@@ -1,8 +1,8 @@
-# Recommended .gitignore for ASP.NET Core  Visual Studio
+# Recommended .gitignore for ASP.NET Core Visual Studio
 .vs
 bin
 obj
-.user
+*.user
 .suo
 .cache
 .log
