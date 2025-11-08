@@ -1,0 +1,10 @@
+# Recommended .gitignore for ASP.NET Core  Visual Studio
+.vs
+bin
+obj
+.user
+.suo
+.cache
+.log
+.nupkg
+packages
