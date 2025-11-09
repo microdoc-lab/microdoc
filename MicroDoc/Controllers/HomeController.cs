@@ -1,6 +1,9 @@
-using System.Diagnostics;
 using MicroDoc.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace MicroDoc.Controllers
 {
@@ -16,6 +19,18 @@ namespace MicroDoc.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult Login()
+        {
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, 
+                GoogleDefaults.AuthenticationScheme);
+        }
+
+        public IActionResult Logout()
+        {
+            return SignOut(new AuthenticationProperties { RedirectUri = "/" },
+                CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
         public IActionResult Privacy()

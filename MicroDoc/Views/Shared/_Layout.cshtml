@@ -26,6 +26,18 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+
+                    <div class="auth-links">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <span>Hello, @User.Identity.Name!</span>
+                            <a class="btn btn-outline-secondary btn-sm ms-2" href="/Home/Logout">Logout</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-primary btn-sm" href="/Home/Login">Login with Google</a>
+                        }
+                    </div>
                 </div>
             </div>
         </nav>
