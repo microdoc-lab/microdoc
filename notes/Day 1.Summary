@@ -1,0 +1,67 @@
+# TagExplorer Daily Log
+# Date: 2025-11-09
+
+## Morning Setup
+
+[09:00] [Repository] Restore GitHub account
+[09:10] [Installation] Install Visual Studio 2022
+[09:25] [Repository] Create new GitHub repository
+[09:40] [Repository] git init and bind to remote repository, initial commit
+- /Insight [Repository] Initial repository setup allows clean commit history
+
+[10:00] [WebApp] Create ASP.NET Core application
+- /Planned [Installation] Install required Visual Studio 2022 components
+
+---
+
+## Hot Reload Feature
+
+[10:45] [WebApp] Enable Razor RuntimeCompilation
+[11:00] [WebApp] Test Hot Reload
+- /Insight [WebApp] Works for local changes in C# methods (WOW!)
+- /Insight [WebApp] Works for changes in cshtml files; page refreshes on-the-fly
+
+---
+
+## Google OAuth Authentication
+
+[11:30] [Security] [Authentication] Obtain Google client-id and client-secret
+- [Google] [Application] Create application
+- [Google] [Application] Setup consent screen
+
+[12:00] [Security] [Authentication] Integrate web application (Program.cs, Controller, Layout.cshtml)
+- /Question [UI] [Navbar] Should auth-links be inside navbar-collapse or outside? (open)
+- /Question [UI] [Navbar] Bootstrap `justify-content-between` flex styles for right alignment (open)
+- /Insight [UI] [Navbar] `justify-content-between` works for aligning login/logout links
+
+[12:30] [UI] [Navbar] Add login/logout links inside navbar-collapse
+
+---
+
+## Planned vs Actual Steps
+
+- **Planned:** Add login/logout links, align right, test Hot Reload, integrate Google OAuth  
+- **Actual:**  
+  - Hot Reload verified  
+  - Google OAuth integrated successfully  
+  - Navbar links added and aligned  
+  - Side questions emerged and logged inline  
+
+---
+
+## Side Questions / Open Issues
+
+- /Question [UI] [Navbar] Placement of auth-links: inside navbar-collapse confirmed; final styling to be verified later (open)  
+- /Question [Auth] [Google] Multiple Gmail accounts login support (deferred, open)  
+- /Question [Project] [.NET] Choose .NET version for project (open)  
+
+---
+
+## Summary / Lessons Learned
+
+- /Insight [AI] [Chat] Forward work can be interrupted; side questions arise naturally  
+- /Insight [AI] [Chat] Inline questions help preserve context without losing chronology  
+- /Insight [AI] [Chat] Planned vs actual comparison is valuable for reflection  
+- /Insight [AI] [Chat] Time-stamped entries allow tracking effort per step  
+- /Question [AI] [Chat] How to mark resolved questions clearly in future logs?  
+- /Insight [AI] [Chat] This format preserves learning and task chronology, ready for Git commit
