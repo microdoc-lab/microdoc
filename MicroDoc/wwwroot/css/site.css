@@ -20,3 +20,23 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.container {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+}
+
+.left-panel {
+    width: 350px;
+    overflow-y: auto;
+    border-right: 1px solid #ccc;
+    padding: 1em;
+    background-color: #f9f9f9;
+}
+
+.main-content {
+    flex-grow: 1;
+    padding: 1em;
+    overflow-y: auto;
+}

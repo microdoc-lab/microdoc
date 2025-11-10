@@ -1,0 +1,30 @@
+﻿@model List<TagNode>
+
+<ul class="tag-tree">
+@foreach (var module in Model)
+{
+    <li class="module" style="--tag-color:@module.Color">
+        <span class="module-name">[@module.Display]</span>
+        @if (module.Children.Any())
+        {
+            <ul class="process-list">
+                @foreach (var process in module.Children)
+                {
+                    <li class="process">
+                        <details>
+                            <summary>[@process.Display]</summary>
+                            <ul class="step-list">
+                                @foreach (var step in process.Children)
+                                @foreach (var sub in step.Children.DefaultIfEmpty(null))
+                                {
+                                    <li class="step">[@step.Display]@(sub != null ? $" - [{sub.Display}]" : "")</li>
+                                }
+                            </ul>
+                        </details>
+                    </li>
+                }
+            </ul>
+        }
+    </li>
+}
+</ul>

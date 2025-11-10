@@ -10,15 +10,22 @@ namespace MicroDoc.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MicroDocService _microDocService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MicroDocService microDocService)
         {
             _logger = logger;
+            _microDocService = microDocService;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = new IndexViewModel
+            {
+                TagTree = _microDocService.GetTagTree()
+            };
+
+            return View(model);
         }
 
         public IActionResult Login()

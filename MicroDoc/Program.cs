@@ -1,13 +1,19 @@
+using MicroDoc.Models;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Bind configuration
+builder.Services.Configure<MicroDocOptions>(
+    builder.Configuration.GetSection("MicroDoc"));
+
 // Add services to the container.
+builder.Services.AddSingleton<MicroDocService>();
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation()
-    ;
+;
 
 // Add authentication
 builder.Services.AddAuthentication(options =>

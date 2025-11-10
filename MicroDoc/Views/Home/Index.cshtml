@@ -1,8 +1,18 @@
-﻿@{
+﻿@model IndexViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+<div class="main-content">
+    <h1>Main content goes here</h1>
+    <p>Select a module/process to see details.</p>
+</div>
+
+<div class="left-panel">
+    @await Html.PartialAsync("_TagTree", Model.TagTree)
 </div>
