@@ -8,3 +8,6 @@ obj
 .log
 .nupkg
 packages
+
+secrets
+appsettings.Development.json
