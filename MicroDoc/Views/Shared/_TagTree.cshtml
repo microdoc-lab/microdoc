@@ -1,30 +1,58 @@
-﻿@model List<TagNode>
+﻿@model TagTreeViewModel
 
-<ul class="tag-tree">
-@foreach (var module in Model)
-{
-    <li class="module" style="--tag-color:@module.Color">
-        <span class="module-name">[@module.Display]</span>
-        @if (module.Children.Any())
+<div id="@Model.Id" class="tag-tree-container">
+    <ul class="tag-tree">
+    @foreach (var module in Model.Nodes)
+    {
+        <li class="module" style="--tag-color:@module.Color">
+            <span class="module-name tree-node" data-tag="@module.Name">[@module.Display]</span>
+            @if (module.Children.Any())
+            {
+                <ul class="process-list">
+                    @foreach (var process in module.Children)
+                    {
+                        <li class="process">
+                            <details>
+                                <summary class="process-node tree-node" data-tag="@module.Name/@process.Name">[@process.Display]</summary>
+                                <ul class="step-list">
+                                    @foreach (var step in process.Children)
+                                    @foreach (var sub in step.Children.DefaultIfEmpty(null))
+                                    {
+                                        @if (sub != null)
+                                        {
+                                            <li class="step tree-node" data-tag="@module.Name/@process.Name/@step.Name/@sub.Name">[@step.Display] - [@sub.Display]</li>
+                                        }
+                                        else
+                                        {
+                                            <li class="step tree-node" data-tag="@module.Name/@process.Name/@step.Name">[@step.Display]</li>
+                                        }
+                                    }
+                                </ul>
+                            </details>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+    </ul>
+</div>
+
+<script>
+    (function() {
+        const container = document.getElementById("@Model.Id");
+        if (!container) return;
+
+        const tree = new TagTree(container);
+
+        @if (!string.IsNullOrEmpty(Model.SelectedNode))
         {
-            <ul class="process-list">
-                @foreach (var process in module.Children)
-                {
-                    <li class="process">
-                        <details>
-                            <summary>[@process.Display]</summary>
-                            <ul class="step-list">
-                                @foreach (var step in process.Children)
-                                @foreach (var sub in step.Children.DefaultIfEmpty(null))
-                                {
-                                    <li class="step">[@step.Display]@(sub != null ? $" - [{sub.Display}]" : "")</li>
-                                }
-                            </ul>
-                        </details>
-                    </li>
-                }
-            </ul>
+            <text>
+            tree.selectNode("@Model.SelectedNode");
+            </text>
         }
-    </li>
-}
-</ul>
+
+        window["@Model.Id"] = tree;
+        container.tagTree = tree;
+    })();
+</script>

@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - MicroDoc</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/document.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/MicroDoc.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -42,6 +42,9 @@
             </div>
         </nav>
     </header>
+
+    <script src="~/js/TagTree.js" asp-append-version="true"></script>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

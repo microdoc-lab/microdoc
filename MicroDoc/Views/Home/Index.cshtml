@@ -16,3 +16,9 @@
 <div class="left-panel">
     @await Html.PartialAsync("_TagTree", Model.TagTree)
 </div>
+
+<script>
+    window.documentTree.onNodeSelected = function(tagName) {
+        console.log("Inventory node selected externally:", tagName);
+    };
+</script>

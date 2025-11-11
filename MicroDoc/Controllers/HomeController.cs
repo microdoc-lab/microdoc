@@ -22,7 +22,12 @@ namespace MicroDoc.Controllers
         {
             var model = new IndexViewModel
             {
-                TagTree = _microDocService.GetTagTree()
+                TagTree =  new TagTreeViewModel
+                {
+                    Id = "documentTree",
+                    Nodes = _microDocService.GetTagTree(),
+                    SelectedNode = "Services",
+                }
             };
 
             return View(model);

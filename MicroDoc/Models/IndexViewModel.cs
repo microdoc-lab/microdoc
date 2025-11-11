@@ -2,6 +2,6 @@
 {
     public class IndexViewModel
     {
-        public List<TagNode> TagTree { get; set; } = new();
+        public TagTreeViewModel TagTree { get; set; } = new();
     }
 }

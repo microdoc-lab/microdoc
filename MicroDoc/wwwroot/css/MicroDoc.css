@@ -1,5 +1,4 @@
 ﻿.tag-tree {
-    list-style: none;
     padding: 0;
 }
 
@@ -15,4 +14,14 @@
 .tag-tree .process-list details summary {
     cursor: pointer;
     font-weight: 500;
+}
+
+.tree-node.selected {
+    background-color: #e0f0ff;
+    border-radius: 4px;
+}
+
+.tree-node {
+    cursor: pointer;
+    padding: 2px 4px;
 }
