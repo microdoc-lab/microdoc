@@ -1,0 +1,87 @@
+# TagExplorer Daily Log
+
+## Tag Tree Development
+
+### Tasks / Topics Covered
+
+- Review folder structure for tag system  
+  - Insight: Hierarchy includes Vocabulary, Game, Admin modules with subfolders for processes and steps  
+
+- Implement `view.ini` parsing for tag display names, order, and colors  
+  - Insight: Enables flexible configuration of tree nodes without touching code  
+
+- Create `_TagTree.cshtml` partial view  
+  - Planned: Support tree depth up to 4 levels (Module → Process → Step → SubStep)  
+  - Insight: Display Modules and Processes expanded by default; steps/substeps as flat list  
+
+- Introduce `TagTreeViewModel`  
+  - Properties: `Id`, `Nodes`, `SelectedNode`  
+  - Insight: Passing `Id` allows multiple tree instances; `SelectedNode` allows initial selection  
+
+- Build `TagTree.js` class  
+  - Implement node selection, methods `onNodeSelected`, `selectNode`, `clearSelection`  
+  - Insight: Multiple tree instances can be managed independently via `window[Id]`  
+
+- Add inline initialization script in partial  
+  - Insight: Self-initialization removes need for external calls; DOM nodes exist at script execution  
+
+- Separate node selection and expand/collapse  
+  - Clicking tree-node selects only  
+  - Clicking bullet (left square) toggles `<details>` expansion  
+  - Insight: Cleaner and more intuitive interaction  
+
+- Style left part of summary for toggle area  
+  - Colored square or pseudo-element indicates clickable area  
+  - Insight: Visual feedback aligns with JS toggle logic  
+
+- Place `TagTree.js` before `@RenderBody()` in `_Layout.cshtml`  
+  - Insight: Inline partial script works without DOMContentLoaded; external event handlers can attach immediately  
+
+- Verify multiple tree instances, initial selection, and toggle behavior  
+  - Insight: Fully reusable component; bullet click toggles only, node click selects only  
+
+### ASP.NET Core Steps
+
+- Moved configuration into `appsettings.json` (e.g., root folder for tree, Google OAuth client settings)  
+  - Insight: Centralized configuration allows safe environment-specific overrides  
+
+- Registered services in `Program.cs`  
+  - Singleton service for `TagTreeService` that reads folder structure and `view.ini`  
+  - Scoped / transient services as needed for page-specific data  
+  - Insight: Proper DI usage improves maintainability and testability  
+
+- Loaded configuration during startup  
+  - `builder.Configuration.GetSection("TagTree")` mapped to strongly-typed model  
+  - Insight: Strongly-typed configuration simplifies access in controllers and partial views  
+
+- Used `TagTreeViewModel` in controller / service  
+  - Passed data to `_TagTree.cshtml` partial  
+  - Insight: Clean separation of server-side logic and client-side rendering  
+
+- Inline partial script for tree initialization  
+  - Runs automatically, no need for external DOMContentLoaded events  
+  - Insight: This approach makes the component self-contained and reusable  
+
+## Key Decisions & Insights
+
+- Partial view initialization ensures DOM nodes exist before JS runs.  
+- Toggle UX separates node selection and expand/collapse for clarity.  
+- ViewModel usage with `Id` and `SelectedNode` supports multiple tree instances.  
+- JS class design exposes methods and `onNodeSelected` for external script integration.  
+- CSS bullet styling clearly indicates toggle area without interfering with node selection.  
+- ASP.NET Core configuration and DI usage improves maintainability and allows easy environment-specific overrides.  
+
+## Day Manifest
+
+- Moved from simple hierarchical data to a **fully interactive, reusable tree control**.  
+- Solved node selection vs expand/collapse UX conflict.  
+- Achieved component encapsulation:  
+  - Partial self-initializes  
+  - JS class handles logic  
+  - External scripts can attach custom event handlers  
+- Control supports multiple instances, custom initial selection, and server-side configuration.  
+- Maintained flexibility through `view.ini` for sorting, display names, and colors.  
+- Proper ASP.NET Core service registration and configuration makes the component maintainable, testable, and environment-aware.  
+
+**Result:**  
+By the end of this work, we have a **robust, reusable Tag Tree control** with clear separation of **presentation, client logic, and model**, fully integrated with **ASP.NET Core configuration and DI patterns**, ready for multiple pages and projects.
