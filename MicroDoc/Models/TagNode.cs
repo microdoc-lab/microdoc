@@ -2,10 +2,10 @@
 {
     public class TagNode
     {
+        public string Id { get; set; }
         public string Name { get; set; }
-        public string Display { get; set; }
         public string Color { get; set; }
-        public string Description { get; set; }
+        public string Group { get; set; }
         public int Order { get; set; }
 
         public List<TagNode> Children { get; set; } = new();

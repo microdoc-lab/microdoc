@@ -5,7 +5,7 @@
     @foreach (var module in Model.Nodes)
     {
         <li class="module" style="--tag-color:@module.Color">
-            <span class="module-name tree-node" data-tag="@module.Name">[@module.Display]</span>
+            <span class="module-name tree-node" data-tag="@module.Id">@module.Name</span>
             @if (module.Children.Any())
             {
                 <ul class="process-list">
@@ -13,18 +13,18 @@
                     {
                         <li class="process">
                             <details>
-                                <summary class="process-node tree-node" data-tag="@module.Name/@process.Name">[@process.Display]</summary>
+                                <summary class="process-node tree-node" data-tag="@process.Id">@process.Name</summary>
                                 <ul class="step-list">
                                     @foreach (var step in process.Children)
                                     @foreach (var sub in step.Children.DefaultIfEmpty(null))
                                     {
                                         @if (sub != null)
                                         {
-                                            <li class="step tree-node" data-tag="@module.Name/@process.Name/@step.Name/@sub.Name">[@step.Display] - [@sub.Display]</li>
+                                            <li class="step tree-node" data-tag="@sub.Id">@step.Name - @sub.Name</li>
                                         }
                                         else
                                         {
-                                            <li class="step tree-node" data-tag="@module.Name/@process.Name/@step.Name">[@step.Display]</li>
+                                            <li class="step tree-node" data-tag="@step.Id">@step.Name</li>
                                         }
                                     }
                                 </ul>
