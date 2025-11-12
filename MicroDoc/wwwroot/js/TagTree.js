@@ -27,20 +27,9 @@
         });
 
         // Handle toggle for <details>
-        const detailsElements = this.element.querySelectorAll("details");
+        const detailsElements = this.element.querySelectorAll("details summary .tree-node");
         detailsElements.forEach(details => {
-            const summary = details.querySelector("summary");
-
-            summary.addEventListener("click", (event) => {
-                // Check relative X position
-                const rect = summary.getBoundingClientRect();
-                const relativeX = event.clientX - rect.left;
-
-                if (relativeX < 14) {
-                    // allow toggle
-                    details.open = !details.open;
-                }
-
+            details.addEventListener("click", (event) => {
                 event.preventDefault(); // prevent default toggle for other clicks
             });
         });
