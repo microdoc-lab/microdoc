@@ -55,6 +55,7 @@ namespace MicroDoc.Models
                     {
                         Name = group.Key,
                         DisplayName = group.Key,
+                        Group = "",
                         Order = tag?.Order,
                     };
                     nodes.Add(groupNode);
@@ -74,8 +75,55 @@ namespace MicroDoc.Models
 
         public bool ReorderTag(string path, string group, string tag, bool up)
         {
-            var viewPath = Path.Combine(_options.RootFolder, path ?? "", "view.ini");
+            TagView view = BuildView(path);
 
+            var tags = view.Tags.Where(t => t.Group == group).ToList();
+            var index = tags.FindIndex(t => t.Tag == tag);
+            
+            if (index == -1)
+                return false;
+
+            if (up && index > 0)
+                (tags[index - 1].Order, tags[index].Order) = (tags[index].Order, tags[index - 1].Order);
+            else if (!up && index < tags.Count - 1)
+                (tags[index + 1].Order, tags[index].Order) = (tags[index].Order, tags[index + 1].Order);
+
+            var viewPath = Path.Combine(_options.RootFolder, path ?? "", "view.ini");
+            ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            return true;
+        }
+
+        public bool ReorderTagsBatch(string path, string group, string tag, string targetTag)
+        {
+            TagView view = BuildView(path);
+
+            var tags = view.Tags.Where(t => t.Group == group).ToList();
+            var index = tags.FindIndex(t => t.Tag == tag);
+            var targetIndex = tags.FindIndex(t => t.Tag == targetTag);
+
+            if (index == -1 || targetIndex == -1 || index == targetIndex)
+                return false;
+
+            // Extract dragged item
+            var dragged = tags[index];
+
+            // Remove it first
+            tags.RemoveAt(index);
+
+            // Insert dragged node before target
+            tags.Insert(targetIndex, dragged);
+
+            // Update order fields (optional)
+            for (int i = 0; i < tags.Count; i++)
+                tags[i].Order = i + 1;
+
+            var viewPath = Path.Combine(_options.RootFolder, path ?? "", "view.ini");
+            ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            return true;
+        }
+
+        private TagView BuildView(string path)
+        {
             var nodePath = Path.Combine(_options.RootFolder, path ?? "");
             var tree = BuildTree(nodePath, parentId: null, recursive: false);
 
@@ -93,20 +141,7 @@ namespace MicroDoc.Models
             }
 
             var view = new TagView { Tags = list };
-
-            var tags = view.Tags.Where(t => t.Group == group).ToList();
-            var index = tags.FindIndex(t => t.Tag == tag);
-            // add missing tag
-            if (index == -1)
-                return false;
-
-            if (up && index > 0)
-                (tags[index - 1].Order, tags[index].Order) = (tags[index].Order, tags[index - 1].Order);
-            else if (!up && index < tags.Count - 1)
-                (tags[index + 1].Order, tags[index].Order) = (tags[index].Order, tags[index + 1].Order);
-
-            ViewConfigLoader.SaveTagsToFile(viewPath, view);
-            return true;
+            return view;
         }
     }
 }

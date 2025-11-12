@@ -13,7 +13,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReorderTag([FromBody] ReorderRequest request)
+        public IActionResult ReorderTag([FromBody] ReorderTagRequest request)
         {
             if (!_tagTreeService.ReorderTag(request.Path, request.Group, request.Tag, request.Direction == "up"))
                 return NotFound();
@@ -21,12 +21,29 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
-        public class ReorderRequest
+        [HttpPost]
+        public IActionResult ReorderTagsBatch([FromBody] ReorderTagsBatchRequest request)
+        {
+            if (!_tagTreeService.ReorderTagsBatch(request.Path, request.Group, request.Tag, request.TargetTag))
+                return NotFound();
+
+            return Ok();
+        }
+
+        public class ReorderTagRequest
         {
             public string Path { get; set; }
             public string Group { get; set; }
             public string Tag { get; set; }
             public string Direction { get; set; }
+        }
+
+        public class ReorderTagsBatchRequest
+        {
+            public string Path { get; set; }
+            public string Group { get; set; }
+            public string Tag { get; set; }
+            public string TargetTag { get; set; }
         }
     }
 }

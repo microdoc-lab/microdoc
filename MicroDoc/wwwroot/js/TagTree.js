@@ -37,9 +37,10 @@
         // Reorder buttons handlers
         this.element.querySelectorAll(".reorder-buttons button").forEach(btn => {
             btn.addEventListener("click", async e => {
-                const path = e.target.dataset.path;
-                const group = e.target.dataset.group;
-                const tag = e.target.dataset.tag;
+                const context = e.target.closest(".reorder-buttons");
+                const path = context.dataset.path;
+                const group = context.dataset.group;
+                const tag = context.dataset.tag;
                 const direction = e.target.dataset.dir;
                 const button = e.target.closest("button");
                 const node = button.closest("li"); // current node element
@@ -57,6 +58,68 @@
                     } else if (direction === "down" && node.nextElementSibling) {
                         parentList.insertBefore(node.nextElementSibling, node);
                     }                    
+                } else {
+                    console.error("Reorder failed", await res.text());
+                }
+            });
+        });
+
+        // DragNDrop to Reorder
+        let draggedNode = null;
+        this.element.querySelectorAll(".tree-node").forEach(node => {
+            node.addEventListener("dragstart", e => {
+                draggedNode = node;
+                e.dataTransfer.effectAllowed = "move";
+            });
+
+            node.addEventListener("dragover", e => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = "move";
+            });
+
+            node.addEventListener("drop", async e => {
+                e.preventDefault();
+                const targetNode = node;
+                const parentList = draggedNode.closest("ul");
+
+                // Only allow drop within the same parent
+                if (!draggedNode || parentList !== targetNode.closest("ul") || draggedNode === targetNode) return;
+
+                const draggedItem = draggedNode.closest("li");
+                const targetItem = targetNode.closest("li");
+                const context = draggedItem.querySelector(".reorder-buttons");
+                const path = context.dataset.path;
+                const group = context.dataset.group;
+                const tag = context.dataset.tag;
+
+                const targetContext = targetItem.querySelector(".reorder-buttons");
+                const targetTag = targetContext.dataset.tag;
+                
+                const res = await fetch("/MicroDoc/ReorderTagsBatch", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ path, group, tag, targetTag })
+                });
+
+                if (res.ok) {
+                    // Reorder DOM
+                    const nodes = Array.from(parentList.children);
+                    const draggedIndex = nodes.indexOf(draggedItem);
+                    const targetIndex = nodes.indexOf(targetItem);
+
+                    if (draggedIndex === -1 || targetIndex === -1) return;
+
+                    if (draggedIndex < targetIndex) {
+                        // Insert after target
+                        if (targetItem.nextSibling) {
+                            parentList.insertBefore(draggedItem, targetItem.nextSibling);
+                        } else {
+                            parentList.appendChild(draggedItem); // target is last element
+                        }
+                    } else {
+                        // Insert before target
+                        parentList.insertBefore(draggedItem, targetItem);
+                    }
                 } else {
                     console.error("Reorder failed", await res.text());
                 }
