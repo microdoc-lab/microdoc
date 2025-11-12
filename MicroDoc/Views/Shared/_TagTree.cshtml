@@ -28,34 +28,16 @@
                                 </summary>
                                 <ul class="step-list">
                                     @foreach (var step in process.Children)
-                                    @foreach (var sub in step.Children.DefaultIfEmpty(null))
                                     {
-                                        @if (sub != null)
-                                        {
-                                            <li>
-                                                <div class="tree-node-wrapper">
-                                                    <span class="step-name tree-node" data-tag="@sub.Id">@step.DisplayName - @sub.DisplayName</span>
-                                                    <div class="reorder-buttons">
-                                                        <button type="button" class="arrow-up" data-path="@step.Id" data-group="@sub.Group" data-tag="@sub.Name" data-dir="up">↑</button>
-                                                        <button type="button" class="arrow-down" data-path="@step.Id" data-group="@sub.Group" data-tag="@sub.Name" data-dir="down">↓</button>
-                                                    </div>
+                                        <li>
+                                            <div class="tree-node-wrapper">
+                                                <span class="step-name tree-node" data-tag="@step.Id">@step.DisplayName</span>
+                                                <div class="reorder-buttons">
+                                                    <button type="button" class="arrow-up" data-path="@process.Id" data-group="@step.Group" data-tag="@step.Name" data-dir="up">↑</button>
+                                                    <button type="button" class="arrow-down" data-path="@process.Id" data-group="@step.Group" data-tag="@step.Name" data-dir="down">↓</button>
                                                 </div>
-                                            </li>
-
-
-                                        }
-                                        else
-                                        {
-                                            <li>
-                                                <div class="tree-node-wrapper">
-                                                    <span class="step-name tree-node" data-tag="@step.Id">@step.DisplayName</span>
-                                                    <div class="reorder-buttons">
-                                                        <button type="button" class="arrow-up" data-path="@process.Id" data-group="@step.Group" data-tag="@step.Name" data-dir="up">↑</button>
-                                                        <button type="button" class="arrow-down" data-path="@process.Id" data-group="@step.Group" data-tag="@step.Name" data-dir="down">↓</button>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        }
+                                            </div>
+                                        </li>
                                     }
                                 </ul>
                             </details>

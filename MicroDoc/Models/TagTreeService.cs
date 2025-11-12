@@ -11,29 +11,31 @@ namespace MicroDoc.Models
             _options = options.Value;
         }
 
-        public List<TagNode> GetTagTree() => BuildTree(_options.RootFolder, null);
+        public List<TagNode> GetTagTree() => BuildTree(_options.RootFolder, parentId: null, recursive: true);
 
-        private static List<TagNode> BuildTree(string rootFolder, string id)
+        private static List<TagNode> BuildTree(string path, string parentId, bool recursive)
         {
-            var viewPath = Path.Combine(rootFolder, "view.ini");
+            var viewPath = Path.Combine(path, "view.ini");
             var view = ViewConfigLoader.LoadTagsFromFile(viewPath);
 
             // Load nodes
             var nodes = new List<TagNode>();
-            foreach (var dir in Directory.GetDirectories(rootFolder))
+            foreach (var dir in Directory.GetDirectories(path))
             {
                 var name = Path.GetFileName(dir);
                 var tag = view.Tags.FirstOrDefault(t => t.Tag == name);
 
                 var node = new TagNode
                 {
-                    Id = id == null ? name : id + "/" + name,
+                    Id = parentId == null ? name : parentId + "/" + name,
                     Name = name,
                     DisplayName = "[" + name + "]",
                     Group = (tag?.Group ?? "").Trim(),
-                    Order = tag?.Order ?? 999,
+                    Order = tag?.Order,
                 };
-                node.Children = BuildTree(dir, node.Id);
+
+                if (recursive)
+                    node.Children = BuildTree(dir, parentId: node.Id, recursive: true);
 
                 nodes.Add(node);
             }
@@ -53,7 +55,7 @@ namespace MicroDoc.Models
                     {
                         Name = group.Key,
                         DisplayName = group.Key,
-                        Order = tag?.Order ?? 0,
+                        Order = tag?.Order,
                     };
                     nodes.Add(groupNode);
                 }
@@ -64,36 +66,44 @@ namespace MicroDoc.Models
                     nodes.Remove(node);
                 }
 
-                groupNode.Children = groupNode.Children.OrderBy(n => n.Order).ThenBy(n => n.Name).ToList();
+                groupNode.Children = groupNode.Children.OrderBy(n => n.Order ?? 999).ThenBy(n => n.Name).ToList();
             }
 
-            return nodes.OrderBy(n => n.Order).ThenBy(n => n.Name).ToList();
+            return nodes.OrderBy(n => n.Order ?? 999).ThenBy(n => n.Name).ToList();
         }
 
         public bool ReorderTag(string path, string group, string tag, bool up)
         {
             var viewPath = Path.Combine(_options.RootFolder, path ?? "", "view.ini");
-            var view = ViewConfigLoader.LoadTagsFromFile(viewPath);
+
+            var nodePath = Path.Combine(_options.RootFolder, path ?? "");
+            var tree = BuildTree(nodePath, parentId: null, recursive: false);
+
+            var list = new List<TagView.Node>();
+
+            int order = 0;
+            foreach (var node in tree)
+                list.Add(new TagView.Node { Tag = node.Name, Group = node.Group, Order = ++order });
+
+            foreach (var node in tree)
+            {
+                order = 0;
+                foreach (var child in node.Children)
+                    list.Add(new TagView.Node { Tag = child.Name, Group = child.Group, Order = ++order });
+            }
+
+            var view = new TagView { Tags = list };
 
             var tags = view.Tags.Where(t => t.Group == group).ToList();
             var index = tags.FindIndex(t => t.Tag == tag);
+            // add missing tag
             if (index == -1)
-            {
-                var newTag = new TagView.Node
-                {
-                    Tag = tag,
-                    Group = group,
-                    Order = (tags.Max(t => (int?)t.Order) ?? 0) + 1
-                };
-                view.Tags.Add(newTag);
-            }
-            else
-            {
-                if (up && index > 0)
-                    (tags[index - 1].Order, tags[index].Order) = (tags[index].Order, tags[index - 1].Order);
-                else if (!up && index < tags.Count - 1)
-                    (tags[index + 1].Order, tags[index].Order) = (tags[index].Order, tags[index + 1].Order);
-            }
+                return false;
+
+            if (up && index > 0)
+                (tags[index - 1].Order, tags[index].Order) = (tags[index].Order, tags[index - 1].Order);
+            else if (!up && index < tags.Count - 1)
+                (tags[index + 1].Order, tags[index].Order) = (tags[index].Order, tags[index + 1].Order);
 
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
             return true;
