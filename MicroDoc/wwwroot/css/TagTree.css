@@ -1,0 +1,62 @@
+﻿.tag-tree {
+    padding: 0;
+}
+
+.tag-tree, .tag-tree .process-list, .tag-tree .process-list .step-list {
+    list-style-type: none;
+}
+
+.tag-tree .module {
+    margin-bottom: 1em;
+}
+
+.tag-tree .module-name {
+    font-weight: bold;
+    color: var(--tag-color);
+}
+
+.tag-tree .process-list details summary {
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.tree-node.selected {
+    background-color: #e0f0ff;
+    border-radius: 4px;
+}
+
+.tree-node {
+    cursor: pointer;
+    padding: 2px 4px;
+}
+
+.tree-node-wrapper {
+    position: relative; /* for absolute positioning inside */
+    padding-right: 40px; /* reserve space for buttons */
+}
+
+.reorder-buttons {
+    display: none; /* hidden by default */
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%); /* vertically center */
+    gap: 4px;
+}
+
+.tree-node-wrapper:hover .reorder-buttons {
+    display: flex;
+}
+
+.reorder-buttons button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #777;
+    font-size: 0.8rem;
+    padding: 0 4px;
+}
+
+.reorder-buttons button:hover {
+    color: black;
+}

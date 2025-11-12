@@ -10,12 +10,12 @@ namespace MicroDoc.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly MicroDocService _microDocService;
+        private readonly TagTreeService _tagTreeService;
 
-        public HomeController(ILogger<HomeController> logger, MicroDocService microDocService)
+        public HomeController(ILogger<HomeController> logger, TagTreeService tagTreeService)
         {
             _logger = logger;
-            _microDocService = microDocService;
+            _tagTreeService = tagTreeService;
         }
 
         public IActionResult Index()
@@ -25,7 +25,7 @@ namespace MicroDoc.Controllers
                 TagTree =  new TagTreeViewModel
                 {
                     Id = "documentTree",
-                    Nodes = _microDocService.GetTagTree(),
+                    Nodes = _tagTreeService.GetTagTree(),
                     SelectedNode = "Services",
                 }
             };

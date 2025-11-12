@@ -5,17 +5,28 @@ namespace MicroDoc.Controllers
 {
     public class MicroDocController : Controller
     {
-        private readonly MicroDocService _microDocService;
+        private readonly TagTreeService _tagTreeService;
 
-        public MicroDocController(MicroDocService microDocService)
+        public MicroDocController(TagTreeService tagTreeService)
         {
-            _microDocService = microDocService;
+            _tagTreeService = tagTreeService;
         }
 
-        public IActionResult TagTree()
+        [HttpPost]
+        public IActionResult ReorderTag([FromBody] ReorderRequest request)
         {
-            var model = _microDocService.GetTagTree();
-            return PartialView("_TagTree", model);
+            if (!_tagTreeService.ReorderTag(request.Path, request.Group, request.Tag, request.Direction == "up"))
+                return NotFound();
+
+            return Ok();
+        }
+
+        public class ReorderRequest
+        {
+            public string Path { get; set; }
+            public string Group { get; set; }
+            public string Tag { get; set; }
+            public string Direction { get; set; }
         }
     }
 }

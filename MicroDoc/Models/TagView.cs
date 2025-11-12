@@ -7,6 +7,8 @@
             public string Tag { get; set; }
             public string Group { get; set; }
             public int Order { get; set; }
+
+            public override string ToString() => $"{Tag} Group: {Group}; Order: {Order}";
         }
 
         public List<Node> Tags { get; set; } = new();

@@ -5,7 +5,13 @@
     @foreach (var module in Model.Nodes)
     {
         <li class="module" style="--tag-color:@module.Color">
-            <span class="module-name tree-node" data-tag="@module.Id">@module.Name</span>
+            <div class="tree-node-wrapper">
+                <span class="module-name tree-node" data-tag="@module.Id">@module.DisplayName</span>
+                <div class="reorder-buttons">
+                    <button type="button" class="arrow-up" data-path="" data-group="@module.Group" data-tag="@module.Name" data-dir="up">↑</button>
+                    <button type="button" class="arrow-down" data-path="" data-group="@module.Group" data-tag="@module.Name" data-dir="down">↓</button>
+                </div>
+            </div>
             @if (module.Children.Any())
             {
                 <ul class="process-list">
@@ -13,18 +19,42 @@
                     {
                         <li class="process">
                             <details>
-                                <summary class="process-node tree-node" data-tag="@process.Id">@process.Name</summary>
+                                <summary class="process-name tree-node-wrapper">
+                                    <span class="process-name tree-node" data-tag="@process.Id">@process.DisplayName</span>
+                                    <div class="reorder-buttons">
+                                        <button type="button" data-path="@module.Id" data-group="@process.Group" data-tag="@process.Name" data-dir="up">↑</button>
+                                        <button type="button" data-path="@module.Id" data-group="@process.Group" data-tag="@process.Name" data-dir="down">↓</button>
+                                    </div>
+                                </summary>
                                 <ul class="step-list">
                                     @foreach (var step in process.Children)
                                     @foreach (var sub in step.Children.DefaultIfEmpty(null))
                                     {
                                         @if (sub != null)
                                         {
-                                            <li class="step tree-node" data-tag="@sub.Id">@step.Name - @sub.Name</li>
+                                            <li>
+                                                <div class="tree-node-wrapper">
+                                                    <span class="step-name tree-node" data-tag="@sub.Id">@step.DisplayName - @sub.DisplayName</span>
+                                                    <div class="reorder-buttons">
+                                                        <button type="button" class="arrow-up" data-path="@step.Id" data-group="@sub.Group" data-tag="@sub.Name" data-dir="up">↑</button>
+                                                        <button type="button" class="arrow-down" data-path="@step.Id" data-group="@sub.Group" data-tag="@sub.Name" data-dir="down">↓</button>
+                                                    </div>
+                                                </div>
+                                            </li>
+
+
                                         }
                                         else
                                         {
-                                            <li class="step tree-node" data-tag="@step.Id">@step.Name</li>
+                                            <li>
+                                                <div class="tree-node-wrapper">
+                                                    <span class="step-name tree-node" data-tag="@step.Id">@step.DisplayName</span>
+                                                    <div class="reorder-buttons">
+                                                        <button type="button" class="arrow-up" data-path="@process.Id" data-group="@step.Group" data-tag="@step.Name" data-dir="up">↑</button>
+                                                        <button type="button" class="arrow-down" data-path="@process.Id" data-group="@step.Group" data-tag="@step.Name" data-dir="down">↓</button>
+                                                    </div>
+                                                </div>
+                                            </li>
                                         }
                                     }
                                 </ul>

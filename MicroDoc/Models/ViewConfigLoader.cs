@@ -1,5 +1,4 @@
 ﻿using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 namespace MicroDoc.Models
 {
@@ -11,12 +10,18 @@ namespace MicroDoc.Models
                 return new();
 
             var yaml = File.ReadAllText(path);
-            var deserializer = new DeserializerBuilder()
-                .Build();
+            var deserializer = new DeserializerBuilder().Build();
+            var view = deserializer.Deserialize<TagView>(yaml);
+            view.Tags = view.Tags.OrderBy(t => t.Group).ThenBy(t => t.Order).ToList();
+            return view;
+        }
 
-            var data = deserializer.Deserialize<TagView>(yaml);
-
-            return data;
+        public static void SaveTagsToFile(string path, TagView view)
+        {
+            var serializer = new SerializerBuilder().Build();
+            view.Tags = view.Tags.OrderBy(t => t.Group).ThenBy(t => t.Order).ToList();
+            var updatedYaml = serializer.Serialize(view);
+            File.WriteAllText(path, updatedYaml);
         }
     }
 }

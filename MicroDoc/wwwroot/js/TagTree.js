@@ -44,6 +44,35 @@
                 event.preventDefault(); // prevent default toggle for other clicks
             });
         });
+
+        // Reorder buttons handlers
+        this.element.querySelectorAll(".reorder-buttons button").forEach(btn => {
+            btn.addEventListener("click", async e => {
+                const path = e.target.dataset.path;
+                const group = e.target.dataset.group;
+                const tag = e.target.dataset.tag;
+                const direction = e.target.dataset.dir;
+                const button = e.target.closest("button");
+                const node = button.closest("li"); // current node element
+                const parentList = node.parentElement;
+
+                const res = await fetch("/MicroDoc/ReorderTag", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ path, group, tag, direction })
+                });
+
+                if (res.ok) {
+                    if (direction === "up" && node.previousElementSibling) {
+                        parentList.insertBefore(node, node.previousElementSibling);
+                    } else if (direction === "down" && node.nextElementSibling) {
+                        parentList.insertBefore(node.nextElementSibling, node);
+                    }                    
+                } else {
+                    console.error("Reorder failed", await res.text());
+                }
+            });
+        });
     };
 
     this.selectNode = function (tagName) {
