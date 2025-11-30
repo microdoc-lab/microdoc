@@ -15,9 +15,13 @@
     color: var(--tag-color);
 }
 
-.tag-tree .process-list details summary {
+.tag-tree details > summary {
     cursor: pointer;
     font-weight: 500;
+}
+
+.tag-tree details.empty > summary {
+    list-style: none; /* Hides the marker for most browsers */
 }
 
 .tree-node {

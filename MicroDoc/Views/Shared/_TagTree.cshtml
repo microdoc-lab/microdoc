@@ -5,40 +5,43 @@
     @foreach (var module in Model.Nodes)
     {
         <li class="module" style="--tag-color:@module.Color">
-            <div class="tree-node-wrapper">
-                <span class="module-name tree-node" data-tag="@module.Path" draggable="true">[@module.Tag]</span>
-                <div class="toolbar" data-path="" data-tag="@module.Tag">
-                </div>
-            </div>
-            @if (module.Children.Any())
-            {
-                <ul class="process-list">
-                    @foreach (var process in module.Children)
-                    {
-                        <li class="process">
-                            <details>
-                                <summary class="process-name tree-node-wrapper">
-                                    <span class="process-name tree-node" data-tag="@process.Path" draggable="true">[@process.Tag]</span>
-                                    <div class="toolbar" data-path="@module.Path" data-tag="@process.Tag">
-                                    </div>
-                                </summary>
-                                <ul class="step-list">
-                                    @foreach (var step in process.Children)
-                                    {
-                                        <li>
-                                            <div class="tree-node-wrapper">
-                                                <span class="step-name tree-node" data-tag="@step.Path" draggable="true">[@step.Tag]</span>
-                                                <div class="toolbar" data-path="@process.Path" data-tag="@step.Tag">
+            <details open class="@(!module.Children.Any() ? "empty" : "")">
+                <summary class="tree-node-wrapper">
+                    <span class="module-name tree-node" data-tag="@module.Path" draggable="true">[@module.Tag]</span>
+                    <div class="toolbar" data-path="" data-tag="@module.Tag">
+                    </div>
+                </summary>
+
+                @if (module.Children.Any())
+                {
+                    <ul class="process-list">
+                        @foreach (var process in module.Children)
+                        {
+                            <li class="process" style="--tag-color:@process.Color">
+                                <details class="@(!process.Children.Any() ? "empty" : "")">
+                                    <summary class="tree-node-wrapper">
+                                        <span class="process-name tree-node" data-tag="@process.Path" draggable="true">[@process.Tag]</span>
+                                        <div class="toolbar" data-path="@module.Path" data-tag="@process.Tag">
+                                        </div>
+                                    </summary>
+                                    <ul class="step-list">
+                                        @foreach (var step in process.Children)
+                                        {
+                                            <li class="step" style="--tag-color:@step.Color">
+                                                <div class="tree-node-wrapper">
+                                                    <span class="step-name tree-node" data-tag="@step.Path" draggable="true">[@step.Tag]</span>
+                                                    <div class="toolbar" data-path="@process.Path" data-tag="@step.Tag">
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    }
-                                </ul>
-                            </details>
-                        </li>
-                    }
-                </ul>
-            }
+                                            </li>
+                                        }
+                                    </ul>
+                                </details>
+                            </li>
+                        }
+                    </ul>
+                }
+            </details>
         </li>
     }
     </ul>
