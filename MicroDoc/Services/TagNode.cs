@@ -1,4 +1,4 @@
-﻿namespace MicroDoc.Models
+﻿namespace MicroDoc.Services
 {
     public class TagNode
     {

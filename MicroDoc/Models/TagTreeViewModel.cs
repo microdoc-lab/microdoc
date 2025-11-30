@@ -1,4 +1,6 @@
-﻿namespace MicroDoc.Models
+﻿using MicroDoc.Services;
+
+namespace MicroDoc.Models
 {
     public class TagTreeViewModel
     {

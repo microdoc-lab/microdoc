@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 
-namespace MicroDoc.Models
+namespace MicroDoc.Services
 {
     public class TagTreeService
     {

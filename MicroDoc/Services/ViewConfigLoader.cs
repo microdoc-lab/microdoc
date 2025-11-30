@@ -1,6 +1,6 @@
 ﻿using YamlDotNet.Serialization;
 
-namespace MicroDoc.Models
+namespace MicroDoc.Services
 {
     public static class ViewConfigLoader
     {
