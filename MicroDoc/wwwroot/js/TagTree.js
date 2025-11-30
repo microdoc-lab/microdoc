@@ -34,36 +34,6 @@
             });
         });
 
-        // Reorder buttons handlers
-        this.element.querySelectorAll(".reorder-buttons button").forEach(btn => {
-            btn.addEventListener("click", async e => {
-                const context = e.target.closest(".reorder-buttons");
-                const path = context.dataset.path;
-                const group = context.dataset.group;
-                const tag = context.dataset.tag;
-                const direction = e.target.dataset.dir;
-                const button = e.target.closest("button");
-                const node = button.closest("li"); // current node element
-                const parentList = node.parentElement;
-
-                const res = await fetch("/MicroDoc/ReorderTag", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ path, group, tag, direction })
-                });
-
-                if (res.ok) {
-                    if (direction === "up" && node.previousElementSibling) {
-                        parentList.insertBefore(node, node.previousElementSibling);
-                    } else if (direction === "down" && node.nextElementSibling) {
-                        parentList.insertBefore(node.nextElementSibling, node);
-                    }                    
-                } else {
-                    console.error("Reorder failed", await res.text());
-                }
-            });
-        });
-
         // DragNDrop to Reorder
         let draggedNode = null;
         this.element.querySelectorAll(".tree-node").forEach(node => {
@@ -87,18 +57,17 @@
 
                 const draggedItem = draggedNode.closest("li");
                 const targetItem = targetNode.closest("li");
-                const context = draggedItem.querySelector(".reorder-buttons");
+                const context = draggedItem.querySelector(".toolbar");
                 const path = context.dataset.path;
-                const group = context.dataset.group;
                 const tag = context.dataset.tag;
 
-                const targetContext = targetItem.querySelector(".reorder-buttons");
+                const targetContext = targetItem.querySelector(".toolbar");
                 const targetTag = targetContext.dataset.tag;
                 
                 const res = await fetch("/MicroDoc/ReorderTagsBatch", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ path, group, tag, targetTag })
+                    body: JSON.stringify({ path, tag, targetTag })
                 });
 
                 if (res.ok) {

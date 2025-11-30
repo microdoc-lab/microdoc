@@ -1,9 +1,9 @@
-﻿.tag-tree {
-    padding: 0;
+﻿.tag-tree-container ul {
+    list-style-type: none;
 }
 
-.tag-tree, .tag-tree .process-list, .tag-tree .process-list .step-list {
-    list-style-type: none;
+.tag-tree {
+    padding: 0;
 }
 
 .tag-tree .module {
@@ -20,14 +20,14 @@
     font-weight: 500;
 }
 
-.tree-node.selected {
-    background-color: #e0f0ff;
-    border-radius: 4px;
-}
-
 .tree-node {
     cursor: pointer;
     padding: 2px 4px;
+}
+
+.tree-node.selected {
+    background-color: #e0f0ff;
+    border-radius: 4px;
 }
 
 .tree-node-wrapper {
@@ -35,7 +35,11 @@
     padding-right: 40px; /* reserve space for buttons */
 }
 
-.reorder-buttons {
+.tree-node-wrapper:hover .toolbar {
+    display: flex;
+}
+
+.toolbar {
     display: none; /* hidden by default */
     position: absolute;
     right: 0;
@@ -44,11 +48,7 @@
     gap: 4px;
 }
 
-.tree-node-wrapper:hover .reorder-buttons {
-    display: flex;
-}
-
-.reorder-buttons button {
+.toolbar button {
     border: none;
     background: transparent;
     cursor: pointer;
@@ -57,6 +57,6 @@
     padding: 0 4px;
 }
 
-.reorder-buttons button:hover {
+.toolbar button:hover {
     color: black;
 }

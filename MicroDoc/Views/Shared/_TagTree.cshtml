@@ -6,10 +6,8 @@
     {
         <li class="module" style="--tag-color:@module.Color">
             <div class="tree-node-wrapper">
-                <span class="module-name tree-node" data-tag="@module.Id" draggable="true">@module.DisplayName</span>
-                <div class="reorder-buttons" data-path="" data-group="@module.Group" data-tag="@module.Name">
-                    <button type="button" data-dir="up">↑</button>
-                    <button type="button" data-dir="down">↓</button>
+                <span class="module-name tree-node" data-tag="@module.Path" draggable="true">[@module.Tag]</span>
+                <div class="toolbar" data-path="" data-tag="@module.Tag">
                 </div>
             </div>
             @if (module.Children.Any())
@@ -20,10 +18,8 @@
                         <li class="process">
                             <details>
                                 <summary class="process-name tree-node-wrapper">
-                                    <span class="process-name tree-node" data-tag="@process.Id" draggable="true">@process.DisplayName</span>
-                                    <div class="reorder-buttons" data-path="@module.Id" data-group="@process.Group" data-tag="@process.Name">
-                                        <button type="button" data-dir="up">↑</button>
-                                        <button type="button" data-dir="down">↓</button>
+                                    <span class="process-name tree-node" data-tag="@process.Path" draggable="true">[@process.Tag]</span>
+                                    <div class="toolbar" data-path="@module.Path" data-tag="@process.Tag">
                                     </div>
                                 </summary>
                                 <ul class="step-list">
@@ -31,10 +27,8 @@
                                     {
                                         <li>
                                             <div class="tree-node-wrapper">
-                                                <span class="step-name tree-node" data-tag="@step.Id" draggable="true">@step.DisplayName</span>
-                                                <div class="reorder-buttons" data-path="@process.Id" data-group="@step.Group" data-tag="@step.Name">
-                                                    <button type="button" data-dir="up">↑</button>
-                                                    <button type="button" data-dir="down">↓</button>
+                                                <span class="step-name tree-node" data-tag="@step.Path" draggable="true">[@step.Tag]</span>
+                                                <div class="toolbar" data-path="@process.Path" data-tag="@step.Tag">
                                                 </div>
                                             </div>
                                         </li>
