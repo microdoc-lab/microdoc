@@ -5,7 +5,7 @@
     @foreach (var module in Model.Nodes)
     {
         <li class="module" style="--tag-color:@module.Color">
-            <details open class="@(!module.Children.Any() ? "empty" : "")">
+            <details class="@(!module.Children.Any() ? "empty" : "")">
                 <summary class="tree-node-wrapper">
                     <span class="module-name tree-node" data-tag="@module.Path" draggable="true">[@module.Tag]</span>
                     <div class="toolbar" data-path="" data-tag="@module.Tag">
@@ -14,7 +14,7 @@
 
                 @if (module.Children.Any())
                 {
-                    <ul class="process-list">
+                    <ul class="process-list popup-content">
                         @foreach (var process in module.Children)
                         {
                             <li class="process" style="--tag-color:@process.Color">
@@ -24,7 +24,7 @@
                                         <div class="toolbar" data-path="@module.Path" data-tag="@process.Tag">
                                         </div>
                                     </summary>
-                                    <ul class="step-list">
+                                    <ul class="step-list popup-content">
                                         @foreach (var step in process.Children)
                                         {
                                             <li class="step" style="--tag-color:@step.Color">
