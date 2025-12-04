@@ -24,7 +24,7 @@ body {
 .container {
     display: flex;
     flex-direction: row;
-    height: 100vh;
+    min-height: calc(100vh - 160px); /* subtract footer height */
 }
 
 .left-panel {
@@ -39,4 +39,9 @@ body {
     flex-grow: 1;
     padding: 1em;
     overflow-y: auto;
+}
+
+footer {
+    position: sticky;
+    bottom: 0;
 }

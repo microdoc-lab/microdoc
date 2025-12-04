@@ -1,5 +1,4 @@
-﻿using MicroDoc.Models;
-using MicroDoc.Services;
+﻿using MicroDoc.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MicroDoc.Controllers
@@ -14,19 +13,12 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        public IActionResult ReorderTagsBatch([FromBody] ReorderTagsBatchRequest request)
+        public IActionResult ReorderTagsBatch(string path, string tag, string targetTag)
         {
-            if (!_tagTreeService.ReorderTagsBatch(request.Path, request.Tag, request.TargetTag))
+            if (!_tagTreeService.ReorderTagsBatch(path, tag, targetTag))
                 return NotFound();
 
             return Ok();
-        }
-
-        public class ReorderTagsBatchRequest
-        {
-            public string Path { get; set; }
-            public string Tag { get; set; }
-            public string TargetTag { get; set; }
         }
     }
 }

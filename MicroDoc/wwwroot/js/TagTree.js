@@ -2,41 +2,55 @@
     if (!element) return;
 
     this.element = element;
+    this.options = options;
 
-    // User can provide their own handler
-    this.onNodeSelected = options.onNodeSelected || function (tagName) {
-        console.log("Selected node:", tagName);
-    };
-
-    // Initialization function
-    this.init = function () {
-        const treeNodes = this.element.querySelectorAll(".tree-node");
-
-        // Node click for selection
-        treeNodes.forEach(node => {
-            node.addEventListener("click", (event) => {
-                event.stopPropagation(); // prevent parent triggers
-
-                // Highlight selected node
-                this.clearSelection();
-                node.classList.add("selected");
-
-                // Call user-provided callback
-                this.onNodeSelected(node.dataset.tag);
-            });
-        });
-
+    this.InitToggle = function () {
         // Handle toggle for <details>
-        const detailsElements = this.element.querySelectorAll("details summary .tree-node");
+        const detailsElements = this.element.querySelectorAll(".title");
         detailsElements.forEach(details => {
             details.addEventListener("click", (event) => {
                 event.preventDefault(); // prevent default toggle for other clicks
             });
         });
+    }
 
-        // DragNDrop to Reorder
+    this.InitSelection = function () {
+        // Api
+        this.SelectNode = function (tagName) {
+            const node = this.element.querySelector(`.tag[data-id="${tagName}"] .title`);
+            if (node) node.click();
+        };
+
+        this.ClearSelection = function () {
+            this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
+        };
+
+        // Events
+        this.OnNodeSelected = this.options.OnNodeSelected || function (tagName) {
+            console.log("Selected node: ", tagName);
+        };
+
+        // Node click for selection
+        const treeNodes = this.element.querySelectorAll(".title");
+        treeNodes.forEach(node => {
+            node.addEventListener("click", (event) => {
+                event.stopPropagation(); // prevent parent triggers
+                const clickedNode = node;
+                const sender = clickedNode.closest(".tag");
+
+                // Highlight selected node
+                this.ClearSelection();
+                sender.classList.add("selected");
+
+                // Call user-provided callback
+                this.OnNodeSelected(sender.dataset.id);
+            });
+        });
+    }
+
+    this.InitDragNDropReorder = function () {
         let draggedNode = null;
-        this.element.querySelectorAll(".tree-node").forEach(node => {
+        this.element.querySelectorAll(".title").forEach(node => {
             node.addEventListener("dragstart", e => {
                 draggedNode = node;
                 e.dataTransfer.effectAllowed = "move";
@@ -50,61 +64,52 @@
             node.addEventListener("drop", async e => {
                 e.preventDefault();
                 const targetNode = node;
-                const parentList = draggedNode.closest("ul");
 
                 // Only allow drop within the same parent
-                if (!draggedNode || parentList !== targetNode.closest("ul") || draggedNode === targetNode) return;
+                if (!draggedNode || draggedNode === targetNode || draggedNode.closest(".tag-list") !== targetNode.closest(".tag-list")) return;
 
-                const draggedItem = draggedNode.closest("li");
-                const targetItem = targetNode.closest("li");
-                const context = draggedItem.querySelector(".toolbar");
-                const path = context.dataset.path;
-                const tag = context.dataset.tag;
+                const sender = draggedNode.closest(".tag");
+                const target = targetNode.closest(".tag");
 
-                const targetContext = targetItem.querySelector(".toolbar");
-                const targetTag = targetContext.dataset.tag;
-                
-                const res = await fetch("/MicroDoc/ReorderTagsBatch", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ path, tag, targetTag })
-                });
+                const response = await ReorderTagsBatch(sender, target);
+                if (!response.ok) {
+                    console.error("ReorderTagsBatch failed", await response.text());
+                    return;
+                }
 
-                if (res.ok) {
-                    // Reorder DOM
-                    const nodes = Array.from(parentList.children);
-                    const draggedIndex = nodes.indexOf(draggedItem);
-                    const targetIndex = nodes.indexOf(targetItem);
+                // Reorder DOM
+                const parentList = draggedNode.closest(".tag-list");
+                const nodes = Array.from(parentList.children);
+                const draggedIndex = nodes.indexOf(sender);
+                const targetIndex = nodes.indexOf(target);
 
-                    if (draggedIndex === -1 || targetIndex === -1) return;
+                if (draggedIndex === -1 || targetIndex === -1) return;
 
-                    if (draggedIndex < targetIndex) {
-                        // Insert after target
-                        if (targetItem.nextSibling) {
-                            parentList.insertBefore(draggedItem, targetItem.nextSibling);
-                        } else {
-                            parentList.appendChild(draggedItem); // target is last element
-                        }
-                    } else {
-                        // Insert before target
-                        parentList.insertBefore(draggedItem, targetItem);
-                    }
-                } else {
-                    console.error("Reorder failed", await res.text());
+                if (draggedIndex >= targetIndex) {  // Insert before target                    
+                    parentList.insertBefore(sender, target);
+                } else if (target.nextSibling) {    // Insert after target                    
+                    parentList.insertBefore(sender, target.nextSibling);
+                } else {                            // Insert last                    
+                    parentList.appendChild(sender);
                 }
             });
         });
-    };
+    }
 
-    this.selectNode = function (tagName) {
-        const node = this.element.querySelector(`.tree-node[data-tag="${tagName}"]`);
-        if (node) node.click();
-    };
+    // Run initialization
+    this.InitToggle();
+    this.InitSelection();
+    this.InitDragNDropReorder();
 
-    this.clearSelection = function () {
-        this.element.querySelectorAll(".tree-node.selected").forEach(n => n.classList.remove("selected"));
-    };
-
-    // Run initialization immediately
-    this.init();
+    // Service methods ---------------------------------------------------------------------
+    function ReorderTagsBatch(sender, target) {
+        return fetch("/MicroDoc/ReorderTagsBatch", {
+            method: "POST",
+            body: new URLSearchParams({
+                path: sender.dataset.path,
+                tag: sender.dataset.tag,
+                targetTag: target.dataset.tag
+            })
+        });
+    }
 }

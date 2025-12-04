@@ -1,36 +1,36 @@
 ﻿@model TagTreeViewModel
 
-<div id="@Model.Id" class="tag-tree-container">
-    <ul class="tag-tree">
+<div id="@Model.Id" class="tag-tree">
+    <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
     {
-        <li class="module" style="--tag-color:@module.Color">
+        <li class="module tag" style="--tag-color:@module.Color;" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
             <details class="@(!module.Children.Any() ? "empty" : "")">
-                <summary class="tree-node-wrapper">
-                    <span class="module-name tree-node" data-tag="@module.Path" draggable="true">[@module.Tag]</span>
-                    <div class="toolbar" data-path="" data-tag="@module.Tag">
+                <summary class="title-bar">
+                    <span class="module title" draggable="true">[@module.Tag]</span>
+                    <div class="toolbar">
                     </div>
                 </summary>
 
                 @if (module.Children.Any())
                 {
-                    <ul class="process-list popup-content">
+                    <ul class="process tag-list popup">
                         @foreach (var process in module.Children)
                         {
-                            <li class="process" style="--tag-color:@process.Color">
+                            <li class="process tag" style="--tag-color:@process.Color" data-path="@process.Path" data-tag="@process.Tag" data-id="@process.Id">
                                 <details class="@(!process.Children.Any() ? "empty" : "")">
-                                    <summary class="tree-node-wrapper">
-                                        <span class="process-name tree-node" data-tag="@process.Path" draggable="true">[@process.Tag]</span>
-                                        <div class="toolbar" data-path="@module.Path" data-tag="@process.Tag">
+                                    <summary class="title-bar">
+                                        <span class="process title" draggable="true">[@process.Tag]</span>
+                                        <div class="toolbar">
                                         </div>
                                     </summary>
-                                    <ul class="step-list popup-content">
+                                    <ul class="step tag-list popup">
                                         @foreach (var step in process.Children)
                                         {
-                                            <li class="step" style="--tag-color:@step.Color">
-                                                <div class="tree-node-wrapper">
-                                                    <span class="step-name tree-node" data-tag="@step.Path" draggable="true">[@step.Tag]</span>
-                                                    <div class="toolbar" data-path="@process.Path" data-tag="@step.Tag">
+                                            <li class="step tag" style="--tag-color:@step.Color" data-path="@step.Path" data-tag="@step.Tag" data-id="@step.Id">
+                                                <div class="title-bar">
+                                                    <span class="step title" draggable="true">[@step.Tag]</span>
+                                                    <div class="toolbar">
                                                     </div>
                                                 </div>
                                             </li>
@@ -57,7 +57,7 @@
         @if (!string.IsNullOrEmpty(Model.SelectedNode))
         {
             <text>
-            tree.selectNode("@Model.SelectedNode");
+            tree.SelectNode("@Model.SelectedNode");
             </text>
         }
 

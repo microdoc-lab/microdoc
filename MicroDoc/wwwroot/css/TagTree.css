@@ -1,52 +1,51 @@
-﻿.tag-tree-container ul {
+﻿.tag-tree .tag-list {
     list-style-type: none;
-}
-
-.tag-tree {
     padding: 0;
 }
 
-.tag-tree .module {
+.tag-tree .module.tag {
     margin-bottom: 1em;
 }
 
-.tag-tree .module-name {
+.tag-tree .module.title {
     font-weight: bold;
     color: var(--tag-color);
 }
 
-.tree-node {
-    cursor: pointer;
-    padding: 2px 4px;
-}
-
-.tree-node.selected {
-    background-color: #e0f0ff;
-    border-radius: 4px;
-}
-
-/* Details expand/collapse */
-.tag-tree details > summary {
+/* Toggle */
+.tag-tree .tag > details > summary {
     cursor: pointer;
     font-weight: 500;
 }
 
-.tag-tree details.empty > summary {
+.tag-tree .tag > details.empty > summary {
     list-style: none; /* Hides the marker for most browsers */
     padding-left: 1.2em;
 }
 
-/* Floating/absolute-positioned details panel */
+/* Selection*/
+.tag-tree .title {
+    cursor: pointer;
+    padding: 2px 4px;
+}
 
+.tag-tree .tag.selected > .title-bar > .title,
+.tag-tree .tag.selected > details > .title-bar > .title
+{
+    background-color: #e0f0ff;
+    border-radius: 4px;
+}
+
+/* Floating/absolute-positioned details panel */
 .tag-tree details {
     position: relative;
 }
 
-.tag-tree details[open] .popup-content {
+.tag-tree details[open] .popup {
     display: block;
 }
 
-.tag-tree details .popup-content {
+.tag-tree details .popup {
     display: none;
     position: absolute;
     top: 100%; /* below summary */
@@ -58,12 +57,12 @@
 }
 
 /* Toolbar */
-.tree-node-wrapper {
+.title-bar {
     position: relative; /* for absolute positioning inside */
     padding-right: 40px; /* reserve space for buttons */
 }
 
-.tree-node-wrapper:hover .toolbar {
+.title-bar:hover .toolbar {
     display: flex;
 }
 

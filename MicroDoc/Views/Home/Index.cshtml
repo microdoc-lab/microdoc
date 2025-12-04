@@ -3,12 +3,12 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="left-panel">
+<div>
     @await Html.PartialAsync("_TagTree", Model.TagTree)
 </div>
 
 <script>
-    window.documentTree.onNodeSelected = function(tagName) {
+    window.documentTree.OnNodeSelected = function(tagName) {
         console.log("Inventory node selected externally:", tagName);
     };
 </script>

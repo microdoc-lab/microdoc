@@ -28,13 +28,13 @@ namespace MicroDoc.Services
 
                 var node = new TagNode
                 {
-                    Path = path == null ? tag : path + "/" + tag,
+                    Path = path ?? "",
                     Tag = tag,
                     Order = viewTag?.Order,
                 };
 
                 if (recursive)
-                    node.Children = BuildTree(node.Path, recursive: true);
+                    node.Children = BuildTree(node.Id, recursive: true);
 
                 nodes.Add(node);
             }
