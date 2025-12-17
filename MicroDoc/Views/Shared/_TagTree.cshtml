@@ -7,9 +7,7 @@
         <li class="module tag" style="--tag-color:@module.Color;" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
             <details class="@(!module.Children.Any() ? "empty" : "")">
                 <summary class="title-bar">
-                    <span class="module title" draggable="true">[@module.Tag]</span>
-                    <div class="toolbar">
-                    </div>
+                    <span class="module title">[@module.Tag]</span>
                 </summary>
 
                 @if (module.Children.Any())
@@ -20,18 +18,14 @@
                             <li class="process tag" style="--tag-color:@process.Color" data-path="@process.Path" data-tag="@process.Tag" data-id="@process.Id">
                                 <details class="@(!process.Children.Any() ? "empty" : "")">
                                     <summary class="title-bar">
-                                        <span class="process title" draggable="true">[@process.Tag]</span>
-                                        <div class="toolbar">
-                                        </div>
+                                        <span class="process title">[@process.Tag]</span>
                                     </summary>
                                     <ul class="step tag-list popup">
                                         @foreach (var step in process.Children)
                                         {
                                             <li class="step tag" style="--tag-color:@step.Color" data-path="@step.Path" data-tag="@step.Tag" data-id="@step.Id">
                                                 <div class="title-bar">
-                                                    <span class="step title" draggable="true">[@step.Tag]</span>
-                                                    <div class="toolbar">
-                                                    </div>
+                                                    <span class="step title">[@step.Tag]</span>
                                                 </div>
                                             </li>
                                         }

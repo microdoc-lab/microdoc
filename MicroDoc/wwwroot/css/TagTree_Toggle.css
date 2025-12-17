@@ -1,0 +1,25 @@
+﻿/* Hide toggle marker */
+.tag-tree .tag > details.empty > summary {
+    list-style: none;
+    padding-left: 1.2em;
+}
+
+/* Floating/absolute-positioned details panel */
+.tag-tree details {
+    position: relative;
+}
+
+.tag-tree details[open] .popup {
+    display: block;
+}
+
+.tag-tree details .popup {
+    display: none;
+    position: absolute;
+    top: 100%; /* below summary */
+    background: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 999;
+}
