@@ -36,5 +36,5 @@ TagTree.prototype.ClearSelection = function () {
 
 // Events
 TagTree.prototype.OnNodeSelected = function (tagName) {
-    console.log("Selected node: ", tagName);
+    this.log(`OnNodeSelected '${tagName}'`);
 };

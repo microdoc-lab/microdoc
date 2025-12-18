@@ -46,7 +46,9 @@
         const container = document.getElementById("@Model.Id");
         if (!container) return;
 
-        const tree = new TagTree(container);
+        const options = window["@Model.Id" + "Options"]
+
+        const tree = new TagTree(container, options);
 
         @if (!string.IsNullOrEmpty(Model.SelectedNode))
         {
