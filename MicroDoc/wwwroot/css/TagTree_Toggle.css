@@ -1,4 +1,9 @@
-﻿/* Hide toggle marker */
+﻿/* Prevent wrapping after marker */
+.tag-tree .tag > details > summary {
+    white-space: nowrap;
+}
+
+/* Hide toggle marker */
 .tag-tree .tag > details.empty > summary {
     list-style: none;
     padding-left: 1.2em;
