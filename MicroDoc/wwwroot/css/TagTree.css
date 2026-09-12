@@ -1,4 +1,9 @@
-﻿.tag-tree .tag-list {
+﻿.tag-tree {
+    width: 100%;
+    height: 100%;
+}
+
+.tag-tree .tag-list {
     list-style-type: none;
     padding: 0;
 }

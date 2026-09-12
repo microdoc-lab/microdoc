@@ -2,6 +2,6 @@
 {
     public class IndexViewModel
     {
-        public TagTreeViewModel TagTree { get; set; } = new();
+        public ExplorerViewModel Explorer { get; set; } = new();
     }
 }

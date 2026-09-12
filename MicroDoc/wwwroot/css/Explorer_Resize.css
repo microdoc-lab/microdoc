@@ -1,0 +1,25 @@
+﻿.explorer {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.explorer .tree-panel {
+    width: 300px; /* initial width */
+    flex-shrink: 0;
+    overflow: auto;
+}
+
+.explorer .splitter {
+    width: 5px;
+    flex-shrink: 0;
+    cursor: col-resize;
+    background-color: lightgray;
+}
+
+.explorer .doc-panel {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+}

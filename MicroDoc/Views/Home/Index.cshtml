@@ -4,12 +4,16 @@
 }
 
 <script>
-    window.documentTreeOptions = {
-        style: "width: 600px; height: 200px; border: 1px solid black;",
+    window.explorerOptions = {
+        style: "width: 1000px; height: 200px; border: 1px solid black;"
+    };
+
+    window.explorerTagTreeOptions = {
+        style: "border: 1px solid red;",
         OnNodeSelected: function(tagName) {
             this.log(`Node selected externally: '${tagName}'`);
         }
     };
 </script>
 
-@await Html.PartialAsync("_TagTree", Model.TagTree)
+@await Html.PartialAsync("_Explorer", Model.Explorer)

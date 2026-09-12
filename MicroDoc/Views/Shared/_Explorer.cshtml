@@ -1,0 +1,34 @@
+﻿@model ExplorerViewModel
+
+@{
+    if (string.IsNullOrWhiteSpace(Model.Id))
+    {
+        throw new ArgumentNullException();
+    }
+}
+
+<div id="@Model.Id" class="explorer">
+    <div class="tree-panel">
+        @await Html.PartialAsync("_TagTree", Model.TagTree)
+    </div>
+
+    <div class="splitter"></div>
+
+    <div class="doc-panel">
+        @await Html.PartialAsync("_Doc", Model.Doc)
+    </div>
+</div>
+
+<script>
+    (function() {
+        const container = document.getElementById("@Model.Id");
+        if (!container) return;
+
+        const options = window["@Model.Id" + "Options"]
+
+        const explorer = new Explorer(container, options);
+
+        window["@Model.Id"] = explorer;
+        container.explorer = explorer;
+    })();
+</script>
