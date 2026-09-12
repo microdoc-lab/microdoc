@@ -9,6 +9,7 @@
     width: 300px; /* initial width */
     flex-shrink: 0;
     overflow: auto;
+    scrollbar-gutter: stable;
 }
 
 .explorer .splitter {
