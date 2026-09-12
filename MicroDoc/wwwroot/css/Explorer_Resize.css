@@ -2,13 +2,16 @@
     display: flex;
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .explorer .tree-panel {
     width: 300px; /* initial width */
     flex-shrink: 0;
-    overflow: auto;
+    overflow: visible;
+    background-color: aliceblue;
+    position: relative;
+    z-index: 1;
 }
 
 .explorer .splitter {
@@ -16,10 +19,15 @@
     flex-shrink: 0;
     cursor: col-resize;
     background-color: lightgray;
+    position: relative;
+    z-index: 2;
 }
 
 .explorer .doc-panel {
     flex: 1;
     min-width: 0;
     overflow: auto;
+    background-color: antiquewhite;
+    position: relative;
+    z-index: 3;
 }
