@@ -8,6 +8,7 @@
     let dragging = false;
 
     splitter.addEventListener("mousedown", () => {
+        window.dragging = true;
         dragging = true;
         document.body.style.cursor = "col-resize";
         document.body.style.userSelect = "none";
@@ -27,6 +28,7 @@
         if (!dragging)
             return;
 
+        window.dragging = false;
         dragging = false;
         document.body.style.cursor = "";
         document.body.style.userSelect = "";

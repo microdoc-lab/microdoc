@@ -6,6 +6,11 @@
         node.draggable = true;
 
         node.addEventListener("dragstart", e => {
+            if (window.dragging) {
+                e.preventDefault();
+                return;
+            }
+
             draggedNode = node;
             e.dataTransfer.effectAllowed = "move";
         });
