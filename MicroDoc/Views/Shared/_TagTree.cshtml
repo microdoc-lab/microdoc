@@ -12,20 +12,20 @@
 
                 @if (module.Children.Any())
                 {
-                    <ul class="process tag-list popup">
-                        @foreach (var process in module.Children)
+                    <ul class="component tag-list popup">
+                        @foreach (var component in module.Children)
                         {
-                            <li class="process tag" style="--tag-color:@process.Color" data-path="@process.Path" data-tag="@process.Tag" data-id="@process.Id">
-                                <details class="@(!process.Children.Any() ? "empty" : "")">
+                            <li class="component tag" style="--tag-color:@component.Color" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
+                                <details class="@(!component.Children.Any() ? "empty" : "")">
                                     <summary class="title-bar">
-                                        <span class="process title">[@process.Tag]</span>
+                                        <span class="component title">[@component.Tag]</span>
                                     </summary>
-                                    <ul class="step tag-list popup">
-                                        @foreach (var step in process.Children)
+                                    <ul class="part tag-list popup">
+                                        @foreach (var part in component.Children)
                                         {
-                                            <li class="step tag" style="--tag-color:@step.Color" data-path="@step.Path" data-tag="@step.Tag" data-id="@step.Id">
+                                            <li class="part tag" style="--tag-color:@part.Color" data-path="@part.Path" data-tag="@part.Tag" data-id="@part.Id">
                                                 <div class="title-bar">
-                                                    <span class="step title">[@step.Tag]</span>
+                                                    <span class="part title">[@part.Tag]</span>
                                                 </div>
                                             </li>
                                         }
