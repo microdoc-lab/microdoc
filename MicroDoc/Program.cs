@@ -16,6 +16,7 @@ builder.Services.AddSingleton(sp =>
     return DomainOptionsLoader.LoadOptionsFromFile(options.DomainOptions);
 });
 builder.Services.AddSingleton<TagTreeService>();
+builder.Services.AddSingleton<DocService>();
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation()
 ;

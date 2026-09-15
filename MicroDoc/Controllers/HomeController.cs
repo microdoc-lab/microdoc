@@ -11,15 +11,19 @@ namespace MicroDoc.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly DomainOptions _domainOptions;
         private readonly TagTreeService _tagTreeService;
+        private readonly DocService _docService;
 
-        public HomeController(ILogger<HomeController> logger, TagTreeService tagTreeService)
+        public HomeController(ILogger<HomeController> logger, DomainOptions domainOptions, TagTreeService tagTreeService, DocService docService)
         {
             _logger = logger;
+            _domainOptions = domainOptions;
             _tagTreeService = tagTreeService;
+            _docService = docService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string domain = "microdoc.doc")
         {
             var model = new IndexViewModel
             {
@@ -27,8 +31,12 @@ namespace MicroDoc.Controllers
                 {
                     Id = "explorer",
                     TagTree = {
+                        Domain = _domainOptions.Find(domain),
                         Nodes = _tagTreeService.GetTagTree(),
                         SelectedNode = "Services",
+                    },
+                    Doc = { 
+                        Domain = _domainOptions.Find(domain)
                     }
                 }
             };

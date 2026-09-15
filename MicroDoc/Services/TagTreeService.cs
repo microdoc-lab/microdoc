@@ -4,6 +4,8 @@ namespace MicroDoc.Services
 {
     public class TagTreeService
     {
+        internal const string ViewFileName = "view.ini";
+
         private readonly MicroDocOptions _options;
 
         public TagTreeService(IOptions<MicroDocOptions> options)
@@ -16,7 +18,7 @@ namespace MicroDoc.Services
         private List<TagNode> BuildTree(string path, bool recursive)
         {
             var folder = Path.Combine(_options.RootFolder, path ?? "");
-            var viewPath = Path.Combine(folder, "view.ini");
+            var viewPath = Path.Combine(folder, ViewFileName);
             var view = ViewConfigLoader.LoadTagsFromFile(viewPath);
 
             // Load nodes
@@ -66,7 +68,7 @@ namespace MicroDoc.Services
             for (int i = 0; i < tags.Count; i++)
                 tags[i].Order = i + 1;
 
-            var viewPath = Path.Combine(_options.RootFolder, path ?? "", "view.ini");
+            var viewPath = Path.Combine(_options.RootFolder, path ?? "", ViewFileName);
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
             return true;
         }

@@ -1,5 +1,24 @@
 ﻿@model DocViewModel
 
 <div id="@Model.Id" class="doc">
+	<table class="matrix">
+		<tr>
+			<th>Tag</th>
+			@foreach (var column in Model.Domain.Documents)
+			{
+				<th>@column</th>	
+			}
+		</tr>
 
+		@foreach (var row in Model.Rows)
+		{
+			<tr>
+				<td>@row.Tag.Tag</td>
+				@foreach (var column in Model.Domain.Documents)
+				{
+					<td>@row.Cells[column].Doc.Content</td>
+				}
+			</tr>
+		}
+	</table>
 </div>
