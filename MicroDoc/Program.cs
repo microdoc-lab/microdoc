@@ -1,6 +1,7 @@
 using MicroDoc.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,11 @@ builder.Services.Configure<MicroDocOptions>(
     builder.Configuration.GetSection("MicroDoc"));
 
 // Add services to the container.
+builder.Services.AddSingleton(sp =>
+{
+    var options = sp.GetRequiredService<IOptions<MicroDocOptions>>().Value;
+    return DomainOptionsLoader.LoadOptionsFromFile(options.DomainOptions);
+});
 builder.Services.AddSingleton<TagTreeService>();
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation()
