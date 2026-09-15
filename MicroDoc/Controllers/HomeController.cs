@@ -32,7 +32,7 @@ namespace MicroDoc.Controllers
                     Id = "explorer",
                     TagTree = {
                         Domain = _domainOptions.Find(domain),
-                        Nodes = _tagTreeService.GetTagTree(),
+                        Nodes = _tagTreeService.GetTagTree(domain),
                         SelectedNode = "Services",
                     },
                     Doc = { 
@@ -42,6 +42,15 @@ namespace MicroDoc.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
+        {
+            if (!_tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag))
+                return NotFound();
+
+            return Ok();
         }
 
         public IActionResult Login()

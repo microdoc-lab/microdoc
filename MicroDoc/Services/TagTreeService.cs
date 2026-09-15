@@ -1,23 +1,22 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace MicroDoc.Services
+﻿namespace MicroDoc.Services
 {
     public class TagTreeService
     {
         internal const string ViewFileName = "view.ini";
 
-        private readonly MicroDocOptions _options;
+        private readonly DomainOptions _domainOptions;
 
-        public TagTreeService(IOptions<MicroDocOptions> options)
+        public TagTreeService(DomainOptions domainOptions)
         {
-            _options = options.Value;
+            _domainOptions = domainOptions;
         }
 
-        public List<TagNode> GetTagTree() => BuildTree(path: null, recursive: true);
+        public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: null, recursive: true);
 
-        private List<TagNode> BuildTree(string path, bool recursive)
+        private List<TagNode> BuildTree(string domain, string path, bool recursive)
         {
-            var folder = Path.Combine(_options.RootFolder, path ?? "");
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            var folder = Path.Combine(rootFolder, path ?? "");
             var viewPath = Path.Combine(folder, ViewFileName);
             var view = ViewConfigLoader.LoadTagsFromFile(viewPath);
 
@@ -30,13 +29,14 @@ namespace MicroDoc.Services
 
                 var node = new TagNode
                 {
+                    Domain = domain,
                     Path = path ?? "",
                     Tag = tag,
                     Order = viewTag?.Order,
                 };
 
                 if (recursive)
-                    node.Children = BuildTree(node.Id, recursive: true);
+                    node.Children = BuildTree(domain, node.Id, recursive: true);
 
                 nodes.Add(node);
             }
@@ -44,9 +44,10 @@ namespace MicroDoc.Services
             return nodes.OrderBy(n => n.Order ?? 999).ThenBy(n => n.Tag).ToList();
         }
 
-        public bool ReorderTagsBatch(string path, string tag, string targetTag)
+        public bool ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
-            TagView view = BuildView(path);
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            TagView view = BuildView(domain, path);
 
             var tags = view.Tags.ToList();
             var index = tags.FindIndex(t => t.Tag == tag);
@@ -68,14 +69,14 @@ namespace MicroDoc.Services
             for (int i = 0; i < tags.Count; i++)
                 tags[i].Order = i + 1;
 
-            var viewPath = Path.Combine(_options.RootFolder, path ?? "", ViewFileName);
+            var viewPath = Path.Combine(rootFolder, path ?? "", ViewFileName);
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
             return true;
         }
 
-        private TagView BuildView(string path)
+        private TagView BuildView(string domain, string path)
         {
-            var tree = BuildTree(path, recursive: false);
+            var tree = BuildTree(domain, path, recursive: false);
 
             var list = new List<TagView.Node>();
 

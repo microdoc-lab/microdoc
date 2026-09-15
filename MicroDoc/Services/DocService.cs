@@ -1,19 +1,18 @@
-﻿using Microsoft.Extensions.Options;
-
-namespace MicroDoc.Services
+﻿namespace MicroDoc.Services
 {
     public class DocService
     {
-        private readonly MicroDocOptions _options;
+        private readonly DomainOptions _domainOptions;
 
-        public DocService(IOptions<MicroDocOptions> options)
+        public DocService(DomainOptions domainOptions)
         {
-            _options = options.Value;
+            _domainOptions = domainOptions;
         }
 
-        public List<DocNode> GetDocuments(string path)
+        public List<DocNode> GetDocuments(string domain, string path)
         {
-            var folder = Path.Combine(_options.RootFolder, path ?? "");
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            var folder = Path.Combine(rootFolder, path ?? "");
 
             var nodes = new List<DocNode>();
             foreach (var file in Directory.GetFiles(folder))
@@ -30,6 +29,7 @@ namespace MicroDoc.Services
 
                 var node = new DocNode
                 {
+                    Domain = domain,
                     Path = path ?? "",
                     Name = name,
                     Content = content

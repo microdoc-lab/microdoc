@@ -4,7 +4,7 @@
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
     {
-        <li class="module tag" style="--tag-color:@module.Color;" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
+        <li class="module tag" style="--tag-color:@module.Color;" data-domain="@module.Domain" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
             <details class="@(!module.Children.Any() ? "empty" : "")">
                 <summary class="title-bar">
                     <span class="module title">[@module.Tag]</span>
@@ -15,7 +15,7 @@
                     <ul class="component tag-list popup">
                         @foreach (var component in module.Children)
                         {
-                            <li class="component tag" style="--tag-color:@component.Color" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
+                            <li class="component tag" style="--tag-color:@component.Color" data-domain="@component.Domain" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
                                 <details class="@(!component.Children.Any() ? "empty" : "")">
                                     <summary class="title-bar">
                                         <span class="component title">[@component.Tag]</span>
@@ -23,7 +23,7 @@
                                     <ul class="part tag-list popup">
                                         @foreach (var part in component.Children)
                                         {
-                                            <li class="part tag" style="--tag-color:@part.Color" data-path="@part.Path" data-tag="@part.Tag" data-id="@part.Id">
+                                            <li class="part tag" style="--tag-color:@part.Color" data-domain="@part.Domain" data-path="@part.Path" data-tag="@part.Tag" data-id="@part.Id">
                                                 <div class="title-bar">
                                                     <span class="part title">[@part.Tag]</span>
                                                 </div>

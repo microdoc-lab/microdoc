@@ -2,6 +2,7 @@
 {
     public class TagNode
     {
+        public string Domain { get; set; }
         public string Path { get; set; }
         public string Tag { get; set; }
         public string Id => string.IsNullOrEmpty(Path) ? Tag : Path + "/" + Tag;

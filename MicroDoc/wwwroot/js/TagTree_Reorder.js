@@ -59,9 +59,10 @@ TagTree.prototype.behaviors.push(TagTree.prototype.InitDragNDropReorder);
 
 // Service methods
 function ReorderTagsBatch(sender, target) {
-    return fetch("/MicroDoc/ReorderTagsBatch", {
+    return fetch("/Home/ReorderTagsBatch", {
         method: "POST",
         body: new URLSearchParams({
+            domain: sender.dataset.domain,
             path: sender.dataset.path,
             tag: sender.dataset.tag,
             targetTag: target.dataset.tag
