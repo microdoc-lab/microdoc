@@ -30,13 +30,10 @@ namespace MicroDoc.Controllers
                 Explorer = new ExplorerViewModel
                 {
                     Id = "explorer",
+                    Domain = _domainOptions.Find(domain),
                     TagTree = {
-                        Domain = _domainOptions.Find(domain),
                         Nodes = _tagTreeService.GetTagTree(domain),
                         SelectedNode = "Services",
-                    },
-                    DocMatrix = { 
-                        Domain = _domainOptions.Find(domain)
                     }
                 }
             };
@@ -51,6 +48,17 @@ namespace MicroDoc.Controllers
                 return NotFound();
 
             return Ok();
+        }
+
+        public IActionResult LoadTagDocuments(string domain, string tagId)
+        {
+            var model = new ExplorerViewModel
+            {
+                Id = "explorer",
+                Domain = _domainOptions.Find(domain)
+            };
+
+            return PartialView("_DocMatrix", model.DocMatrix);
         }
 
         public IActionResult Login()

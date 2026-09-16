@@ -1,4 +1,6 @@
-﻿namespace MicroDoc.Models
+﻿using MicroDoc.Services;
+
+namespace MicroDoc.Models
 {
     public class ExplorerViewModel
     {
@@ -13,6 +15,13 @@
             }
         }
 
+        private DomainOptions.Domain _Domain;
+        public DomainOptions.Domain Domain 
+        {
+            get => _Domain;
+            set { _Domain = TagTree.Domain = DocMatrix.Domain = value; }
+        }
+        
         public TagTreeViewModel TagTree { get; set; } = new();
         public DocMatrixViewModel DocMatrix { get; set; } = new();
     }

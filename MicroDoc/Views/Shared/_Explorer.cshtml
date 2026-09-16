@@ -25,7 +25,9 @@
         const options = window["@Model.Id" + "Options"]
 
         const explorer = new Explorer(container, options);
-        
+        explorer.domain = "@Model.Domain.Name";
+        explorer.tagTreeId = "@Model.TagTree.Id";
+        explorer.docMatrixId = "@Model.DocMatrix.Id";
         explorer.tagTree = window["@Model.TagTree.Id"];
         explorer.docMatrix = window["@Model.DocMatrix.Id"];
         
