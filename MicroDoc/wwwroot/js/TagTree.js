@@ -3,6 +3,8 @@
 
     if (!options) options = {};
 
+    element.tagTree = this;
+
     this.element = element;
     this.options = options;
 

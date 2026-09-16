@@ -3,6 +3,8 @@
 
     if (!options) options = {};
 
+    element.explorer = this;
+
     this.element = element;
     this.options = options;
 
