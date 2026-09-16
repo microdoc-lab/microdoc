@@ -14,7 +14,7 @@ DocMatrix.prototype.Load = async function (tagId) {
     this.selectedTag = tagId;
 
     // Reload HTML content
-    const response = await this.service.DocMatrix(this.id, this.domain, tagId);
+    const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag);
     if (!response.ok) {
         console.error("DocMatrix request failed", await response.text());
         return;

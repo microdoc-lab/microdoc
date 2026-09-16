@@ -23,22 +23,19 @@ namespace MicroDoc.Controllers
             _docService = docService;
         }
 
-        public IActionResult Index(string domain = "microdoc.doc", string selectedTag = "Services")
+        public IActionResult Explorer(string explorerId, string domain, string selectedTag)
         {
-            var model = new IndexViewModel
+            var model = new ExplorerViewModel
             {
-                Explorer = new ExplorerViewModel
-                {
-                    Id = "explorer",
-                    Domain = _domainOptions.Find(domain),
-                    TagTree = {
-                        Nodes = _tagTreeService.GetTagTree(domain),
-                        SelectedTag = selectedTag,
-                    }
+                Id = explorerId,
+                Domain = _domainOptions.Find(domain),
+                SelectedTag = selectedTag,
+                TagTree = {
+                    Nodes = _tagTreeService.GetTagTree(domain),
                 }
             };
 
-            return View(model);
+            return PartialView("_Explorer", model);
         }
 
         [HttpPost]
@@ -61,6 +58,11 @@ namespace MicroDoc.Controllers
             };
 
             return PartialView("_DocMatrix", model);
+        }
+
+        public IActionResult Index()
+        {
+            return View();
         }
 
         public IActionResult Login()

@@ -1,7 +1,8 @@
-﻿@model IndexViewModel
-@{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
+
+<div id="explorer"></div>
 
 <script>
     // window.explorerOptions = {
@@ -14,6 +15,11 @@
     //         this.log(`Node selected externally: '${tagName}'`);
     //     }
     // };
-</script>
 
-@await Html.PartialAsync("_Explorer", Model.Explorer)
+    var container = document.getElementById("explorer");
+    var explorer = new Explorer(container);
+    explorer.domain = "microdoc.doc";
+    explorer.selectedTag = "Services";
+    
+    explorer.Reload();
+</script>

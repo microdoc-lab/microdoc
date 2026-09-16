@@ -21,7 +21,14 @@ namespace MicroDoc.Models
             get => _Domain;
             set { _Domain = TagTree.Domain = DocMatrix.Domain = value; }
         }
-        
+
+        private string _SelectedTag;
+        public string SelectedTag
+        {
+            get => _SelectedTag;
+            set { _SelectedTag = TagTree.SelectedTag = DocMatrix.SelectedTag = value; }
+        }
+
         public TagTreeViewModel TagTree { get; set; } = new();
         public DocMatrixViewModel DocMatrix { get; set; } = new();
     }
