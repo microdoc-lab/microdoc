@@ -18,6 +18,11 @@
         });
     });
 
+    // Default event handler
+    this.OnNodeSelected = function (tagName) {
+        this.log(`OnNodeSelected '${tagName}'`);
+    };
+
     if (options.OnNodeSelected)
         this.OnNodeSelected = options.OnNodeSelected;
 }
@@ -25,6 +30,13 @@
 TagTree.prototype.behaviors.push(TagTree.prototype.InitSelection);
 
 // Api
+TagTree.prototype.SelectedNode = function () {
+    var selected = this.element.querySelector(".tag.selected");
+    if (selected)
+        return selected.dataset.id;
+    return null;
+}
+
 TagTree.prototype.SelectNode = function (tagName) {
     const node = this.element.querySelector(`.tag[data-id="${tagName}"] .title`);
     if (node) {
@@ -35,13 +47,8 @@ TagTree.prototype.SelectNode = function (tagName) {
         }
         node.click();
     }
-};
+}
 
 TagTree.prototype.ClearSelection = function () {
     this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
-};
-
-// Events
-TagTree.prototype.OnNodeSelected = function (tagName) {
-    this.log(`OnNodeSelected '${tagName}'`);
-};
+}
