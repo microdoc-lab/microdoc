@@ -4,7 +4,7 @@
     var explorer = this;
 
     this.tagTree.OnNodeSelected = async function (tagId) {
-        const response = await LoadTagDocuments(explorer.domain, tagId);
+        const response = await LoadTagDocuments(explorer.docMatrixId, explorer.domain, tagId);
         if (!response.ok) {
             console.error("ReorderTagsBatch failed", await response.text());
             return;
@@ -18,6 +18,6 @@
 Explorer.prototype.behaviors.push(Explorer.prototype.InitSelectTag);
 
 // Service methods
-function LoadTagDocuments(domain, tagId) {
-    return fetch(`/Home/LoadTagDocuments?domain=${domain}&tagId=${tagId}`);
+function LoadTagDocuments(docMatrixId, domain, tagId) {
+    return fetch(`/Home/LoadTagDocuments?docMatrixId=${docMatrixId}&domain=${domain}&tagId=${tagId}`);
 }

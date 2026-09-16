@@ -50,18 +50,16 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
-        public IActionResult LoadTagDocuments(string domain, string tagId)
+        public IActionResult LoadTagDocuments(string docMatrixId, string domain, string tagId)
         {
-            var model = new ExplorerViewModel
+            var model = new DocMatrixViewModel
             {
-                Id = "explorer",
+                Id = docMatrixId,
                 Domain = _domainOptions.Find(domain),
-                DocMatrix = { 
-                    Rows = _docService.GetTagWithDocuments(domain, tagId)
-                }
+                Rows = _docService.GetTagWithDocuments(domain, tagId)
             };
 
-            return PartialView("_DocMatrix", model.DocMatrix);
+            return PartialView("_DocMatrix", model);
         }
 
         public IActionResult Login()
