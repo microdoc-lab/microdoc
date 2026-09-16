@@ -1,4 +1,5 @@
-﻿function DocMatrix(element, options = {}) {
+﻿function DocMatrixService() { }
+function DocMatrix(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
@@ -13,6 +14,8 @@
 
     if (options.style)
         element.setAttribute('style', options.style);
+
+    this.service = new DocMatrixService();
 }
 
 DocMatrix.prototype.behaviors = [];

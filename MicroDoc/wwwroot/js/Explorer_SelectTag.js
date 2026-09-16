@@ -3,7 +3,7 @@
 
     var explorer = this;
     this.tagTree().OnNodeSelected = function (tagId) {
-        explorer.docMatrix().LoadDocuments(tagId);
+        explorer.docMatrix().Load(tagId);
     };
 }
 

@@ -30,9 +30,9 @@
             const sender = draggedNode.closest(".tag");
             const target = targetNode.closest(".tag");
 
-            const response = await ReorderTagsBatch(sender.dataset.domain, sender.dataset.path, sender.dataset.tag, target.dataset.tag);
+            const response = await this.service.ReorderTagsBatch(sender.dataset.domain, sender.dataset.path, sender.dataset.tag, target.dataset.tag);
             if (!response.ok) {
-                console.error("ReorderTagsBatch failed", await response.text());
+                console.error("ReorderTagsBatch request failed", await response.text());
                 return;
             }
 
@@ -58,7 +58,7 @@
 TagTree.prototype.behaviors.push(TagTree.prototype.InitDragNDropReorder);
 
 // Service methods
-function ReorderTagsBatch(domain, path, tag, targetTag) {
+TagTreeService.prototype.ReorderTagsBatch = function(domain, path, tag, targetTag) {
     return fetch("/Home/ReorderTagsBatch", {
         method: "POST",
         body: new URLSearchParams({

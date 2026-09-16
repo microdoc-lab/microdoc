@@ -50,7 +50,7 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
-        public IActionResult LoadTagDocuments(string docMatrixId, string domain, string tagId)
+        public IActionResult DocMatrix(string docMatrixId, string domain, string tagId)
         {
             var model = new DocMatrixViewModel
             {

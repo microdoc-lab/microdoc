@@ -1,4 +1,5 @@
-﻿function TagTree(element, options = {}) {
+﻿function TagTreeService() { }
+function TagTree(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
@@ -13,6 +14,8 @@
 
     if (options.style)
         element.setAttribute('style', options.style);
+
+    this.service = new TagTreeService();
 }
 
 TagTree.prototype.behaviors = [];

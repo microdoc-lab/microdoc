@@ -1,4 +1,5 @@
-﻿function Explorer(element, options = {}) {
+﻿function ExplorerService() { }
+function Explorer(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
@@ -13,6 +14,8 @@
 
     if (options.style)
         element.setAttribute('style', options.style);
+
+    this.service = new ExplorerService();
 }
 
 Explorer.prototype.behaviors = [];
