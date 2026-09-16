@@ -11,11 +11,13 @@
 
     if (options.style)
         element.setAttribute('style', options.style);
-
-    // Run initialization
-    for (const init of this.behaviors) {
-        init.call(this, options);
-    }
 }
 
 DocMatrix.prototype.behaviors = [];
+
+DocMatrix.prototype.InitBehaviors = function () {
+    // Run initialization
+    for (const init of this.behaviors) {
+        init.call(this, this.options);
+    }
+}

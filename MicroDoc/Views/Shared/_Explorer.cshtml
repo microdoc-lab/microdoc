@@ -25,11 +25,13 @@
         const options = window["@Model.Id" + "Options"]
 
         const explorer = new Explorer(container, options);
+        
+        explorer.tagTree = window["@Model.TagTree.Id"];
+        explorer.docMatrix = window["@Model.DocMatrix.Id"];
+        
+        explorer.InitBehaviors();
 
         window["@Model.Id"] = explorer;
         container.explorer = explorer;
-        
-        container.tagTree = window["@Model.TagTree.Id"];
-        container.docMatrix = window["@Model.DocMatrix.Id"];
     })();
 </script>
