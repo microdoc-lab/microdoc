@@ -53,13 +53,13 @@
 
         const options = window["@Model.Id" + "Options"]
 
-        const tree = new TagTree(container, options);
-        tree.InitBehaviors();
+        const tagTree = new TagTree(container, options);
+        tagTree.InitBehaviors();
 
         @if (!string.IsNullOrEmpty(Model.SelectedNode))
         {
             <text>
-            setTimeout(function() { tree.SelectNode("@Model.SelectedNode"); }, 0)
+            setTimeout(function() { tagTree.SelectNode("@Model.SelectedNode"); }, 0)
             </text>
         }
     })();
