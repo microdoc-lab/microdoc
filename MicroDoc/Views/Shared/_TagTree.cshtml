@@ -54,6 +54,7 @@
         const options = window["@Model.Id" + "Options"]
 
         const tagTree = new TagTree(container, options);
+        tagTree.domain = "@Model.Domain.Name";
         tagTree.InitBehaviors();
 
         @if (!string.IsNullOrEmpty(Model.SelectedNode))

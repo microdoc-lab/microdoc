@@ -11,7 +11,7 @@ namespace MicroDoc.Models
             set { 
                 _Id = value;
                 TagTree.Id = Id + "TagTree";
-                DocMatrix.Id = Id + "Doc";
+                DocMatrix.Id = Id + "DocMatrix";
             }
         }
 

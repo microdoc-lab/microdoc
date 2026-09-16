@@ -5,6 +5,8 @@
     throw new ArgumentNullException();
 }
 
+<button onclick='document.getElementById("@Model.Id").docMatrix.ReloadDocuments()'>Reload</button>
+
 <table id="@Model.Id" class="docmatrix">
 	<tr>
 		<th>Tag</th>
@@ -37,6 +39,9 @@
         const options = window["@Model.Id" + "Options"]
 
         const docMatrix = new DocMatrix(container, options);
+		docMatrix.domain = "@Model.Domain.Name";
+		docMatrix.selectedTag = "@Model.SelectedTag";
+
 		docMatrix.InitBehaviors();
     })();
 </script>

@@ -56,6 +56,7 @@ namespace MicroDoc.Controllers
             {
                 Id = docMatrixId,
                 Domain = _domainOptions.Find(domain),
+                SelectedTag = tagId,
                 Rows = _docService.GetTagWithDocuments(domain, tagId)
             };
 
