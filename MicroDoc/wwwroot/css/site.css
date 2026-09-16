@@ -27,6 +27,10 @@ body {
     min-height: calc(100vh - 160px); /* subtract footer height */
 }
 
+main {
+    width: 100%;
+}
+
 .left-panel {
     width: 350px;
     overflow-y: visible;

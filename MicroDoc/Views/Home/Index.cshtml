@@ -4,16 +4,16 @@
 }
 
 <script>
-    window.explorerOptions = {
-        style: "width: 1000px; height: 100%; border: 1px solid black;"
-    };
+    // window.explorerOptions = {
+    //     style: "width: 100%; height: 100%; border: 1px solid black;"
+    // };
 
-    window.explorerTagTreeOptions = {
-        style: "border: 1px solid red;",
-        OnNodeSelected: function(tagName) {
-            this.log(`Node selected externally: '${tagName}'`);
-        }
-    };
+    // window.explorerTagTreeOptions = {
+    //     style: "border: 1px solid red;",
+    //     OnNodeSelected: function(tagName) {
+    //         this.log(`Node selected externally: '${tagName}'`);
+    //     }
+    // };
 </script>
 
 @await Html.PartialAsync("_Explorer", Model.Explorer)

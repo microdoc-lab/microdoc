@@ -35,7 +35,7 @@ namespace MicroDoc.Controllers
                         Nodes = _tagTreeService.GetTagTree(domain),
                         SelectedNode = "Services",
                     },
-                    Doc = { 
+                    DocMatrix = { 
                         Domain = _domainOptions.Find(domain)
                     }
                 }

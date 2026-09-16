@@ -2,7 +2,7 @@
 
 namespace MicroDoc.Models
 {
-    public class DocViewModel
+    public class DocMatrixViewModel
     {
         public string Id { get; set; }
 

@@ -1,5 +1,10 @@
 ﻿@model TagTreeViewModel
 
+@if (string.IsNullOrWhiteSpace(Model.Id))
+{
+    throw new ArgumentNullException();
+}
+
 <div id="@Model.Id" class="tag-tree">
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)

@@ -1,10 +1,8 @@
 ﻿@model ExplorerViewModel
 
-@{
-    if (string.IsNullOrWhiteSpace(Model.Id))
-    {
-        throw new ArgumentNullException();
-    }
+@if (string.IsNullOrWhiteSpace(Model.Id))
+{
+    throw new ArgumentNullException();
 }
 
 <div id="@Model.Id" class="explorer">
@@ -15,7 +13,7 @@
     <div class="splitter"></div>
 
     <div class="doc-panel">
-        @await Html.PartialAsync("_Doc", Model.Doc)
+        @await Html.PartialAsync("_DocMatrix", Model.DocMatrix)
     </div>
 </div>
 
@@ -30,5 +28,8 @@
 
         window["@Model.Id"] = explorer;
         container.explorer = explorer;
+        
+        container.tagTree = window["@Model.TagTree.Id"];
+        container.docMatrix = window["@Model.DocMatrix.Id"];
     })();
 </script>

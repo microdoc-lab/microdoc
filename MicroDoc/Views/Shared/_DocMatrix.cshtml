@@ -1,0 +1,43 @@
+﻿@model DocMatrixViewModel
+
+@if (string.IsNullOrWhiteSpace(Model.Id))
+{
+    throw new ArgumentNullException();
+}
+
+<table id="@Model.Id" class="docmatrix">
+	<tr>
+		<th>Tag</th>
+		@foreach (var column in Model.Domain.Documents)
+		{
+			<th>@column</th>	
+		}
+		<th>Misc</th>
+	</tr>
+
+	@foreach (var row in Model.Rows)
+	{
+		<tr>
+			<td>@row.Tag.Tag</td>
+			@foreach (var column in Model.Domain.Documents)
+			{
+				<td>@row.Cells[column].Doc.Content</td>
+			}
+			<td></td>
+		</tr>
+	}
+</table>
+
+<script>
+    (function() {
+        const container = document.getElementById("@Model.Id");
+        if (!container) return;
+
+        const options = window["@Model.Id" + "Options"]
+
+        const docMatrix = new DocMatrix(container, options);
+
+        window["@Model.Id"] = docMatrix;
+        container.docMatrix = docMatrix;
+    })();
+</script>
