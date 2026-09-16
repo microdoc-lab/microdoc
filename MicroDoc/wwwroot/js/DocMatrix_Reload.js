@@ -1,8 +1,8 @@
-﻿DocMatrix.prototype.InitLoadDocuments = function (options) {
-    this.log('InitLoadDocuments');
+﻿DocMatrix.prototype.InitReload = function (options) {
+    this.log('InitReload');
 }
 
-DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitLoadDocuments);
+DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitReload);
 
 // Api
 DocMatrix.prototype.Reload = async function () {
