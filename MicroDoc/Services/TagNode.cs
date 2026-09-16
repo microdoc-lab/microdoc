@@ -10,6 +10,7 @@
         public int? Order { get; set; }
 
         public List<TagNode> Children { get; set; } = new();
+        public List<DocNode> Documents { get; set; } = new();
 
         public override string ToString() => $"{Id} - {Order ?? 999}";
     }

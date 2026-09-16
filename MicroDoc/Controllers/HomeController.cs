@@ -56,6 +56,9 @@ namespace MicroDoc.Controllers
             {
                 Id = "explorer",
                 Domain = _domainOptions.Find(domain),
+                DocMatrix = { 
+                    Rows = _docService.GetTagWithDocuments(domain, tagId)
+                }
             };
 
             return PartialView("_DocMatrix", model.DocMatrix);

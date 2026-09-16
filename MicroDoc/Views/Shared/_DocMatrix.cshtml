@@ -18,10 +18,11 @@
 	@foreach (var row in Model.Rows)
 	{
 		<tr>
-			<td>@row.Tag.Tag</td>
+			<td>@row.Tag</td>
 			@foreach (var column in Model.Domain.Documents)
 			{
-				<td>@row.Cells[column].Doc.Content</td>
+				var doc = row.Documents.FirstOrDefault(d => d.Name == column);
+				<td>@doc?.Content</td>
 			}
 			<td></td>
 		</tr>

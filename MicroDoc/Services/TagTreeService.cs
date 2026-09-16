@@ -13,7 +13,7 @@
 
         public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: null, recursive: true);
 
-        private List<TagNode> BuildTree(string domain, string path, bool recursive)
+        internal List<TagNode> BuildTree(string domain, string path, bool recursive)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var folder = Path.Combine(rootFolder, path ?? "");

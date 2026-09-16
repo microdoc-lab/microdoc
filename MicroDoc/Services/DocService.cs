@@ -3,10 +3,42 @@
     public class DocService
     {
         private readonly DomainOptions _domainOptions;
+        private readonly TagTreeService _tagTreeService;
 
-        public DocService(DomainOptions domainOptions)
+        public DocService(DomainOptions domainOptions, TagTreeService tagTreeService)
         {
             _domainOptions = domainOptions;
+            _tagTreeService = tagTreeService;
+        }
+
+        public List<TagNode> GetTagWithDocuments(string domain, string path) => GetTagWithDocuments(domain, path, recursive: true);
+
+        private List<TagNode> GetTagWithDocuments(string domain, string path, bool recursive)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            var folder = Path.Combine(rootFolder, path ?? "");
+
+            var nodes = new List<TagNode>();
+
+            if (Directory.Exists(folder))
+            {
+                var node = new TagNode
+                {
+                    Domain = domain,
+                    Path = path ?? "",
+                    Tag = Path.GetFileName(folder),
+                    Documents = GetDocuments(domain, path)
+                };
+
+                nodes.Add(node);
+
+                var children = _tagTreeService.BuildTree(domain, path, false);
+                foreach (var child in children)
+                    child.Documents = GetDocuments(domain, child.Path);
+                nodes.AddRange(children);
+            }
+
+            return nodes;
         }
 
         public List<DocNode> GetDocuments(string domain, string path)
@@ -17,10 +49,10 @@
             var nodes = new List<DocNode>();
             foreach (var file in Directory.GetFiles(folder))
             {
-                string name = Path.GetFileName(file);
+                string name = Path.GetFileNameWithoutExtension(file);
                 string extension = Path.GetExtension(file);
 
-                if (name.Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
+                if ((name + extension).Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
                 string content = null;
@@ -32,6 +64,7 @@
                     Domain = domain,
                     Path = path ?? "",
                     Name = name,
+                    Extension = extension,
                     Content = content
                 };
 
