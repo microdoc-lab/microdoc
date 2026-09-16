@@ -2,8 +2,9 @@
     this.log('InitSelectTag');
 
     var explorer = this;
+    var tagTree = this.tagTree();
 
-    this.tagTree.OnNodeSelected = async function (tagId) {
+    tagTree.OnNodeSelected = async function (tagId) {
         const response = await LoadTagDocuments(explorer.docMatrixId, explorer.domain, tagId);
         if (!response.ok) {
             console.error("ReorderTagsBatch failed", await response.text());
@@ -11,7 +12,6 @@
         }
 
         explorer.element.querySelector(".doc-panel").innerHTML = await response.text();
-        explorer.docMatrix = window[explorer.docMatrixId];
     };
 }
 

@@ -21,3 +21,7 @@ Explorer.prototype.InitBehaviors = function () {
         init.call(this, this.options);
     }
 }
+
+// Api
+Explorer.prototype.tagTree = function () { return document.getElementById(this.tagTreeId).tagTree; }
+Explorer.prototype.docMatrix = function () { return document.getElementById(this.docMatrixId).docMatrix; }
