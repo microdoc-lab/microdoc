@@ -59,7 +59,7 @@
         @if (!string.IsNullOrEmpty(Model.SelectedNode))
         {
             <text>
-            tree.SelectNode("@Model.SelectedNode");
+            setTimeout(function() { tree.SelectNode("@Model.SelectedNode"); }, 0)
             </text>
         }
 

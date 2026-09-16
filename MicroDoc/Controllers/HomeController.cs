@@ -23,7 +23,7 @@ namespace MicroDoc.Controllers
             _docService = docService;
         }
 
-        public IActionResult Index(string domain = "microdoc.doc")
+        public IActionResult Index(string domain = "microdoc.doc", string selectedTag = "Services")
         {
             var model = new IndexViewModel
             {
@@ -33,7 +33,7 @@ namespace MicroDoc.Controllers
                     Domain = _domainOptions.Find(domain),
                     TagTree = {
                         Nodes = _tagTreeService.GetTagTree(domain),
-                        SelectedNode = "Services",
+                        SelectedNode = selectedTag,
                     }
                 }
             };
@@ -55,7 +55,7 @@ namespace MicroDoc.Controllers
             var model = new ExplorerViewModel
             {
                 Id = "explorer",
-                Domain = _domainOptions.Find(domain)
+                Domain = _domainOptions.Find(domain),
             };
 
             return PartialView("_DocMatrix", model.DocMatrix);

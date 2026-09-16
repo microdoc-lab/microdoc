@@ -27,7 +27,14 @@ TagTree.prototype.behaviors.push(TagTree.prototype.InitSelection);
 // Api
 TagTree.prototype.SelectNode = function (tagName) {
     const node = this.element.querySelector(`.tag[data-id="${tagName}"] .title`);
-    if (node) node.click();
+    if (node) {
+        var details = node.closest("details");
+        while (details) {
+            details.open = true;
+            details = details.parentElement.closest("details");
+        }
+        node.click();
+    }
 };
 
 TagTree.prototype.ClearSelection = function () {
