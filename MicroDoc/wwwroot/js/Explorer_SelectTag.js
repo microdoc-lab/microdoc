@@ -1,21 +1,25 @@
 ﻿Explorer.prototype.InitSelectTag = function (options) {
     this.log('InitSelectTag');
 
-    var explorer = this;
     var tagTree = this.tagTree();
 
-    tagTree.OnNodeSelected = async function (tagId) {
-        const response = await LoadTagDocuments(explorer.docMatrixId, explorer.domain, tagId);
-        if (!response.ok) {
-            console.error("ReorderTagsBatch failed", await response.text());
-            return;
-        }
-
-        explorer.element.querySelector(".doc-panel").innerHTML = await response.text();
-    };
+    tagTree.OnNodeSelected = this.LoadDocuments.bind(this);
 }
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitSelectTag);
+
+// Api
+Explorer.prototype.LoadDocuments = async function (tagId) {
+    var explorer = this;
+
+    const response = await LoadTagDocuments(explorer.docMatrixId, explorer.domain, tagId);
+    if (!response.ok) {
+        console.error("LoadTagDocuments failed", await response.text());
+        return;
+    }
+
+    explorer.element.querySelector(".doc-panel").innerHTML = await response.text();
+}
 
 // Service methods
 function LoadTagDocuments(docMatrixId, domain, tagId) {
