@@ -7,6 +7,6 @@ namespace MicroDoc.Models
         public string Id { get; set; }
         public DomainOptions.Domain Domain { get; set; }
         public List<TagNode> Nodes { get; set; } = new();
-        public string SelectedNode { get; set; }
+        public string SelectedTag { get; set; }
     }
 }

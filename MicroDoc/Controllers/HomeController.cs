@@ -33,7 +33,7 @@ namespace MicroDoc.Controllers
                     Domain = _domainOptions.Find(domain),
                     TagTree = {
                         Nodes = _tagTreeService.GetTagTree(domain),
-                        SelectedNode = selectedTag,
+                        SelectedTag = selectedTag,
                     }
                 }
             };

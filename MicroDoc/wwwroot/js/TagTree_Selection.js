@@ -3,18 +3,11 @@
 
     // Node click for selection
     const treeNodes = this.element.querySelectorAll(".title");
-    treeNodes.forEach(node => {
-        node.addEventListener("click", (event) => {
+    treeNodes.forEach(titleNode => {
+        titleNode.addEventListener("click", (event) => {
             event.stopPropagation(); // prevent parent triggers
-            const clickedNode = node;
-            const sender = clickedNode.closest(".tag");
-
-            // Highlight selected node
-            this.ClearSelection();
-            sender.classList.add("selected");
-
-            // Call user-provided callback
-            this.OnNodeSelected(sender.dataset.id);
+            const tagNode = titleNode.closest(".tag");
+            this.InternalSelectTag(tagNode);
         });
     });
 
@@ -30,25 +23,45 @@
 TagTree.prototype.behaviors.push(TagTree.prototype.InitSelection);
 
 // Api
-TagTree.prototype.SelectedNode = function () {
-    var selected = this.element.querySelector(".tag.selected");
-    if (selected)
-        return selected.dataset.id;
-    return null;
-}
+TagTree.prototype.SelectTag = function (tagName) {
+    if (tagName) {
+        const titleNode = this.element.querySelector(`.tag[data-id="${tagName}"] .title`);
+        if (titleNode) {
+            var details = titleNode.closest("details");
+            while (details) {
+                details.open = true;
+                details = details.parentElement.closest("details");
+            }
 
-TagTree.prototype.SelectNode = function (tagName) {
-    const node = this.element.querySelector(`.tag[data-id="${tagName}"] .title`);
-    if (node) {
-        var details = node.closest("details");
-        while (details) {
-            details.open = true;
-            details = details.parentElement.closest("details");
+            const tagNode = titleNode.closest(".tag");
+            this.InternalSelectTag(tagNode);
         }
-        node.click();
+    }
+    else {
+        this.InternalSelectTag(null);
     }
 }
 
-TagTree.prototype.ClearSelection = function () {
-    this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
+TagTree.prototype.InternalSelectTag = function (tagNode) {
+    if (tagNode) {
+        // Highlight selected node
+        this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
+        tagNode.classList.add("selected");
+
+        // Update model property
+        this.selectedTag = tagNode.dataset.id;
+
+        // Call user-provided callback
+        this.OnNodeSelected(tagNode.dataset.id);
+    }
+    else {
+        // Remove selection
+        this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
+
+        // Update model property
+        this.selectedTag = null;
+
+        // Call user-provided callback
+        this.OnNodeSelected(null);
+    }
 }

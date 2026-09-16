@@ -55,12 +55,14 @@
 
         const tagTree = new TagTree(container, options);
         tagTree.domain = "@Model.Domain.Name";
+        tagTree.selectedTag = "@Model.SelectedTag";
+
         tagTree.InitBehaviors();
 
-        @if (!string.IsNullOrEmpty(Model.SelectedNode))
+        @if (!string.IsNullOrEmpty(Model.SelectedTag))
         {
             <text>
-            setTimeout(function() { tagTree.SelectNode("@Model.SelectedNode"); }, 0)
+            setTimeout(function() { tagTree.SelectTag("@Model.SelectedTag"); }, 0)
             </text>
         }
     })();
