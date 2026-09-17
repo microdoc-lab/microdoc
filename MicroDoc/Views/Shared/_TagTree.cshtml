@@ -5,12 +5,22 @@
     throw new ArgumentNullException();
 }
 
+@functions {
+    bool IsTagNodeOpen(string tagId)
+    {
+        return !string.IsNullOrEmpty(Model.SelectedTag) 
+            && (Model.SelectedTag == tagId || Model.SelectedTag.StartsWith(tagId + "/"));
+    }
+}
+
 <div id="@Model.Id" class="tag-tree">
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
     {
-        <li class="module tag" style="--tag-color:@module.Color;" data-domain="@module.Domain" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
-            <details class="@(!module.Children.Any() ? "empty" : "")">
+        <li class="module tag @(module.Id == Model.SelectedTag ? "selected" : "")" 
+            style="--tag-color:@module.Color;" 
+            data-domain="@module.Domain" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
+            <details class="@(!module.Children.Any() ? "empty" : "")" open="@IsTagNodeOpen(module.Id)">
                 <summary class="title-bar">
                     <span class="module title">[@module.Tag]</span>
                 </summary>
@@ -20,15 +30,19 @@
                     <ul class="component tag-list popup">
                         @foreach (var component in module.Children)
                         {
-                            <li class="component tag" style="--tag-color:@component.Color" data-domain="@component.Domain" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
-                                <details class="@(!component.Children.Any() ? "empty" : "")">
+                            <li class="component tag @(component.Id == Model.SelectedTag ? "selected" : "")" 
+                                style="--tag-color:@component.Color" 
+                                data-domain="@component.Domain" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
+                                <details class="@(!component.Children.Any() ? "empty" : "")" open="@IsTagNodeOpen(component.Id)">
                                     <summary class="title-bar">
                                         <span class="component title">[@component.Tag]</span>
                                     </summary>
                                     <ul class="part tag-list popup">
                                         @foreach (var part in component.Children)
                                         {
-                                            <li class="part tag" style="--tag-color:@part.Color" data-domain="@part.Domain" data-path="@part.Path" data-tag="@part.Tag" data-id="@part.Id">
+                                            <li class="part tag @(part.Id == Model.SelectedTag ? "selected" : "")" 
+                                                style="--tag-color:@part.Color" 
+                                                data-domain="@part.Domain" data-path="@part.Path" data-tag="@part.Tag" data-id="@part.Id">
                                                 <div class="title-bar">
                                                     <span class="part title">[@part.Tag]</span>
                                                 </div>
@@ -58,12 +72,5 @@
         tagTree.selectedTag = "@Model.SelectedTag";
 
         tagTree.InitBehaviors();
-
-        @if (!string.IsNullOrEmpty(Model.SelectedTag))
-        {
-            <text>
-            setTimeout(function() { tagTree.SelectTag("@Model.SelectedTag"); }, 0)
-            </text>
-        }
     })();
 </script>
