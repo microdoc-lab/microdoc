@@ -48,6 +48,6 @@ TagTree.prototype.Load = async function (tagId) {
 // Service methods
 function TagTreeService() { }
 
-TagTreeService.prototype.Explorer = function (clientId, domain, selectedTag) {
+TagTreeService.prototype.TagTree = function (clientId, domain, selectedTag) {
     return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
 }
