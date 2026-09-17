@@ -2,7 +2,7 @@
     this.log('InitSelectTag');
 
     var explorer = this;
-    this.tagTree().OnNodeSelected = function (tagId) {
+    this.tagTree().options.OnNodeSelected = this.tagTree().OnNodeSelected = function (tagId) {
         explorer.docMatrix().Load(tagId);
     };
 }

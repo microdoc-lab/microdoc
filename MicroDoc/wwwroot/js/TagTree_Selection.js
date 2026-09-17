@@ -12,12 +12,11 @@
     });
 
     // Default event handler
-    this.OnNodeSelected = function (tagName) {
+    options.OnNodeSelected ??= function (tagName) {
         this.log(`OnNodeSelected '${tagName}'`);
     };
 
-    if (options.OnNodeSelected)
-        this.OnNodeSelected = options.OnNodeSelected;
+    this.OnNodeSelected = options.OnNodeSelected;
 }
 
 TagTree.prototype.behaviors.push(TagTree.prototype.InitSelection);
