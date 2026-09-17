@@ -1,5 +1,4 @@
-﻿function ExplorerService() { }
-function Explorer(element, options = {}) {
+﻿function Explorer(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
@@ -30,3 +29,28 @@ Explorer.prototype.InitBehaviors = function () {
 // Api
 Explorer.prototype.tagTree = function () { return document.getElementById(this.tagTreeId).tagTree; }
 Explorer.prototype.docMatrix = function () { return document.getElementById(this.docMatrixId).docMatrix; }
+
+Explorer.prototype.Reload = async function () {
+    await this.Load(this.selectedTag);
+}
+
+Explorer.prototype.Load = async function (tagId) {
+    // Update model property
+    this.selectedTag = tagId;
+
+    // Reload HTML content
+    const response = await this.service.Explorer(this.id, this.domain, this.selectedTag);
+    if (!response.ok) {
+        console.error("Explorer request failed", await response.text());
+        return;
+    }
+
+    ReplaceInnerHtml(this.element.parentElement, await response.text());
+}
+
+// Service methods
+function ExplorerService() { }
+
+ExplorerService.prototype.Explorer = function (clientId, domain, selectedTag) {
+    return fetch(`/Home/Explorer?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
+}

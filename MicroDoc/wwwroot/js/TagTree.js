@@ -1,5 +1,4 @@
-﻿function TagTreeService() { }
-function TagTree(element, options = {}) {
+﻿function TagTree(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
@@ -25,4 +24,30 @@ TagTree.prototype.InitBehaviors = function () {
     for (const init of this.behaviors) {
         init.call(this, this.options);
     }
+}
+
+// Api
+TagTree.prototype.Reload = async function () {
+    await this.Load(this.selectedTag);
+}
+
+TagTree.prototype.Load = async function (tagId) {
+    // Update model property
+    this.selectedTag = tagId;
+
+    // Reload HTML content
+    const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);
+    if (!response.ok) {
+        console.error("TagTree request failed", await response.text());
+        return;
+    }
+
+    ReplaceInnerHtml(this.element.parentElement, await response.text());
+}
+
+// Service methods
+function TagTreeService() { }
+
+TagTreeService.prototype.Explorer = function (clientId, domain, selectedTag) {
+    return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
 }

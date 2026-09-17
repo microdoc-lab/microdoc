@@ -23,11 +23,46 @@ namespace MicroDoc.Controllers
             _docService = docService;
         }
 
-        public IActionResult Explorer(string explorerId, string domain, string selectedTag)
+        public IActionResult TagTree(string clientId, string domain, string selectedTag)
+        {
+            var model = new TagTreeViewModel
+            {
+                Id = clientId,
+                Domain = _domainOptions.Find(domain),
+                SelectedTag = selectedTag,
+                Nodes = _tagTreeService.GetTagTree(domain),
+            };
+
+            return PartialView("_TagTree", model);
+        }
+
+        [HttpPost]
+        public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
+        {
+            if (!_tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag))
+                return NotFound();
+
+            return Ok();
+        }
+
+        public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
+        {
+            var model = new DocMatrixViewModel
+            {
+                Id = clientId,
+                Domain = _domainOptions.Find(domain),
+                SelectedTag = selectedTag,
+                Rows = _docService.GetTagWithDocuments(domain, selectedTag)
+            };
+
+            return PartialView("_DocMatrix", model);
+        }
+
+        public IActionResult Explorer(string clientId, string domain, string selectedTag)
         {
             var model = new ExplorerViewModel
             {
-                Id = explorerId,
+                Id = clientId,
                 Domain = _domainOptions.Find(domain),
                 SelectedTag = selectedTag,
                 TagTree = {
@@ -41,28 +76,7 @@ namespace MicroDoc.Controllers
             return PartialView("_Explorer", model);
         }
 
-        [HttpPost]
-        public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
-        {
-            if (!_tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag))
-                return NotFound();
-
-            return Ok();
-        }
-
-        public IActionResult DocMatrix(string docMatrixId, string domain, string selectedTag)
-        {
-            var model = new DocMatrixViewModel
-            {
-                Id = docMatrixId,
-                Domain = _domainOptions.Find(domain),
-                SelectedTag = selectedTag,
-                Rows = _docService.GetTagWithDocuments(domain, selectedTag)
-            };
-
-            return PartialView("_DocMatrix", model);
-        }
-
+        #region Misc
         public IActionResult Index()
         {
             return View();
@@ -90,5 +104,6 @@ namespace MicroDoc.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
     }
 }

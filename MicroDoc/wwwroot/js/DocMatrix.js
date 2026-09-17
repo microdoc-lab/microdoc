@@ -1,5 +1,4 @@
-﻿function DocMatrixService() { }
-function DocMatrix(element, options = {}) {
+﻿function DocMatrix(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
@@ -25,4 +24,30 @@ DocMatrix.prototype.InitBehaviors = function () {
     for (const init of this.behaviors) {
         init.call(this, this.options);
     }
+}
+
+// Api
+DocMatrix.prototype.Reload = async function () {
+    await this.Load(this.selectedTag);
+}
+
+DocMatrix.prototype.Load = async function (tagId) {
+    // Update model property
+    this.selectedTag = tagId;
+
+    // Reload HTML content
+    const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag);
+    if (!response.ok) {
+        console.error("DocMatrix request failed", await response.text());
+        return;
+    }
+
+    ReplaceInnerHtml(this.element.parentElement, await response.text());
+}
+
+// Service methods
+function DocMatrixService() { }
+
+DocMatrixService.prototype.DocMatrix = function (clientId, domain, selectedTag) {
+    return fetch(`/Home/DocMatrix?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
 }
