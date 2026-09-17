@@ -13,6 +13,8 @@
     }
 }
 
+<button onclick='document.getElementById("@Model.Id").tagTree.Reload()'>Reload</button>
+
 <div id="@Model.Id" class="tag-tree">
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
@@ -65,7 +67,9 @@
         const container = document.getElementById("@Model.Id");
         if (!container) return;
 
-        const options = window["@Model.Id" + "Options"]
+        var options = window["@Model.Id" + "Options"]
+		if (!options)
+			window["@Model.Id" + "Options"] = options = {};
 
         const tagTree = new TagTree(container, options);
         tagTree.domain = "@Model.Domain.Name";

@@ -36,7 +36,9 @@
         const container = document.getElementById("@Model.Id");
         if (!container) return;
 
-        const options = window["@Model.Id" + "Options"]
+        var options = window["@Model.Id" + "Options"]
+		if (!options)
+			window["@Model.Id" + "Options"] = options = {};
 
         const docMatrix = new DocMatrix(container, options);
 		docMatrix.domain = "@Model.Domain.Name";

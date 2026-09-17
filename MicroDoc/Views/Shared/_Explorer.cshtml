@@ -22,7 +22,9 @@
         const container = document.getElementById("@Model.Id");
         if (!container) return;
 
-        const options = window["@Model.Id" + "Options"]
+        var options = window["@Model.Id" + "Options"]
+		if (!options)
+			window["@Model.Id" + "Options"] = options = {};
 
         const explorer = new Explorer(container, options);
         explorer.domain = "@Model.Domain.Name";
