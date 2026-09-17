@@ -26,16 +26,19 @@
                 {
                     Domain = domain,
                     Path = path ?? "",
-                    Tag = Path.GetFileName(folder),
+                    Tag = Path.GetFileName(path),
                     Documents = GetDocuments(domain, path)
                 };
 
                 nodes.Add(node);
 
-                var children = _tagTreeService.BuildTree(domain, path, false);
-                foreach (var child in children)
-                    child.Documents = GetDocuments(domain, child.Path);
-                nodes.AddRange(children);
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var children = _tagTreeService.BuildTree(domain, path, false);
+                    foreach (var child in children)
+                        child.Documents = GetDocuments(domain, child.Path);
+                    nodes.AddRange(children);
+                }
             }
 
             return nodes;
