@@ -24,6 +24,6 @@ DocMatrix.prototype.Load = async function (tagId) {
 }
 
 // Service methods
-DocMatrixService.prototype.DocMatrix = function(docMatrixId, domain, tagId) {
-    return fetch(`/Home/DocMatrix?docMatrixId=${docMatrixId}&domain=${domain}&tagId=${tagId}`);
+DocMatrixService.prototype.DocMatrix = function (docMatrixId, domain, selectedTag) {
+    return fetch(`/Home/DocMatrix?docMatrixId=${docMatrixId}&domain=${domain}&selectedTag=${selectedTag}`);
 }

@@ -32,6 +32,9 @@ namespace MicroDoc.Controllers
                 SelectedTag = selectedTag,
                 TagTree = {
                     Nodes = _tagTreeService.GetTagTree(domain),
+                },
+                DocMatrix = {
+                    Rows = _docService.GetTagWithDocuments(domain, selectedTag)
                 }
             };
 
@@ -47,14 +50,14 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
-        public IActionResult DocMatrix(string docMatrixId, string domain, string tagId)
+        public IActionResult DocMatrix(string docMatrixId, string domain, string selectedTag)
         {
             var model = new DocMatrixViewModel
             {
                 Id = docMatrixId,
                 Domain = _domainOptions.Find(domain),
-                SelectedTag = tagId,
-                Rows = _docService.GetTagWithDocuments(domain, tagId)
+                SelectedTag = selectedTag,
+                Rows = _docService.GetTagWithDocuments(domain, selectedTag)
             };
 
             return PartialView("_DocMatrix", model);
