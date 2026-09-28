@@ -5,31 +5,48 @@
     throw new ArgumentNullException();
 }
 
-<button onclick='document.getElementById("@Model.Id").docMatrix.Reload()'>Reload</button>
-
-<table id="@Model.Id" class="docmatrix">
-	<tr>
-		<th>Tag</th>
-		@foreach (var column in Model.Domain.Documents)
-		{
-			<th>@column</th>	
-		}
-		<th>Misc</th>
-	</tr>
-
-	@foreach (var row in Model.Rows)
-	{
+<div id="@Model.Id" class="docmatrix">
+	<button onclick='document.getElementById("@Model.Id").docMatrix.Reload()'>Reload</button>
+	<table class="grid">
 		<tr>
-			<td>@row.Tag</td>
+			<th>Tag</th>
 			@foreach (var column in Model.Domain.Documents)
 			{
-				var doc = row.Documents.FirstOrDefault(d => d.Name == column);
-				<td>@doc?.Content</td>
+				<th>@column</th>	
 			}
-			<td></td>
+			<th>Misc</th>
 		</tr>
-	}
-</table>
+
+		@foreach (var row in Model.Rows)
+		{
+			<tr>
+				<th>@row.Tag</th>
+				@foreach (var column in Model.Domain.Documents)
+				{
+					var doc = row.Documents.FirstOrDefault(d => d.Name == column);
+					if (doc == null)
+					{
+						doc = new MicroDoc.Services.DocNode
+						{
+							Domain = Model.Domain.Name,
+							Path = row.Id,
+							Name = column,
+							Extension = ".txt",
+							Content = string.Empty
+						};
+					}
+
+					<td data-id="@doc.Id" data-content="@doc.Content">@doc.Content</td>
+				}
+				<td></td>
+			</tr>
+		}
+	</table>
+
+	<div class="overlay">
+
+	</div>
+</div>
 
 <script>
     (function() {
