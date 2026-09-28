@@ -25,7 +25,7 @@
                 var node = new TagNode
                 {
                     Domain = domain,
-                    Path = path ?? "",
+                    Path = Path.GetDirectoryName(path ?? ""),
                     Tag = Path.GetFileName(path),
                     Documents = GetDocuments(domain, path)
                 };
@@ -36,7 +36,7 @@
                 {
                     var children = _tagTreeService.BuildTree(domain, path, false);
                     foreach (var child in children)
-                        child.Documents = GetDocuments(domain, child.Path);
+                        child.Documents = GetDocuments(domain, child.Id);
                     nodes.AddRange(children);
                 }
             }
@@ -74,6 +74,7 @@
                 nodes.Add(node);
             }
 
+            nodes = nodes.OrderBy(d => d.Extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase) ? 0 : 1).ToList();
             return nodes;
         }
     }
