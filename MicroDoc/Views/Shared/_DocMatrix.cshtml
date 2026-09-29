@@ -6,10 +6,15 @@
 }
 
 <div id="@Model.Id" class="docmatrix">
-	<button onclick='document.getElementById("@Model.Id").docMatrix.Reload()'>Reload</button>
 	<table class="grid">
 		<tr>
-			<th></th>
+			<th>
+				<div class="toolbar">
+					<button class="icon-button" onclick='document.getElementById("@Model.Id").docMatrix.Reload()' title="Reload">
+						<img src="/icons/Refresh.png">
+					</button>
+				</div>
+			</th>
 			@foreach (var column in Model.Domain.Documents)
 			{
 				<th>@column</th>	

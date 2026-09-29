@@ -4,13 +4,16 @@
     position: relative;
 }
 
+.docmatrix .toolbar {
+    position: absolute;
+    z-index: 1;
+    font-size: 0;
+}
+
 .docmatrix .grid {
     position: absolute;
     inset: 0;
-    top: 30px;
 
-    border-collapse: collapse;
-    border: 1px solid #ccc;
     background-color: antiquewhite;
 }
 
@@ -19,7 +22,9 @@
 }
 
 .docmatrix .grid th, .docmatrix .grid td {
-    border: 1px solid #ccc;
+    border-collapse: collapse;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
     vertical-align: top;
 }
 
@@ -31,6 +36,10 @@
     text-align: center;
     padding: 0px 5px;
     min-width: 100px;
+}
+
+.docmatrix .grid tr:nth-child(1) th:nth-child(1) {
+    padding: 0px;
 }
 
 .docmatrix .grid th:nth-child(1) {
@@ -70,5 +79,9 @@
 .docmatrix .grid td doc h1 { font-size: 1rem; font-weight: normal; }
 .docmatrix .grid td doc h2 { font-size: 1rem; font-weight: normal; margin-left: 5px; }
 .docmatrix .grid td doc h3 { font-size: 1rem; font-weight: normal; margin-left: 10px; }
+
+.docmatrix .grid td doc h1:hover { font-weight: bold; }
+.docmatrix .grid td doc h2:hover { font-weight: bold; }
+.docmatrix .grid td doc h3:hover { font-weight: bold; }
 
 .docmatrix .grid td doc p { margin-bottom: 4px; }

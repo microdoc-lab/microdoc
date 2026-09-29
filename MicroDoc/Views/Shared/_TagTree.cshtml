@@ -13,9 +13,16 @@
     }
 }
 
-<button onclick='document.getElementById("@Model.Id").tagTree.Reload()'>Reload</button>
-
 <div id="@Model.Id" class="tag-tree">
+	<div class="toolbar">
+		<button class="icon-button" onclick='document.getElementById("@Model.Id").tagTree.Reload()' title="New Tag">
+			<img src="/icons/New.png">
+		</button>
+		<button class="icon-button" onclick='document.getElementById("@Model.Id").tagTree.Reload()' title="Reload">
+			<img src="/icons/Refresh.png">
+		</button>
+	</div>
+
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
     {

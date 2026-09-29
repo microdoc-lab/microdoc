@@ -124,8 +124,8 @@
         const rect = docElement.getBoundingClientRect();
         const overlayRect = overlay.getBoundingClientRect();
 
-        toolbar.style.left = `${rect.right - overlayRect.left - toolbar.offsetWidth - 5}px`;
-        toolbar.style.top = `${rect.top - overlayRect.top + toolbar.offsetHeight - 12}px`;
+        toolbar.style.left = `${rect.right - overlayRect.left - toolbar.offsetWidth}px`;
+        toolbar.style.top = `${rect.top - overlayRect.top}px`;
 
         // show toolbar
         toolbar.style.visibility = "visible";

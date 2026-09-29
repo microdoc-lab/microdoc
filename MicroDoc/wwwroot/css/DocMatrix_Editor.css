@@ -47,9 +47,11 @@
     width: fit-content;
     z-index: 100;
     pointer-events: auto;
+    padding-top: 2px;
+    padding-right: 7px;
+    font-size: 0;
 }
 
 .explorer .overlay .toolbar .grip {
-    display: inline-block;
     cursor: move;
 }

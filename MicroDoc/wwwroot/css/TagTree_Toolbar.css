@@ -1,13 +1,20 @@
-﻿.title-bar {
+﻿.tag-tree .toolbar {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-size: 0;
+}
+
+.tag-tree .tag .title-bar {
     position: relative; /* for absolute positioning inside */
     padding-right: 40px; /* reserve space for buttons */
 }
 
-.title-bar:hover .toolbar {
+.tag-tree .tag .title-bar:hover .toolbar {
     display: flex;
 }
 
-.toolbar {
+.tag-tree .tag .toolbar {
     display: none; /* hidden by default */
     position: absolute;
     right: 0;
@@ -16,7 +23,7 @@
     gap: 4px;
 }
 
-.toolbar button {
+.tag-tree .tag .toolbar button {
     border: none;
     background: transparent;
     cursor: pointer;
@@ -25,6 +32,6 @@
     padding: 0 4px;
 }
 
-.toolbar button:hover {
+.tag-tree .tag .toolbar button:hover {
     color: black;
 }
