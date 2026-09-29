@@ -1,4 +1,7 @@
-﻿namespace MicroDoc.Services
+﻿using System.IO;
+using YamlDotNet.Core.Tokens;
+
+namespace MicroDoc.Services
 {
     public class TagTreeService
     {
@@ -43,6 +46,19 @@
             }
 
             return nodes.OrderBy(n => n.Order ?? 999).ThenBy(n => n.Tag).ToList();
+        }
+
+        public bool NewTag(string domain, string selectedTag, string newTagName, out string newTagId)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            newTagId = string.IsNullOrEmpty(selectedTag) ? newTagName : selectedTag + "/" + newTagName;
+            var folder = Path.Combine(rootFolder, newTagId);
+            
+            if (Directory.Exists(folder))
+                return false;
+
+            Directory.CreateDirectory(folder);
+            return true;
         }
 
         public bool ReorderTagsBatch(string domain, string path, string tag, string targetTag)

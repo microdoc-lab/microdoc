@@ -46,8 +46,39 @@ TagTree.prototype.Load = async function (tagId) {
     ReplaceInnerHtml(this.element.parentElement, await response.text());
 }
 
+TagTree.prototype.New = async function () {
+    // Prompt new tag name
+    var newTagName = prompt("Enter new Tag name");
+    if (!newTagName || !newTagName.trim())
+        return;
+
+    // Create Tag
+    const response = await this.service.NewTag(this.domain, this.selectedTag, newTagName);
+    if (!response.ok) {
+        this.error("NewTag request failed", await response.text());
+        return;
+    }
+
+    // obtain new tag
+    var newTag = await response.text();
+
+    // reload tree and select new tag
+    await this.Load(newTag);
+}
+
 // Service methods
 function TagTreeService() { }
+
+TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
+    return fetch("/Home/NewTag", {
+        method: "POST",
+        body: new URLSearchParams({
+            domain: domain,
+            selectedTag: selectedTag,
+            newTagName: newTagName
+        })
+    });
+}
 
 TagTreeService.prototype.TagTree = function (clientId, domain, selectedTag) {
     return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);

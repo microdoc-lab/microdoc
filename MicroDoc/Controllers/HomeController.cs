@@ -37,6 +37,15 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        public IActionResult NewTag(string domain, string selectedTag, string newTagName)
+        {
+            if (!_tagTreeService.NewTag(domain, selectedTag, newTagName, out string newTagId))
+                return NotFound();
+
+            return Content(newTagId);
+        }
+
+        [HttpPost]
         public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
             if (!_tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag))
