@@ -7,82 +7,112 @@
 
     // open document in overlay by click
     grid.addEventListener("click", event => {
+        // don't open document if user select some text in the cell
+        const selection = window.getSelection();
+
+        if (selection && !selection.isCollapsed)
+            return;
+
+        // check the cell
         const cell = event.target.closest("td");
 
         if (!cell || !grid.contains(cell))
             return;
 
-        var editor = overlay.querySelector(`.doc[data-id="${cell.dataset.id}"] .editor`);
+        var documentId = cell.dataset.id;
+        var documentContent = cell.dataset.content;
 
-        if (editor) {
-            editor.focus();
+        // if document already opened - just focus it
+        var txtEditor = overlay.querySelector(`.doc[data-id="${documentId}"] .editor`);
+
+        if (txtEditor) {
+            txtEditor.focus();
             return;
         }
 
-        var doc = document.createElement("div");
-        doc.className = "doc";
-        doc.dataset.id = cell.dataset.id;
+        // open new document
+        var docElement = document.createElement("div");
+        docElement.className = "doc";
+        docElement.dataset.id = documentId;
 
-        var editor = document.createElement("textarea");
-        editor.className = "editor";
-        editor.textContent = cell.dataset.content;
-        doc.appendChild(editor);
+        txtEditor = document.createElement("textarea");
+        txtEditor.className = "editor";
+        txtEditor.textContent = documentContent;
+        docElement.appendChild(txtEditor);
 
-        overlay.appendChild(doc);
+        overlay.appendChild(docElement);
 
         function textAreaAdjust(o) {
             o.style.height = "1px";
             o.style.height = (o.scrollHeight) + "px";
         }
 
-        editor.addEventListener("input", () => { textAreaAdjust(editor); });
-        textAreaAdjust(editor)
+        txtEditor.addEventListener("input", () => { textAreaAdjust(txtEditor); });
+        textAreaAdjust(txtEditor);
 
-        editor.focus();
+        txtEditor.focus();
     });
 
     /* Toolbar */
 
     // init toolbar handlers
     toolbar.querySelector(".close").addEventListener("click", event => {
-        var doc = overlay.querySelector(`.doc[data-id="${toolbar.dataset.id}"]`);
-        overlay.removeChild(doc);
+        var documentId = toolbar.dataset.id;
+
+        var docElement = overlay.querySelector(`.doc[data-id="${documentId}"]`);
+
+        overlay.removeChild(docElement);
+
+        // hide toolbar
         toolbar.style.visibility = "hidden";
+
+        // reset toolbar context
+        toolbar.dataset.id = null;
     });
 
     // show toolbar on mouseover
     overlay.addEventListener("mouseover", event => {
-        const doc = event.target.closest(".doc");
+        const docElement = event.target.closest(".doc");
 
-        if (!doc || !overlay.contains(doc))
+        if (!docElement || !overlay.contains(docElement))
             return;
 
-        const rect = doc.getBoundingClientRect();
+        var documentId = docElement.dataset.id;
+
+        // position toolbar at the top-right corner of docElement
+        const rect = docElement.getBoundingClientRect();
         const overlayRect = overlay.getBoundingClientRect();
 
         toolbar.style.left = `${rect.right - overlayRect.left - toolbar.offsetWidth - 5}px`;
         toolbar.style.top = `${rect.top - overlayRect.top + toolbar.offsetHeight - 12}px`;
+
+        // show toolbar
         toolbar.style.visibility = "visible";
 
-        toolbar.dataset.id = doc.dataset.id;
+        // set toolbar context
+        toolbar.dataset.id = documentId;
     });
 
     // hide toolbar on mouseout
     overlay.addEventListener("mouseout", event => {
-        const doc = event.target.closest(".doc");
+        const docElement = event.target.closest(".doc");
 
-        if (!doc)
+        if (!docElement)
             return;
 
         // Don't hide when moving between elements inside the same item.
-        if (doc.contains(event.relatedTarget))
+        if (docElement.contains(event.relatedTarget))
             return;
 
         // Don't hide when moving over toolbar itself.
         if (toolbar.contains(event.relatedTarget))
             return;
 
+        // hide toolbar
         toolbar.style.visibility = "hidden";
+
+        // reset toolbar context
+        toolbar.dataset.id = null;
     });
 }
 
