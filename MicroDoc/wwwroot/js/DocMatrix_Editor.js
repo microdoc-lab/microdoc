@@ -7,6 +7,8 @@
 
     var grid = this.element.querySelector(".grid");
 
+    let draggedDoc = null;
+
     // open document in overlay by click
     grid.addEventListener("click", event => {
         // don't open document if user select some text in the cell
@@ -45,6 +47,10 @@
 
         overlay.appendChild(docElement);
 
+        // additional initialization (drag-n-drop)
+        initDragDrop(docElement);
+
+        // adjust textEditor height
         function textAreaAdjust(o) {
             o.style.height = "1px";
             o.style.height = (o.scrollHeight) + "px";
@@ -53,12 +59,81 @@
         txtEditor.addEventListener("input", () => { textAreaAdjust(txtEditor); });
         textAreaAdjust(txtEditor);
 
+        // focus textEditor
         txtEditor.focus();
     });
 
     /* Toolbar */
 
-    // init toolbar handlers
+    //#region Reorder docs with Drag-n-Drop
+    var grip = toolbar.querySelector(".grip");
+    grip.draggable = true;
+
+    grip.addEventListener("dragstart", e => {
+        if (window.dragging) {
+            e.preventDefault();
+            return;
+        }
+
+        // obtain document context
+        var documentId = toolbar.dataset.id;
+
+        var docElement = overlay.querySelector(`.doc[data-id="${documentId}"]`);
+        if (!docElement) {
+            e.preventDefault();
+            return;
+        }
+
+        e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setData("text/plain", documentId);
+        e.dataTransfer.setData("application/x-drag-type", "Doc");
+
+        draggedDoc = docElement;
+    });
+
+    grip.addEventListener("dragend", () => {
+        draggedDoc = null;
+    });
+
+    function initDragDrop(docElement) {
+        docElement.addEventListener("dragover", e => {
+            if (!draggedDoc)
+                return;
+
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+        });
+
+        docElement.addEventListener("drop", e => {
+            if (!draggedDoc)
+                return;
+
+            e.preventDefault();
+
+            const sender = draggedDoc;
+            const target = docElement;
+
+            // Reorder DOM
+            const parentList = overlay;
+            const nodes = Array.from(parentList.children);
+            const draggedIndex = nodes.indexOf(sender);
+            const targetIndex = nodes.indexOf(target);
+
+            if (draggedIndex === -1 || targetIndex === -1) return;
+
+            if (draggedIndex >= targetIndex) {  // Insert before target                    
+                parentList.insertBefore(sender, target);
+            } else if (target.nextSibling) {    // Insert after target                    
+                parentList.insertBefore(sender, target.nextSibling);
+            } else {                            // Insert last                    
+                parentList.appendChild(sender);
+            }
+        });
+    }
+
+    //#endregion
+
+    // save on close
     toolbar.querySelector(".close").addEventListener("click", async event => {
         // obtain document context
         var documentId = toolbar.dataset.id;
@@ -104,6 +179,8 @@
         cell.innerHTML = formattedContent;
     });
 
+    //#region Show/hide toolbar
+
     // show toolbar on mouseover
     overlay.addEventListener("mouseover", event => {
         // find & check docElement
@@ -147,6 +224,8 @@
         // reset toolbar context
         toolbar.dataset.id = null;
     });
+
+    //#endregion
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitEditor);

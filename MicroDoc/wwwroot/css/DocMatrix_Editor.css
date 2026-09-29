@@ -48,3 +48,8 @@
     z-index: 100;
     pointer-events: auto;
 }
+
+.explorer .overlay .toolbar .grip {
+    display: inline-block;
+    cursor: move;
+}
