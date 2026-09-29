@@ -28,7 +28,8 @@ TagTree.prototype.SelectTag = function (tagName) {
         if (titleNode) {
             var details = titleNode.closest("details");
             while (details) {
-                details.open = true;
+                if (!details.classList.contains("empty"))
+                    details.open = true;
                 details = details.parentElement.closest("details");
             }
 

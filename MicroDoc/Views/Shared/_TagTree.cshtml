@@ -29,7 +29,7 @@
         <li class="module tag @(module.Id == Model.SelectedTag ? "selected" : "")" 
             style="--tag-color:@module.Color;" 
             data-domain="@module.Domain" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
-            <details class="@(!module.Children.Any() ? "empty" : "")" open="@IsTagNodeOpen(module.Id)">
+            <details class="@(!module.Children.Any() ? "empty" : "")" open="@(module.Children.Any() && IsTagNodeOpen(module.Id))">
                 <summary class="title-bar">
                     <span class="module title">[@module.Tag]</span>
                 </summary>
@@ -42,7 +42,7 @@
                             <li class="component tag @(component.Id == Model.SelectedTag ? "selected" : "")" 
                                 style="--tag-color:@component.Color" 
                                 data-domain="@component.Domain" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
-                                <details class="@(!component.Children.Any() ? "empty" : "")" open="@IsTagNodeOpen(component.Id)">
+                                <details class="@(!component.Children.Any() ? "empty" : "")" open="@(component.Children.Any() && IsTagNodeOpen(component.Id))">
                                     <summary class="title-bar">
                                         <span class="component title">[@component.Tag]</span>
                                     </summary>
