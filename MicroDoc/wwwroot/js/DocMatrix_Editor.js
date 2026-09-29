@@ -22,8 +22,9 @@
         var domain = docCell.dataset.domain;
         var documentId = docCell.dataset.id;
         var documentContent = docCell.dataset.content;
+        var header = event.target.textContent;
 
-        this.OpenDocument(domain, documentId, documentContent);
+        this.OpenDocument(domain, documentId, documentContent, header);
     });
 
     // save document on close
@@ -160,13 +161,13 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitEditor);
 
 // Api
-DocMatrix.prototype.OpenDocument = function(domain, documentId, documentContent) {
+DocMatrix.prototype.OpenDocument = function(domain, documentId, documentContent, selectedHeader) {
     var overlay = this.overlay();
 
     // if document already opened - just focus it
     var txtEditor = this.txtEditor(domain, documentId);
     if (txtEditor) {
-        txtEditor.focus();
+        FocusEditor();
         return false;
     }
 
@@ -195,8 +196,23 @@ DocMatrix.prototype.OpenDocument = function(domain, documentId, documentContent)
     txtEditor.addEventListener("input", () => { textAreaAdjust(txtEditor); });
     textAreaAdjust(txtEditor);
 
-    // focus textEditor
-    txtEditor.focus();
+    FocusEditor();
+
+    function FocusEditor() {
+        // focus textEditor
+        txtEditor.focus();
+
+        // move cursor to clicked Header position
+        if (selectedHeader && selectedHeader.length > 0) {
+            const position = txtEditor.value.indexOf(selectedHeader);
+            if (position >= 0)
+                txtEditor.setSelectionRange(position, position);
+            else
+                txtEditor.setSelectionRange(0, 0);
+        }
+    }
+
+
     return true;
 }
 
