@@ -27,6 +27,15 @@ DocMatrix.prototype.InitBehaviors = function () {
 }
 
 // Api
+DocMatrix.prototype.explorer = function () { return this.element.closest(".explorer"); }
+DocMatrix.prototype.overlay = function () { return this.explorer().querySelector(".overlay"); }
+DocMatrix.prototype.toolbar = function () { return this.overlay().querySelector(".toolbar"); }
+DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
+
+DocMatrix.prototype.docElement = function (domain, documentId) { return this.overlay().querySelector(`.doc[data-domain="${domain}"][data-id="${documentId}"]`); }
+DocMatrix.prototype.txtEditor = function (domain, documentId) { return this.overlay().querySelector(`.doc[data-domain="${domain}"][data-id="${documentId}"] .editor`); }
+DocMatrix.prototype.docCell = function (domain, documentId) { return this.grid().querySelector(`td[data-domain="${domain}"][data-id="${documentId}"]`); }
+
 DocMatrix.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }

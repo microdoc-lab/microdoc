@@ -1,13 +1,10 @@
 ﻿DocMatrix.prototype.InitEditor = function (options) {
     this.log('InitEditor');
 
-    var explorer = this.element.closest(".explorer");
-    var overlay = explorer.querySelector(".overlay");
-    var toolbar = overlay.querySelector(".toolbar");
-
-    var grid = this.element.querySelector(".grid");
-
-    let draggedDoc = null;
+    var docMatrix = this;
+    var overlay = this.overlay();
+    var toolbar = this.toolbar();
+    var grid = this.grid();
 
     // open document in overlay by click
     grid.addEventListener("click", event => {
@@ -18,54 +15,29 @@
             return;
 
         // find & check the cell
-        const cell = event.target.closest("td");
-        if (!cell || !grid.contains(cell))
+        const docCell = event.target.closest("td");
+        if (!docCell || !grid.contains(docCell))
             return;
 
-        var domain = cell.dataset.domain;
-        var documentId = cell.dataset.id;
-        var documentContent = cell.dataset.content;
+        var domain = docCell.dataset.domain;
+        var documentId = docCell.dataset.id;
+        var documentContent = docCell.dataset.content;
 
-        // if document already opened - just focus it
-        var txtEditor = overlay.querySelector(`.doc[data-id="${documentId}"] .editor`);
-
-        if (txtEditor) {
-            txtEditor.focus();
-            return;
-        }
-
-        // open new document
-        var docElement = document.createElement("div");
-        docElement.className = "doc";
-        docElement.dataset.domain = domain;
-        docElement.dataset.id = documentId;
-
-        txtEditor = document.createElement("textarea");
-        txtEditor.className = "editor";
-        txtEditor.value = documentContent;
-        docElement.appendChild(txtEditor);
-
-        overlay.appendChild(docElement);
-
-        // additional initialization (drag-n-drop)
-        initDragDrop(docElement);
-
-        // adjust textEditor height
-        function textAreaAdjust(o) {
-            o.style.height = "1px";
-            o.style.height = (o.scrollHeight) + "px";
-        }
-
-        txtEditor.addEventListener("input", () => { textAreaAdjust(txtEditor); });
-        textAreaAdjust(txtEditor);
-
-        // focus textEditor
-        txtEditor.focus();
+        this.OpenDocument(domain, documentId, documentContent);
     });
 
-    /* Toolbar */
+    // save document on close
+    toolbar.querySelector(".close").addEventListener("click", async event => {
+        // obtain document context
+        var domain = toolbar.dataset.domain;
+        var documentId = toolbar.dataset.id;
+
+        await this.SaveDocument(domain, documentId);
+    });
 
     //#region Reorder docs with Drag-n-Drop
+    let draggedDoc = null;
+
     var grip = toolbar.querySelector(".grip");
     grip.draggable = true;
 
@@ -76,9 +48,10 @@
         }
 
         // obtain document context
+        var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
 
-        var docElement = overlay.querySelector(`.doc[data-id="${documentId}"]`);
+        var docElement = docMatrix.docElement(domain, documentId);
         if (!docElement) {
             e.preventDefault();
             return;
@@ -95,7 +68,7 @@
         draggedDoc = null;
     });
 
-    function initDragDrop(docElement) {
+    this.initDragDrop = function(docElement) {
         docElement.addEventListener("dragover", e => {
             if (!draggedDoc)
                 return;
@@ -133,52 +106,6 @@
 
     //#endregion
 
-    // save on close
-    toolbar.querySelector(".close").addEventListener("click", async event => {
-        // obtain document context
-        var documentId = toolbar.dataset.id;
-
-        // find & check docElement
-        var docElement = overlay.querySelector(`.doc[data-id="${documentId}"]`);
-        if (!docElement)
-            return;
-
-        // find & check txtEditor
-        var txtEditor = docElement.querySelector(".editor");
-        if (!txtEditor)
-            return;
-
-        // obtain document context
-        var domain = docElement.dataset.domain;
-        var content = txtEditor.value;
-
-        // save document
-        const response = await this.service.SaveDocument(domain, documentId, content);
-        if (!response.ok) {
-            console.error("SaveDocument request failed", await response.text());
-            return;
-        }
-
-        // remove docElement
-        overlay.removeChild(docElement);
-        // hide toolbar
-        toolbar.style.visibility = "hidden";
-        // reset toolbar context
-        toolbar.dataset.id = null;
-
-        // update cell in grid
-        var formattedContent = await response.text();
-
-        // find & check cell
-        var grid = explorer.querySelector(".docmatrix .grid");
-        var cell = grid.querySelector(`td[data-id="${documentId}"]`);
-        if (!cell)
-            return;
-
-        cell.dataset.content = content;
-        cell.innerHTML = formattedContent;
-    });
-
     //#region Show/hide toolbar
 
     // show toolbar on mouseover
@@ -189,6 +116,7 @@
             return;
 
         // obtain document context
+        var domain = docElement.dataset.domain;
         var documentId = docElement.dataset.id;
 
         // position toolbar at the top-right corner of docElement
@@ -201,6 +129,7 @@
         // show toolbar
         toolbar.style.visibility = "visible";
         // set toolbar context
+        toolbar.dataset.domain = domain;
         toolbar.dataset.id = documentId;
     });
 
@@ -229,6 +158,90 @@
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitEditor);
+
+// Api
+DocMatrix.prototype.OpenDocument = function(domain, documentId, documentContent) {
+    var overlay = this.overlay();
+
+    // if document already opened - just focus it
+    var txtEditor = this.txtEditor(domain, documentId);
+    if (txtEditor) {
+        txtEditor.focus();
+        return false;
+    }
+
+    // open new document
+    var docElement = document.createElement("div");
+    docElement.className = "doc";
+    docElement.dataset.domain = domain;
+    docElement.dataset.id = documentId;
+
+    txtEditor = document.createElement("textarea");
+    txtEditor.className = "editor";
+    txtEditor.value = documentContent;
+    docElement.appendChild(txtEditor);
+
+    overlay.appendChild(docElement);
+
+    // additional initialization (drag-n-drop)
+    this.initDragDrop(docElement);
+
+    // adjust textEditor height
+    function textAreaAdjust(o) {
+        o.style.height = "1px";
+        o.style.height = (o.scrollHeight) + "px";
+    }
+
+    txtEditor.addEventListener("input", () => { textAreaAdjust(txtEditor); });
+    textAreaAdjust(txtEditor);
+
+    // focus textEditor
+    txtEditor.focus();
+    return true;
+}
+
+DocMatrix.prototype.SaveDocument = async function (domain, documentId) {
+    var overlay = this.overlay();
+    var toolbar = this.toolbar();
+
+    // find & check docElement
+    var docElement = this.docElement(domain, documentId);
+    if (!docElement)
+        return;
+
+    // find & check txtEditor
+    var txtEditor = docElement.querySelector(".editor");
+    if (!txtEditor)
+        return;
+
+    var content = txtEditor.value;
+
+    // save document
+    const response = await this.service.SaveDocument(domain, documentId, content);
+    if (!response.ok) {
+        console.error("SaveDocument request failed", await response.text());
+        return;
+    }
+
+    // remove docElement
+    overlay.removeChild(docElement);
+    // hide toolbar
+    toolbar.style.visibility = "hidden";
+    // reset toolbar context
+    toolbar.dataset.domain = null;
+    toolbar.dataset.id = null;
+
+    // update cell in grid
+    var formattedContent = await response.text();
+
+    // find & check cell
+    var docCell = this.docCell(domain, documentId);
+    if (!docCell)
+        return;
+
+    docCell.dataset.content = content;
+    docCell.innerHTML = formattedContent;
+}
 
 // Service methods
 DocMatrixService.prototype.SaveDocument = function (domain, documentId, content) {
