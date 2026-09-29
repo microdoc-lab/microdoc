@@ -9,9 +9,8 @@
     width: 300px; /* initial width */
     flex-shrink: 0;
     overflow: visible;
-    background-color: aliceblue;
+    background-color: linen;
     position: relative;
-    z-index: 1;
 }
 
 .explorer .splitter {
@@ -20,14 +19,12 @@
     cursor: col-resize;
     background-color: lightgray;
     position: relative;
-    z-index: 2;
 }
 
 .explorer .doc-panel {
     flex: 1;
     min-width: 0;
     overflow: auto;
-    background-color: antiquewhite;
+    background-color: linen;
     position: relative;
-    z-index: 3;
 }

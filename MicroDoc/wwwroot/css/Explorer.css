@@ -1,1 +1,19 @@
-﻿
+﻿.explorer {
+    position: relative;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+}
+
+.explorer > .overlay {
+    position: absolute;
+    left: 5px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 10;
+    min-height: 200px;
+    pointer-events: none;
+}
+
+.explorer .tree-panel:hover {
+    z-index: 20;
+}

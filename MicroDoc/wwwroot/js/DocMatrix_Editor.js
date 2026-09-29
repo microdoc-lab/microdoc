@@ -1,9 +1,11 @@
 ﻿DocMatrix.prototype.InitEditor = function (options) {
     this.log('InitEditor');
 
+    var explorer = this.element.closest(".explorer");
+    var overlay = explorer.querySelector(".overlay");
+    var toolbar = overlay.querySelector(".toolbar");
+
     var grid = this.element.querySelector(".grid");
-    var overlay = this.element.querySelector(".overlay");
-    var toolbar = this.element.querySelector(".toolbar");
 
     // open document in overlay by click
     grid.addEventListener("click", event => {
@@ -93,6 +95,7 @@
         var formattedContent = await response.text();
 
         // find & check cell
+        var grid = explorer.querySelector(".docmatrix .grid");
         var cell = grid.querySelector(`td[data-id="${documentId}"]`);
         if (!cell)
             return;

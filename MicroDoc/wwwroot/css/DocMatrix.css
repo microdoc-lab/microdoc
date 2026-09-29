@@ -1,12 +1,21 @@
 ﻿.docmatrix {
     width: 100%;
     height: 100%;
+    position: relative;
 }
 
 .docmatrix .grid {
-    background-color: antiquewhite;
+    position: absolute;
+    inset: 0;
+    top: 30px;
+
     border-collapse: collapse;
     border: 1px solid #ccc;
+    background-color: antiquewhite;
+}
+
+.docmatrix .grid:hover {
+    z-index: 20;
 }
 
 .docmatrix .grid th, .docmatrix .grid td {

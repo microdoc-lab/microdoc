@@ -14,7 +14,6 @@
 			{
 				<th>@column</th>	
 			}
-			<th>Misc</th>
 		</tr>
 
 		@foreach (var row in Model.Rows)
@@ -38,16 +37,9 @@
 
 					<td data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content">@doc.Content</td>
 				}
-				<td></td>
 			</tr>
 		}
 	</table>
-
-	<div class="overlay">
-		<div class="toolbar">
-			<button class="close">[x]</button>
-		</div>
-	</div>
 </div>
 
 <script>
