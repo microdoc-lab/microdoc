@@ -55,33 +55,56 @@
     max-height: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 0px 5px;
 }
 
 .docmatrix .grid td doc content {
     display: none;
     position: absolute;
     z-index: 1;
+    padding: 0px 3px;
 }
 
-.docmatrix .grid td doc section:has(> :is(h1, h2, h3):hover) > content {
+.docmatrix .grid td doc section:hover > content {
     display: block;
-    background-color: ivory;
-    left: 2px;
+    background-color: aliceblue;
     margin-top: -8px;
     width: 50cqw;
 
     border-collapse: collapse;
     border: 1px solid #ccc;
-    border-radius: 4px;
 }
 
-.docmatrix .grid td doc h1 { font-size: 1rem; font-weight: normal; }
-.docmatrix .grid td doc h2 { font-size: 1rem; font-weight: normal; margin-left: 5px; }
-.docmatrix .grid td doc h3 { font-size: 1rem; font-weight: normal; margin-left: 10px; }
+.docmatrix .grid td doc :is(h1, h2, h3) 
+{ 
+    padding: 0px 3px;
+    font-size: 1rem; 
+    font-weight: normal; 
 
-.docmatrix .grid td doc h1:hover { font-weight: bold; }
-.docmatrix .grid td doc h2:hover { font-weight: bold; }
-.docmatrix .grid td doc h3:hover { font-weight: bold; }
+    border-left: 1px solid transparent; 
+    border-right: 1px solid transparent; 
+    border-top: 1px solid transparent;
+}
+
+.docmatrix .grid td doc h1 { margin-left: 3px;}
+.docmatrix .grid td doc h2 { margin-left: 7px; }
+.docmatrix .grid td doc h3 { margin-left: 11px; }
+
+.docmatrix .grid td doc section:hover {
+    cursor: text;
+}
+
+.docmatrix .grid td doc section:hover :is(h1, h2, h3)
+{ 
+    color: red; 
+    background-color: aliceblue; 
+
+    border-left: 1px solid #ccc; 
+    border-right: 1px solid #ccc; 
+    border-top: 1px solid #ccc; 
+}
+
+.docmatrix .grid td doc section:has(h1):hover > content { left: 4px; }
+.docmatrix .grid td doc section:has(h2):hover > content { left: 8px; }
+.docmatrix .grid td doc section:has(h3):hover > content { left: 12px; }
 
 .docmatrix .grid td doc p { margin-bottom: 4px; }
