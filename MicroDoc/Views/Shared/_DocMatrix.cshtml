@@ -9,7 +9,7 @@
 	<button onclick='document.getElementById("@Model.Id").docMatrix.Reload()'>Reload</button>
 	<table class="grid">
 		<tr>
-			<th>Tag</th>
+			<th></th>
 			@foreach (var column in Model.Domain.Documents)
 			{
 				<th>@column</th>	
@@ -19,7 +19,7 @@
 		@foreach (var row in Model.Rows)
 		{
 			<tr>
-				<th>@row.Tag</th>
+				<th style="--tag-level:@row.Level;">@row.Tag</th>
 				@foreach (var column in Model.Domain.Documents)
 				{
 					var doc = row.Documents.FirstOrDefault(d => d.Name == column);

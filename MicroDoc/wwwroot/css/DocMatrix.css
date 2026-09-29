@@ -27,13 +27,23 @@
     background-color: ivory;
 }
 
+.docmatrix .grid tr:nth-child(1) th {
+    text-align: center;
+    padding: 0px 5px;
+    min-width: 100px;
+}
+
+.docmatrix .grid th:nth-child(1) {
+    padding-left: calc(var(--tag-level) * 10px);
+}
+
 .docmatrix .grid td {
     position: relative;
 }
 
 .docmatrix .grid td doc {
     display: block;
-    max-height: 90px;
+    max-height: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
     padding: 0px 5px;
@@ -57,8 +67,8 @@
     border-radius: 4px;
 }
 
-.docmatrix .grid td doc h1 { font-size: 1.3rem; }
-.docmatrix .grid td doc h2 { font-size: 1.1rem; }
-.docmatrix .grid td doc h3 { font-size: 0.9rem; }
+.docmatrix .grid td doc h1 { font-size: 1rem; font-weight: normal; }
+.docmatrix .grid td doc h2 { font-size: 1rem; font-weight: normal; margin-left: 5px; }
+.docmatrix .grid td doc h3 { font-size: 1rem; font-weight: normal; margin-left: 10px; }
 
 .docmatrix .grid td doc p { margin-bottom: 4px; }

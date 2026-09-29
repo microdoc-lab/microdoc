@@ -212,7 +212,6 @@ DocMatrix.prototype.OpenDocument = function(domain, documentId, documentContent,
         }
     }
 
-
     return true;
 }
 

@@ -8,6 +8,7 @@
         public string Id => string.IsNullOrEmpty(Path) ? Tag : Path + "/" + Tag;
         public string Color { get; set; }
         public int? Order { get; set; }
+        public int Level { get; set; }
 
         public List<TagNode> Children { get; set; } = new();
         public List<DocNode> Documents { get; set; } = new();

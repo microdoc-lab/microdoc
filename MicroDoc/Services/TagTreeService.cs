@@ -11,9 +11,9 @@
             _domainOptions = domainOptions;
         }
 
-        public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: null, recursive: true);
+        public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: null, recursive: true, level: 0);
 
-        internal List<TagNode> BuildTree(string domain, string path, bool recursive)
+        internal List<TagNode> BuildTree(string domain, string path, bool recursive, int level)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var folder = Path.Combine(rootFolder, path ?? "");
@@ -33,10 +33,11 @@
                     Path = path ?? "",
                     Tag = tag,
                     Order = viewTag?.Order,
+                    Level = level,
                 };
 
                 if (recursive)
-                    node.Children = BuildTree(domain, node.Id, recursive: true);
+                    node.Children = BuildTree(domain, node.Id, recursive: true, level + 1);
 
                 nodes.Add(node);
             }
@@ -76,7 +77,7 @@
 
         private TagView BuildView(string domain, string path)
         {
-            var tree = BuildTree(domain, path, recursive: false);
+            var tree = BuildTree(domain, path, recursive: false, level: 0);
 
             var list = new List<TagView.Node>();
 

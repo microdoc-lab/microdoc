@@ -29,14 +29,15 @@ namespace MicroDoc.Services
                     Domain = domain,
                     Path = Path.GetDirectoryName(path ?? ""),
                     Tag = Path.GetFileName(path),
-                    Documents = GetDocuments(domain, path)
+                    Documents = GetDocuments(domain, path),
+                    Level = 0
                 };
 
                 nodes.Add(node);
 
                 if (!string.IsNullOrEmpty(path))
                 {
-                    var children = _tagTreeService.BuildTree(domain, path, false);
+                    var children = _tagTreeService.BuildTree(domain, path, recursive: false, level: 1);
                     foreach (var child in children)
                         child.Documents = GetDocuments(domain, child.Id);
                     nodes.AddRange(children);
