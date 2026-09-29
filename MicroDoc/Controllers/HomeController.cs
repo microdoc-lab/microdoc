@@ -76,6 +76,13 @@ namespace MicroDoc.Controllers
             return PartialView("_Explorer", model);
         }
 
+        [HttpPost]
+        public IActionResult SaveDocument(string domain, string documentId, string content)
+        {
+            _docService.SaveDocument(domain, documentId, content);
+            return Content(content);
+        }
+
         #region Misc
         public IActionResult Index()
         {

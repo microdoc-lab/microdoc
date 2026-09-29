@@ -13,12 +13,12 @@
         if (selection && !selection.isCollapsed)
             return;
 
-        // check the cell
+        // find & check the cell
         const cell = event.target.closest("td");
-
         if (!cell || !grid.contains(cell))
             return;
 
+        var domain = cell.dataset.domain;
         var documentId = cell.dataset.id;
         var documentContent = cell.dataset.content;
 
@@ -33,11 +33,12 @@
         // open new document
         var docElement = document.createElement("div");
         docElement.className = "doc";
+        docElement.dataset.domain = domain;
         docElement.dataset.id = documentId;
 
         txtEditor = document.createElement("textarea");
         txtEditor.className = "editor";
-        txtEditor.textContent = documentContent;
+        txtEditor.value = documentContent;
         docElement.appendChild(txtEditor);
 
         overlay.appendChild(docElement);
@@ -56,27 +57,58 @@
     /* Toolbar */
 
     // init toolbar handlers
-    toolbar.querySelector(".close").addEventListener("click", event => {
+    toolbar.querySelector(".close").addEventListener("click", async event => {
+        // obtain document context
         var documentId = toolbar.dataset.id;
 
+        // find & check docElement
         var docElement = overlay.querySelector(`.doc[data-id="${documentId}"]`);
+        if (!docElement)
+            return;
 
+        // find & check txtEditor
+        var txtEditor = docElement.querySelector(".editor");
+        if (!txtEditor)
+            return;
+
+        // obtain document context
+        var domain = docElement.dataset.domain;
+        var content = txtEditor.value;
+
+        // save document
+        const response = await this.service.SaveDocument(domain, documentId, content);
+        if (!response.ok) {
+            console.error("SaveDocument request failed", await response.text());
+            return;
+        }
+
+        // remove docElement
         overlay.removeChild(docElement);
-
         // hide toolbar
         toolbar.style.visibility = "hidden";
-
         // reset toolbar context
         toolbar.dataset.id = null;
+
+        // update cell in grid
+        var formattedContent = await response.text();
+
+        // find & check cell
+        var cell = grid.querySelector(`td[data-id="${documentId}"]`);
+        if (!cell)
+            return;
+
+        cell.dataset.content = content;
+        cell.innerHTML = formattedContent;
     });
 
     // show toolbar on mouseover
     overlay.addEventListener("mouseover", event => {
+        // find & check docElement
         const docElement = event.target.closest(".doc");
-
         if (!docElement || !overlay.contains(docElement))
             return;
 
+        // obtain document context
         var documentId = docElement.dataset.id;
 
         // position toolbar at the top-right corner of docElement
@@ -88,15 +120,14 @@
 
         // show toolbar
         toolbar.style.visibility = "visible";
-
         // set toolbar context
         toolbar.dataset.id = documentId;
     });
 
     // hide toolbar on mouseout
     overlay.addEventListener("mouseout", event => {
+        // find & check docElement
         const docElement = event.target.closest(".doc");
-
         if (!docElement)
             return;
 
@@ -110,10 +141,21 @@
 
         // hide toolbar
         toolbar.style.visibility = "hidden";
-
         // reset toolbar context
         toolbar.dataset.id = null;
     });
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitEditor);
+
+// Service methods
+DocMatrixService.prototype.SaveDocument = function (domain, documentId, content) {
+    return fetch("/Home/SaveDocument", {
+        method: "POST",
+        body: new URLSearchParams({
+            domain: domain,
+            documentId: documentId,
+            content: content
+        })
+    });
+}

@@ -1,4 +1,6 @@
-﻿namespace MicroDoc.Services
+﻿using System.IO;
+
+namespace MicroDoc.Services
 {
     public class DocService
     {
@@ -76,6 +78,13 @@
 
             nodes = nodes.OrderBy(d => d.Extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase) ? 0 : 1).ToList();
             return nodes;
+        }
+
+        public void SaveDocument(string domain, string documentId, string content)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            var path = Path.Combine(rootFolder, documentId);
+            File.WriteAllText(path, content);
         }
     }
 }
