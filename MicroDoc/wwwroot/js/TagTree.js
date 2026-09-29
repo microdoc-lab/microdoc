@@ -59,11 +59,14 @@ TagTree.prototype.New = async function () {
         return;
     }
 
-    // obtain new tag
-    var newTag = await response.text();
+    var explorerElement = this.element.closest(".explorer");
 
     // reload tree and select new tag
-    await this.Load(newTag);
+    await this.Load(this.selectedTag);
+
+    // reload docMatrix
+    if (explorerElement)
+        explorerElement.explorer.docMatrix().Reload();
 }
 
 // Service methods

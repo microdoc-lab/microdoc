@@ -51,6 +51,11 @@
             } else {                            // Insert last                    
                 parentList.appendChild(sender);
             }
+
+            // reload docMatrix
+            var explorerElement = this.element.closest(".explorer");
+            if (explorerElement)
+                explorerElement.explorer.docMatrix().Reload();
         });
     });
 }

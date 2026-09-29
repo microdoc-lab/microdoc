@@ -58,6 +58,11 @@ namespace MicroDoc.Services
                 return false;
 
             Directory.CreateDirectory(folder);
+
+            TagView view = BuildView(domain, selectedTag);
+            var viewPath = Path.Combine(rootFolder, selectedTag, ViewFileName);
+            ViewConfigLoader.SaveTagsToFile(viewPath, view);
+
             return true;
         }
 
