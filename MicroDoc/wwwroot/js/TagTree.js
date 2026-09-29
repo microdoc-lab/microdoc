@@ -10,6 +10,7 @@
 
     this.id = element.id;
     this.log = function (text) { console.log(`TagTree #${this.id}: ${text}`); }
+    this.error = function (text, error) { console.error(text, error); alert(text + "\n\n" + error); }
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -38,7 +39,7 @@ TagTree.prototype.Load = async function (tagId) {
     // Reload HTML content
     const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);
     if (!response.ok) {
-        console.error("TagTree request failed", await response.text());
+        this.error("TagTree request failed", await response.text());
         return;
     }
 

@@ -10,6 +10,7 @@
 
     this.id = element.id;
     this.log = function (text) { console.log(`DocMatrix #${this.id}: ${text}`); }
+    this.error = function (text, error) { console.error(text, error); alert(text + "\n\n" + error); }
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -47,7 +48,7 @@ DocMatrix.prototype.Load = async function (tagId) {
     // Reload HTML content
     const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag);
     if (!response.ok) {
-        console.error("DocMatrix request failed", await response.text());
+        this.error("DocMatrix request failed", await response.text());
         return;
     }
 

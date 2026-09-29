@@ -10,6 +10,7 @@
 
     this.id = element.id;
     this.log = function (text) { console.log(`Explorer #${this.id}: ${text}`); }
+    this.error = function (text, error) { console.error(text, error); alert(text + "\n\n" + error); }
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -41,7 +42,7 @@ Explorer.prototype.Load = async function (tagId) {
     // Reload HTML content
     const response = await this.service.Explorer(this.id, this.domain, this.selectedTag);
     if (!response.ok) {
-        console.error("Explorer request failed", await response.text());
+        this.error("Explorer request failed", await response.text());
         return;
     }
 
