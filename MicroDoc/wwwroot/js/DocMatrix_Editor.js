@@ -219,7 +219,7 @@ DocMatrix.prototype.SaveDocument = async function (domain, documentId) {
     // save document
     const response = await this.service.SaveDocument(domain, documentId, content);
     if (!response.ok) {
-        console.error("SaveDocument request failed", await response.text());
+        this.error("SaveDocument request failed", await response.text());
         return;
     }
 
@@ -240,7 +240,7 @@ DocMatrix.prototype.SaveDocument = async function (domain, documentId) {
         return;
 
     docCell.dataset.content = content;
-    docCell.innerHTML = formattedContent;
+    docCell.querySelector("doc").innerHTML = formattedContent;
 }
 
 // Service methods

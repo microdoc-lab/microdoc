@@ -31,11 +31,12 @@
 							Path = row.Id,
 							Name = column,
 							Extension = ".txt",
-							Content = string.Empty
+							Content = string.Empty,
+							Html = string.Empty
 						};
 					}
 
-					<td data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content">@doc.Content</td>
+					<td data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content"><doc>@Html.Raw(doc.Html)</doc></td>
 				}
 			</tr>
 		}

@@ -70,7 +70,8 @@ namespace MicroDoc.Services
                     Path = path ?? "",
                     Name = name,
                     Extension = extension,
-                    Content = content
+                    Content = content,
+                    Html = Markup.ToHtml(content)
                 };
 
                 nodes.Add(node);

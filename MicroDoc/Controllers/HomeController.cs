@@ -79,8 +79,11 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult SaveDocument(string domain, string documentId, string content)
         {
+            content = content ?? string.Empty;
+
             _docService.SaveDocument(domain, documentId, content);
-            return Content(content);
+            var html = Markup.ToHtml(content);
+            return Content(html);
         }
 
         #region Misc

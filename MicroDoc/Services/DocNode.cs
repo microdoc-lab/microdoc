@@ -8,5 +8,6 @@
         public string Extension { get; set; }
         public string Id => string.IsNullOrEmpty(Path) ? Name : Path + "/" + Name + Extension;
         public string Content { get; set; }
+        public string Html { get; set; }
     }
 }

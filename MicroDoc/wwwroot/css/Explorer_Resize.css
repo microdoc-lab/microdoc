@@ -24,7 +24,7 @@
 .explorer .doc-panel {
     flex: 1;
     min-width: 0;
-    overflow: auto;
+    overflow: visible;
     background-color: linen;
     position: relative;
 }
