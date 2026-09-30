@@ -1,43 +1,44 @@
-﻿.explorer .overlay .doc {
-    display: inline-block;
-    position: relative;
-    padding-right: 5px;
-
-    width: 50%;
-    height: auto;
-    z-index: 30;
-}
-
+﻿/* Doc Title */
 .explorer .overlay .doc::before {
     content: attr(data-id);
     position: absolute;
     left: 5px;
     top: -14px;
+    padding: 0px 3px;
     font-size: smaller;
-
     background-color: burlywood;
     border: 1px solid red;
     border-radius: 5px;
-    padding: 0px 3px;
 }
 
+/* Doc */
+.explorer .overlay .doc {
+    position: relative;
+    display: inline-block;
+    padding-right: 5px;
+    width: 50%;
+    height: auto;
+    z-index: 30;
+}
+
+/* Toolbar */
 .explorer .overlay .toolbar {
     position: absolute;
     display: inline-block;
     visibility: collapse;
+    padding-top: 2px;
+    padding-right: 7px;
     width: fit-content;
     z-index: 100;
     pointer-events: auto;
-    padding-top: 2px;
-    padding-right: 7px;
     font-size: 0;
 }
 
-.explorer .overlay .toolbar .grip {
-    cursor: move;
-}
+.explorer .overlay .toolbar .grip { cursor: move; }
 
-.explorer .overlay .doc .viewer, .explorer .overlay .doc .editor {
+/* Viewer & Editor */
+.explorer .overlay .doc .viewer, 
+.explorer .overlay .doc .editor {
     display: block;
     width: 100%;
     height: 100%;
@@ -52,15 +53,19 @@
     pointer-events: auto;
 }
 
+.explorer .overlay .doc .viewer { padding: 4px; }
 .explorer .overlay .doc .editor { resize: none; }
 .explorer .overlay .doc .editor:focus { outline: none; }
 
 .explorer .overlay .doc[mode=edit] .viewer { display: none; }
 .explorer .overlay .doc[mode=view] .editor { display: none; }
 
-.explorer .overlay .doc .viewer { padding: 4px; }
+/* Viewer HTML*/
+/* Headings */
 .explorer .overlay .doc .viewer :is(h1,h2,h3) { margin-bottom: 4px; }
 .explorer .overlay .doc .viewer h1 { font-size: 1.6rem; }
 .explorer .overlay .doc .viewer h2 { font-size: 1.4rem; }
 .explorer .overlay .doc .viewer h3 { font-size: 1.2rem; }
+
+/* Paragraph */
 .explorer .overlay .doc .viewer p { margin-bottom: 4px; }

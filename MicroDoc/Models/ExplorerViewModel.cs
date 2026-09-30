@@ -12,6 +12,7 @@ namespace MicroDoc.Models
                 _Id = value;
                 TagTree.Id = Id + "TagTree";
                 DocMatrix.Id = Id + "DocMatrix";
+                TemplateDoc.Id = Id + "TemplateDoc";
             }
         }
 
@@ -19,7 +20,7 @@ namespace MicroDoc.Models
         public DomainOptions.Domain Domain 
         {
             get => _Domain;
-            set { _Domain = TagTree.Domain = DocMatrix.Domain = value; }
+            set { _Domain = TagTree.Domain = DocMatrix.Domain = TemplateDoc.Domain = value; }
         }
 
         private string _SelectedTag;
@@ -31,5 +32,6 @@ namespace MicroDoc.Models
 
         public TagTreeViewModel TagTree { get; set; } = new();
         public DocMatrixViewModel DocMatrix { get; set; } = new();
+        public DocViewModel TemplateDoc { get; set; } = new();
     }
 }

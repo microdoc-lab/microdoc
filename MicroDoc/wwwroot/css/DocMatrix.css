@@ -22,13 +22,6 @@
     z-index: 20;
 }
 
-.docmatrix .grid th, .docmatrix .grid td {
-    border-collapse: collapse;
-    border-right: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    vertical-align: top;
-}
-
 .docmatrix .grid tr:nth-child(1) th {
     text-align: center;
     padding: 0px 5px;
@@ -41,6 +34,13 @@
 
 .docmatrix .grid th:nth-child(1) {
     padding-left: calc(var(--tag-level) * 10px);
+}
+
+.docmatrix .grid th, .docmatrix .grid td {
+    border-collapse: collapse;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    vertical-align: top;
 }
 
 .docmatrix .grid td {
@@ -71,55 +71,3 @@
 .docmatrix .grid td:hover doc {
     background-color: ivory;
 }
-
-.docmatrix .grid td doc content {
-    display: none;
-    position: absolute;
-    transform: translateY(-1px);
-    z-index: 1;
-    padding: 0px 3px;
-}
-
-.docmatrix .grid td doc section:hover > content:not(:empty) {
-    display: block;
-    background-color: aliceblue;
-    margin-top: -8px;
-    width: 50cqw;
-
-    border-collapse: collapse;
-    border: 1px solid #ccc;
-}
-
-.docmatrix .grid td doc :is(h1, h2, h3) 
-{ 
-    padding: 0px 3px;
-    font-size: 0.8rem; 
-    font-weight: normal; 
-    max-width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-
-    border: 1px solid transparent; 
-}
-
-.docmatrix .grid td doc h1 { margin-left: 0px;}
-.docmatrix .grid td doc h2 { margin-left: 4px; }
-.docmatrix .grid td doc h3 { margin-left: 8px; }
-
-.docmatrix .grid td doc section:hover {
-    cursor: text;
-}
-
-.docmatrix .grid td doc section:hover :is(h1, h2, h3)
-{ 
-    color: red; 
-    background-color: aliceblue; 
-    border: 1px solid #ccc; 
-}
-
-.docmatrix .grid td doc section:has(h1):hover > content { left: 0px; }
-.docmatrix .grid td doc section:has(h2):hover > content { left: 4px; }
-.docmatrix .grid td doc section:has(h3):hover > content { left: 8px; }
-
-.docmatrix .grid td doc p { margin-bottom: 4px; }

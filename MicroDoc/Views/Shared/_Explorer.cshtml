@@ -29,6 +29,10 @@
     		</button>
 	    </div>
     </div>
+
+    <div style="display:none;">
+        @await Html.PartialAsync("_Doc", Model.TemplateDoc)
+    </div>
 </div>
 
 <script>
@@ -45,6 +49,7 @@
         explorer.selectedTag = "@Model.SelectedTag";
         explorer.tagTreeId = "@Model.TagTree.Id";
         explorer.docMatrixId = "@Model.DocMatrix.Id";
+        explorer.templateDocId = "@Model.TemplateDoc.Id";
         
         explorer.InitBehaviors();
     })();

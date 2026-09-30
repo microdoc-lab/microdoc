@@ -1,0 +1,28 @@
+﻿@model DocViewModel
+
+@if (string.IsNullOrWhiteSpace(Model.Id))
+{
+    throw new ArgumentNullException();
+}
+
+<div id="@Model.Id" class="doc" mode="@Model.Mode" data-domain="@Model.Doc.Domain" data-id="@Model.Doc.Id">
+    <div class="viewer">@Html.Raw(Model.Doc.Html)</div>
+    <textarea class="editor">@Model.Doc.Content</textarea>
+</div>
+
+<script>
+    (function() {
+        const container = document.getElementById("@Model.Id");
+        if (!container) return;
+
+        var options = window["@Model.Id" + "Options"]
+		if (!options)
+			window["@Model.Id" + "Options"] = options = {};
+
+        const doc = new Doc(container, options);
+		doc.domain = "@Model.Domain.Name";
+		doc.documentId = "@Model.Doc.Domain";
+
+		doc.InitBehaviors();
+    })();
+</script>

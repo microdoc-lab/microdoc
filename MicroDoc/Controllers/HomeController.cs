@@ -79,6 +79,10 @@ namespace MicroDoc.Controllers
                 },
                 DocMatrix = {
                     Rows = _docService.GetTagWithDocuments(domain, selectedTag)
+                },
+                TemplateDoc = { 
+                    Mode = "view",
+                    Doc = new DocNode { }
                 }
             };
 
