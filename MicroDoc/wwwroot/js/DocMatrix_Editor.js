@@ -15,9 +15,13 @@
         if (!docCell || !grid.contains(docCell))
             return;
 
-        // check the click only on cell or header
-        if (!event.target.matches("h1, h2, h3, doc, clip, td"))
+        // find & check the section
+        const section = event.target.closest("section");
+        if (!section || !docCell.contains(section))
             return;
+
+        // obtain section heading
+        var heading = section.querySelector("h1, h2, h3");
 
         // obtain document context
         var domain = docCell.dataset.domain;
@@ -27,7 +31,7 @@
 
         // detect clicked heading index
         const headings = docCell.querySelector("doc").querySelectorAll("h1, h2, h3");
-        const headingIndex = [...headings].indexOf(event.target);
+        const headingIndex = [...headings].indexOf(heading);
 
         this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
     });
