@@ -15,10 +15,12 @@
 .explorer .overlay .doc {
     position: relative;
     display: inline-block;
-    padding-right: 5px;
+    padding-right: 0px;
     width: 50%;
     height: auto;
     z-index: 30;
+
+    font-size: initial;
 }
 
 /* Toolbar */
