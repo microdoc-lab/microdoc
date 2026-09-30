@@ -9,7 +9,7 @@
     bool IsTagNodeOpen(string tagId)
     {
         return !string.IsNullOrEmpty(Model.SelectedTag) 
-            && (Model.SelectedTag == tagId || Model.SelectedTag.StartsWith(tagId + "/"));
+            && Model.SelectedTag.StartsWith(tagId + "/");
     }
 }
 

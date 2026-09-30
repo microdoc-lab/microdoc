@@ -27,10 +27,12 @@ TagTree.prototype.SelectTag = function (tagName) {
         const titleNode = this.element.querySelector(`.tag[data-id="${tagName}"] .title`);
         if (titleNode) {
             var details = titleNode.closest("details");
+            var lastTag = true;
             while (details) {
-                if (!details.classList.contains("empty"))
+                if (!details.classList.contains("empty") && !lastTag)
                     details.open = true;
                 details = details.parentElement.closest("details");
+                lastTag = false;
             }
 
             const tagNode = titleNode.closest(".tag");
