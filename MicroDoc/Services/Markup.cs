@@ -39,11 +39,11 @@ namespace MicroDoc.Services
             {
                 EndSection();
 
-                html.Append("<section>\n")
+                html.Append("<section>")
                     .Append("<h").Append(level).Append(">")
                     .Append(title)
                     .Append("</h").Append(level).Append(">\n")
-                    .Append("<content>\n");
+                    .Append("<content>");
 
                 sectionStarted = true;
             }

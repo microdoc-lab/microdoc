@@ -5,10 +5,14 @@
     throw new ArgumentNullException();
 }
 
+@{
+	int colWidth = 100 / (Model.Domain.Documents.Count + 1);
+}
+
 <div id="@Model.Id" class="docmatrix">
 	<table class="grid">
 		<tr>
-			<th>
+			<th style="width: @(colWidth)%; max-width: @(colWidth)%;">
 				<div class="toolbar">
 					<button class="icon-button" onclick='document.getElementById("@Model.Id").docMatrix.Reload()' title="Reload">
 						<img src="/icons/Refresh.png">
@@ -17,7 +21,7 @@
 			</th>
 			@foreach (var column in Model.Domain.Documents)
 			{
-				<th>@column</th>	
+				<th style="width: @(colWidth)%; max-width: @(colWidth)%;">@column</th>	
 			}
 		</tr>
 
@@ -41,7 +45,7 @@
 						};
 					}
 
-					<td data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content"><doc>@Html.Raw(doc.Html)</doc></td>
+					<td data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content"><clip><doc>@Html.Raw(doc.Html)</doc></clip></td>
 				}
 			</tr>
 		}

@@ -13,7 +13,8 @@
 .docmatrix .grid {
     position: absolute;
     inset: 0;
-
+    width: 100%;
+    table-layout: fixed;
     background-color: antiquewhite;
 }
 
@@ -26,10 +27,6 @@
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     vertical-align: top;
-}
-
-.docmatrix .grid td:hover {
-    background-color: ivory;
 }
 
 .docmatrix .grid tr:nth-child(1) th {
@@ -48,23 +45,42 @@
 
 .docmatrix .grid td {
     position: relative;
+    overflow: visible;
+}
+
+.docmatrix .grid td clip {
+    display: block;
+    overflow: clip;
+    max-height: 70px;
 }
 
 .docmatrix .grid td doc {
-    display: block;
-    max-height: 200px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    position: relative;
+    display: inline-block;
+    margin-left: 2px;
+}
+
+.docmatrix .grid td:hover {
+    z-index: 10;
+}
+
+.docmatrix .grid td:hover clip {
+    overflow: visible;
+}
+
+.docmatrix .grid td:hover doc {
+    background-color: ivory;
 }
 
 .docmatrix .grid td doc content {
     display: none;
     position: absolute;
+    transform: translateY(-1px);
     z-index: 1;
     padding: 0px 3px;
 }
 
-.docmatrix .grid td doc section:hover > content {
+.docmatrix .grid td doc section:hover > content:not(:empty) {
     display: block;
     background-color: aliceblue;
     margin-top: -8px;
@@ -77,17 +93,19 @@
 .docmatrix .grid td doc :is(h1, h2, h3) 
 { 
     padding: 0px 3px;
-    font-size: 1rem; 
+    font-size: 0.8rem; 
     font-weight: normal; 
+    max-width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
-    border-left: 1px solid transparent; 
-    border-right: 1px solid transparent; 
-    border-top: 1px solid transparent;
+    border: 1px solid transparent; 
 }
 
-.docmatrix .grid td doc h1 { margin-left: 3px;}
-.docmatrix .grid td doc h2 { margin-left: 7px; }
-.docmatrix .grid td doc h3 { margin-left: 11px; }
+.docmatrix .grid td doc h1 { margin-left: 0px;}
+.docmatrix .grid td doc h2 { margin-left: 4px; }
+.docmatrix .grid td doc h3 { margin-left: 8px; }
 
 .docmatrix .grid td doc section:hover {
     cursor: text;
@@ -97,14 +115,11 @@
 { 
     color: red; 
     background-color: aliceblue; 
-
-    border-left: 1px solid #ccc; 
-    border-right: 1px solid #ccc; 
-    border-top: 1px solid #ccc; 
+    border: 1px solid #ccc; 
 }
 
-.docmatrix .grid td doc section:has(h1):hover > content { left: 4px; }
-.docmatrix .grid td doc section:has(h2):hover > content { left: 8px; }
-.docmatrix .grid td doc section:has(h3):hover > content { left: 12px; }
+.docmatrix .grid td doc section:has(h1):hover > content { left: 0px; }
+.docmatrix .grid td doc section:has(h2):hover > content { left: 4px; }
+.docmatrix .grid td doc section:has(h3):hover > content { left: 8px; }
 
 .docmatrix .grid td doc p { margin-bottom: 4px; }
