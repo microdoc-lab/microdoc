@@ -63,7 +63,7 @@ namespace MicroDoc.Services
                 else
                 {
                     if (!sectionStarted)
-                        StartSection(1, "(empty)");
+                        StartSection(1, "(no header)");
 
                     if (paragraph.Length > 0)
                         paragraph.Append('\n');

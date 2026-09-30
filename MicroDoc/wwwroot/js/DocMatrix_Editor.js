@@ -10,7 +10,6 @@
     grid.addEventListener("click", event => {
         // don't open document if user select some text in the cell
         const selection = window.getSelection();
-
         if (selection && !selection.isCollapsed)
             return;
 
@@ -19,13 +18,18 @@
         if (!docCell || !grid.contains(docCell))
             return;
 
+        if (!event.target.matches("h1, h2, h3, doc, clip, td"))
+            return;
+
         var domain = docCell.dataset.domain;
         var documentId = docCell.dataset.id;
         var documentContent = docCell.dataset.content;
         var documentHtml = docCell.querySelector("doc").innerHTML;
-        var header = event.target.textContent;
 
-        this.OpenDocument(domain, documentId, documentContent, documentHtml, header, event.ctrlKey ? "edit" : "view");
+        const headings = docCell.querySelector("doc").querySelectorAll("h1, h2, h3");
+        const headingIndex = [...headings].indexOf(event.target);
+
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
     });
 
     // toggle view/edit mode
@@ -43,65 +47,66 @@
 
         if (mode == "view") {
             var docViewer = this.docViewer(domain, documentId);
-            var selectedHeading = getSelectedHeading(docViewer);
+            const headingIndex = getSelectedHeadingIndex(docViewer);
 
             docElement.setAttribute("mode", "edit");
 
             var txtEditor = this.txtEditor(domain, documentId);
             txtEditor.AdjustHeight(txtEditor);
 
-            txtEditor.FocusAndSelect(selectedHeading);
+            txtEditor.FocusAndSelect(headingIndex);
 
-            function getSelectedHeading(container) {
-                // detect selected heading
+            function getSelectedHeadingIndex(viewer) {
                 const selection = window.getSelection();
+
                 if (!selection.rangeCount || selection.isCollapsed)
-                    return;
+                    return -1;
 
                 const range = selection.getRangeAt(0);
-                if (!container.contains(range.commonAncestorContainer))
-                    return;
 
-                // Find the first heading in the selection
-                const headings = container.querySelectorAll("h1, h2, h3");
-                const heading = [...headings].find(h => range.intersectsNode(h));
+                if (!viewer.contains(range.commonAncestorContainer))
+                    return -1;
 
-                return heading ? heading.textContent : null;
+                const headings = [...viewer.querySelectorAll("h1, h2, h3")];
+
+                for (let i = 0; i < headings.length; i++) {
+                    if (range.intersectsNode(headings[i]))
+                        return i;
+                }
+
+                return -1;
             }
         }
         else {
             var txtEditor = this.txtEditor(domain, documentId);
-            var currentHeading = getHeadingAtCursor(txtEditor);
+            const headingIndex = getHeadingIndexAtCursor(txtEditor);
 
             var documentHtml = await this.SaveDocument(domain, documentId, false);
             docElement.setAttribute("mode", "view");
 
             var docViewer = this.docViewer(domain, documentId);
             docViewer.innerHTML = documentHtml;
-            docViewer.FocusAndSelect(currentHeading);
+            docViewer.FocusAndSelect(headingIndex);
 
-            function getHeadingAtCursor(textarea) {
+            function getHeadingIndexAtCursor(textarea) {
                 const text = textarea.value;
                 const cursor = textarea.selectionStart;
+                const lines = text.split("\n");
 
-                const lineStart = text.lastIndexOf("\n", cursor - 1) + 1;
-                const lineEnd = text.indexOf("\n", cursor);
+                let position = 0;
+                let headingIndex = -1;
 
-                const line = text.substring(
-                    lineStart,
-                    lineEnd === -1 ? text.length : lineEnd
-                );
+                for (const line of lines) {
+                    if (position > cursor)
+                        break;
 
-                if (line.startsWith("### "))
-                    return line.substring(4);
+                    if (/^#{1,3} /.test(line))
+                        headingIndex++;
 
-                if (line.startsWith("## "))
-                    return line.substring(3);
+                    position += line.length + 1; // +1 for \n
+                }
 
-                if (line.startsWith("# "))
-                    return line.substring(2);
-
-                return null;
+                return headingIndex;
             }
         }
     });
@@ -240,21 +245,22 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitEditor);
 
 // Api
-DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, selectedHeader, mode) {
+DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, headingIndex, mode) {
     var overlay = this.overlay();
     var toolbar = this.toolbar();
 
     // if document already opened - just focus it
     var docElement = this.docElement(domain, documentId);
     if (docElement) {
-        if (mode == "view") {
+        var currentMode = docElement.getAttribute("mode");
+        if (currentMode == "view") {
             var docViewer = this.docViewer(domain, documentId);
-            docViewer.FocusAndSelect(selectedHeader);
+            docViewer.FocusAndSelect(headingIndex);
         }
 
-        if (mode == "edit") {
+        if (currentMode == "edit") {
             var txtEditor = this.txtEditor(domain, documentId);
-            txtEditor.FocusAndSelect(selectedHeader);
+            txtEditor.FocusAndSelect(headingIndex);
         }
 
         return false;
@@ -282,6 +288,29 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     // additional initialization (drag-n-drop)
     this.initDragDrop(docElement);
 
+    // select header on click in viewer
+    docViewer.addEventListener("click", event => {
+        // don't open document if user select some text in the cell
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed)
+            return;
+
+        // find & check the section
+        const section = event.target.closest("section");
+        if (!section || !docViewer.contains(section))
+            return;
+
+        var heading = section.querySelector("h1, h2, h3");
+        if (heading) {
+            const range = document.createRange();
+            range.selectNodeContents(heading);
+
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }
+    });
+
     // save and close on Esc in text editor
     txtEditor.addEventListener("keydown", e => {
         if (e.key === "Escape")
@@ -298,15 +327,12 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     txtEditor.AdjustHeight(txtEditor);
 
     // focus and select
-    docViewer.FocusAndSelect = function (header) {
+    docViewer.FocusAndSelect = function (headingIndex) {
         // move cursor to clicked Header position
-        if (header && header.length > 0) {
-            const heading = [...docViewer.querySelectorAll("h1, h2, h3")].find(h => h.textContent.includes(header));
+        if (headingIndex >= 0) {
+            const heading = docViewer.querySelectorAll("h1, h2, h3")[headingIndex];
             if (heading) {
-                heading.scrollIntoView({
-                    behavior: "auto",
-                    block: "center"
-                });
+                heading.scrollIntoView({ behavior: "auto", block: "start" });
 
                 const range = document.createRange();
                 range.selectNodeContents(heading);
@@ -318,26 +344,71 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
         }
     }
 
-    txtEditor.FocusAndSelect = function (header) {
+    txtEditor.FocusAndSelect = function (headingIndex) {
         // move cursor to clicked Header position
-        if (header && header.length > 0) {
-            const position = txtEditor.value.indexOf(header);
+        if (headingIndex >= 0) {
+            const position = getCursorPositionAtHeading(txtEditor, headingIndex);
             if (position >= 0)
                 txtEditor.setSelectionRange(position, position);
             else
                 txtEditor.setSelectionRange(0, 0);
+
+            scrollCursorToTop(txtEditor);
         }
 
         // focus textEditor
         txtEditor.blur();
         txtEditor.focus();
+
+        function getCursorPositionAtHeading(textarea, headingIndex) {
+            const text = textarea.value;
+            const lines = text.split("\n");
+
+            let index = 0;
+            let position = 0;
+
+            for (const line of lines) {
+                if (/^#{1,3} /.test(line)) {
+                    if (index === headingIndex)
+                        return position;
+
+                    index++;
+                }
+
+                position += line.length + 1; // +1 for "\n"
+            }
+
+            return -1;
+        }
+
+        function scrollCursorToTop(textarea) {
+            const text = textarea.value;
+            const cursor = textarea.selectionStart;
+
+            const before = text.substring(0, cursor);
+            const after = text.substring(cursor);
+
+            // Let the browser calculate wrapping for text before the cursor.
+            textarea.value = before;
+            textarea.scrollTop = textarea.scrollHeight;
+
+            const scrollHeight = textarea.scrollHeight;
+
+            // Restore the complete document.
+            textarea.value = before + after;
+            textarea.selectionStart = textarea.selectionEnd = cursor;
+
+            // Move the cursor's visual line to the top.
+            const lineHeight = parseFloat(getComputedStyle(textarea).lineHeight);
+            textarea.scrollTop = scrollHeight + lineHeight;
+        }
     }
 
     if (mode == "view")
-        docViewer.FocusAndSelect(selectedHeader);
+        docViewer.FocusAndSelect(headingIndex);
 
     if (mode == "edit")
-        txtEditor.FocusAndSelect(selectedHeader);
+        txtEditor.FocusAndSelect(headingIndex);
 
     return true;
 }
