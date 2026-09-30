@@ -28,17 +28,15 @@ Doc.prototype.InitBehaviors = function () {
 }
 
 // Api
-Doc.prototype.explorer = function () { return this.element.closest(".explorer"); }
-Doc.prototype.docMatrix = function () { return this.element.closest(".explorer").querySelector(".docmatrix"); }
+Doc.prototype.docMatrix = function () { return this.element.closest(".explorer").querySelector(".docmatrix").docMatrix; }
 Doc.prototype.overlay = function () { return this.element.closest(".explorer").querySelector(".overlay"); }
 Doc.prototype.toolbar = function () { return this.element.closest(".explorer").querySelector(".overlay .toolbar"); }
-Doc.prototype.grid = function () { return this.element.querySelector(".grid"); }
 
 Doc.prototype.docViewer = function () { return this.element.querySelector(".viewer"); }
 Doc.prototype.txtEditor = function () { return this.element.querySelector(".editor"); }
 
 Doc.prototype.SaveDocument = async function (close) {
-    var docMatrix = this.docMatrix().docMatrix;
+    var docMatrix = this.docMatrix();
     var overlay = this.overlay();
     var toolbar = this.toolbar();
     var docElement = this.element;

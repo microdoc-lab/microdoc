@@ -54,7 +54,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     }
 
     // clone doc element from template
-    var template = document.getElementById(explorer.explorer.templateDocId);
+    var template = document.getElementById(explorer.templateDocId);
     docElement = template.cloneNode(true);
 
     // bind doc properties

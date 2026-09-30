@@ -3,7 +3,7 @@
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();
-    var docMatrix = this.docMatrix().docMatrix;
+    var docMatrix = this.docMatrix();
 
     if (toolbar.toolbarInited)
         return;
