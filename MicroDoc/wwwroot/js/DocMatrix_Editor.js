@@ -22,9 +22,88 @@
         var domain = docCell.dataset.domain;
         var documentId = docCell.dataset.id;
         var documentContent = docCell.dataset.content;
+        var documentHtml = docCell.querySelector("doc").innerHTML;
         var header = event.target.textContent;
 
-        this.OpenDocument(domain, documentId, documentContent, header);
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, header, event.ctrlKey ? "edit" : "view");
+    });
+
+    // toggle view/edit mode
+    toolbar.querySelector(".view").addEventListener("click", async event => {
+        // obtain document context
+        var domain = toolbar.dataset.domain;
+        var documentId = toolbar.dataset.id;
+
+        // find & check docElement
+        var docElement = this.docElement(domain, documentId);
+        if (!docElement)
+            return;
+
+        var mode = docElement.getAttribute("mode");
+
+        if (mode == "view") {
+            var docViewer = this.docViewer(domain, documentId);
+            var selectedHeading = getSelectedHeading(docViewer);
+
+            docElement.setAttribute("mode", "edit");
+
+            var txtEditor = this.txtEditor(domain, documentId);
+            txtEditor.AdjustHeight(txtEditor);
+
+            txtEditor.FocusAndSelect(selectedHeading);
+
+            function getSelectedHeading(container) {
+                // detect selected heading
+                const selection = window.getSelection();
+                if (!selection.rangeCount || selection.isCollapsed)
+                    return;
+
+                const range = selection.getRangeAt(0);
+                if (!container.contains(range.commonAncestorContainer))
+                    return;
+
+                // Find the first heading in the selection
+                const headings = container.querySelectorAll("h1, h2, h3");
+                const heading = [...headings].find(h => range.intersectsNode(h));
+
+                return heading ? heading.textContent : null;
+            }
+        }
+        else {
+            var txtEditor = this.txtEditor(domain, documentId);
+            var currentHeading = getHeadingAtCursor(txtEditor);
+
+            var documentHtml = await this.SaveDocument(domain, documentId, false);
+            docElement.setAttribute("mode", "view");
+
+            var docViewer = this.docViewer(domain, documentId);
+            docViewer.innerHTML = documentHtml;
+            docViewer.FocusAndSelect(currentHeading);
+
+            function getHeadingAtCursor(textarea) {
+                const text = textarea.value;
+                const cursor = textarea.selectionStart;
+
+                const lineStart = text.lastIndexOf("\n", cursor - 1) + 1;
+                const lineEnd = text.indexOf("\n", cursor);
+
+                const line = text.substring(
+                    lineStart,
+                    lineEnd === -1 ? text.length : lineEnd
+                );
+
+                if (line.startsWith("### "))
+                    return line.substring(4);
+
+                if (line.startsWith("## "))
+                    return line.substring(3);
+
+                if (line.startsWith("# "))
+                    return line.substring(2);
+
+                return null;
+            }
+        }
     });
 
     // save document on close
@@ -33,7 +112,7 @@
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
 
-        await this.SaveDocument(domain, documentId);
+        await this.SaveDocument(domain, documentId, true);
     });
 
     //#region Reorder docs with Drag-n-Drop
@@ -161,21 +240,37 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitEditor);
 
 // Api
-DocMatrix.prototype.OpenDocument = function(domain, documentId, documentContent, selectedHeader) {
+DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, selectedHeader, mode) {
     var overlay = this.overlay();
+    var toolbar = this.toolbar();
 
     // if document already opened - just focus it
-    var txtEditor = this.txtEditor(domain, documentId);
-    if (txtEditor) {
-        FocusEditor();
+    var docElement = this.docElement(domain, documentId);
+    if (docElement) {
+        if (mode == "view") {
+            var docViewer = this.docViewer(domain, documentId);
+            docViewer.FocusAndSelect(selectedHeader);
+        }
+
+        if (mode == "edit") {
+            var txtEditor = this.txtEditor(domain, documentId);
+            txtEditor.FocusAndSelect(selectedHeader);
+        }
+
         return false;
     }
 
     // open new document
-    var docElement = document.createElement("div");
+    docElement = document.createElement("div");
     docElement.className = "doc";
+    docElement.setAttribute("mode", mode);
     docElement.dataset.domain = domain;
     docElement.dataset.id = documentId;
+
+    docViewer = document.createElement("div");
+    docViewer.className = "viewer";
+    docViewer.innerHTML = documentHtml;
+    docElement.appendChild(docViewer);
 
     txtEditor = document.createElement("textarea");
     txtEditor.className = "editor";
@@ -187,35 +282,67 @@ DocMatrix.prototype.OpenDocument = function(domain, documentId, documentContent,
     // additional initialization (drag-n-drop)
     this.initDragDrop(docElement);
 
+    // save and close on Esc in text editor
+    txtEditor.addEventListener("keydown", e => {
+        if (e.key === "Escape")
+            toolbar.querySelector(".close").click();
+    });
+
     // adjust textEditor height
-    function textAreaAdjust(o) {
+    txtEditor.AdjustHeight = function(o) {
         o.style.height = "1px";
         o.style.height = (o.scrollHeight) + "px";
     }
 
-    txtEditor.addEventListener("input", () => { textAreaAdjust(txtEditor); });
-    textAreaAdjust(txtEditor);
+    txtEditor.addEventListener("input", () => { txtEditor.AdjustHeight(txtEditor); });
+    txtEditor.AdjustHeight(txtEditor);
 
-    FocusEditor();
-
-    function FocusEditor() {
-        // focus textEditor
-        txtEditor.focus();
-
+    // focus and select
+    docViewer.FocusAndSelect = function (header) {
         // move cursor to clicked Header position
-        if (selectedHeader && selectedHeader.length > 0) {
-            const position = txtEditor.value.indexOf(selectedHeader);
+        if (header && header.length > 0) {
+            const heading = [...docViewer.querySelectorAll("h1, h2, h3")].find(h => h.textContent.includes(header));
+            if (heading) {
+                heading.scrollIntoView({
+                    behavior: "auto",
+                    block: "center"
+                });
+
+                const range = document.createRange();
+                range.selectNodeContents(heading);
+
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+        }
+    }
+
+    txtEditor.FocusAndSelect = function (header) {
+        // move cursor to clicked Header position
+        if (header && header.length > 0) {
+            const position = txtEditor.value.indexOf(header);
             if (position >= 0)
                 txtEditor.setSelectionRange(position, position);
             else
                 txtEditor.setSelectionRange(0, 0);
         }
+
+        // focus textEditor
+        txtEditor.blur();
+        txtEditor.focus();
     }
+
+    if (mode == "view")
+        docViewer.FocusAndSelect(selectedHeader);
+
+    if (mode == "edit")
+        txtEditor.FocusAndSelect(selectedHeader);
 
     return true;
 }
 
-DocMatrix.prototype.SaveDocument = async function (domain, documentId) {
+DocMatrix.prototype.SaveDocument = async function (domain, documentId, close) {
     var overlay = this.overlay();
     var toolbar = this.toolbar();
 
@@ -238,24 +365,27 @@ DocMatrix.prototype.SaveDocument = async function (domain, documentId) {
         return;
     }
 
-    // remove docElement
-    overlay.removeChild(docElement);
-    // hide toolbar
-    toolbar.style.visibility = "hidden";
-    // reset toolbar context
-    toolbar.dataset.domain = null;
-    toolbar.dataset.id = null;
+    if (close) {
+        // remove docElement
+        overlay.removeChild(docElement);
+        // hide toolbar
+        toolbar.style.visibility = "hidden";
+        // reset toolbar context
+        toolbar.dataset.domain = null;
+        toolbar.dataset.id = null;
+    }
 
     // update cell in grid
     var formattedContent = await response.text();
 
     // find & check cell
     var docCell = this.docCell(domain, documentId);
-    if (!docCell)
-        return;
+    if (docCell) {
+        docCell.dataset.content = content;
+        docCell.querySelector("doc").innerHTML = formattedContent;
+    }
 
-    docCell.dataset.content = content;
-    docCell.querySelector("doc").innerHTML = formattedContent;
+    return formattedContent;
 }
 
 // Service methods

@@ -34,6 +34,7 @@ DocMatrix.prototype.toolbar = function () { return this.overlay().querySelector(
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
 
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.overlay().querySelector(`.doc[data-domain="${domain}"][data-id="${documentId}"]`); }
+DocMatrix.prototype.docViewer = function (domain, documentId) { return this.overlay().querySelector(`.doc[data-domain="${domain}"][data-id="${documentId}"] .viewer`); }
 DocMatrix.prototype.txtEditor = function (domain, documentId) { return this.overlay().querySelector(`.doc[data-domain="${domain}"][data-id="${documentId}"] .editor`); }
 DocMatrix.prototype.docCell = function (domain, documentId) { return this.grid().querySelector(`td[data-domain="${domain}"][data-id="${documentId}"]`); }
 
