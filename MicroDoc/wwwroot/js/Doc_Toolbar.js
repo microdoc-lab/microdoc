@@ -19,12 +19,7 @@
         var domain = docElement.dataset.domain;
         var documentId = docElement.dataset.id;
 
-        // position toolbar at the top-right corner of docElement
-        const rect = docElement.getBoundingClientRect();
-        const overlayRect = overlay.getBoundingClientRect();
-
-        toolbar.style.left = `${rect.right - overlayRect.left - toolbar.offsetWidth}px`;
-        toolbar.style.top = `${rect.top - overlayRect.top}px`;
+        docElement.doc.PositionToolbar();
 
         // show toolbar
         toolbar.style.visibility = "visible";
@@ -93,6 +88,19 @@
 
 Doc.prototype.behaviors.push(Doc.prototype.InitToolbar);
 
+Doc.prototype.PositionToolbar = function () {
+    var docElement = this.element;
+    var overlay = this.overlay();
+    var toolbar = this.toolbar();
+
+    // position toolbar at the top-right corner of docElement
+    const rect = docElement.getBoundingClientRect();
+    const overlayRect = overlay.getBoundingClientRect();
+
+    toolbar.style.left = `${rect.right - overlayRect.left - toolbar.offsetWidth}px`;
+    toolbar.style.top = `${rect.top - overlayRect.top}px`;
+}
+
 Doc.prototype.ToggleMode = async function () {
     var docElement = this.element;
     var toolbar = this.toolbar();
@@ -127,4 +135,6 @@ Doc.prototype.ToggleMode = async function () {
 
         toggleButtonImage.src = "/icons/Edit.png";
     }
+
+    docElement.doc.PositionToolbar();
 }
