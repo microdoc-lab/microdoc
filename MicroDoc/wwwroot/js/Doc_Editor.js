@@ -29,10 +29,13 @@
                 txtEditor.setSelectionRange(position, position);
             else
                 txtEditor.setSelectionRange(0, 0);
-
-            // scroll textarea to position cursor at the top
-            scrollCursorToTop(txtEditor);
+        } else {
+            // if no heading specified - scroll editor to top
+            txtEditor.setSelectionRange(0, 0);
         }
+
+        // scroll textarea to position cursor at the top
+        scrollCursorToTop(txtEditor);
 
         // focus textEditor
         txtEditor.blur();

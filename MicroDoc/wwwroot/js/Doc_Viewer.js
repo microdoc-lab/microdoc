@@ -27,11 +27,15 @@
         if (headingIndex >= 0) {
             const heading = docViewer.querySelectorAll("h1, h2, h3")[headingIndex];
             if (heading) {
-                // scroll into view
+                // scroll heading into view
                 heading.scrollIntoView({ behavior: "auto", block: "start" });
                 // put selection on heading
                 SelectHeading(heading);
             }
+        }
+        else {
+            // if no heading specified - scroll document to top
+            container.scrollTo({ behavior: "auto", top: 0 });
         }
     }
 
