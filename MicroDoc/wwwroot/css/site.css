@@ -61,5 +61,5 @@ footer {
 }
 
 .icon-button img {
-    display: block;
+    display: inline-block;
 }

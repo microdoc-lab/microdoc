@@ -56,6 +56,8 @@
 
             txtEditor.FocusAndSelect(headingIndex);
 
+            toolbar.querySelector(".view img").src = "/icons/View.png";
+
             function getSelectedHeadingIndex(viewer) {
                 const selection = window.getSelection();
 
@@ -87,6 +89,8 @@
             var docViewer = this.docViewer(domain, documentId);
             docViewer.innerHTML = documentHtml;
             docViewer.FocusAndSelect(headingIndex);
+
+            toolbar.querySelector(".view img").src = "/icons/Edit.png";
 
             function getHeadingIndexAtCursor(textarea) {
                 const text = textarea.value;
@@ -216,6 +220,12 @@
         // set toolbar context
         toolbar.dataset.domain = domain;
         toolbar.dataset.id = documentId;
+
+        var mode = docElement.getAttribute("mode");
+        if (mode == "view")
+            toolbar.querySelector(".view img").src = "/icons/Edit.png";
+        else
+            toolbar.querySelector(".view img").src = "/icons/View.png";
     });
 
     // hide toolbar on mouseout
