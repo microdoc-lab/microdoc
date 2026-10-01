@@ -15,23 +15,23 @@
         if (!docCell || !grid.contains(docCell))
             return;
 
-        // find & check the section
-        const section = event.target.closest("section");
-        if (!section || !docCell.contains(section))
-            return;
-
-        // obtain section heading
-        var heading = section.querySelector("h1, h2, h3");
-
         // obtain document context
         var domain = docCell.dataset.domain;
         var documentId = docCell.dataset.id;
         var documentContent = docCell.dataset.content;
         var documentHtml = docCell.querySelector("doc").innerHTML;
 
-        // detect clicked heading index
-        const headings = docCell.querySelector("doc").querySelectorAll("h1, h2, h3");
-        const headingIndex = [...headings].indexOf(heading);
+        // find clicked heading index
+        var headingIndex = -1;
+        const section = event.target.closest("section");
+        if (section) {
+            // obtain section heading
+            var heading = section.querySelector("h1, h2, h3");
+
+            // detect clicked heading index
+            const headings = docCell.querySelector("doc").querySelectorAll("h1, h2, h3");
+            headingIndex = [...headings].indexOf(heading);
+        }
 
         this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
     });
