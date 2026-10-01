@@ -1,5 +1,5 @@
-﻿DocMatrix.prototype.InitEditor = function (options) {
-    this.log('InitEditor');
+﻿DocMatrix.prototype.InitPreview = function (options) {
+    this.log('InitPreview');
 
     var grid = this.grid();
 
@@ -37,7 +37,7 @@
     });
 }
 
-DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitEditor);
+DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPreview);
 
 // Api
 DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, headingIndex, mode) {
