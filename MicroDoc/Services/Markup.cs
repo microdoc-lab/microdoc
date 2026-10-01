@@ -66,7 +66,7 @@ namespace MicroDoc.Services
                         StartSection(1, "(no header)");
 
                     if (paragraph.Length > 0)
-                        paragraph.Append('\n');
+                        paragraph.Append("<br>");
 
                     paragraph.Append(line);
                 }
