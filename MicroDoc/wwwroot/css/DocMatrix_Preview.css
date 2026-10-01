@@ -1,4 +1,8 @@
 ﻿/* Section */
+.docmatrix .grid td doc section {
+    position: relative;
+}
+
 .docmatrix .grid td doc section:hover :is(h1, h2, h3) {
     color: red;
     background-color: aliceblue;
@@ -6,19 +10,22 @@
 }
 
 /* Headings */
-.docmatrix .grid td doc :is(h1, h2, h3) { 
-    font-size: 0.8rem; 
-    font-weight: normal; 
-    padding: 0px 3px;
+.docmatrix .grid td doc :is(h1, h2, h3) {
+    font-size: 0.8rem;
+    font-weight: normal;
+    padding: 0px;
+    width: fit-content;
     max-width: 100%;
     overflow: hidden;
     white-space: nowrap;
-    border: 1px solid transparent; 
+    border: 1px solid transparent;
 }
 
-.docmatrix .grid td doc h1 { margin-left: 0px;}
-.docmatrix .grid td doc h2 { margin-left: 4px; }
-.docmatrix .grid td doc h3 { margin-left: 8px; }
+.docmatrix .grid td doc section:has(h2) { left: 4px; }
+.docmatrix .grid td doc section:has(h3) { left: 8px; }
+
+.docmatrix .grid td doc:has(section h2) { padding-right: 4px; }
+.docmatrix .grid td doc:has(section h3) { padding-right: 8px; }
 
 /* Content */
 .docmatrix .grid td doc content {
@@ -28,10 +35,6 @@
     z-index: 1;
     padding: 0px 3px;
 }
-
-.docmatrix .grid td doc section:has(h1) > content { left: 0px; }
-.docmatrix .grid td doc section:has(h2) > content { left: 4px; }
-.docmatrix .grid td doc section:has(h3) > content { left: 8px; }
 
 .docmatrix .grid td doc section:hover > content:not(:empty) {
     display: block;

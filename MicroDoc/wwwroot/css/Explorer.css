@@ -1,6 +1,5 @@
 ﻿.explorer {
     position: relative;
-    border-collapse: collapse;
     border: 1px solid #ccc;
     container-type: inline-size;
 }
@@ -11,7 +10,6 @@
     right: 0px;
     bottom: 0px;
     z-index: 10;
-    min-height: 200px;
     pointer-events: none;  
     
     font-size: 0px;
