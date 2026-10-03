@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div id="explorer"></div>
+<div id="domainExplorers"></div>
 
 <script>
     // window.explorerOptions = {
@@ -16,10 +16,5 @@
     //     }
     // };
 
-    var container = document.getElementById("explorer");
-    var explorer = new Explorer(container);
-    explorer.domain = "microdoc.doc";
-    explorer.selectedTag = "Services";
-    
-    explorer.Reload();
+    OpenDomainExplorer("microdoc.doc", "Services");
 </script>
