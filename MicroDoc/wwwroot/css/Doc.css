@@ -63,10 +63,10 @@
 
 /* Viewer HTML*/
 /* Headings */
-.explorer .overlay .doc .viewer :is(h1,h2,h3) { margin-bottom: 4px; }
+.explorer .overlay .doc .viewer :is(h1,h2,h3) { margin: 4px 0px 4px 0px; }
 .explorer .overlay .doc .viewer h1 { font-size: 1.6rem; }
 .explorer .overlay .doc .viewer h2 { font-size: 1.4rem; }
 .explorer .overlay .doc .viewer h3 { font-size: 1.2rem; }
 
 /* Paragraph */
-.explorer .overlay .doc .viewer p { margin-bottom: 4px; }
+.explorer .overlay .doc .viewer p { margin: 4px 0px 4px 0px; }

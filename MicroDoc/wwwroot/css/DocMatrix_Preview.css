@@ -13,6 +13,7 @@
 .docmatrix .grid td doc :is(h1, h2, h3) {
     font-size: 0.8rem;
     font-weight: normal;
+    margin: 4px 0px 4px 0px;
     padding: 0px;
     width: fit-content;
     max-width: 100%;
@@ -46,4 +47,4 @@
 }
 
 /* Paragraph */
-.docmatrix .grid td doc p { margin-bottom: 4px; }
+.docmatrix .grid td doc p { margin: 4px 0px 4px 0px; }
