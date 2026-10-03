@@ -7,6 +7,7 @@
             public string Type { get; set; }
             public string Name { get; set; }
             public string RootFolder { get; set; }
+            public string Background { get; set; }
             public List<string> Documents { get; set; }
         }
 

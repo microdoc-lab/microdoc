@@ -99,6 +99,35 @@ namespace MicroDoc.Controllers
             return Content(html);
         }
 
+        public IActionResult Background(string domain) 
+        {
+            var options = _domainOptions.Find(domain);
+            if (options == null)
+                return NotFound();
+
+            if (string.IsNullOrWhiteSpace(options.Background))
+                return NotFound();
+
+            var path = Path.Combine(options.RootFolder, options.Background);
+
+            if (!System.IO.File.Exists(path))
+                return NotFound();
+
+            var contentType = Path.GetExtension(path).ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".webp" => "image/webp",
+                ".gif" => "image/gif",
+                ".svg" => "image/svg+xml",
+                _ => "application/octet-stream"
+            };
+
+            Response.Headers.CacheControl = "no-store";
+
+            return PhysicalFile(path, contentType);
+        }
+
         #region Misc
         public IActionResult Index()
         {

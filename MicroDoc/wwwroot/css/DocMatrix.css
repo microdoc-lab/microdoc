@@ -15,7 +15,7 @@
     inset: 0;
     width: 100%;
     table-layout: fixed;
-    background-color: antiquewhite;
+    background: color-mix(in srgb, antiquewhite 90%, transparent);
 }
 
 .docmatrix .grid:hover {

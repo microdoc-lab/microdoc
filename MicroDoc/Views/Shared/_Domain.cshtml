@@ -1,0 +1,11 @@
+﻿@using MicroDoc.Services
+@inject DomainOptions _domainOptions
+
+<div id="domainExplorers"></div>
+
+<script>
+    var options = {};
+
+    var domain = new Domain(options);
+    domain.OpenExplorer("microdoc.doc", "Services");
+</script>

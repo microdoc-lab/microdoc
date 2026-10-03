@@ -2,7 +2,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div id="domainExplorers"></div>
+@await Html.PartialAsync("_Domain")
 
 <script>
     // window.explorerOptions = {
@@ -15,7 +15,4 @@
     //         this.log(`Node selected externally: '${tagName}'`);
     //     }
     // };
-
-    var domain = new Domain();
-    domain.OpenExplorer("microdoc.doc", "Services");
 </script>

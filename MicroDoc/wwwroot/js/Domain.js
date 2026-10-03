@@ -1,4 +1,5 @@
-﻿function Domain() {
+﻿function Domain(options) {
+    this.options = options;
     this.container = document.querySelector("#domainExplorers");
 
     window.domain = this;
@@ -31,6 +32,7 @@ Domain.prototype.OpenExplorer = function(domain, selectedTag) {
     var parent = document.createElement("div");
     parent.className = "explorerHost";
     parent.domain = domain;
+    parent.style.backgroundImage = `url("/Home/Background?domain=${domain}")`;
 
     element = document.createElement("div");
     element.id = explorerId;

@@ -9,7 +9,7 @@
     width: 300px; /* initial width */
     flex-shrink: 0;
     overflow: visible;
-    background-color: linen;
+    background: color-mix(in srgb, linen 90%, transparent);
     position: relative;
 }
 
@@ -25,6 +25,6 @@
     flex: 1;
     min-width: 0;
     overflow: visible;
-    background-color: linen;
+    background: color-mix(in srgb, linen 50%, transparent);
     position: relative;
 }
