@@ -3,7 +3,6 @@
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();
-    var docMatrix = this.docMatrix();
 
     if (toolbar.toolbarInited)
         return;
@@ -61,6 +60,8 @@
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
 
+        var docMatrix = this.docMatrix();
+
         // find & check docElement
         var docElement = docMatrix.docElement(domain, documentId);
         if (!docElement)
@@ -74,6 +75,8 @@
         // obtain document context
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
+
+        var docMatrix = this.docMatrix();
 
         // find & check docElement
         var docElement = docMatrix.docElement(domain, documentId);

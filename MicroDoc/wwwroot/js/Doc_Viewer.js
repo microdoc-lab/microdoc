@@ -35,7 +35,7 @@
         }
         else {
             // if no heading specified - scroll document to top
-            container.scrollTo({ behavior: "auto", top: 0 });
+            docViewer.scrollTo({ behavior: "auto", top: 0 });
         }
     }
 
