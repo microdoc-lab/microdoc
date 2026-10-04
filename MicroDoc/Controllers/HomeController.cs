@@ -99,6 +99,13 @@ namespace MicroDoc.Controllers
             return Content(html);
         }
 
+        [HttpPost]
+        public IActionResult DeleteDocument(string domain, string documentId)
+        {
+            _docService.DeleteDocument(domain, documentId);
+            return Ok();
+        }
+
         public IActionResult Background(string domain) 
         {
             var options = _domainOptions.Find(domain);

@@ -54,22 +54,6 @@
         toolbar.dataset.id = null;
     });
 
-    // save document on close
-    toolbar.querySelector(".close").addEventListener("click", async event => {
-        // obtain document context
-        var domain = toolbar.dataset.domain;
-        var documentId = toolbar.dataset.id;
-
-        var docMatrix = this.docMatrix();
-
-        // find & check docElement
-        var docElement = docMatrix.docElement(domain, documentId);
-        if (!docElement)
-            return;
-
-        await docElement.doc.SaveDocument(true);
-    });
-
     // toggle view/edit mode
     toolbar.querySelector(".view").addEventListener("click", async event => {
         // obtain document context
@@ -84,6 +68,43 @@
             return;
 
         await docElement.doc.ToggleMode();
+    });
+
+    // save document on close
+    toolbar.querySelector(".delete").addEventListener("click", async event => {
+        // obtain document context
+        var domain = toolbar.dataset.domain;
+        var documentId = toolbar.dataset.id;
+
+        var docMatrix = this.docMatrix();
+
+        var docPath = docMatrix.DocPath(domain, documentId);
+
+        if (!confirm(`Delete document ${docPath} ?`))
+            return;
+
+        // find & check docElement
+        var docElement = docMatrix.docElement(domain, documentId);
+        if (!docElement)
+            return;
+
+        await docElement.doc.DeleteDocument();
+    });
+
+    // save document on close
+    toolbar.querySelector(".close").addEventListener("click", async event => {
+        // obtain document context
+        var domain = toolbar.dataset.domain;
+        var documentId = toolbar.dataset.id;
+
+        var docMatrix = this.docMatrix();
+
+        // find & check docElement
+        var docElement = docMatrix.docElement(domain, documentId);
+        if (!docElement)
+            return;
+
+        await docElement.doc.SaveDocument(true);
     });
 
     toolbar.toolbarInited = true;

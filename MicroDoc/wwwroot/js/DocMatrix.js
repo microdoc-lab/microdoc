@@ -35,6 +35,20 @@ DocMatrix.prototype.grid = function () { return this.element.querySelector(".gri
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docCell = function (domain, documentId) { return this.element.querySelector(`.grid td[data-domain="${domain}"][data-id="${documentId}"]`); }
 
+DocMatrix.prototype.DocPath = function (domain, documentId) {
+    var tags = documentId.split('/');
+    var docName = tags.pop();
+    var tagPath = tags.map(t => `[${t}]`).join(' ');
+    return (tagPath ? tagPath : domain) + " " + docName;
+}
+
+DocMatrix.prototype.DocColor = function (documentId) {
+    var tags = documentId.split('/');
+    var docName = tags.pop();
+    var docNameNoExt = docName.replace(/\.[^.]*$/, "");
+    return this.options.DocumentColors[docNameNoExt];
+}
+
 DocMatrix.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }

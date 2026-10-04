@@ -89,5 +89,12 @@ namespace MicroDoc.Services
             var path = Path.Combine(rootFolder, documentId);
             File.WriteAllText(path, content);
         }
+
+        public void DeleteDocument(string domain, string documentId)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            var path = Path.Combine(rootFolder, documentId);
+            File.Delete(path);
+        }
     }
 }

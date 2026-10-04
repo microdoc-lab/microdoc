@@ -76,6 +76,38 @@ Doc.prototype.SaveDocument = async function (close) {
     return formattedContent;
 }
 
+Doc.prototype.DeleteDocument = async function () {
+    var docMatrix = this.docMatrix();
+    var overlay = this.overlay();
+    var toolbar = this.toolbar();
+    var docElement = this.element;
+
+    var domain = docElement.dataset.domain;
+    var documentId = docElement.dataset.id;
+
+    // save document
+    const response = await this.service.DeleteDocument(domain, documentId);
+    if (!response.ok) {
+        this.error("DeleteDocument request failed", await response.text());
+        return;
+    }
+
+    // remove docElement
+    overlay.removeChild(docElement);
+    // hide toolbar
+    toolbar.style.visibility = "hidden";
+    // reset toolbar context
+    toolbar.dataset.domain = null;
+    toolbar.dataset.id = null;
+
+    // find & check cell
+    var docCell = docMatrix.docCell(domain, documentId);
+    if (docCell) {
+        docCell.dataset.content = null;
+        docCell.querySelector("doc").innerHTML = null;
+    }
+}
+
 // Service methods
 function DocService() { }
 
@@ -86,6 +118,16 @@ DocService.prototype.SaveDocument = function (domain, documentId, content) {
             domain: domain,
             documentId: documentId,
             content: content
+        })
+    });
+}
+
+DocService.prototype.DeleteDocument = function (domain, documentId) {
+    return fetch("/Home/DeleteDocument", {
+        method: "POST",
+        body: new URLSearchParams({
+            domain: domain,
+            documentId: documentId
         })
     });
 }

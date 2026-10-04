@@ -94,17 +94,3 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     if (mode == "edit")
         docElement.doc.txtEditor().SelectAndScroll(headingIndex);
 }
-
-DocMatrix.prototype.DocPath = function(domain, documentId) {
-    var tags = documentId.split('/');
-    var docName = tags.pop();
-    var tagPath = tags.map(t => `[${t}]`).join(' ');
-    return (tagPath ? tagPath : domain) + " " + docName;
-}
-
-DocMatrix.prototype.DocColor = function (documentId) {
-    var tags = documentId.split('/');
-    var docName = tags.pop();
-    var docNameNoExt = docName.replace(/\.[^.]*$/, "");
-    return this.options.DocumentColors[docNameNoExt];
-}
