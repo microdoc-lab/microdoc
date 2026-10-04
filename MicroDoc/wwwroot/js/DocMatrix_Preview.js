@@ -67,11 +67,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     docElement.dataset.domain = domain;
     docElement.dataset.id = documentId;
     docElement.dataset.tagpath = this.DocPath(domain, documentId);
-
-    // determine doc color
-    var docColor = this.DocColor(documentId);
-    if (docColor)
-        docElement.style.setProperty("--doc-color", docColor);
+    docElement.dataset.document = this.DocName(documentId);
 
     docElement.querySelector(".viewer").innerHTML = documentHtml;
     docElement.querySelector(".editor").value = documentContent;

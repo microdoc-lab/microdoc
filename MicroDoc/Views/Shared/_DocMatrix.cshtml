@@ -21,7 +21,7 @@
 			</th>
 			@foreach (var column in Model.Domain.Documents)
 			{
-				<th style="width: @(colWidth)%; max-width: @(colWidth)%; --doc-color: @Model.Domain.GetDocumentColor(column);">@column</th>	
+				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column">@column</th>	
 			}
 		</tr>
 
@@ -68,16 +68,6 @@
 		if (!options)
 			window["@Model.Id" + "Options"] = options = {};
 
-		options.DocumentColors = {};
-
-		@foreach (var docOptions in Model.Domain.DocumentOptions)
-		{
-			if (!string.IsNullOrWhiteSpace(docOptions.Color))
-			{
-				<text>options.DocumentColors["@docOptions.Name"] = "@docOptions.Color";</text>
-			}
-		}
-
         const docMatrix = new DocMatrix(container, options);
 		docMatrix.domain = "@Model.Domain.Name";
 		docMatrix.selectedTag = "@Model.SelectedTag";
@@ -85,3 +75,13 @@
 		docMatrix.InitBehaviors();
     })();
 </script>
+
+<style type="text/css">
+	@foreach (var docOptions in Model.Domain.DocumentOptions)
+	{
+		if (!string.IsNullOrWhiteSpace(docOptions.Color))
+		{
+			<text>.docmatrix th[data-document=@docOptions.Name], .explorer .overlay .doc[data-document=@docOptions.Name]::before { background: @docOptions.Color; }</text>
+		}
+	}
+</style>

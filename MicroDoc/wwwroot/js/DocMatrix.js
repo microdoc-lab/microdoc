@@ -42,11 +42,11 @@ DocMatrix.prototype.DocPath = function (domain, documentId) {
     return (tagPath ? tagPath : domain) + " " + docName;
 }
 
-DocMatrix.prototype.DocColor = function (documentId) {
+DocMatrix.prototype.DocName = function (documentId) {
     var tags = documentId.split('/');
     var docName = tags.pop();
-    var docNameNoExt = docName.replace(/\.[^.]*$/, "");
-    return this.options.DocumentColors[docNameNoExt];
+    const index = docName.lastIndexOf(".");
+    return index > 0 ? docName.substring(0, index) : docName;
 }
 
 DocMatrix.prototype.Reload = async function () {

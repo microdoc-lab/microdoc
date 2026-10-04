@@ -29,7 +29,6 @@
     text-align: center;
     padding: 0px 5px;
     min-width: 100px;
-    background: var(--doc-color);
 }
 
 .docmatrix .grid tr:nth-child(1) th:nth-child(1) {

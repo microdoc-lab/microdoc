@@ -7,8 +7,7 @@
     padding: 0px 3px;
     font-size: smaller;
     font-weight: bold;
-    background-color: var(--doc-color);
-    border: 1px solid red;
+    border: 1px solid #ccc;
     border-radius: 5px;
 }
 
