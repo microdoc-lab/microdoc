@@ -63,6 +63,31 @@
             return true;
         }
 
+        public bool DeleteTag(string domain, string selectedTag)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            
+            if (string.IsNullOrEmpty(selectedTag))
+                return false;
+
+            var folder = Path.Combine(rootFolder, selectedTag);
+            if (!Directory.Exists(folder))
+                return false;
+
+            if (Directory.GetDirectories(folder).Any())
+                return false;
+
+            Directory.Delete(folder);
+
+            var parentTag = Path.GetDirectoryName(selectedTag);
+
+            TagView view = BuildView(domain, parentTag);
+            var viewPath = Path.Combine(rootFolder, parentTag ?? "", ViewFileName);
+            ViewConfigLoader.SaveTagsToFile(viewPath, view);
+
+            return true;
+        }
+
         public bool ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;

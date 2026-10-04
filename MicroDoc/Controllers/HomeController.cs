@@ -46,6 +46,18 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        public IActionResult DeleteTag(string domain, string selectedTag)
+        {
+            if (_docService.GetDocuments(domain, selectedTag).Any())
+                return NotFound();
+
+            if (!_tagTreeService.DeleteTag(domain, selectedTag))
+                return NotFound();
+
+            return Ok();
+        }
+
+        [HttpPost]
         public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
             if (!_tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag))

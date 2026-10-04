@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace MicroDoc.Services
+﻿namespace MicroDoc.Services
 {
     public class DocService
     {

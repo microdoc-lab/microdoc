@@ -47,16 +47,18 @@ TagTree.prototype.Load = async function (tagId) {
 }
 
 TagTree.prototype.New = async function () {
+    var domain = this.domain;
+    var selectedTag = this.selectedTag;
+
     // Prompt new tag name
-    var selectedTagName = this.selectedTag
-        ? `[${this.selectedTag}]`
-        : "ROOT";
-    var newTagName = prompt(`Create new Tag in ${selectedTagName}`);
+    var tagPath = this.TagPath(domain, selectedTag);
+
+    var newTagName = prompt(`Create new Tag in ${tagPath}`);
     if (!newTagName || !newTagName.trim())
         return;
 
     // Create Tag
-    const response = await this.service.NewTag(this.domain, this.selectedTag, newTagName);
+    const response = await this.service.NewTag(domain, selectedTag, newTagName);
     if (!response.ok) {
         this.error("NewTag request failed", await response.text());
         return;
@@ -64,12 +66,59 @@ TagTree.prototype.New = async function () {
 
     var explorerElement = this.element.closest(".explorer");
 
-    // reload tree and select new tag
-    await this.Load(this.selectedTag);
+    // reload tree with currently selected tag
+    await this.Load(selectedTag);
+
+    // expand selectedTag
+    explorerElement.explorer.tagTree().ExpandTag(selectedTag);
 
     // reload docMatrix
     if (explorerElement)
         explorerElement.explorer.docMatrix().Reload();
+}
+
+TagTree.prototype.Delete = async function () {
+    var domain = this.domain;
+    var selectedTag = this.selectedTag;
+
+    // Prompt new tag name
+    var tagPath = this.TagPath(domain, selectedTag);
+    var parentTag = this.ParentTag(selectedTag);
+
+    if (!confirm(`Delete tag ${tagPath} ?`))
+        return;
+
+    // Delete Tag
+    const response = await this.service.DeleteTag(domain, selectedTag);
+    if (!response.ok) {
+        this.error("DeleteTag request failed", await response.text());
+        return;
+    }
+
+    var explorerElement = this.element.closest(".explorer");
+
+    // reload tree and select parent tag
+    await this.Load(parentTag);
+
+    // expand parentTag
+    explorerElement.explorer.tagTree().ExpandTag(parentTag);
+
+    // reload docMatrix
+    if (explorerElement)
+        explorerElement.explorer.docMatrix().Reload();
+}
+
+TagTree.prototype.TagPath = function (domain, tag) {
+    var tags = tag.split('/');
+    var tagPath = tags.map(t => `[${t}]`).join(' ');
+    return tagPath && tagPath != "[]" ? tagPath : domain;
+}
+
+TagTree.prototype.ParentTag = function (tag) {
+    var tags = tag.split('/');
+    tags.pop();
+    var tagPath = tags.join('/');
+    return tagPath;
 }
 
 // Service methods
@@ -82,6 +131,16 @@ TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
             domain: domain,
             selectedTag: selectedTag ?? "",
             newTagName: newTagName
+        })
+    });
+}
+
+TagTreeService.prototype.DeleteTag = function (domain, selectedTag) {
+    return fetch("/Home/DeleteTag", {
+        method: "POST",
+        body: new URLSearchParams({
+            domain: domain,
+            selectedTag: selectedTag ?? ""
         })
     });
 }

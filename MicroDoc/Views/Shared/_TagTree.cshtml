@@ -18,12 +18,15 @@
 		<button class="icon-button" onclick='document.getElementById("@Model.Id").tagTree.New()' title="New Tag">
 			<img src="/icons/New.png">
 		</button>
+		<button class="icon-button" onclick='document.getElementById("@Model.Id").tagTree.Delete()' title="Delete Tag">
+			<img src="/icons/Delete.png">
+		</button>
 		<button class="icon-button" onclick='document.getElementById("@Model.Id").tagTree.Reload()' title="Reload">
 			<img src="/icons/Refresh.png">
 		</button>
 	</div>
 
-    <div class="domain tag @(Model.SelectedTag == null ? "selected" : "")">
+    <div class="domain tag @(Model.SelectedTag == null ? "selected" : "")" data-domain="@Model.Domain.Name" data-path="" data-tag="" data-id="">
         <span class="title-bar">
             <span class="domain title">@Model.Domain.Name</span>
         </span>
