@@ -48,7 +48,10 @@ TagTree.prototype.Load = async function (tagId) {
 
 TagTree.prototype.New = async function () {
     // Prompt new tag name
-    var newTagName = prompt("Enter new Tag name");
+    var selectedTagName = this.selectedTag
+        ? `[${this.selectedTag}]`
+        : "ROOT";
+    var newTagName = prompt(`Create new Tag in ${selectedTagName}`);
     if (!newTagName || !newTagName.trim())
         return;
 
@@ -77,12 +80,12 @@ TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
-            selectedTag: selectedTag,
+            selectedTag: selectedTag ?? "",
             newTagName: newTagName
         })
     });
 }
 
 TagTreeService.prototype.TagTree = function (clientId, domain, selectedTag) {
-    return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
+    return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag ?? ""}`);
 }
