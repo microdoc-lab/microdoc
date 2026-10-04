@@ -3,9 +3,16 @@
 
 <div id="domainExplorers"></div>
 
+<div id="domainOptions" style="display: none;">
+	<textarea class="editor"></textarea>
+</div>
+
 <script>
     var options = {};
 
     var domain = new Domain(options);
+    
+    domain.InitBehaviors();
+
     domain.OpenExplorer("microdoc.doc", "Services");
 </script>

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Diagnostics;
 
 namespace MicroDoc.Controllers
@@ -11,13 +12,15 @@ namespace MicroDoc.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IOptions<MicroDocOptions> _microDocOptions;
         private readonly DomainOptions _domainOptions;
         private readonly TagTreeService _tagTreeService;
         private readonly DocService _docService;
 
-        public HomeController(ILogger<HomeController> logger, DomainOptions domainOptions, TagTreeService tagTreeService, DocService docService)
+        public HomeController(ILogger<HomeController> logger, IOptions<MicroDocOptions> microDocOptions, DomainOptions domainOptions, TagTreeService tagTreeService, DocService docService)
         {
             _logger = logger;
+            _microDocOptions = microDocOptions;
             _domainOptions = domainOptions;
             _tagTreeService = tagTreeService;
             _docService = docService;
@@ -160,6 +163,26 @@ namespace MicroDoc.Controllers
             Response.Headers.CacheControl = "no-store";
 
             return PhysicalFile(path, contentType);
+        }
+
+        public IActionResult LoadDomainOptions() 
+        {
+            var yaml = DomainOptionsLoader.LoadOptionsAsText(_microDocOptions.Value.DomainOptions);
+
+            return Content(yaml);
+        }
+
+        [HttpPost]
+        public IActionResult SaveDomainOptions(string yaml)
+        {
+            var domainOptions = DomainOptionsLoader.ValidateOptions(yaml);
+
+            DomainOptionsLoader.SaveOptionsToFile(_microDocOptions.Value.DomainOptions, yaml);
+
+            // Update singleton in container
+            _domainOptions.Domains = domainOptions.Domains;
+
+            return Ok();
         }
 
         private IActionResult Error(ErrorCode code) => NotFound($"{code}");
