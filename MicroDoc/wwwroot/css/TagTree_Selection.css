@@ -3,8 +3,7 @@
 }
 
 .tag-tree .tag.selected > .title-bar > .title,
-.tag-tree .tag.selected > details > .title-bar > .title
-{
-    background-color: #e0f0ff;
+.tag-tree .tag.selected > details > .title-bar > .title {
+    background-color: var(--selection-background);
     border-radius: 4px;
 }

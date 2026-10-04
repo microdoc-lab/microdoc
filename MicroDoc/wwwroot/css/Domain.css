@@ -15,5 +15,5 @@
 }
 
 a.explorer-link.selected {
-    background-color:aqua;
+    background-color: var(--selection-background);
 }

@@ -5,7 +5,7 @@
 
 .docmatrix .grid td doc section:hover :is(h1, h2, h3) {
     color: red;
-    background-color: aliceblue;
+    background-color: var(--doc-background);
     border: 1px solid #ccc;
 }
 
@@ -32,14 +32,14 @@
 .docmatrix .grid td doc content {
     position: absolute;
     display: none;
-    transform: translateY(-1px);
+    transform: translateY(2px);
     z-index: 1;
-    padding: 0px 3px;
+    padding: 0px 3px 0px 3px;
 }
 
 .docmatrix .grid td doc section:hover > content:not(:empty) {
     display: block;
-    background-color: aliceblue;
+    background-color: var(--doc-background);
     margin-top: -8px;
     width: 50cqw;
     border-collapse: collapse;

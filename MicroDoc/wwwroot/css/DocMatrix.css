@@ -15,11 +15,14 @@
     inset: 0;
     width: 100%;
     table-layout: fixed;
-    background: color-mix(in srgb, antiquewhite 90%, transparent);
+    --color: var(--grid-background);
+    --opacity: 90%;
+    background: color-mix(in srgb, var(--color) var(--opacity), transparent);
 }
 
 .docmatrix .grid:hover {
     z-index: 20;
+    --opacity: 100%;
 }
 
 .docmatrix .grid tr:nth-child(1) th {
@@ -68,6 +71,6 @@
 }
 
 .docmatrix .grid td:hover doc {
-    background-color: antiquewhite;
+    background-color: var(--grid-background);
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }

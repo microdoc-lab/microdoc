@@ -39,7 +39,7 @@
 .explorer .overlay .toolbar .grip { cursor: move; }
 
 /* Viewer & Editor */
-.explorer .overlay .doc .viewer, 
+.explorer .overlay .doc .viewer,
 .explorer .overlay .doc .editor {
     display: block;
     width: 100%;
@@ -47,11 +47,19 @@
     min-height: 150px;
     max-height: 350px;
     overflow-y: auto;
-
     border: 1px solid #ccc;
-    background: color-mix(in srgb, aliceblue 80%, transparent);
+
+    --color: var(--doc-background);
+    --opacity: 90%;
+    background: color-mix(in srgb, var(--color) var(--opacity), transparent);
 
     pointer-events: auto;
+}
+
+.explorer .overlay .doc .viewer:hover,
+.explorer .overlay .doc .editor:hover,
+.explorer .overlay .doc .editor:focus {
+    --opacity: 100%;
 }
 
 .explorer .overlay .doc .viewer { padding: 4px; }

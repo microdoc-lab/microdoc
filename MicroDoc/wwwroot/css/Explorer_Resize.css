@@ -6,25 +6,23 @@
 }
 
 .explorer .tree-panel {
+    position: relative;
     width: 300px; /* initial width */
     flex-shrink: 0;
     overflow: visible;
-    background: color-mix(in srgb, linen 90%, transparent);
-    position: relative;
 }
 
 .explorer .splitter {
+    position: relative;
     width: 5px;
     flex-shrink: 0;
     cursor: col-resize;
     background-color: lightgray;
-    position: relative;
 }
 
 .explorer .doc-panel {
+    position: relative;
     flex: 1;
     min-width: 0;
     overflow: visible;
-    background: color-mix(in srgb, linen 50%, transparent);
-    position: relative;
 }

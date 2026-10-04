@@ -1,3 +1,20 @@
+:root {
+    --tree-background: linen;
+    --grid-background: antiquewhite;
+    --doc-background: aliceblue;
+    --selection-background: skyblue;
+    --hover-background: Gainsboro;
+    /*
+    --tree-background: AliceBlue;
+    --grid-background: WhiteSmoke;
+    --doc-background: White;
+    */
+}
+
+::selection {
+    background-color: var(--selection-background);
+}
+
 html {
   font-size: 14px;
 }
@@ -37,7 +54,6 @@ main {
     overflow-y: visible;
     border-right: 1px solid #ccc;
     padding: 1em;
-    background-color: #f9f9f9;
 }
 
 .main-content {
