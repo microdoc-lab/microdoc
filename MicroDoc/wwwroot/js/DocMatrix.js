@@ -33,7 +33,7 @@ DocMatrix.prototype.overlay = function () { return this.element.closest(".explor
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
 
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
-DocMatrix.prototype.docCell = function (domain, documentId) { return this.element.querySelector(`.grid td[data-domain="${domain}"][data-id="${documentId}"]`); }
+DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 
 DocMatrix.prototype.DocPath = function (domain, documentId) {
     var tags = documentId.split('/');

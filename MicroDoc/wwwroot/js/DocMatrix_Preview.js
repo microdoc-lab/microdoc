@@ -10,17 +10,25 @@
         if (selection && !selection.isCollapsed)
             return;
 
-        // find & check the cell
-        const docCell = event.target.closest("td");
-        if (!docCell || !grid.contains(docCell))
+        var docInCell = event.target.closest("doc");
+
+        if (!docInCell) {
+            // find & check cell
+            const docCell = event.target.closest("td");
+            if (!docCell || !grid.contains(docCell))
+                return;
+
+            docInCell = docCell.querySelector("doc");
+        }
+
+        if (!docInCell || !grid.contains(docInCell))
             return;
 
         // obtain document context
-        var domain = docCell.dataset.domain;
-        var documentId = docCell.dataset.id;
-        var tagpath = docCell.dataset.tagpath;
-        var documentContent = docCell.dataset.content;
-        var documentHtml = docCell.querySelector("doc").innerHTML;
+        var domain = docInCell.dataset.domain;
+        var documentId = docInCell.dataset.id;
+        var documentContent = docInCell.dataset.content;
+        var documentHtml = docInCell.innerHTML;
 
         // find clicked heading index
         var headingIndex = -1;
@@ -30,7 +38,7 @@
             var heading = section.querySelector("h1, h2, h3");
 
             // detect clicked heading index
-            const headings = docCell.querySelector("doc").querySelectorAll("h1, h2, h3");
+            const headings = docInCell.querySelectorAll("h1, h2, h3");
             headingIndex = [...headings].indexOf(heading);
         }
 

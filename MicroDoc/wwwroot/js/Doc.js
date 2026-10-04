@@ -69,10 +69,10 @@ Doc.prototype.SaveDocument = async function (close) {
     var formattedContent = await response.text();
 
     // find & check cell
-    var docCell = docMatrix.docCell(domain, documentId);
-    if (docCell) {
-        docCell.dataset.content = content;
-        docCell.querySelector("doc").innerHTML = formattedContent;
+    var docInCell = docMatrix.docInCell(domain, documentId);
+    if (docInCell) {
+        docInCell.dataset.content = content;
+        docInCell.innerHTML = formattedContent;
     }
 
     return formattedContent;
@@ -105,10 +105,15 @@ Doc.prototype.DeleteDocument = async function () {
     toolbar.dataset.id = null;
 
     // find & check cell
-    var docCell = docMatrix.docCell(domain, documentId);
-    if (docCell) {
-        docCell.dataset.content = null;
-        docCell.querySelector("doc").innerHTML = null;
+    var docInCell = docMatrix.docInCell(domain, documentId);
+    if (docInCell) {
+        if (docInCell.classList.contains("nameonly")) {
+            docInCell.remove();
+        }
+        else {
+            docInCell.dataset.content = null;
+            docInCell.innerHTML = null;
+        }
     }
 }
 

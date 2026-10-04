@@ -22,6 +22,11 @@
     border: 1px solid transparent;
 }
 
+.docmatrix .grid td doc.nameonly :is(h1, h2, h3) {
+    visibility: hidden;
+    margin: 0px;
+}
+
 .docmatrix .grid td doc section:has(h2) { left: 4px; }
 .docmatrix .grid td doc section:has(h3) { left: 8px; }
 
@@ -37,7 +42,7 @@
     padding: 0px 3px 0px 3px;
 }
 
-.docmatrix .grid td doc section:hover > content:not(:empty) {
+.docmatrix .grid td doc:not(.nameonly) section:hover > content:not(:empty) {
     display: block;
     background-color: var(--doc-background);
     margin-top: -8px;

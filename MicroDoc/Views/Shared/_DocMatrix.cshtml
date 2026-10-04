@@ -6,7 +6,7 @@
 }
 
 @{
-	int colWidth = 100 / (Model.Domain.Documents.Count + 1);
+	int colWidth = 100 / (Model.Domain.Documents.Count + 2);
 }
 
 <div id="@Model.Id" class="docmatrix">
@@ -23,6 +23,7 @@
 			{
 				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column">@column</th>	
 			}
+			<th style="width: @(colWidth)%; max-width: @(colWidth)%;"></th>
 		</tr>
 
 		@foreach (var row in Model.Rows)
@@ -52,8 +53,14 @@
 						};
 					}
 
-					<td data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content"><clip><doc>@Html.Raw(doc.Html)</doc></clip></td>
+					<td><clip><doc data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content">@Html.Raw(doc.Html)</doc></clip></td>
 				}
+				<td><clip>
+					@foreach (var doc in row.Documents.Where(d => !Model.Domain.Documents.Contains(d.Name)))
+					{
+						<doc class="nameonly" data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content" data-document="@doc.Name" data-name="@(doc.Name + doc.Extension)">@Html.Raw(doc.Html)</doc>
+					}
+				</clip></td>
 			</tr>
 		}
 	</table>
@@ -81,7 +88,10 @@
 	{
 		if (!string.IsNullOrWhiteSpace(docOptions.Color))
 		{
-			<text>.docmatrix th[data-document=@docOptions.Name], .explorer .overlay .doc[data-document=@docOptions.Name]::before { background: @docOptions.Color; }</text>
+<text>.docmatrix th[data-document=@docOptions.Name],
+.docmatrix td doc.nameonly[data-document=@docOptions.Name]::before,
+.explorer .overlay .doc[data-document=@docOptions.Name]::before { background: @docOptions.Color; }
+</text>
 		}
 	}
 </style>
