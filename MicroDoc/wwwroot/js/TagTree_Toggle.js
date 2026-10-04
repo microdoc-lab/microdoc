@@ -39,8 +39,19 @@
 
 TagTree.prototype.behaviors.push(TagTree.prototype.InitToggle);
 
+TagTree.prototype.ExpandedTag = function () {
+    var elements = this.element.querySelectorAll(`details[open]`);
+    var details = elements.length ? elements[elements.length - 1] : null;
+    if (details)
+        return details.closest(".tag").dataset.id;
+    return null;
+}
+
 TagTree.prototype.ExpandTag = function (tag) {
     var details = this.element.querySelector(`.tag[data-id="${tag}"] details`);
-    if (details)
-        details.open = true;
+    while (details) {
+        if (!details.classList.contains("empty"))
+            details.open = true;
+        details = details.parentElement.closest("details");
+    }
 }

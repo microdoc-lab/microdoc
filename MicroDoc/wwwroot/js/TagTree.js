@@ -33,8 +33,12 @@ TagTree.prototype.Reload = async function () {
 }
 
 TagTree.prototype.Load = async function (tagId) {
+    var expandedTag = this.ExpandedTag();
+
     // Update model property
     this.selectedTag = tagId;
+
+    var explorerElement = this.element.closest(".explorer");
 
     // Reload HTML content
     const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);
@@ -44,6 +48,9 @@ TagTree.prototype.Load = async function (tagId) {
     }
 
     ReplaceInnerHtml(this.element.parentElement, await response.text());
+
+    // expand expandedTag
+    explorerElement.explorer.tagTree().ExpandTag(expandedTag);
 }
 
 TagTree.prototype.New = async function () {
