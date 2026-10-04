@@ -39,8 +39,10 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult NewTag(string domain, string selectedTag, string newTagName)
         {
-            if (!_tagTreeService.NewTag(domain, selectedTag, newTagName, out string newTagId))
-                return NotFound();
+            var status = _tagTreeService.NewTag(domain, selectedTag, newTagName, out string newTagId);
+                
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             return Content(newTagId);
         }
@@ -48,11 +50,16 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult DeleteTag(string domain, string selectedTag)
         {
-            if (_docService.GetDocuments(domain, selectedTag).Any())
-                return NotFound();
+            if (string.IsNullOrEmpty(selectedTag))
+                return Error(ErrorCode.RootTag);
 
-            if (!_tagTreeService.DeleteTag(domain, selectedTag))
-                return NotFound();
+            if (_docService.GetDocuments(domain, selectedTag).Any())
+                return Error(ErrorCode.NestedDocumentsExists);
+
+            var status = _tagTreeService.DeleteTag(domain, selectedTag);
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             return Ok();
         }
@@ -106,7 +113,11 @@ namespace MicroDoc.Controllers
         {
             content = content ?? string.Empty;
 
-            _docService.SaveDocument(domain, documentId, content);
+            var status = _docService.SaveDocument(domain, documentId, content);
+            
+            if (status != ErrorCode.Ok)
+                return Error(status);
+
             var html = Markup.ToHtml(content);
             return Content(html);
         }
@@ -114,7 +125,11 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult DeleteDocument(string domain, string documentId)
         {
-            _docService.DeleteDocument(domain, documentId);
+            var status = _docService.DeleteDocument(domain, documentId);
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
+
             return Ok();
         }
 
@@ -146,6 +161,8 @@ namespace MicroDoc.Controllers
 
             return PhysicalFile(path, contentType);
         }
+
+        private IActionResult Error(ErrorCode code) => NotFound($"{code}");
 
         #region Misc
         public IActionResult Index()

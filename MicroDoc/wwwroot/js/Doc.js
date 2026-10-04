@@ -46,10 +46,12 @@ Doc.prototype.SaveDocument = async function (close) {
     var documentId = docElement.dataset.id;
     var content = txtEditor.value;
 
+    var docPath = docMatrix.DocPath(domain, documentId);
+
     // save document
     const response = await this.service.SaveDocument(domain, documentId, content);
     if (!response.ok) {
-        this.error("SaveDocument request failed", await response.text());
+        this.error(`Save document ${docPath} failed`, await response.text());
         return;
     }
 
@@ -85,10 +87,12 @@ Doc.prototype.DeleteDocument = async function () {
     var domain = docElement.dataset.domain;
     var documentId = docElement.dataset.id;
 
+    var docPath = docMatrix.DocPath(domain, documentId);
+
     // save document
     const response = await this.service.DeleteDocument(domain, documentId);
     if (!response.ok) {
-        this.error("DeleteDocument request failed", await response.text());
+        this.error(`Delete document ${docPath} failed`, await response.text());
         return;
     }
 

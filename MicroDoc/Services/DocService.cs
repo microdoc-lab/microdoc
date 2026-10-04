@@ -81,18 +81,35 @@
             return nodes;
         }
 
-        public void SaveDocument(string domain, string documentId, string content)
+        public ErrorCode SaveDocument(string domain, string documentId, string content)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var path = Path.Combine(rootFolder, documentId);
+
+            var folder = Path.GetDirectoryName(path);
+            if (!Directory.Exists(folder))
+                return ErrorCode.TagNotFound;
+
             File.WriteAllText(path, content);
+
+            return ErrorCode.Ok;
         }
 
-        public void DeleteDocument(string domain, string documentId)
+        public ErrorCode DeleteDocument(string domain, string documentId)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var path = Path.Combine(rootFolder, documentId);
+
+            var folder = Path.GetDirectoryName(path);
+            if (!Directory.Exists(folder))
+                return ErrorCode.TagNotFound;
+
+            if (!File.Exists(path))
+                return ErrorCode.Ok;
+
             File.Delete(path);
+
+            return ErrorCode.Ok;
         }
     }
 }

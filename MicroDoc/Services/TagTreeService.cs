@@ -45,14 +45,14 @@
             return nodes.OrderBy(n => n.Order ?? 999).ThenBy(n => n.Tag).ToList();
         }
 
-        public bool NewTag(string domain, string selectedTag, string newTagName, out string newTagId)
+        public ErrorCode NewTag(string domain, string selectedTag, string newTagName, out string newTagId)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             newTagId = string.IsNullOrEmpty(selectedTag) ? newTagName : selectedTag + "/" + newTagName;
             var folder = Path.Combine(rootFolder, newTagId);
             
             if (Directory.Exists(folder))
-                return false;
+                return ErrorCode.TagNotFound;
 
             Directory.CreateDirectory(folder);
 
@@ -60,22 +60,22 @@
             var viewPath = Path.Combine(rootFolder, selectedTag ?? "", ViewFileName);
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
 
-            return true;
+            return ErrorCode.Ok;
         }
 
-        public bool DeleteTag(string domain, string selectedTag)
+        public ErrorCode DeleteTag(string domain, string selectedTag)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             
             if (string.IsNullOrEmpty(selectedTag))
-                return false;
+                return ErrorCode.RootTag;
 
             var folder = Path.Combine(rootFolder, selectedTag);
             if (!Directory.Exists(folder))
-                return false;
+                return ErrorCode.TagNotFound;
 
             if (Directory.GetDirectories(folder).Any())
-                return false;
+                return ErrorCode.NestedTagsExists;
 
             Directory.Delete(folder);
 
@@ -85,7 +85,7 @@
             var viewPath = Path.Combine(rootFolder, parentTag ?? "", ViewFileName);
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
 
-            return true;
+            return ErrorCode.Ok;
         }
 
         public bool ReorderTagsBatch(string domain, string path, string tag, string targetTag)

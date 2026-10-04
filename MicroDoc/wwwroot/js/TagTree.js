@@ -60,14 +60,14 @@ TagTree.prototype.New = async function () {
     // Prompt new tag name
     var tagPath = this.TagPath(domain, selectedTag);
 
-    var newTagName = prompt(`Create new Tag in ${tagPath}`);
+    var newTagName = prompt(`Create new Tag in ${tagPath}? Enter new tag name`);
     if (!newTagName || !newTagName.trim())
         return;
 
     // Create Tag
     const response = await this.service.NewTag(domain, selectedTag, newTagName);
     if (!response.ok) {
-        this.error("NewTag request failed", await response.text());
+        this.error(`Create new Tag in ${tagPath} failed`, await response.text());
         return;
     }
 
@@ -98,7 +98,7 @@ TagTree.prototype.Delete = async function () {
     // Delete Tag
     const response = await this.service.DeleteTag(domain, selectedTag);
     if (!response.ok) {
-        this.error("DeleteTag request failed", await response.text());
+        this.error(`Delete tag ${tagPath} failed`, await response.text());
         return;
     }
 
