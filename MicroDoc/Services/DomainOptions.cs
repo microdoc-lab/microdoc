@@ -9,6 +9,15 @@
             public string RootFolder { get; set; }
             public string Background { get; set; }
             public List<string> Documents { get; set; }
+            public List<DocumentOptions> DocumentOptions { get; set; } = new();
+
+            public string GetDocumentColor(string document) => DocumentOptions.Where(o => o.Name == document).Select(o => o.Color).FirstOrDefault();
+        }
+
+        public class DocumentOptions {
+            public string Name { get; set; }
+            public string[] Names { get; set; }
+            public string Color { get; set; }
         }
 
         public List<Domain> Domains { get; set; } = new();

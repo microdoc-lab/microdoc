@@ -18,6 +18,7 @@
         // obtain document context
         var domain = docCell.dataset.domain;
         var documentId = docCell.dataset.id;
+        var tagpath = docCell.dataset.tagpath;
         var documentContent = docCell.dataset.content;
         var documentHtml = docCell.querySelector("doc").innerHTML;
 
@@ -65,6 +66,13 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     docElement.setAttribute("mode", mode);
     docElement.dataset.domain = domain;
     docElement.dataset.id = documentId;
+    docElement.dataset.tagpath = this.DocPath(domain, documentId);
+
+    // determine doc color
+    var docColor = this.DocColor(documentId);
+    if (docColor)
+        docElement.style.setProperty("--doc-color", docColor);
+
     docElement.querySelector(".viewer").innerHTML = documentHtml;
     docElement.querySelector(".editor").value = documentContent;
 
@@ -85,4 +93,18 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
 
     if (mode == "edit")
         docElement.doc.txtEditor().SelectAndScroll(headingIndex);
+}
+
+DocMatrix.prototype.DocPath = function(domain, documentId) {
+    var tags = documentId.split('/');
+    var docName = tags.pop();
+    var tagPath = tags.map(t => `[${t}]`).join(' ');
+    return (tagPath ? tagPath : domain) + " " + docName;
+}
+
+DocMatrix.prototype.DocColor = function (documentId) {
+    var tags = documentId.split('/');
+    var docName = tags.pop();
+    var docNameNoExt = docName.replace(/\.[^.]*$/, "");
+    return this.options.DocumentColors[docNameNoExt];
 }

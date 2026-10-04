@@ -21,7 +21,7 @@
 			</th>
 			@foreach (var column in Model.Domain.Documents)
 			{
-				<th style="width: @(colWidth)%; max-width: @(colWidth)%;">@column</th>	
+				<th style="width: @(colWidth)%; max-width: @(colWidth)%; --doc-color: @Model.Domain.GetDocumentColor(column);">@column</th>	
 			}
 		</tr>
 
@@ -67,6 +67,16 @@
         var options = window["@Model.Id" + "Options"]
 		if (!options)
 			window["@Model.Id" + "Options"] = options = {};
+
+		options.DocumentColors = {};
+
+		@foreach (var docOptions in Model.Domain.DocumentOptions)
+		{
+			if (!string.IsNullOrWhiteSpace(docOptions.Color))
+			{
+				<text>options.DocumentColors["@docOptions.Name"] = "@docOptions.Color";</text>
+			}
+		}
 
         const docMatrix = new DocMatrix(container, options);
 		docMatrix.domain = "@Model.Domain.Name";
