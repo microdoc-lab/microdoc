@@ -9,6 +9,7 @@
         public string Color { get; set; }
         public int? Order { get; set; }
         public int Level { get; set; }
+        public bool IsDomain { get; set; }
 
         public List<TagNode> Children { get; set; } = new();
         public List<DocNode> Documents { get; set; } = new();

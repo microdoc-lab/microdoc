@@ -28,14 +28,15 @@ namespace MicroDoc.Services
                 {
                     Domain = domain,
                     Path = Path.GetDirectoryName(path ?? ""),
-                    Tag = Path.GetFileName(path),
+                    Tag = string.IsNullOrEmpty(path) ? domain : Path.GetFileName(path),
                     Documents = GetDocuments(domain, path),
-                    Level = 0
+                    Level = 0,
+                    IsDomain = string.IsNullOrEmpty(path)
                 };
 
                 nodes.Add(node);
 
-                if (!string.IsNullOrEmpty(path))
+                // if (!string.IsNullOrEmpty(path))
                 {
                     var children = _tagTreeService.BuildTree(domain, path, recursive: false, level: 1);
                     foreach (var child in children)
@@ -61,7 +62,7 @@ namespace MicroDoc.Services
                 if ((name + extension).Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
-                string content = null;
+                string content = "";
                 if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
                     content = File.ReadAllText(file);
 

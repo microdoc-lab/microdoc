@@ -18,6 +18,15 @@
     color: var(--tag-color);
 }
 
+.tag-tree .domain {
+    padding-bottom: 15px;
+}
+
+.tag-tree .domain.title {
+    font-size: larger;
+}
+
+.tag-tree .domain.title,
 .tag-tree .module.title {
     font-weight: bold;
 }

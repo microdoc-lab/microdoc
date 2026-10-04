@@ -23,6 +23,12 @@
 		</button>
 	</div>
 
+    <div class="domain tag @(Model.SelectedTag == null ? "selected" : "")">
+        <span class="title-bar">
+            <span class="domain title">@Model.Domain.Name</span>
+        </span>
+    </div>
+
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
     {

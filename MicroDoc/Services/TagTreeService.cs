@@ -1,7 +1,4 @@
-﻿using System.IO;
-using YamlDotNet.Core.Tokens;
-
-namespace MicroDoc.Services
+﻿namespace MicroDoc.Services
 {
     public class TagTreeService
     {
@@ -60,7 +57,7 @@ namespace MicroDoc.Services
             Directory.CreateDirectory(folder);
 
             TagView view = BuildView(domain, selectedTag);
-            var viewPath = Path.Combine(rootFolder, selectedTag, ViewFileName);
+            var viewPath = Path.Combine(rootFolder, selectedTag ?? "", ViewFileName);
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
 
             return true;

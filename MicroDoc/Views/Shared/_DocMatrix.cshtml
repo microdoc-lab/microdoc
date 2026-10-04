@@ -28,7 +28,14 @@
 		@foreach (var row in Model.Rows)
 		{
 			<tr>
-				<th style="--tag-level:@row.Level;">@row.Tag</th>
+				@if (row.IsDomain)
+				{
+					<th style="--tag-level:@row.Level;">@row.Tag</th>
+				}
+				else
+				{
+					<th style="--tag-level:@row.Level;">[@row.Tag]</th>
+				}
 				@foreach (var column in Model.Domain.Documents)
 				{
 					var doc = row.Documents.FirstOrDefault(d => d.Name == column);
