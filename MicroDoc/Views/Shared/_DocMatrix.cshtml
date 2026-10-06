@@ -28,7 +28,7 @@
 
 		@foreach (var row in Model.Rows)
 		{
-			<tr>
+			<tr data-tag="@row.Id">
 				@if (row.IsDomain)
 				{
 					<th style="--tag-level:@row.Level;">@row.Tag</th>
@@ -55,10 +55,10 @@
 
 					<td><clip><doc data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content">@Html.Raw(doc.Html)</doc></clip></td>
 				}
-				<td><clip>
+				<td class="nameonly"><clip>
 					@foreach (var doc in row.Documents.Where(d => !Model.Domain.Documents.Contains(d.Name)))
 					{
-						<doc class="nameonly" data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content" data-document="@doc.Name" data-name="@(doc.Name + doc.Extension)">@Html.Raw(doc.Html)</doc>
+						<doc data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content" data-document="@doc.Name" data-name="@(doc.Name + doc.Extension)">@Html.Raw(doc.Html)</doc>
 					}
 				</clip></td>
 			</tr>
@@ -89,7 +89,7 @@
 		if (!string.IsNullOrWhiteSpace(docOptions.Color))
 		{
 <text>.docmatrix th[data-document=@docOptions.Name],
-.docmatrix td doc.nameonly[data-document=@docOptions.Name]::before,
+.docmatrix td.nameonly doc[data-document=@docOptions.Name]::before,
 .explorer .overlay .doc[data-document=@docOptions.Name]::before { background: @docOptions.Color; }
 </text>
 		}

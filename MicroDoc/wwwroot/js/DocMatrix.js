@@ -73,3 +73,14 @@ function DocMatrixService() { }
 DocMatrixService.prototype.DocMatrix = function (clientId, domain, selectedTag) {
     return fetch(`/Home/DocMatrix?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag ?? ""}`);
 }
+
+DocMatrixService.prototype.SaveDocument = function (domain, documentId, content) {
+    return fetch("/Home/SaveDocument", {
+        method: "POST",
+        body: new URLSearchParams({
+            domain: domain,
+            documentId: documentId,
+            content: content
+        })
+    });
+}

@@ -62,20 +62,20 @@
     margin-left: 4px;
 }
 
-.docmatrix .grid td doc.nameonly {
+.docmatrix .grid td.nameonly doc {
     display: block;
     height: 20px;
     white-space: nowrap;
 }
 
-.docmatrix .grid td doc.nameonly::before {
+.docmatrix .grid td.nameonly doc::before {
     content: attr(data-name);
     position: absolute;
     font-size: smaller;
     font-weight: bold;
 }
 
-.docmatrix .grid td doc.nameonly:hover {
+.docmatrix .grid td.nameonly doc:hover {
     background-color: var(--selection-background);
 }
 

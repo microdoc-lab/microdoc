@@ -4,24 +4,54 @@
     var grid = this.grid();
 
     // open document in overlay by click
-    grid.addEventListener("click", event => {
+    grid.addEventListener("click", async event => {
         // don't open document if user select some text in the cell
         const selection = window.getSelection();
         if (selection && !selection.isCollapsed)
             return;
 
+        // check click was on doc
         var docInCell = event.target.closest("doc");
 
+        // if clicked not on doc - check table cell
         if (!docInCell) {
             // find & check cell
             const docCell = event.target.closest("td");
             if (!docCell || !grid.contains(docCell))
                 return;
 
-            docInCell = docCell.querySelector("doc");
+            // obtain first doc in cell
+            if (!docCell.classList.contains("nameonly"))
+                docInCell = docCell.querySelector("doc");
+            else {
+                var docName = prompt("Enter document name (without extension)");
+                if (!docName.trim())
+                    return;
+
+                docInCell = docCell.querySelector(`doc[data-document=${docName}]`);
+                if (!docInCell) {
+                    // create new document element
+                    docInCell = document.createElement("doc");
+                    docInCell.dataset.domain = this.domain;
+                    docInCell.dataset.id = docCell.closest("tr").dataset.tag + "/" + docName + ".txt";
+                    docInCell.dataset.document = docName;
+                    docInCell.dataset.name = docName + ".txt";
+                    docInCell.dataset.content = "";
+
+                    // Save empty document
+                    const response = await this.service.SaveDocument(docInCell.dataset.domain, docInCell.dataset.id, "");
+                    if (!response.ok) {
+                        this.error(`Save document ${docPath} failed`, await response.text());
+                        return;
+                    }
+
+                    // append new document element into cell after save
+                    docCell.querySelector("clip").appendChild(docInCell);
+                }
+            }
         }
 
-        if (!docInCell || !grid.contains(docInCell))
+        if (!docInCell)
             return;
 
         // obtain document context

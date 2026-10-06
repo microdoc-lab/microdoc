@@ -107,7 +107,7 @@ Doc.prototype.DeleteDocument = async function () {
     // find & check cell
     var docInCell = docMatrix.docInCell(domain, documentId);
     if (docInCell) {
-        if (docInCell.classList.contains("nameonly")) {
+        if (docInCell.closest("td").classList.contains("nameonly")) {
             docInCell.remove();
         }
         else {
