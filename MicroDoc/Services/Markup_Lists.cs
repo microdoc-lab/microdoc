@@ -4,7 +4,7 @@
     {
         private int listLevel = -1;
 
-        static private int GetListLevel(string line)
+        static private (int Level, string Item) TryParseListItem(string line)
         {
             int spaces = 0;
 
@@ -12,33 +12,19 @@
                 spaces++;
 
             if (spaces >= line.Length || !line.AsSpan(spaces).StartsWith("- "))
-                return -1;
+                return (-1, null);
 
-            return spaces;
+            return (spaces / 2, line[(spaces + 2)..]);
         }
 
-        static private string GetListText(string line, int level)
+        private void StartListItem(string item, int level)
         {
-            return line[(level + 2)..];
-        }
-
-        private void StartListItem(string line, int level)
-        {
-            if (listLevel < 0)
-            {
-                html.Append("<ul>\n")
-                    .Append("<li>")
-                    .Append(GetListText(line, level));
-
-                listLevel = level;
-                return;
-            }
-
             if (level > listLevel)
             {
-                html.Append("<ul>\n")
-                    .Append("<li>")
-                    .Append(GetListText(line, level));
+                for (int i = listLevel; i < level; i++)
+                    html.Append("<ul>\n<li>");
+
+                html.Append(item);
 
                 listLevel = level;
             }
@@ -46,17 +32,15 @@
             {
                 html.Append("</li>\n")
                     .Append("<li>")
-                    .Append(GetListText(line, level));
+                    .Append(item);
             }
             else
             {
-                html.Append("</li>\n");
-
                 for (int i = listLevel; i > level; i--)
-                    html.Append("</ul>\n</li>\n");
+                    html.Append("</li>\n</ul>\n");
 
                 html.Append("<li>")
-                    .Append(GetListText(line, level));
+                    .Append(item);
 
                 listLevel = level;
             }
@@ -64,18 +48,8 @@
 
         private void EndList()
         {
-            if (listLevel < 0)
-                return;
-
-            html.Append("</li>\n");
-
-            for (int i = listLevel; i >= 0; i--)
-            {
-                html.Append("</ul>\n");
-
-                if (i > 0)
-                    html.Append("</li>\n");
-            }
+            for (int i = listLevel; i > -1; i--)
+                html.Append("</li>\n</ul>\n");
 
             listLevel = -1;
         }

@@ -17,13 +17,13 @@ namespace MicroDoc.Services
 
             foreach (var line in lines)
             {
-                int headingLevel = GetHeadingLevel(line);
-                if (headingLevel > 0)
+                var heading = TryParseHeading(line);
+                if (heading.Level > 0)
                 {
                     EndParagraph();
                     EndList();
                     EndSection();
-                    StartSection(line[(headingLevel + 1)..], headingLevel);
+                    StartSection(heading.Heading, heading.Level);
                     continue;
                 }
 
@@ -34,19 +34,21 @@ namespace MicroDoc.Services
                     continue;
                 }
 
-                int listItemLevel = GetListLevel(line);
-                if (listItemLevel >= 0)
+                var listItem = TryParseListItem(line);
+                if (listItem.Level >= 0)
                 {
                     EndParagraph();
                     EnsureStartSection();
-                    StartListItem(line, listItemLevel);
+                    var formatted = FormatText(listItem.Item);
+                    StartListItem(formatted, listItem.Level);
                 }
                 else
                 {
 
                     EndList();
                     EnsureStartSection();
-                    StartParagraph(line);
+                    var formatted = FormatText(line);
+                    StartParagraph(formatted);
                 }
             }
 

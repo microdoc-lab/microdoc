@@ -4,18 +4,18 @@
     {
         private bool sectionStarted = false;
 
-        static private int GetHeadingLevel(string line)
+        static private (int Level, string Heading) TryParseHeading(string line)
         {
             if (line.StartsWith("### "))
-                return 3;
+                return (3, line["### ".Length..]);
 
             if (line.StartsWith("## "))
-                return 2;
+                return (2, line["## ".Length..]);
 
             if (line.StartsWith("# "))
-                return 1;
+                return (1, line["# ".Length..]);
 
-            return 0;
+            return (0, null);
         }
 
         private void EnsureStartSection() {
@@ -23,14 +23,14 @@
                 StartSection("(no header)", 1);
         }
 
-        private void StartSection(string title, int headingLevel)
+        private void StartSection(string heading, int level)
         {
             EndSection();
 
             html.Append("<section>")
-                .Append("<h").Append(headingLevel).Append(">")
-                .Append(title)
-                .Append("</h").Append(headingLevel).Append(">\n")
+                .Append("<h").Append(level).Append(">")
+                .Append(heading)
+                .Append("</h").Append(level).Append(">\n")
                 .Append("<content>");
 
             sectionStarted = true;
