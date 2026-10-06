@@ -71,7 +71,7 @@
                     Name = name,
                     Extension = extension,
                     Content = content,
-                    Html = Markup.ToHtml(content)
+                    Html = new Markup().ToHtml(content)
                 };
 
                 nodes.Add(node);

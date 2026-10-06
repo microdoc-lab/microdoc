@@ -121,7 +121,7 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            var html = Markup.ToHtml(content);
+            var html = new Markup().ToHtml(content);
             return Content(html);
         }
 
