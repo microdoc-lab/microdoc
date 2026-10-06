@@ -22,6 +22,7 @@ namespace MicroDoc.Services
                 {
                     EndParagraph();
                     EndList();
+                    EndTable();
                     EndSection();
                     StartSection(heading.Heading, heading.Level);
                     continue;
@@ -31,6 +32,7 @@ namespace MicroDoc.Services
                 {
                     EndParagraph();
                     EndList();
+                    EndTable();
                     continue;
                 }
 
@@ -38,14 +40,28 @@ namespace MicroDoc.Services
                 if (listItem.Level >= 0)
                 {
                     EndParagraph();
+                    EndTable();
                     EnsureStartSection();
                     var formatted = FormatText(listItem.Item);
                     StartListItem(formatted, listItem.Level);
+                    continue;
                 }
-                else
+
+                var tableCells = ParseTableCells(line);
+                if (tableCells.Length > 1) 
+                {
+                    EndParagraph();
+                    EndList();
+                    EnsureStartSection();
+                    var formatted = tableCells.Select(FormatText).ToArray();
+                    StartTableRow(formatted);
+                    continue;
+                }
+
                 {
 
                     EndList();
+                    EndTable();
                     EnsureStartSection();
                     var formatted = FormatText(line);
                     StartParagraph(formatted);
@@ -54,6 +70,7 @@ namespace MicroDoc.Services
 
             EndParagraph();
             EndList();
+            EndTable();
             EndSection();
 
             return html.ToString();

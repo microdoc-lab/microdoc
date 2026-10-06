@@ -79,3 +79,13 @@
 
 /* Paragraph */
 .explorer .overlay .doc .viewer p { margin: 4px 0px 4px 0px; }
+
+/* Table */
+.explorer .overlay .doc .viewer table {
+    border: 1px solid #ccc;
+}
+
+.explorer .overlay .doc .viewer table th,
+.explorer .overlay .doc .viewer table td {
+    border: 1px solid #ccc;
+}

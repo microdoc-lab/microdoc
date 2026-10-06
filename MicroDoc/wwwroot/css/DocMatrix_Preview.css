@@ -53,3 +53,13 @@
 
 /* Paragraph */
 .docmatrix .grid td doc p { margin: 4px 0px 4px 0px; }
+
+/* Table */
+.docmatrix .grid td doc table {
+    border: 1px solid #ccc;
+}
+
+.docmatrix .grid td doc table th,
+.docmatrix .grid td doc table td {
+    border: 1px solid #ccc;
+}

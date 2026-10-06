@@ -8,6 +8,15 @@
     txtEditor.addEventListener("keydown", e => {
         if (e.key === "Escape")
             toolbar.querySelector(".close").click();
+
+        if (e.key === "Tab") {
+            e.preventDefault();
+
+            const start = txtEditor.selectionStart;
+            const end = txtEditor.selectionEnd;
+
+            txtEditor.setRangeText("\t", start, end, "end");
+        }
     });
 
     // adjust textEditor height
