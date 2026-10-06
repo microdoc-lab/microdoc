@@ -4,7 +4,7 @@
     {
         private bool sectionStarted = false;
 
-        static private (int Level, string Heading) TryParseHeading(string line)
+        static private (int level, string heading) TryParseHeading(string line)
         {
             if (line.StartsWith("### "))
                 return (3, line["### ".Length..]);
@@ -20,10 +20,10 @@
 
         private void EnsureStartSection() {
             if (!sectionStarted)
-                StartSection("(no header)", 1);
+                StartSection(1, "(no header)");
         }
 
-        private void StartSection(string heading, int level)
+        private void StartSection(int level, string heading)
         {
             EndSection();
 

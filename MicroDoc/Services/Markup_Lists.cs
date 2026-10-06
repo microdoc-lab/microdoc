@@ -4,7 +4,7 @@
     {
         private int listLevel = -1;
 
-        static private (int Level, string Item) TryParseListItem(string line)
+        static private (int level, string item) TryParseListItem(string line)
         {
             int spaces = 0;
 
@@ -17,7 +17,7 @@
             return (spaces / 2, line[(spaces + 2)..]);
         }
 
-        private void StartListItem(string item, int level)
+        private void StartListItem(int level, string item)
         {
             if (level > listLevel)
             {
