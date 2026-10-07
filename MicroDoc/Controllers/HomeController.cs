@@ -121,7 +121,7 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            var html = new Markup().ToHtml(content);
+            var html = new Markup(domain, documentId).ToHtml(content);
             return Content(html);
         }
 
@@ -136,21 +136,16 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
-        public IActionResult Background(string domain) 
+        #region Images
+
+        public IActionResult Image(string domain, string documentId, string imageName)
         {
-            var options = _domainOptions.Find(domain);
-            if (options == null)
+            string filePath = _docService.GetDocumentImage(domain, documentId, imageName);
+
+            if (!System.IO.File.Exists(filePath))
                 return NotFound();
 
-            if (string.IsNullOrWhiteSpace(options.Background))
-                return NotFound();
-
-            var path = Path.Combine(options.RootFolder, options.Background);
-
-            if (!System.IO.File.Exists(path))
-                return NotFound();
-
-            var contentType = Path.GetExtension(path).ToLowerInvariant() switch
+            var contentType = Path.GetExtension(filePath).ToLowerInvariant() switch
             {
                 ".jpg" or ".jpeg" => "image/jpeg",
                 ".png" => "image/png",
@@ -162,7 +157,54 @@ namespace MicroDoc.Controllers
 
             Response.Headers.CacheControl = "no-store";
 
-            return PhysicalFile(path, contentType);
+            return PhysicalFile(filePath, contentType);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadImage(string domain, string documentId, string imageName, IFormFile image)
+        {
+            string filePath = _docService.GetDocumentImage(domain, documentId, imageName);
+            string folder = Path.GetDirectoryName(filePath);
+            if (!Directory.Exists(folder))
+                return Error(ErrorCode.TagNotFound);
+
+            await using var stream = System.IO.File.Create(filePath);
+            await image.CopyToAsync(stream);
+
+            return Ok();
+        }
+
+        #endregion
+
+        #region Domain (Background/Options)
+
+        public IActionResult Background(string domain) 
+        {
+            var options = _domainOptions.Find(domain);
+            if (options == null)
+                return NotFound();
+
+            if (string.IsNullOrWhiteSpace(options.Background))
+                return NotFound();
+
+            var filePath = Path.Combine(options.RootFolder, options.Background);
+
+            if (!System.IO.File.Exists(filePath))
+                return NotFound();
+
+            var contentType = Path.GetExtension(filePath).ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".webp" => "image/webp",
+                ".gif" => "image/gif",
+                ".svg" => "image/svg+xml",
+                _ => "application/octet-stream"
+            };
+
+            Response.Headers.CacheControl = "no-store";
+
+            return PhysicalFile(filePath, contentType);
         }
 
         public IActionResult LoadDomainOptions() 
@@ -184,6 +226,8 @@ namespace MicroDoc.Controllers
 
             return Ok();
         }
+
+        #endregion
 
         private IActionResult Error(ErrorCode code) => NotFound($"{code}");
 

@@ -140,3 +140,16 @@ DocService.prototype.DeleteDocument = function (domain, documentId) {
         })
     });
 }
+
+DocService.prototype.UploadImage = function (domain, documentId, imageName, image) {
+    const formData = new FormData();
+    formData.append("domain", domain);
+    formData.append("documentId", documentId);
+    formData.append("imageName", imageName);
+    formData.append("image", image);
+
+    return fetch("/Home/UploadImage", {
+        method: "POST",
+        body: formData
+    });
+}

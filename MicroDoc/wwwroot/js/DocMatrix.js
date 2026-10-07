@@ -49,6 +49,13 @@ DocMatrix.prototype.DocName = function (documentId) {
     return index > 0 ? docName.substring(0, index) : docName;
 }
 
+DocMatrix.prototype.DocType = function (documentId) {
+    var tags = documentId.split('/');
+    var docName = tags.pop();
+    const index = docName.lastIndexOf(".");
+    return index > 0 ? docName.substring(index) : "";
+}
+
 DocMatrix.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }

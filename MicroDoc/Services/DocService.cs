@@ -2,6 +2,16 @@
 {
     public class DocService
     {
+        private static readonly string[] ImageExtensions = new[] 
+        { 
+            ".jpg",
+            ".jpeg",
+            ".png",
+            ".webp",
+            ".gif",
+            ".svg",
+        };
+
         private readonly DomainOptions _domainOptions;
         private readonly TagTreeService _tagTreeService;
 
@@ -60,6 +70,9 @@
                 if ((name + extension).Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
+                if (ImageExtensions.Any(ext => extension.Equals(ext, StringComparison.InvariantCultureIgnoreCase)))
+                    continue;
+
                 string content = "";
                 if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
                     content = File.ReadAllText(file);
@@ -71,8 +84,9 @@
                     Name = name,
                     Extension = extension,
                     Content = content,
-                    Html = new Markup().ToHtml(content)
                 };
+
+                node.Html = new Markup(node.Domain, node.Id).ToHtml(content);
 
                 nodes.Add(node);
             }
@@ -110,6 +124,19 @@
             File.Delete(path);
 
             return ErrorCode.Ok;
+        }
+
+        public string GetDocumentImage(string domain, string documentId, string imageName)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            string path = Path.GetDirectoryName(documentId);
+            string document = Path.GetFileNameWithoutExtension(documentId);
+            var folder = Path.Combine(rootFolder, path ?? "");
+
+            var fileName = $"{document}+{imageName}";
+            string filePath = Path.Combine(folder, fileName);
+
+            return filePath;
         }
     }
 }

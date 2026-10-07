@@ -63,3 +63,21 @@
 .docmatrix .grid td doc table td {
     border: 1px solid #ccc;
 }
+
+/* Image */
+.docmatrix .grid td doc gallery {
+    display: flex;
+    gap: 5px;
+}
+
+.docmatrix .grid td doc gallery img {
+    margin-left: 10px;
+    max-width: 50px;
+    max-height: 50px;
+    transition: transform 0.15s ease;
+    transform-origin: top left;
+}
+
+.docmatrix .grid td doc gallery img:hover {
+    transform: scale(15);
+}

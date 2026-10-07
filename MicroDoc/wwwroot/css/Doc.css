@@ -47,6 +47,7 @@
     height: 100%;
     min-height: 150px;
     max-height: 350px;
+    overflow-x: hidden;
     overflow-y: auto;
     border: 1px solid #ccc;
 
@@ -88,4 +89,30 @@
 .explorer .overlay .doc .viewer table th,
 .explorer .overlay .doc .viewer table td {
     border: 1px solid #ccc;
+}
+
+/* Image */
+.explorer .overlay .doc .viewer gallery {
+    position: absolute;
+    display: flex;
+    gap: 5px;
+}
+
+.explorer .overlay .doc .viewer gallery + * {
+    padding-top: 50px;
+}
+
+.explorer .overlay .doc .viewer gallery img {
+    max-width: 50px;
+    max-height: 50px;
+    transition: transform 0.15s ease;
+    transform-origin: bottom left;
+}
+
+.explorer .overlay .doc .viewer gallery img:hover {
+    transform: scale(15);
+}
+
+.explorer .overlay:has(.doc .viewer gallery img:hover) .toolbar {
+    display: none;
 }
