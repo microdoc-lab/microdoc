@@ -184,10 +184,10 @@ namespace MicroDoc.Controllers
             if (options == null)
                 return NotFound();
 
-            if (string.IsNullOrWhiteSpace(options.Background))
-                return NotFound();
+            var filePath = options.GetBackgroundPath();
 
-            var filePath = Path.Combine(options.RootFolder, options.Background);
+            if (filePath == null)
+                return NotFound();
 
             if (!System.IO.File.Exists(filePath))
                 return NotFound();
@@ -202,7 +202,7 @@ namespace MicroDoc.Controllers
                 _ => "application/octet-stream"
             };
 
-            Response.Headers.CacheControl = "no-store";
+            Response.Headers.CacheControl = "public, max-age=31536000, immutable";
 
             return PhysicalFile(filePath, contentType);
         }

@@ -1,4 +1,6 @@
-﻿namespace MicroDoc.Services
+﻿using Microsoft.CodeAnalysis;
+
+namespace MicroDoc.Services
 {
     public class DomainOptions
     {
@@ -12,6 +14,27 @@
             public List<DocumentOptions> DocumentOptions { get; set; } = new();
 
             public string GetDocumentColor(string document) => DocumentOptions.Where(o => o.Name == document).Select(o => o.Color).FirstOrDefault();
+
+            public string GetBackgroundPath() 
+            {
+                if (string.IsNullOrWhiteSpace(Background))
+                    return null;
+
+                return Path.Combine(RootFolder, Background);
+            }
+
+            public string GetBackgroundVersion() 
+            {
+                var filePath = GetBackgroundPath();
+                if (filePath == null)
+                    return DateTime.MinValue.Ticks.ToString("x");
+
+                if (!File.Exists(filePath))
+                    return DateTime.MinValue.Ticks.ToString("x");
+
+                var time = File.GetLastWriteTimeUtc(filePath);
+                return time.Ticks.ToString("x");
+            }
         }
 
         public class DocumentOptions {

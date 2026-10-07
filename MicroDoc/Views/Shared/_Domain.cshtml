@@ -10,6 +10,13 @@
 <script>
     var options = {};
 
+    options.DomainBackgroundVersions = {};
+    @foreach (var docOptions in _domainOptions.Domains)
+	{
+<text>options.DomainBackgroundVersions["@docOptions.Name"] = "@docOptions.GetBackgroundVersion()";
+</text>
+	}
+
     var domain = new Domain(options);
     
     domain.InitBehaviors();

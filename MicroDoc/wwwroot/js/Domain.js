@@ -47,7 +47,9 @@ Domain.prototype.OpenExplorer = function(domain, selectedTag) {
     var parent = document.createElement("div");
     parent.className = "explorerHost";
     parent.domain = domain;
-    parent.style.backgroundImage = `url("/Home/Background?domain=${domain}")`;
+
+    var backgroundVersion = this.options.DomainBackgroundVersions[domain];
+    parent.style.backgroundImage = `url("/Home/Background?domain=${domain}&v=${backgroundVersion}")`;
 
     element = document.createElement("div");
     element.id = explorerId;
