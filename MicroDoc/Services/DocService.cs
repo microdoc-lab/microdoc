@@ -86,7 +86,7 @@
                     Content = content,
                 };
 
-                node.Html = new Markup(node.Domain, node.Id).ToHtml(content);
+                node.Html = new Markup(this, node.Domain, node.Id).ToHtml(content);
 
                 nodes.Add(node);
             }
@@ -137,6 +137,13 @@
             string filePath = Path.Combine(folder, fileName);
 
             return filePath;
+        }
+
+        public string GetImageVersion(string domain, string documentId, string imageName)
+        {
+            var filePath = GetDocumentImage(domain, documentId, imageName);
+            var time = File.GetLastWriteTimeUtc(filePath);
+            return time.Ticks.ToString("x");
         }
     }
 }

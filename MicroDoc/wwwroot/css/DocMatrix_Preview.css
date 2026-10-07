@@ -66,12 +66,38 @@
 
 /* Image */
 .docmatrix .grid td doc gallery {
+    margin-left: 5px;
     display: flex;
     gap: 5px;
 }
 
+.docmatrix .grid td doc gallery imgw {
+    min-width: 50px;
+    min-height: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.docmatrix .grid td doc gallery imgc {
+    width: 50px;
+    height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.docmatrix .grid td doc gallery imgw::after {
+    content: attr(title);
+    display: block;
+    font-size: small;
+}
+
 .docmatrix .grid td doc gallery img {
-    margin-left: 10px;
     max-width: 50px;
     max-height: 50px;
     transition: transform 0.15s ease;

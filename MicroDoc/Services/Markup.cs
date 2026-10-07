@@ -4,11 +4,13 @@ namespace MicroDoc.Services
 {
     public partial class Markup
     {
+        private readonly DocService _docService;
         private readonly string domain;
         private readonly string documentId;
 
-        public Markup(string domain, string documentId)
+        public Markup(DocService docService, string domain, string documentId)
         {
+            _docService = docService;
             this.domain = domain;
             this.documentId = documentId;
         }

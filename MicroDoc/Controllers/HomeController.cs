@@ -121,7 +121,7 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            var html = new Markup(domain, documentId).ToHtml(content);
+            var html = new Markup(_docService, domain, documentId).ToHtml(content);
             return Content(html);
         }
 
@@ -155,7 +155,7 @@ namespace MicroDoc.Controllers
                 _ => "application/octet-stream"
             };
 
-            Response.Headers.CacheControl = "no-store";
+            Response.Headers.CacheControl = "public, max-age=31536000, immutable";
 
             return PhysicalFile(filePath, contentType);
         }

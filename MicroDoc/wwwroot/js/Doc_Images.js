@@ -3,8 +3,30 @@
 
     var docMatrix = this.docMatrix();
     var docElement = this.element;
+    var docViewer = this.docViewer();
     var txtEditor = this.txtEditor();
     var service = this.service;
+
+    // move gallery synchronously with vertical scroller
+    docViewer.addEventListener("scroll", () => {
+        const scrollTop = docViewer.scrollTop;
+        const viewerRect = docViewer.getBoundingClientRect();
+
+        docViewer.querySelectorAll("gallery").forEach(gallery => {
+            // scroll gallery manually
+            gallery.style.marginTop = `${-scrollTop}px`;
+
+            const rect = gallery.getBoundingClientRect();
+            const galleryCenter = (rect.top + rect.bottom) / 2;
+
+            // control gallery visibility
+            gallery.style.visibility =
+                galleryCenter >= viewerRect.top &&
+                    galleryCenter <= viewerRect.bottom
+                    ? "visible"
+                    : "hidden";
+        });
+    });
 
     txtEditor.addEventListener("paste", async function (e) {
 

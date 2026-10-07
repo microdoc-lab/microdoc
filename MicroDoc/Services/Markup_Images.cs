@@ -20,7 +20,14 @@
                 imageGalleryStarted = true;
             }
 
-            html.Append($"<img src=\"Home/Image?domain={domain}&documentId={documentId}&imageName={imageName}\" title=\"{imageName}\">\n");
+            var version = _docService.GetImageVersion(domain, documentId, imageName);
+            var onlyName = Path.GetFileNameWithoutExtension(imageName);
+
+            html.Append($"<imgw title=\"{onlyName}\">")
+                .Append("<imgc>")
+                .Append($"<img src=\"Home/Image?domain={domain}&documentId={documentId}&imageName={imageName}&v={version}\" title=\"{onlyName}\">")
+                .Append("</imgc>")
+                .Append("</imgw>\n");
         }
 
         private void EndImageGallery()
