@@ -59,7 +59,7 @@
 .docmatrix .grid td doc {
     position: relative;
     display: inline-block;
-    margin-left: 4px;
+    margin-left: 6px;
 }
 
 .docmatrix .grid td.nameonly doc {

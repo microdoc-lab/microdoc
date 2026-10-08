@@ -1,6 +1,7 @@
 ﻿/* Section */
 .docmatrix .grid td doc section {
     position: relative;
+    cursor: default;
 }
 
 .docmatrix .grid td doc section:hover :is(h1, h2, h3) {
@@ -68,7 +69,8 @@
 .docmatrix .grid td doc gallery {
     margin-left: 5px;
     display: flex;
-    gap: 5px;
+    gap: 25px;
+    margin: 8px 14px;
 }
 
 .docmatrix .grid td doc gallery imgw {

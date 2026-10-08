@@ -2,9 +2,8 @@
 .explorer .overlay .doc::before {
     content: attr(data-tagpath);
     position: absolute;
-    z-index: 10;
-    left: 5px;
-    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
     padding: 0px 3px;
     font-size: smaller;
     font-weight: bold;
@@ -66,7 +65,9 @@
     --opacity: 100%;
 }
 
-.explorer .overlay .doc .viewer { padding: 4px; }
+.explorer .overlay .doc .viewer {
+    padding: 16px 4px 4px 4px;
+}
 .explorer .overlay .doc .editor { resize: none; }
 .explorer .overlay .doc .editor:focus { outline: none; }
 
@@ -97,7 +98,9 @@
 .explorer .overlay .doc .viewer gallery {
     position: absolute;
     display: flex;
-    gap: 5px;
+    gap: 25px;
+    margin: 8px 14px;
+    cursor: default;
 }
 
 .explorer .overlay .doc .viewer gallery + * {
@@ -140,7 +143,6 @@
     transform: scale(15);
 }
 
-.explorer .overlay .doc:has(.viewer gallery imgw:hover)::before,
 .explorer .overlay:has(.doc .viewer gallery imgw:hover) .toolbar {
     display: none;
 }
