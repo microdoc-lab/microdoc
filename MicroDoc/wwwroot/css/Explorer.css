@@ -22,6 +22,14 @@
 }
 
 .explorer .tree-panel:hover {
-    z-index: 20;
     --opacity: 100%;
+}
+
+.explorer .tree-panel .tag-tree {
+    position: relative;
+}
+
+.explorer .tree-panel .tag-tree:hover {
+    z-index: 20;
+    background: var(--tree-background);
 }
