@@ -78,7 +78,8 @@
             const heading = docViewer.querySelectorAll("h1, h2, h3")[headingIndex];
             if (heading) {
                 // scroll heading into view
-                heading.scrollIntoView({ behavior: "auto", block: "start" });
+                if (!IsFullyVisibleAndAboveMiddle(heading, docViewer))
+                    heading.scrollIntoView({ behavior: "auto", block: "start" });
                 // put selection on heading
                 SelectElement(heading);
             }
@@ -117,6 +118,19 @@
         const selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
+    }
+
+    function IsFullyVisibleAndAboveMiddle(element, container) {
+        const rect = element.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+
+        const top = containerRect.top + container.clientTop;
+        const bottom = top + container.clientHeight;
+        const middle = (top + bottom) / 2;
+
+        return rect.top >= top
+            && rect.bottom <= bottom
+            && rect.top < middle;
     }
 }
 
