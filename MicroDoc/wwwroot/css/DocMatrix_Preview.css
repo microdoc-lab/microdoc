@@ -99,11 +99,11 @@
     max-width: 50px;
     max-height: 50px;
     transition: transform 0.15s ease;
-    transform-origin: top right;
+    transform-origin: bottom left;
 }
 
 .docmatrix .grid td doc gallery imgw:hover img {
-    transform: scale(15);
+    transform: scale(5);
 }
 
 /* Error */
