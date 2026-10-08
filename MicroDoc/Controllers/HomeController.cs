@@ -140,7 +140,7 @@ namespace MicroDoc.Controllers
 
         public IActionResult Image(string domain, string documentId, string imageName)
         {
-            string filePath = _docService.GetDocumentImage(domain, documentId, imageName);
+            string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
 
             if (!System.IO.File.Exists(filePath))
                 return NotFound();
@@ -163,7 +163,7 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImage(string domain, string documentId, string imageName, IFormFile image)
         {
-            string filePath = _docService.GetDocumentImage(domain, documentId, imageName);
+            string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
             string folder = Path.GetDirectoryName(filePath);
             if (!Directory.Exists(folder))
                 return Error(ErrorCode.TagNotFound);

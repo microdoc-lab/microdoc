@@ -1,4 +1,6 @@
-﻿namespace MicroDoc.Services
+﻿using System.IO;
+
+namespace MicroDoc.Services
 {
     public class DocService
     {
@@ -126,22 +128,17 @@
             return ErrorCode.Ok;
         }
 
-        public string GetDocumentImage(string domain, string documentId, string imageName)
+        public string GetImageFilePath(string domain, string documentId, string imageName)
         {
+            var imageId = DocumentParser.GetImageId(documentId, imageName);
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            string path = Path.GetDirectoryName(documentId);
-            string document = Path.GetFileNameWithoutExtension(documentId);
-            var folder = Path.Combine(rootFolder, path ?? "");
-
-            var fileName = $"{document}+{imageName}";
-            string filePath = Path.Combine(folder, fileName);
-
+            string filePath = Path.Combine(rootFolder, imageId);
             return filePath;
         }
 
-        public string GetImageVersion(string domain, string documentId, string imageName)
+        public string GetImageFileVersion(string domain, string documentId, string imageName)
         {
-            var filePath = GetDocumentImage(domain, documentId, imageName);
+            var filePath = GetImageFilePath(domain, documentId, imageName);
             var time = File.GetLastWriteTimeUtc(filePath);
             return time.Ticks.ToString("x");
         }

@@ -34,6 +34,7 @@
     padding-right: 7px;
     width: fit-content;
     z-index: 100;
+    white-space: nowrap;
     pointer-events: auto;
     font-size: 0;
 }
@@ -123,9 +124,7 @@
     justify-content: center;
 }
 
-.explorer .overlay .doc .viewer gallery imgw::after {
-    content: attr(title);
-    display: block;
+.explorer .overlay .doc .viewer gallery imgw div {
     font-size: small;
 }
 
@@ -137,10 +136,17 @@
     transform-origin: bottom left;
 }
 
-.explorer .overlay .doc .viewer gallery img:hover {
+.explorer .overlay .doc .viewer gallery imgw:hover img {
     transform: scale(15);
 }
 
-.explorer .overlay:has(.doc .viewer gallery img:hover) .toolbar {
+.explorer .overlay:has(.doc .viewer gallery imgw:hover) .toolbar {
     display: none;
+}
+
+/* Error */
+error {
+    display: block;
+    color: red;
+    font-weight: bold;
 }

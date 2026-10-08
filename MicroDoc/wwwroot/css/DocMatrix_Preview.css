@@ -91,9 +91,7 @@
     justify-content: center;
 }
 
-.docmatrix .grid td doc gallery imgw::after {
-    content: attr(title);
-    display: block;
+.docmatrix .grid td doc gallery imgw div {
     font-size: small;
 }
 
@@ -101,9 +99,16 @@
     max-width: 50px;
     max-height: 50px;
     transition: transform 0.15s ease;
-    transform-origin: top left;
+    transform-origin: top right;
 }
 
-.docmatrix .grid td doc gallery img:hover {
+.docmatrix .grid td doc gallery imgw:hover img {
     transform: scale(15);
+}
+
+/* Error */
+error {
+    display: block;
+    color: red;
+    font-weight: bold;
 }

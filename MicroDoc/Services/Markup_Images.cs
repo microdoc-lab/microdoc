@@ -20,13 +20,28 @@
                 imageGalleryStarted = true;
             }
 
-            var version = _docService.GetImageVersion(domain, documentId, imageName);
-            var onlyName = Path.GetFileNameWithoutExtension(imageName);
+            // parse image name
+            var status = DocumentParser.TryParseImagePath(imageName, out var tags, out var parsedDocument, out var parsedImageName);
+            if (status != ErrorCode.Ok) {
+                html.Append($"<error>{imageName} - {status}</error>");
+                return;
+            }
 
-            html.Append($"<imgw title=\"{onlyName}\">")
+            var parsedDocumentId = documentId;
+
+            // full image path specified
+            if (tags.Any())
+                parsedDocumentId = DocumentParser.GetDocumentId(tags, parsedDocument);
+
+            var imageLink = DocumentParser.GetImagePath(parsedDocumentId, parsedImageName);
+            var onlyName = Path.GetFileNameWithoutExtension(parsedImageName);
+            var version = _docService.GetImageFileVersion(domain, parsedDocumentId, parsedImageName);
+
+            html.Append($"<imgw imagepath=\"{imageLink}\" title=\"{onlyName}\">")
                 .Append("<imgc>")
-                .Append($"<img src=\"Home/Image?domain={domain}&documentId={documentId}&imageName={imageName}&v={version}\" title=\"{onlyName}\">")
+                .Append($"<img src=\"Home/Image?domain={domain}&documentId={parsedDocumentId}&imageName={parsedImageName}&v={version}\">")
                 .Append("</imgc>")
+                .Append($"<div>{onlyName}</div>")
                 .Append("</imgw>\n");
         }
 

@@ -10,5 +10,8 @@
         NestedDocumentsExists,
 
         DocumentNotFound,
+
+        TagNotClosed,
+        WrongImageName,
     }
 }
