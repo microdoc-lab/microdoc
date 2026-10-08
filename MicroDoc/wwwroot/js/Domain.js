@@ -7,6 +7,7 @@
 
     window.domain = this;
 
+    // prompt user to save&close editing document on browser tab close/reload
     window.addEventListener("beforeunload", e => {
         var docElement = document.querySelector('.explorerHost[style*="display: flex"] .explorer .overlay .doc[mode=edit]')
             ?? document.querySelector('.explorerHost[style*="display: none"] .explorer .overlay .doc[mode=edit]');
@@ -18,6 +19,25 @@
             e.preventDefault();
             e.returnValue = "Please close all active document editors";
         }
+    });
+
+    // close document viewer with active selection on ESC
+    document.addEventListener("keydown", function (e) {
+        const selection = window.getSelection();
+
+        if (!selection || selection.isCollapsed)
+            return;
+
+        // locate and check viewer
+        const viewer = selection.anchorNode.closest(".viewer");
+        if (!viewer)
+            return;
+
+        const docElement = viewer.closest(".doc");
+        if (!docElement)
+            return;
+
+        docElement.doc.CloseDocument();
     });
 
     this.service = new DomainService();

@@ -1,13 +1,13 @@
 ﻿Doc.prototype.InitEditor = function (options) {
     this.log('InitEditor');
 
-    var toolbar = this.toolbar();
+    var docElement = this.element;
     var txtEditor = this.txtEditor();
 
     // save and close on Esc in text editor
     txtEditor.addEventListener("keydown", e => {
         if (e.key === "Escape")
-            toolbar.querySelector(".close").click();
+            docElement.doc.SaveDocument(true);
 
         if (e.key === "Tab") {
             e.preventDefault();

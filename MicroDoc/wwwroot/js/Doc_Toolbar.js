@@ -104,7 +104,11 @@
         if (!docElement)
             return;
 
-        await docElement.doc.SaveDocument(true);
+        var mode = docElement.getAttribute("mode")
+        if (mode == "view")
+            docElement.doc.CloseDocument();
+        else
+            await docElement.doc.SaveDocument(true);
     });
 
     toolbar.toolbarInited = true;

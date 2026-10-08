@@ -35,10 +35,22 @@ Doc.prototype.toolbar = function () { return this.element.closest(".explorer").q
 Doc.prototype.docViewer = function () { return this.element.querySelector(".viewer"); }
 Doc.prototype.txtEditor = function () { return this.element.querySelector(".editor"); }
 
-Doc.prototype.SaveDocument = async function (close) {
-    var docMatrix = this.docMatrix();
+Doc.prototype.CloseDocument = function () {
     var overlay = this.overlay();
     var toolbar = this.toolbar();
+    var docElement = this.element;
+
+    // remove docElement
+    overlay.removeChild(docElement);
+    // hide toolbar
+    toolbar.style.visibility = "hidden";
+    // reset toolbar context
+    toolbar.dataset.domain = null;
+    toolbar.dataset.id = null;
+}
+
+Doc.prototype.SaveDocument = async function (close) {
+    var docMatrix = this.docMatrix();
     var docElement = this.element;
     var txtEditor = this.txtEditor();
 
@@ -55,15 +67,8 @@ Doc.prototype.SaveDocument = async function (close) {
         return;
     }
 
-    if (close) {
-        // remove docElement
-        overlay.removeChild(docElement);
-        // hide toolbar
-        toolbar.style.visibility = "hidden";
-        // reset toolbar context
-        toolbar.dataset.domain = null;
-        toolbar.dataset.id = null;
-    }
+    if (close)
+        this.CloseDocument();
 
     // update cell in grid
     var formattedContent = await response.text();
