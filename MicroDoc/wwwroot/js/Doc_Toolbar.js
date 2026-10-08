@@ -54,6 +54,22 @@
         toolbar.dataset.id = null;
     });
 
+    // copy document path to clipboard
+    toolbar.querySelector(".copy").addEventListener("click", async event => {
+        // obtain document context
+        var domain = toolbar.dataset.domain;
+        var documentId = toolbar.dataset.id;
+
+        var docMatrix = this.docMatrix();
+
+        // find & check docElement
+        var docElement = docMatrix.docElement(domain, documentId);
+        if (!docElement)
+            return;
+
+        await navigator.clipboard.writeText(docElement.dataset.tagpath);
+    });
+
     // toggle view/edit mode
     toolbar.querySelector(".view").addEventListener("click", async event => {
         // obtain document context
