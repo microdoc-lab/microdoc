@@ -23,21 +23,23 @@
 
     // close document viewer with active selection on ESC
     document.addEventListener("keydown", function (e) {
-        const selection = window.getSelection();
+        if (e.key === "Escape") {
+            const selection = window.getSelection();
 
-        if (!selection || selection.isCollapsed)
-            return;
+            if (!selection || selection.isCollapsed)
+                return;
 
-        // locate and check viewer
-        const viewer = selection.anchorNode.closest(".viewer");
-        if (!viewer)
-            return;
+            // locate and check viewer
+            const viewer = selection.anchorNode.closest(".viewer");
+            if (!viewer)
+                return;
 
-        const docElement = viewer.closest(".doc");
-        if (!docElement)
-            return;
+            const docElement = viewer.closest(".doc");
+            if (!docElement)
+                return;
 
-        docElement.doc.CloseDocument();
+            docElement.doc.CloseDocument();
+        }
     });
 
     this.service = new DomainService();
