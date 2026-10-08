@@ -3,12 +3,62 @@
 
     var docViewer = this.docViewer();
 
+    // intercept Ctrl+C event and perform custom copy logic
+    docViewer.addEventListener("copy", event => {
+        const docElement = this.element;
+
+        // obtain document context
+        var domain = docElement.dataset.domain;
+        var documentId = docElement.dataset.id;
+
+        var docMatrix = this.docMatrix();
+
+        // selection should exist
+        const selection = window.getSelection();
+        if (!selection || selection.isCollapsed || selection.anchorNode != selection.focusNode)
+            return;
+
+        var heading = selection.anchorNode.closest("h1,h2,h3");
+        if (heading) {
+            var docPath = docMatrix.TagPath(domain, documentId);
+            event.preventDefault();
+            event.clipboardData.setData("text/plain", docPath + " " + heading.innerText);
+            return;
+        }
+
+        var imageContainer = selection.anchorNode.closest("imgw");
+        if (imageContainer) {
+            var imagePath = imageContainer.dataset.imagepath;
+            event.preventDefault();
+            event.clipboardData.setData("text/plain", imagePath);
+            return;
+        }
+    });
+
+    // capture mousedown coordinates to distinguish mouse selection from click
+    let mouseDownX = 0;
+    let mouseDownY = 0;
+
+    docViewer.addEventListener("mousedown", event => {
+        mouseDownX = event.clientX;
+        mouseDownY = event.clientY;
+    });
+
     // select heading when document section clicked
     docViewer.addEventListener("click", event => {
-        // don't select section if user select some text in the cell
-        const selection = window.getSelection();
-        if (selection && !selection.isCollapsed)
+        const dx = event.clientX - mouseDownX;
+        const dy = event.clientY - mouseDownY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        // treat as selection/drag, not a click
+        if (distance > 5)
             return;
+
+        // find possible clicked image
+        const imageWrapper = event.target.closest("imgw");
+        if (imageWrapper) {
+            SelectElement(imageWrapper.querySelector("div"));
+            return;
+        }
 
         // find & check the section
         const section = event.target.closest("section");
@@ -18,7 +68,7 @@
         // obtain section heading
         var heading = section.querySelector("h1, h2, h3");
         if (heading)
-            SelectHeading(heading);
+            SelectElement(heading);
     });
 
     // select heading and scroll it into view
@@ -30,7 +80,7 @@
                 // scroll heading into view
                 heading.scrollIntoView({ behavior: "auto", block: "start" });
                 // put selection on heading
-                SelectHeading(heading);
+                SelectElement(heading);
             }
         }
         else {
@@ -60,7 +110,7 @@
         return -1;
     }
 
-    function SelectHeading(heading) {
+    function SelectElement(heading) {
         const range = document.createRange();
         range.selectNodeContents(heading);
 

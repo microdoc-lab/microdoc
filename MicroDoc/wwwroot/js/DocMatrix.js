@@ -35,6 +35,13 @@ DocMatrix.prototype.grid = function () { return this.element.querySelector(".gri
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 
+DocMatrix.prototype.TagPath = function (domain, documentId) {
+    var tags = documentId.split('/');
+    tags.pop();
+    var tagPath = tags.map(t => `[${t}]`).join(' ');
+    return (tagPath ? tagPath : domain);
+}
+
 DocMatrix.prototype.DocPath = function (domain, documentId) {
     var tags = documentId.split('/');
     var docName = tags.pop();

@@ -37,7 +37,7 @@
             var onlyName = Path.GetFileNameWithoutExtension(parsedImageName);
             var version = _docService.GetImageFileVersion(domain, parsedDocumentId, parsedImageName);
 
-            html.Append($"<imgw imagepath=\"{imageLink}\" title=\"{onlyName}\">")
+            html.Append($"<imgw data-imagepath=\"{imageLink}\" title=\"{onlyName}\">")
                 .Append("<imgc>")
                 .Append($"<img src=\"Home/Image?domain={domain}&documentId={parsedDocumentId}&imageName={parsedImageName}&v={version}\">")
                 .Append("</imgc>")

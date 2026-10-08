@@ -140,6 +140,7 @@
     transform: scale(15);
 }
 
+.explorer .overlay .doc:has(.viewer gallery imgw:hover)::before,
 .explorer .overlay:has(.doc .viewer gallery imgw:hover) .toolbar {
     display: none;
 }
