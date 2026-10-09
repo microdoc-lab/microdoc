@@ -65,10 +65,8 @@
     --opacity: 100%;
 }
 
-.explorer .overlay .doc .viewer {
-    padding: 16px 4px 4px 4px;
-}
-.explorer .overlay .doc .editor { resize: none; }
+.explorer .overlay .doc .viewer { padding: 16px 4px 4px 4px; }
+.explorer .overlay .doc .editor { resize: none; padding-top: 16px; }
 .explorer .overlay .doc .editor:focus { outline: none; }
 
 .explorer .overlay .doc[mode=edit] .viewer { display: none; }
