@@ -31,7 +31,7 @@
 
             // full image path specified
             if (tags.Any())
-                parsedDocumentId = DocumentParser.GetDocumentId(tags, parsedDocument);
+                parsedDocumentId = DocumentParser.GetDocumentId(tags, parsedDocument + ".txt");
 
             var imageLink = DocumentParser.GetImagePath(parsedDocumentId, parsedImageName);
             var onlyName = Path.GetFileNameWithoutExtension(parsedImageName);

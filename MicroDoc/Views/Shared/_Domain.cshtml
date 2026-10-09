@@ -11,9 +11,9 @@
     var options = {};
 
     options.DomainBackgroundVersions = {};
-    @foreach (var docOptions in _domainOptions.Domains)
+    @foreach (var domainOptions in _domainOptions.Domains)
 	{
-<text>options.DomainBackgroundVersions["@docOptions.Name"] = "@docOptions.GetBackgroundVersion()";
+<text>options.DomainBackgroundVersions["@domainOptions.Name"] = "@domainOptions.BackgroundVersion";
 </text>
 	}
 
@@ -21,5 +21,5 @@
     
     domain.InitBehaviors();
 
-    domain.OpenExplorer("microdoc.doc", "Services");
+    domain.OpenExplorer("microdoc.doc");
 </script>
