@@ -50,7 +50,7 @@
 
         // open document from link
         const link = event.target.closest("a");
-        if (link) { 
+        if (link && link.dataset.document) { 
             event.preventDefault();
 
             var docMatrix = this.docMatrix();
