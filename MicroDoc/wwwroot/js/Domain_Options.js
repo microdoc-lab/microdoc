@@ -3,6 +3,21 @@
 
     this.domainOptions = document.querySelector("#domainOptions");
     this.domainOptionsEditor = document.querySelector("#domainOptions .editor");
+
+    // save and close on Esc in text editor; accept Tab
+    this.domainOptionsEditor.addEventListener("keydown", e => {
+        if (e.key === "Escape")
+            this.ToggleDomainOptions();
+
+        if (e.key === "Tab") {
+            e.preventDefault();
+
+            const start = this.domainOptionsEditor.selectionStart;
+            const end = this.domainOptionsEditor.selectionEnd;
+
+            this.domainOptionsEditor.setRangeText("\t", start, end, "end");
+        }
+    });
 }
 
 Domain.prototype.behaviors.push(Domain.prototype.InitDomainOptions);
