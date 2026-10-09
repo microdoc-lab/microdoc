@@ -1,6 +1,7 @@
 ﻿Doc.prototype.InitViewer = function (options) {
     this.log('InitViewer');
 
+    var docElement = this.element;
     var docViewer = this.docViewer();
 
     // intercept Ctrl+C event and perform custom copy logic
@@ -45,7 +46,36 @@
     });
 
     // select heading when document section clicked
-    docViewer.addEventListener("click", event => {
+    docViewer.addEventListener("click", async event => {
+
+        // open document from link
+        const link = event.target.closest("a");
+        if (link) { 
+            event.preventDefault();
+
+            var docMatrix = this.docMatrix();
+
+            const domain = docElement.dataset.domain;
+            const documentId = link.getAttribute("href");
+
+            const docPath = link.textContent;
+
+            const response = await docMatrix.service.LoadDocument(domain, documentId);
+            if (!response.ok) {
+                this.error(`Load document ${docPath} failed`, await response.text());
+                return;
+            }
+
+            const doc = await response.json();
+            const documentContent = doc.content;
+            const documentHtml = doc.html;
+            const headingIndex = -1;
+
+            docMatrix.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
+
+            return;
+        }
+
         const dx = event.clientX - mouseDownX;
         const dy = event.clientY - mouseDownY;
         const distance = Math.sqrt(dx * dx + dy * dy);

@@ -5,6 +5,34 @@
 
     // open document in overlay by click
     grid.addEventListener("click", async event => {
+
+        // open document from link
+        const link = event.target.closest("a");
+        if (link) {
+            event.preventDefault();
+
+            const domain = this.domain;
+            const documentId = link.getAttribute("href");
+
+            const docPath = link.textContent;
+
+            const response = await this.service.LoadDocument(domain, documentId);
+            if (!response.ok) {
+                this.error(`Load document ${docPath} failed`, await response.text());
+                return;
+            }
+
+            const doc = await response.json();
+            const documentContent = doc.content;
+            const documentHtml = doc.html;
+            const headingIndex = -1;
+
+            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
+
+            return;
+        }
+
+
         // don't open document if user select some text in the cell
         const selection = window.getSelection();
         if (selection && !selection.isCollapsed)

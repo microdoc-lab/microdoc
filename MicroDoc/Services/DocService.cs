@@ -1,4 +1,8 @@
-﻿namespace MicroDoc.Services
+﻿using System.IO;
+using System.Xml.Linq;
+using static MicroDoc.Services.DomainOptions;
+
+namespace MicroDoc.Services
 {
     public class DocService
     {
@@ -94,6 +98,37 @@
 
             nodes = nodes.OrderBy(d => d.Extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase) ? 0 : 1).ToList();
             return nodes;
+        }
+
+        public DocNode LoadDocument(string domain, string documentId)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            string filePath = Path.Combine(rootFolder, documentId);
+
+            var (parent, name) = DocumentParser.SplitId(documentId);
+            string document = Path.GetFileNameWithoutExtension(name);
+            string extension = Path.GetExtension(name);
+
+            if (!File.Exists(filePath))
+                return null;
+
+            var node = new DocNode
+            {
+                Domain = domain,
+                Path = parent,
+                Name = document,
+                Extension = extension,
+                Content = "",
+            };
+
+            string content = "";
+            if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
+                content = File.ReadAllText(filePath);
+
+            node.Content = content;
+            node.Html = new Markup(this, node.Domain, node.Id).ToHtml(content);
+
+            return node;
         }
 
         public ErrorCode SaveDocument(string domain, string documentId, string content)

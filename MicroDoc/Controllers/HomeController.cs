@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using static MicroDoc.Services.DomainOptions;
 
 namespace MicroDoc.Controllers
 {
@@ -110,6 +109,15 @@ namespace MicroDoc.Controllers
             };
 
             return PartialView("_Explorer", model);
+        }
+
+        public IActionResult LoadDocument(string domain, string documentId) 
+        { 
+            var doc = _docService.LoadDocument(domain, documentId);
+            if (doc == null)
+                return Error(ErrorCode.DocumentNotFound);
+
+            return Json(doc);
         }
 
         [HttpPost]

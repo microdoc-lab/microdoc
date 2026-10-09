@@ -97,6 +97,11 @@
             return tags.Length > 0 ? string.Join("/", tags) + "/" + document : document;
         }
 
+        public static string GetDocumentPath(string[] tags, string document)
+        {
+            return tags.Length > 0 ? string.Join(" ", tags.Select(t => $"[{t}]")) + " " + document : document;
+        }
+
         public static string GetImagePath(string documentId, string imageName)
         {
             var parts = documentId.Split('/');
