@@ -88,9 +88,9 @@
 	{
 		if (!string.IsNullOrWhiteSpace(docOptions.Color))
 		{
-<text>.docmatrix th[data-document=@docOptions.Name],
-.docmatrix td.nameonly doc[data-document=@docOptions.Name]::before,
-.explorer .overlay .doc[data-document=@docOptions.Name]::before { background: @docOptions.Color; }
+<text>.explorer[data-domain="@Model.Domain.Name"] .docmatrix th[data-document=@docOptions.Name],
+.explorer[data-domain="@Model.Domain.Name"] .docmatrix td.nameonly doc[data-document=@docOptions.Name]::before,
+.explorer[data-domain="@Model.Domain.Name"] .overlay .doc[data-document=@docOptions.Name]::before { background: @docOptions.Color; }
 </text>
 		}
 	}

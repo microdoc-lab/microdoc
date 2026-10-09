@@ -5,7 +5,7 @@
     throw new ArgumentNullException();
 }
 
-<div id="@Model.Id" class="explorer">
+<div id="@Model.Id" class="explorer" data-domain="@Model.Domain.Name">
     <div class="tree-panel">
         @await Html.PartialAsync("_TagTree", Model.TagTree)
     </div>
