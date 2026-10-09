@@ -3,11 +3,12 @@
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();
-    var docMatrix = this.docMatrix();
 
     var docElement = this.element;
 
     docElement.addEventListener("dragover", e => {
+        var docMatrix = this.docMatrix();
+
         if (!docMatrix.draggedDoc)
             return;
 
@@ -16,6 +17,8 @@
     });
 
     docElement.addEventListener("drop", e => {
+        var docMatrix = this.docMatrix();
+
         if (!docMatrix.draggedDoc)
             return;
 
@@ -53,6 +56,8 @@
             return;
         }
 
+        var docMatrix = this.docMatrix();
+
         // obtain document context
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
@@ -71,6 +76,8 @@
     });
 
     grip.addEventListener("dragend", () => {
+        var docMatrix = this.docMatrix();
+
         docMatrix.draggedDoc = null;
     });
 
