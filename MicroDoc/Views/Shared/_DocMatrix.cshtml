@@ -93,7 +93,9 @@
 		{
 <text>.explorer[data-domain="@Model.Domain.Name"] .docmatrix th[data-document=@docOptions.Name],
 .explorer[data-domain="@Model.Domain.Name"] .docmatrix td.nameonly doc[data-document=@docOptions.Name]::before,
-.explorer[data-domain="@Model.Domain.Name"] .overlay .doc[data-document=@docOptions.Name]::before { background: @docOptions.Color; }
+.explorer[data-domain="@Model.Domain.Name"] .docmatrix td a[data-document=@docOptions.Name],
+.explorer[data-domain="@Model.Domain.Name"] .overlay .doc[data-document=@docOptions.Name]::before,
+.explorer[data-domain="@Model.Domain.Name"] .overlay .doc a[data-document=@docOptions.Name] { background: @docOptions.Color; }
 </text>
 		}
 	}

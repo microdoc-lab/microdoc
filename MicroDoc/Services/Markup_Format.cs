@@ -61,7 +61,7 @@ namespace MicroDoc.Services
                 string documentId = DocumentParser.GetDocumentId(tags, name);
                 string documentPath = DocumentParser.GetDocumentPath(tags, name);
 
-                result.Append("<a href=\"");
+                result.Append($"<a data-document=\"{Path.GetFileNameWithoutExtension(name)}\" href=\"");
                 result.Append(System.Net.WebUtility.HtmlEncode(documentId));
                 result.Append("\">");
                 result.Append(System.Net.WebUtility.HtmlEncode(documentPath));
