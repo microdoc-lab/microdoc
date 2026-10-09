@@ -1,33 +1,20 @@
-﻿.tag-tree {
+﻿/* TagTree */
+.tag-tree {
     width: 100%;
     padding: 0px 3px;
 }
 
+.tag-tree .toolbar {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-size: 0;
+}
+
+/* Tag List */
 .tag-tree .tag-list {
     list-style-type: none;
     padding: 0;
-}
-
-.tag-tree .module.tag {
-    margin-bottom: 1em;
-}
-
-.tag-tree .title {
-    padding: 2px 4px;
-    color: var(--tag-color);
-}
-
-.tag-tree .domain {
-    padding-bottom: 15px;
-}
-
-.tag-tree .domain.title {
-    font-size: larger;
-}
-
-.tag-tree .domain.title,
-.tag-tree .module.title {
-    font-weight: bold;
 }
 
 .tag-tree .module.tag-list {
@@ -44,4 +31,28 @@
 
     /* Optional: Add spacing between columns */
     column-gap: 20px; 
+}
+
+/* Tag */
+.tag-tree .module.tag {
+    margin-bottom: 1em;
+}
+
+.tag-tree .domain.tag {
+    padding-bottom: 15px;
+}
+
+/* Title */
+.tag-tree .title {
+    padding: 2px 4px;
+    color: var(--tag-color);
+}
+
+.tag-tree .domain.title {
+    font-size: larger;
+}
+
+.tag-tree .domain.title,
+.tag-tree .module.title {
+    font-weight: bold;
 }

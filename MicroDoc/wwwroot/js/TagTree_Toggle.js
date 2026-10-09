@@ -40,7 +40,9 @@
 TagTree.prototype.behaviors.push(TagTree.prototype.InitToggle);
 
 TagTree.prototype.ExpandedTag = function () {
+    // find all expanded tags
     var elements = this.element.querySelectorAll(`details[open]`);
+    // take the last expanded tag (deepest node)
     var details = elements.length ? elements[elements.length - 1] : null;
     if (details)
         return details.closest(".tag").dataset.id;
@@ -48,7 +50,9 @@ TagTree.prototype.ExpandedTag = function () {
 }
 
 TagTree.prototype.ExpandTag = function (tag) {
+    // find tag node details
     var details = this.element.querySelector(`.tag[data-id="${tag}"] details`);
+    // expand nodes up to the root
     while (details) {
         if (!details.classList.contains("empty"))
             details.open = true;
@@ -57,7 +61,9 @@ TagTree.prototype.ExpandTag = function (tag) {
 }
 
 TagTree.prototype.CollapseTag = function (tag) {
+    // find tag node details
     var details = this.element.querySelector(`.tag[data-id="${tag}"] details`);
+    // collapse tag
     if (details)
         details.open = false;
 }
