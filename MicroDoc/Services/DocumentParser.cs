@@ -77,6 +77,16 @@
             return (parent, name);
         }
 
+        public static string GetDocumentId(string path)
+        {
+            var status = TryParseDocumentPath(path, out var tags, out var name);
+            if (status != ErrorCode.Ok)
+                return null;
+
+            var documentId = GetDocumentId(tags, name);
+            return documentId;
+        }
+
         public static string GetDocumentId(string tags, string document)
         {
             return !string.IsNullOrEmpty(tags) ? tags + "/" + document : document;

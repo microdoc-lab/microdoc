@@ -54,9 +54,20 @@ Domain.prototype.ToggleDomainOptions = async function () {
             return;
         }
 
+        // update DomainBackgroundVersions
+        const data = await response.json();
+        this.options.domainBackgroundVersions = data.domainBackgroundVersions;
+
         // reload all explorer docmatrix
-        document.querySelectorAll('.explorerHost .explorer').forEach(explorer => {
-            explorer.explorer.docMatrix().Reload();
+        document.querySelectorAll('.explorerHost').forEach(parent => {
+            var domain = parent.domain;
+            var backgroundVersion = this.options.domainBackgroundVersions[domain];
+
+            // update background
+            parent.style.backgroundImage = `url("/Home/Background?domain=${domain}&v=${backgroundVersion}")`;
+
+            // reload docmatrix
+            parent.querySelector(".explorer").explorer.docMatrix().Reload();
         });
 
         // hide editor panel

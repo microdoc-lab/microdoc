@@ -55,4 +55,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+// Run UpdateDomainBackgroundVersions
+app.Services.GetRequiredService<DocService>().UpdateDomainBackgroundVersions();
+
 app.Run();

@@ -188,13 +188,7 @@ namespace MicroDoc.Controllers
             if (string.IsNullOrEmpty(options.Background))
                 return NotFound();
 
-            var status = DocumentParser.TryParseImagePath(options.Background, out var tags, out var parsedDocument, out var parsedImageName);
-            if (status != ErrorCode.Ok)
-                return NotFound();
-
-            var parsedDocumentId = DocumentParser.GetDocumentId(tags, parsedDocument + ".txt");
-
-            string filePath = _docService.GetImageFilePath(domain, parsedDocumentId, parsedImageName);
+            string filePath = _docService.TranslatePathToDocumentId(domain, options.Background);
 
             if (filePath == null)
                 return NotFound();
@@ -234,37 +228,11 @@ namespace MicroDoc.Controllers
             // Update singleton in container
             _domainOptions.Domains = domainOptions.Domains;
 
-            UpdateDomainBackgroundVersions();
+            _docService.UpdateDomainBackgroundVersions();
 
-            return Ok();
-        }
+            var domainBackgroundVersions = _domainOptions.Domains.ToDictionary(o => o.Name, o => o.BackgroundVersion);
 
-        private void UpdateDomainBackgroundVersions()
-        {
-            foreach (var options in _domainOptions.Domains)
-            {
-                options.BackgroundVersion = null;
-
-                if (!string.IsNullOrEmpty(options.Background))
-                {
-                    var status = DocumentParser.TryParseImagePath(options.Background, out var tags, out var parsedDocument, out var parsedImageName);
-                    if (status != ErrorCode.Ok)
-                        continue;
-
-                    var parsedDocumentId = DocumentParser.GetDocumentId(tags, parsedDocument + ".txt");
-
-                    string filePath = _docService.GetImageFilePath(options.Name, parsedDocumentId, parsedImageName);
-
-                    if (filePath == null)
-                        continue;
-
-                    if (!System.IO.File.Exists(filePath))
-                        options.BackgroundVersion = DateTime.MinValue.Ticks.ToString("x");
-
-                    var time = System.IO.File.GetLastWriteTimeUtc(filePath);
-                    options.BackgroundVersion = time.Ticks.ToString("x");
-                }
-            }
+            return Json(new { domainBackgroundVersions });
         }
 
         #endregion
@@ -274,7 +242,6 @@ namespace MicroDoc.Controllers
         #region Misc
         public IActionResult Index()
         {
-            UpdateDomainBackgroundVersions();
             return View();
         }
 

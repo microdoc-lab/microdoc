@@ -1,10 +1,8 @@
-﻿using System.IO;
-
-namespace MicroDoc.Services
+﻿namespace MicroDoc.Services
 {
     public class DocService
     {
-        private static readonly string[] ImageExtensions = new[] 
+        private static readonly string[] ImageExtensions =
         { 
             ".jpg",
             ".jpeg",
@@ -129,6 +127,14 @@ namespace MicroDoc.Services
             return ErrorCode.Ok;
         }
 
+        public string TranslatePathToDocumentId(string domain, string path) 
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            string documentId = DocumentParser.GetDocumentId(path);
+            string filePath = Path.Combine(rootFolder, documentId);
+            return filePath;
+        }
+
         public string GetImageFilePath(string domain, string documentId, string imageName)
         {
             var imageId = DocumentParser.GetImageId(documentId, imageName);
@@ -142,6 +148,25 @@ namespace MicroDoc.Services
             var filePath = GetImageFilePath(domain, documentId, imageName);
             var time = File.GetLastWriteTimeUtc(filePath);
             return time.Ticks.ToString("x");
+        }
+
+        public void UpdateDomainBackgroundVersions()
+        {
+            foreach (var domainOptions in _domainOptions.Domains)
+            {
+                domainOptions.BackgroundVersion = null;
+
+                if (!string.IsNullOrEmpty(domainOptions.Background))
+                {
+                    string filePath = TranslatePathToDocumentId(domainOptions.Name, domainOptions.Background);
+
+                    if (filePath == null)
+                        continue;
+
+                    var time = File.GetLastWriteTimeUtc(filePath);
+                    domainOptions.BackgroundVersion = time.Ticks.ToString("x");
+                }
+            }
         }
     }
 }

@@ -10,10 +10,10 @@
 <script>
     var options = {};
 
-    options.DomainBackgroundVersions = {};
+    options.domainBackgroundVersions = {};
     @foreach (var domainOptions in _domainOptions.Domains)
 	{
-<text>options.DomainBackgroundVersions["@domainOptions.Name"] = "@domainOptions.BackgroundVersion";
+<text>options.domainBackgroundVersions["@domainOptions.Name"] = "@domainOptions.BackgroundVersion";
 </text>
 	}
 
