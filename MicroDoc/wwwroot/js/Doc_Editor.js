@@ -4,6 +4,42 @@
     var docElement = this.element;
     var txtEditor = this.txtEditor();
 
+    // translate № into # (first 3 characters)
+    txtEditor.addEventListener("beforeinput", function (e) {
+        if (e.inputType !== "insertText" || e.data !== "№")
+            return;
+
+        const pos = this.selectionStart;
+        const text = this.value;
+        const lineStart = text.lastIndexOf("\n", pos - 1) + 1;
+        const index = pos - lineStart;
+
+        if (index > 2)
+            return;
+
+        e.preventDefault();
+
+        this.setRangeText("#", this.selectionStart, this.selectionEnd, "end");
+    });
+
+    // translate / (with Shift) into |
+    txtEditor.addEventListener("keydown", function (e) {
+        if (e.code !== "Backslash" || !e.shiftKey)
+            return;
+
+        if (e.ctrlKey || e.altKey || e.metaKey)
+            return;
+
+        e.preventDefault();
+
+        this.setRangeText(
+            "|",
+            this.selectionStart,
+            this.selectionEnd,
+            "end"
+        );
+    });
+
     // save and close on Esc in text editor
     txtEditor.addEventListener("keydown", e => {
         if (e.key === "Escape")
