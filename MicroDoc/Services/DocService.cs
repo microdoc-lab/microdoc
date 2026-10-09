@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.Xml.Linq;
-using static MicroDoc.Services.DomainOptions;
-
-namespace MicroDoc.Services
+﻿namespace MicroDoc.Services
 {
     public class DocService
     {
@@ -37,6 +33,8 @@ namespace MicroDoc.Services
             if (Directory.Exists(folder))
             {
                 var (parent, tag) = DocumentParser.SplitId(path);
+                
+                // load requested tag with documents
                 var node = new TagNode
                 {
                     Domain = domain,
@@ -49,13 +47,11 @@ namespace MicroDoc.Services
 
                 nodes.Add(node);
 
-                // if (!string.IsNullOrEmpty(path))
-                {
-                    var children = _tagTreeService.BuildTree(domain, path, recursive: false, level: 1);
-                    foreach (var child in children)
-                        child.Documents = GetDocuments(domain, child.Id);
-                    nodes.AddRange(children);
-                }
+                // load child tags (1 level) with documents
+                var children = _tagTreeService.BuildTree(domain, path, recursive: false, level: 1);
+                foreach (var child in children)
+                    child.Documents = GetDocuments(domain, child.Id);
+                nodes.AddRange(children);
             }
 
             return nodes;
@@ -72,12 +68,15 @@ namespace MicroDoc.Services
                 string name = Path.GetFileNameWithoutExtension(file);
                 string extension = Path.GetExtension(file);
 
+                // skip view.ini
                 if ((name + extension).Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
                     continue;
 
+                // skip images
                 if (ImageExtensions.Any(ext => extension.Equals(ext, StringComparison.InvariantCultureIgnoreCase)))
                     continue;
 
+                // load content only for .txt files
                 string content = "";
                 if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
                     content = File.ReadAllText(file);
@@ -91,11 +90,13 @@ namespace MicroDoc.Services
                     Content = content,
                 };
 
+                // convert content to HTML
                 node.Html = new Markup(this, node.Domain, node.Id).ToHtml(content);
 
                 nodes.Add(node);
             }
 
+            // order .txt files first
             nodes = nodes.OrderBy(d => d.Extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase) ? 0 : 1).ToList();
             return nodes;
         }
@@ -121,11 +122,14 @@ namespace MicroDoc.Services
                 Content = "",
             };
 
+            // load content only for .txt files
             string content = "";
             if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
                 content = File.ReadAllText(filePath);
 
             node.Content = content;
+
+            // convert content to HTML
             node.Html = new Markup(this, node.Domain, node.Id).ToHtml(content);
 
             return node;

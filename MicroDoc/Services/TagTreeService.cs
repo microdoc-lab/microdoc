@@ -17,6 +17,8 @@
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var folder = Path.Combine(rootFolder, path ?? "");
+            
+            // load view
             var viewPath = Path.Combine(folder, ViewFileName);
             var view = ViewConfigLoader.LoadTagsFromFile(viewPath);
 
@@ -36,12 +38,14 @@
                     Level = level,
                 };
 
+                // load child nodes (recursively)
                 if (recursive)
                     node.Children = BuildTree(domain, node.Id, recursive: true, level + 1);
 
                 nodes.Add(node);
             }
 
+            // order tags by Order
             return nodes.OrderBy(n => n.Order ?? 999).ThenBy(n => n.Tag).ToList();
         }
 
@@ -54,8 +58,10 @@
             if (Directory.Exists(folder))
                 return ErrorCode.TagNotFound;
 
+            // create directory
             Directory.CreateDirectory(folder);
 
+            // update view
             TagView view = BuildView(domain, selectedTag);
             var viewPath = Path.Combine(rootFolder, selectedTag ?? "", ViewFileName);
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
@@ -77,10 +83,12 @@
             if (Directory.GetDirectories(folder).Any())
                 return ErrorCode.NestedTagsExists;
 
+            // delete directory
             Directory.Delete(folder);
 
             var parentTag = Path.GetDirectoryName(selectedTag);
 
+            // update parent tag view
             TagView view = BuildView(domain, parentTag);
             var viewPath = Path.Combine(rootFolder, parentTag ?? "", ViewFileName);
             ViewConfigLoader.SaveTagsToFile(viewPath, view);
@@ -120,14 +128,17 @@
 
         private TagView BuildView(string domain, string path)
         {
+            // load directory tags
             var tree = BuildTree(domain, path, recursive: false, level: 0);
 
             var list = new List<TagView.Node>();
 
+            // reorder directory tags
             int order = 0;
             foreach (var node in tree)
                 list.Add(new TagView.Node { Tag = node.Tag, Order = ++order });
 
+            // reorder directory child tags
             foreach (var node in tree)
             {
                 order = 0;
