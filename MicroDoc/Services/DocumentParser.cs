@@ -33,12 +33,13 @@
 
         public static ErrorCode TryParseImagePath(string text, out string[] tags, out string document, out string imageName)
         {
+            // Embeded case: imageName.png
             document = null;
             imageName = text;
 
             var status = TryParseDocumentPath(text, out tags, out var parsedName);
 
-            // full image Id specified
+            // Full case: [tag1] [tag2] document+imageName.png
             if (tags.Any())
             {
                 var parts = parsedName.Split('+');
@@ -47,15 +48,43 @@
 
                 document = parts[0];
                 imageName = parts[1];
-                return ErrorCode.Ok;
             }
-            
+            else 
+            {
+                var parts = parsedName.Split('+');
+
+                if (parts.Length > 2)
+                    return ErrorCode.WrongImageName;
+
+                // Local case: document+imageName.png
+                if (parts.Length == 2) {
+                    document = parts[0];
+                    imageName = parts[1];
+                }
+            }
+
             return ErrorCode.Ok;
+        }
+
+        public static (string Parent, string Name) SplitId(string tagId)
+        {
+            if (string.IsNullOrEmpty(tagId))
+                return ("", "");
+            
+            string[] parts = (tagId ?? "").Split('/');
+            string parent = string.Join("/", parts[..^1]);
+            string name = parts.Last();
+            return (parent, name);
+        }
+
+        public static string GetDocumentId(string tags, string document)
+        {
+            return !string.IsNullOrEmpty(tags) ? tags + "/" + document : document;
         }
 
         public static string GetDocumentId(string[] tags, string document)
         {
-            return string.Join("/", tags) + "/" + document + ".txt";
+            return tags.Length > 0 ? string.Join("/", tags) + "/" + document : document;
         }
 
         public static string GetImagePath(string documentId, string imageName)
@@ -67,9 +96,10 @@
 
         public static string GetImageId(string documentId, string imageName)
         {
-            var parts = documentId.Split('/');
-            string document = Path.GetFileNameWithoutExtension(documentId);
-            return string.Join("/", parts[..^1]) + "/" + document + "+" + imageName;
+            var (parent, name) = SplitId(documentId);
+            string document = Path.GetFileNameWithoutExtension(name);
+            string imageId = GetDocumentId(parent, document + "+" + imageName);
+            return imageId;
         }
     }
 }

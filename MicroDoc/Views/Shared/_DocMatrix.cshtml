@@ -34,7 +34,7 @@
 			<tr data-tag="@row.Id">
 				@if (row.IsDomain)
 				{
-					<th style="--tag-level:@row.Level;"><clip><tag data-id="@row.Id">@row.Tag</tag></clip></th>
+					<th style="--tag-level:@row.Level;"><clip><tag data-id="@row.Id">@Model.Domain.Name</tag></clip></th>
 				}
 				else
 				{

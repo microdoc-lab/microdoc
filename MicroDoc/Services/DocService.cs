@@ -34,14 +34,15 @@ namespace MicroDoc.Services
 
             if (Directory.Exists(folder))
             {
+                var (parent, tag) = DocumentParser.SplitId(path);
                 var node = new TagNode
                 {
                     Domain = domain,
-                    Path = string.Join("/", (path ?? "").Split('/')[..^1]),
-                    Tag = string.IsNullOrEmpty(path) ? domain : Path.GetFileName(path),
+                    Path = parent,
+                    Tag = tag,
                     Documents = GetDocuments(domain, path),
                     Level = 0,
-                    IsDomain = string.IsNullOrEmpty(path)
+                    IsDomain = string.IsNullOrEmpty(tag)
                 };
 
                 nodes.Add(node);
