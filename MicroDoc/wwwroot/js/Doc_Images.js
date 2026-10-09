@@ -1,6 +1,7 @@
 ﻿Doc.prototype.InitImages = function (options) {
     this.log('InitImages');
 
+    var explorer = this.explorer();
     var docElement = this.element;
     var docViewer = this.docViewer();
     var txtEditor = this.txtEditor();
@@ -28,7 +29,7 @@
     });
 
     txtEditor.addEventListener("paste", async function (e) {
-        var docMatrix = this.docMatrix();
+        var docMatrix = explorer.docMatrix();
 
         var domain = docElement.dataset.domain;
         var documentId = docElement.dataset.id;

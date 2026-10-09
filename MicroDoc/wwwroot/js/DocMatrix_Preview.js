@@ -33,13 +33,18 @@
                     // create new document element
                     docInCell = document.createElement("doc");
                     docInCell.dataset.domain = this.domain;
-                    docInCell.dataset.id = docCell.closest("tr").dataset.tag + "/" + docName + ".txt";
+                    docInCell.dataset.id = this.DocId(docCell.closest("tr").dataset.tag, docName + ".txt");
                     docInCell.dataset.document = docName;
                     docInCell.dataset.name = docName + ".txt";
                     docInCell.dataset.content = "";
 
+                    var domain = docInCell.dataset.domain;
+                    var documentId = docInCell.dataset.id;
+
+                    var docPath = this.DocPath(domain, documentId);
+
                     // Save empty document
-                    const response = await this.service.SaveDocument(docInCell.dataset.domain, docInCell.dataset.id, "");
+                    const response = await this.service.SaveDocument(domain, documentId, "");
                     if (!response.ok) {
                         this.error(`Save document ${docPath} failed`, await response.text());
                         return;

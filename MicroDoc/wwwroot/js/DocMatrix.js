@@ -42,6 +42,10 @@ DocMatrix.prototype.TagPath = function (domain, documentId) {
     return (tagPath ? tagPath : domain);
 }
 
+DocMatrix.prototype.DocId = function (tags, document) {
+    return tags ? tags + "/" + document : document;
+}
+
 DocMatrix.prototype.DocPath = function (domain, documentId) {
     var tags = documentId.split('/');
     var docName = tags.pop();

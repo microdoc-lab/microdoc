@@ -28,6 +28,7 @@ Doc.prototype.InitBehaviors = function () {
 }
 
 // Api
+Doc.prototype.explorer = function () { return this.element.closest(".explorer").explorer; }
 Doc.prototype.docMatrix = function () { return this.element.closest(".explorer").querySelector(".docmatrix").docMatrix; }
 Doc.prototype.overlay = function () { return this.element.closest(".explorer").querySelector(".overlay"); }
 Doc.prototype.toolbar = function () { return this.element.closest(".explorer").querySelector(".overlay .toolbar"); }
