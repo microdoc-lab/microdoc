@@ -3,6 +3,7 @@
 
     var grid = this.grid();
 
+    // browse TagTree from DocMatrix - handle click on Tag in DocMatrix
     grid.addEventListener("click", event => {
         // don't navigate if user select some text in the cell
         const selection = window.getSelection();
@@ -14,6 +15,7 @@
         if (!tag)
             return;
 
+        // select tag in tree
         this.explorer().tagTree().SelectTag(tag.dataset.id);
     });
 }
@@ -25,10 +27,12 @@ DocMatrix.prototype.MoveTagUp = function () {
     if (!this.selectedTag)
         return;
 
-    var tags = this.selectedTag.split('/');
-    tags.pop();
-    var parentTag = tags.join('/');
+    // determine parent tag
+    var parentTag = this.TagParent(this.selectedTag);
 
+    // select parent tag
     this.explorer().tagTree().SelectTag(parentTag);
+
+    // collapse just selected parent tag
     this.explorer().tagTree().CollapseTag(parentTag);
 }

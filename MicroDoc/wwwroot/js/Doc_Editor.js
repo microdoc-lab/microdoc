@@ -40,11 +40,12 @@
         );
     });
 
-    // save and close on Esc in text editor
     txtEditor.addEventListener("keydown", e => {
+        // save and close document editor on ESC
         if (e.key === "Escape")
             docElement.doc.SaveDocument(true);
 
+        // accept Tab in document editor
         if (e.key === "Tab") {
             e.preventDefault();
 

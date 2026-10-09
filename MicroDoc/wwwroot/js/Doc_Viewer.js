@@ -19,6 +19,7 @@
         if (!selection || selection.isCollapsed || selection.anchorNode != selection.focusNode)
             return;
 
+        // copy heading commit: [tag] [tag] heading
         var heading = selection.anchorNode.closest("h1,h2,h3");
         if (heading) {
             var docPath = docMatrix.TagPath(domain, documentId);
@@ -27,6 +28,7 @@
             return;
         }
 
+        // copy image link: [tag] [tag] document+image.png
         var imageContainer = selection.anchorNode.closest("imgw");
         if (imageContainer) {
             var imagePath = imageContainer.dataset.imagepath;
@@ -48,18 +50,20 @@
     // select heading when document section clicked
     docViewer.addEventListener("click", async event => {
 
-        // open document from link
+        // open embeded link
         const link = event.target.closest("a");
         if (link && link.dataset.document) { 
             event.preventDefault();
 
             var docMatrix = this.docMatrix();
 
+            // obtain document properties
             const domain = docElement.dataset.domain;
             const documentId = link.getAttribute("href");
 
             const docPath = link.textContent;
 
+            // load document content
             const response = await docMatrix.service.LoadDocument(domain, documentId);
             if (!response.ok) {
                 this.error(`Load document ${docPath} failed`, await response.text());
@@ -71,6 +75,7 @@
             const documentHtml = doc.html;
             const headingIndex = -1;
 
+            // open document in overlay
             docMatrix.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
 
             return;
@@ -107,9 +112,10 @@
         if (headingIndex >= 0) {
             const heading = docViewer.querySelectorAll("h1, h2, h3")[headingIndex];
             if (heading) {
-                // scroll heading into view
+                // scroll heading into view (if not fully visible above document viewer middle line)
                 if (!IsFullyVisibleAndAboveMiddle(heading, docViewer))
                     heading.scrollIntoView({ behavior: "auto", block: "start" });
+
                 // put selection on heading
                 SelectElement(heading);
             }

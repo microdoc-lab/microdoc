@@ -7,7 +7,8 @@
     var txtEditor = this.txtEditor();
     var service = this.service;
 
-    // move gallery synchronously with vertical scroller
+    // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop
+    // manually clip absolute positioned <gallery> outside document viewer bounds
     docViewer.addEventListener("scroll", () => {
         const scrollTop = docViewer.scrollTop;
         const viewerRect = docViewer.getBoundingClientRect();
@@ -28,9 +29,11 @@
         });
     });
 
+    // paste image from clipboard
     txtEditor.addEventListener("paste", async function (e) {
         var docMatrix = explorer.docMatrix();
 
+        // obtain document context
         var domain = docElement.dataset.domain;
         var documentId = docElement.dataset.id;
 
@@ -49,6 +52,7 @@
             var imageName = docMatrix.DocName(image.name);
             var imageType = docMatrix.DocType(image.name);
 
+            // prompt image name
             imageName = prompt("Enter image name", imageName);
 
             if (!imageName)
@@ -56,12 +60,14 @@
 
             imageName = imageName + imageType;
 
+            // upload image on server
             const response = await service.UploadImage(domain, documentId, imageName, image);
             if (!response.ok) {
                 this.error(`Upload image ${docPath} failed`, await response.text());
                 return;
             }
 
+            // insert image tag into document editor
             InsertImage(txtEditor, imageName);
         }
     });

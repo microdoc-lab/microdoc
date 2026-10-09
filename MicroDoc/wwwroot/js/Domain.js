@@ -9,11 +9,16 @@
 
     // prompt user to save&close editing document on browser tab close/reload
     window.addEventListener("beforeunload", e => {
+        // find first editing document (current domain first)
         var docElement = document.querySelector('.explorerHost[style*="display: flex"] .explorer .overlay .doc[mode=edit]')
             ?? document.querySelector('.explorerHost[style*="display: none"] .explorer .overlay .doc[mode=edit]');
+
+        // prompt user to close editing documents
         if (docElement) {
             var explorerElement = docElement.closest(".explorer");
+            // activate explorer
             this.ActivateExplorer(explorerElement);
+            // focus editing document
             docElement.doc.txtEditor().focus();
 
             e.preventDefault();
@@ -21,11 +26,11 @@
         }
     });
 
-    // close document viewer with active selection on ESC
+    // close document viewer (with active selection) on ESC
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
+            // current document viewer can be determined by having selection in it
             const selection = window.getSelection();
-
             if (!selection || selection.isCollapsed)
                 return;
 
@@ -34,10 +39,12 @@
             if (!viewer)
                 return;
 
+            // locate and check doc
             const docElement = viewer.closest(".doc");
             if (!docElement)
                 return;
 
+            // close document
             docElement.doc.CloseDocument();
         }
     });
@@ -55,9 +62,12 @@ Domain.prototype.InitBehaviors = function () {
 }
 
 // Api
-Domain.prototype.OpenExplorer = function(domain, selectedTag) {
+Domain.prototype.OpenExplorer = function (domain, selectedTag) {
+
+    // translate domain into explorerId
     var explorerId = "explorer" + domain.replaceAll(".", "_").replaceAll(" ", "_");
 
+    // if explorer already opened and not visible - activate it
     var element = document.getElementById(explorerId);
     if (element) {
         if (element.parentElement.style.display == "none") {
@@ -66,22 +76,30 @@ Domain.prototype.OpenExplorer = function(domain, selectedTag) {
         return;
     }
 
-    var parent = document.createElement("div");
-    parent.className = "explorerHost";
-    parent.domain = domain;
+    // create explorer host
+    var host = document.createElement("div");
+    host.className = "explorerHost";
+    host.domain = domain;
 
+    // set background url, obtain background version from options
     var backgroundVersion = this.options.domainBackgroundVersions[domain];
-    parent.style.backgroundImage = `url("/Home/Background?domain=${domain}&v=${backgroundVersion}")`;
+    host.style.backgroundImage = `url("/Home/Background?domain=${domain}&v=${backgroundVersion}")`;
 
+    // create explorer 
     element = document.createElement("div");
     element.id = explorerId;
-    parent.appendChild(element);
-    this.container.appendChild(parent);
 
-    var explorer = new Explorer(element);
+    // add component to DOM
+    host.appendChild(element);
+    this.container.appendChild(host);
+
+    // setup client component
+    var options = {};
+    var explorer = new Explorer(element, options);
     explorer.domain = domain;
     explorer.selectedTag = selectedTag;
 
+    // load explorer content
     explorer.Reload();
 
     this.ActivateExplorer(element);

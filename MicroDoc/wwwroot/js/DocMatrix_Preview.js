@@ -3,19 +3,22 @@
 
     var grid = this.grid();
 
-    // open document in overlay by click
+    // open document by click in grid
     grid.addEventListener("click", async event => {
 
-        // open document from link
+        // open embeded link
         const link = event.target.closest("a");
+        // link should be document-related
         if (link && link.dataset.document) {
             event.preventDefault();
 
+            // obtain document properties
             const domain = this.domain;
             const documentId = link.getAttribute("href");
 
             const docPath = link.textContent;
 
+            // load document content
             const response = await this.service.LoadDocument(domain, documentId);
             if (!response.ok) {
                 this.error(`Load document ${docPath} failed`, await response.text());
@@ -27,6 +30,7 @@
             const documentHtml = doc.html;
             const headingIndex = -1;
 
+            // open document in overlay
             this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
 
             return;
@@ -52,6 +56,7 @@
             if (!docCell.classList.contains("nameonly"))
                 docInCell = docCell.querySelector("doc");
             else {
+                // click was made on MISC cell - create MISC document with custom name
                 var docName = prompt("Enter document name (without extension)");
                 if (!docName.trim())
                     return;
@@ -71,7 +76,7 @@
 
                     var docPath = this.DocPath(domain, documentId);
 
-                    // Save empty document
+                    // Save NEW empty document
                     const response = await this.service.SaveDocument(domain, documentId, "");
                     if (!response.ok) {
                         this.error(`Save document ${docPath} failed`, await response.text());
@@ -105,6 +110,7 @@
             headingIndex = [...headings].indexOf(heading);
         }
 
+        // open document in overlay
         this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey ? "edit" : "view");
     });
 }
@@ -119,6 +125,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     // if document already opened - just focus it
     var docElement = this.docElement(domain, documentId);
     if (docElement) {
+        // select and scroll viewer/editor depending on current mode
         var currentMode = docElement.getAttribute("mode");
         if (currentMode == "view")
             docElement.doc.docViewer().SelectAndScroll(headingIndex);
@@ -155,6 +162,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     // init component behaviors
     doc.InitBehaviors();
 
+    // select and scroll viewer/editor depending on specified mode
     if (mode == "view")
         docElement.doc.docViewer().SelectAndScroll(headingIndex);
 

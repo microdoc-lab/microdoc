@@ -4,11 +4,12 @@
     this.domainOptions = document.querySelector("#domainOptions");
     this.domainOptionsEditor = document.querySelector("#domainOptions .editor");
 
-    // save and close on Esc in text editor; accept Tab
     this.domainOptionsEditor.addEventListener("keydown", e => {
+        // save and close domain options editor on ESC
         if (e.key === "Escape")
             this.ToggleDomainOptions();
 
+        // accept Tab in domain options editor
         if (e.key === "Tab") {
             e.preventDefault();
 

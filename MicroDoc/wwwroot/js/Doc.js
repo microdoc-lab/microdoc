@@ -55,6 +55,7 @@ Doc.prototype.SaveDocument = async function (close) {
     var docElement = this.element;
     var txtEditor = this.txtEditor();
 
+    // obtain document context
     var domain = docElement.dataset.domain;
     var documentId = docElement.dataset.id;
     var content = txtEditor.value;
@@ -74,7 +75,7 @@ Doc.prototype.SaveDocument = async function (close) {
     // update cell in grid
     var formattedContent = await response.text();
 
-    // find & check cell
+    // update cell after save
     var docInCell = docMatrix.docInCell(domain, documentId);
     if (docInCell) {
         docInCell.dataset.content = content;
@@ -86,10 +87,9 @@ Doc.prototype.SaveDocument = async function (close) {
 
 Doc.prototype.DeleteDocument = async function () {
     var docMatrix = this.docMatrix();
-    var overlay = this.overlay();
-    var toolbar = this.toolbar();
     var docElement = this.element;
 
+    // obtain document context
     var domain = docElement.dataset.domain;
     var documentId = docElement.dataset.id;
 
@@ -102,21 +102,17 @@ Doc.prototype.DeleteDocument = async function () {
         return;
     }
 
-    // remove docElement
-    overlay.removeChild(docElement);
-    // hide toolbar
-    toolbar.style.visibility = "hidden";
-    // reset toolbar context
-    toolbar.dataset.domain = null;
-    toolbar.dataset.id = null;
+    this.CloseDocument();
 
-    // find & check cell
+    // clear cell after save
     var docInCell = docMatrix.docInCell(domain, documentId);
     if (docInCell) {
+        // remove document from MISC column
         if (docInCell.closest("td").classList.contains("nameonly")) {
             docInCell.remove();
         }
         else {
+            // clear single-document cell
             docInCell.dataset.content = null;
             docInCell.innerHTML = null;
         }
