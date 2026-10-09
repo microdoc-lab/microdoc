@@ -37,7 +37,7 @@ namespace MicroDoc.Services
                 var node = new TagNode
                 {
                     Domain = domain,
-                    Path = Path.GetDirectoryName(path ?? ""),
+                    Path = string.Join("/", (path ?? "").Split('/')[..^1]),
                     Tag = string.IsNullOrEmpty(path) ? domain : Path.GetFileName(path),
                     Documents = GetDocuments(domain, path),
                     Level = 0,
