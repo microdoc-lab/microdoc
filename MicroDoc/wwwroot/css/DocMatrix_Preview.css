@@ -23,7 +23,7 @@
     border: 1px solid transparent;
 }
 
-.docmatrix .grid td.nameonly doc :is(h1, h2, h3) {
+.docmatrix .grid td.misc doc :is(h1, h2, h3) {
     visibility: hidden;
     margin: 0px;
 }
@@ -43,7 +43,7 @@
     padding: 0px 3px 0px 3px;
 }
 
-.docmatrix .grid td:not(.nameonly) doc section:hover > content:not(:empty) {
+.docmatrix .grid td:not(.misc) doc section:hover > content:not(:empty) {
     display: block;
     background-color: var(--doc-background);
     margin-top: -8px;

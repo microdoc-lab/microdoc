@@ -108,7 +108,7 @@ Doc.prototype.DeleteDocument = async function () {
     var docInCell = docMatrix.docInCell(domain, documentId);
     if (docInCell) {
         // remove document from MISC column
-        if (docInCell.closest("td").classList.contains("nameonly")) {
+        if (docInCell.closest("td").classList.contains("misc")) {
             docInCell.remove();
         }
         else {

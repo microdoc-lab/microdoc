@@ -58,7 +58,7 @@
 
 					<td><clip><doc data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content">@Html.Raw(doc.Html)</doc></clip></td>
 				}
-				<td class="nameonly"><clip>
+				<td class="misc"><clip>
 					@foreach (var doc in row.Documents.Where(d => !Model.Domain.Documents.Contains(d.Name)))
 					{
 						<doc data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content" data-document="@doc.Name" data-name="@(doc.Name + doc.Extension)">@Html.Raw(doc.Html)</doc>
@@ -92,7 +92,7 @@
 		if (!string.IsNullOrWhiteSpace(docOptions.Color))
 		{
 <text>.explorer[data-domain="@Model.Domain.Name"] .docmatrix th[data-document=@docOptions.Name],
-.explorer[data-domain="@Model.Domain.Name"] .docmatrix td.nameonly doc[data-document=@docOptions.Name]::before,
+.explorer[data-domain="@Model.Domain.Name"] .docmatrix td.misc doc[data-document=@docOptions.Name]::before,
 .explorer[data-domain="@Model.Domain.Name"] .docmatrix td a[data-document=@docOptions.Name],
 .explorer[data-domain="@Model.Domain.Name"] .overlay .doc[data-document=@docOptions.Name]::before,
 .explorer[data-domain="@Model.Domain.Name"] .overlay .doc a[data-document=@docOptions.Name] { background: @docOptions.Color; }

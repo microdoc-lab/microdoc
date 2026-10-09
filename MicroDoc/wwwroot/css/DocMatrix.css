@@ -101,21 +101,21 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
 
-/* Doc in MISC cell (nameonly) */
-.docmatrix .grid td.nameonly doc {
+/* Doc in MISC cell */
+.docmatrix .grid td.misc doc {
     display: block;
     height: 20px;
     white-space: nowrap;
 }
 
-.docmatrix .grid td.nameonly doc::before {
+.docmatrix .grid td.misc doc::before {
     content: attr(data-name);
     position: absolute;
     font-size: smaller;
     font-weight: bold;
 }
 
-.docmatrix .grid td.nameonly doc:hover {
+.docmatrix .grid td.misc doc:hover {
     background-color: var(--selection-background);
 }
 

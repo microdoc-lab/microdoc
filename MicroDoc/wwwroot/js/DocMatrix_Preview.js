@@ -53,7 +53,7 @@
                 return;
 
             // obtain first doc in cell
-            if (!docCell.classList.contains("nameonly"))
+            if (!docCell.classList.contains("misc"))
                 docInCell = docCell.querySelector("doc");
             else {
                 // click was made on MISC cell - create MISC document with custom name
