@@ -80,8 +80,10 @@ TagTree.prototype.New = async function () {
     explorerElement.explorer.tagTree().ExpandTag(selectedTag);
 
     // reload docMatrix
-    if (explorerElement)
-        explorerElement.explorer.docMatrix().Reload();
+    if (explorerElement) {
+        var docMatrix = explorerElement.explorer.docMatrix();
+        docMatrix.Reload();
+    }
 }
 
 TagTree.prototype.Delete = async function () {
@@ -111,8 +113,11 @@ TagTree.prototype.Delete = async function () {
     explorerElement.explorer.tagTree().ExpandTag(parentTag);
 
     // reload docMatrix
-    if (explorerElement)
-        explorerElement.explorer.docMatrix().Reload();
+    if (explorerElement) {
+        var docMatrix = explorerElement.explorer.docMatrix();
+        docMatrix.selectedTag = parentTag;
+        docMatrix.Reload();
+    }
 }
 
 TagTree.prototype.TagPath = function (domain, tag) {
