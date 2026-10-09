@@ -31,11 +31,11 @@
 			<tr data-tag="@row.Id">
 				@if (row.IsDomain)
 				{
-					<th style="--tag-level:@row.Level;">@row.Tag</th>
+					<th style="--tag-level:@row.Level;"><clip><tag>@row.Tag</tag></clip></th>
 				}
 				else
 				{
-					<th style="--tag-level:@row.Level;">[@row.Tag]</th>
+					<th style="--tag-level:@row.Level;"><clip><tag>[@row.Tag]</tag></clip></th>
 				}
 				@foreach (var column in Model.Domain.Documents)
 				{

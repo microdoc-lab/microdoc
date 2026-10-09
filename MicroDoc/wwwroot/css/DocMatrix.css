@@ -4,12 +4,7 @@
     position: relative;
 }
 
-.docmatrix .toolbar {
-    position: absolute;
-    z-index: 1;
-    font-size: 0;
-}
-
+/* Grid */
 .docmatrix .grid {
     position: absolute;
     inset: 0;
@@ -25,26 +20,60 @@
     --opacity: 100%;
 }
 
-.docmatrix .grid tr:nth-child(1) th {
-    text-align: center;
-    padding: 0px 5px;
-    min-width: 100px;
-}
-
-.docmatrix .grid tr:nth-child(1) th:nth-child(1) {
-    padding: 0px;
-}
-
-.docmatrix .grid th:nth-child(1) {
-    padding-left: calc(var(--tag-level) * 10px);
-}
-
+/* Grid borders */
 .docmatrix .grid th, .docmatrix .grid td {
     border-right: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     vertical-align: top;
 }
 
+/* Grid toolbar */
+/* top left corner cell */
+.docmatrix .grid tr:nth-child(1) th:nth-child(1) {
+    padding: 0px;
+}
+
+.docmatrix .toolbar {
+    position: absolute;
+    z-index: 1;
+    font-size: 0;
+}
+
+/* grid headers in first row */
+.docmatrix .grid tr:nth-child(1) th {
+    text-align: center;
+    padding: 0px 5px;
+    min-width: 100px;
+}
+
+/* row headers (tag name) in first column */
+.docmatrix .grid th:nth-child(1) {
+    position: relative;
+    overflow: visible;    
+    padding-left: calc(var(--tag-level) * 10px);
+}
+
+.docmatrix .grid th clip { 
+    display: block;
+    overflow: clip; 
+}
+
+.docmatrix .grid th:hover { z-index: 10; }
+.docmatrix .grid th:hover clip { overflow: visible; }
+
+/* Tag in first column */
+.docmatrix .grid th clip tag {
+    position: relative;
+    display: inline-block;
+    padding: 0px 3px;
+}
+
+.docmatrix .grid th:hover tag {
+    background-color: var(--grid-background);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Doc cell */
 .docmatrix .grid td {
     position: relative;
     overflow: visible;
@@ -56,12 +85,22 @@
     max-height: 70px;
 }
 
+.docmatrix .grid td:hover { z-index: 10; }
+.docmatrix .grid td:hover clip { overflow: visible; }
+
+/* Doc in cell */
 .docmatrix .grid td doc {
     position: relative;
     display: inline-block;
     margin-left: 6px;
 }
 
+.docmatrix .grid td:hover doc {
+    background-color: var(--grid-background);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* Doc in MISC cell (nameonly) */
 .docmatrix .grid td.nameonly doc {
     display: block;
     height: 20px;
@@ -79,15 +118,4 @@
     background-color: var(--selection-background);
 }
 
-.docmatrix .grid td:hover {
-    z-index: 10;
-}
 
-.docmatrix .grid td:hover clip {
-    overflow: visible;
-}
-
-.docmatrix .grid td:hover doc {
-    background-color: var(--grid-background);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
