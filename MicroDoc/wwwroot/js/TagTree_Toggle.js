@@ -55,3 +55,9 @@ TagTree.prototype.ExpandTag = function (tag) {
         details = details.parentElement.closest("details");
     }
 }
+
+TagTree.prototype.CollapseTag = function (tag) {
+    var details = this.element.querySelector(`.tag[data-id="${tag}"] details`);
+    if (details)
+        details.open = false;
+}

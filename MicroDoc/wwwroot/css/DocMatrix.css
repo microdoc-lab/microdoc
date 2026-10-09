@@ -39,18 +39,19 @@
     font-size: 0;
 }
 
-/* grid headers in first row */
+/* Column headers in first row */
 .docmatrix .grid tr:nth-child(1) th {
     text-align: center;
     padding: 0px 5px;
     min-width: 100px;
 }
 
-/* row headers (tag name) in first column */
+/* Row headers (tag name) in first column */
 .docmatrix .grid th:nth-child(1) {
     position: relative;
     overflow: visible;    
     padding-left: calc(var(--tag-level) * 10px);
+    cursor: pointer;
 }
 
 .docmatrix .grid th clip { 

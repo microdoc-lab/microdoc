@@ -23,20 +23,22 @@ TagTree.prototype.behaviors.push(TagTree.prototype.InitSelection);
 
 // Api
 TagTree.prototype.SelectTag = function (tagName) {
-    if (tagName) {
-        const titleNode = this.element.querySelector(`.tag[data-id="${tagName}"] .title`);
-        if (titleNode) {
-            var details = titleNode.closest("details");
+    if (tagName != null) {
+        var tagNode = this.element.querySelector(`.tag[data-id="${tagName}"]`);
+        if (tagNode) {
+            // select tag
+            this.InternalSelectTag(tagNode);
+
+            // expand details chain up to selected tag (don't expand last node)
             var lastTag = true;
-            while (details) {
-                if (!details.classList.contains("empty") && !lastTag)
+            while (tagNode) {
+                var details = tagNode.querySelector("details");
+                if (details && !details.classList.contains("empty") && !lastTag)
                     details.open = true;
-                details = details.parentElement.closest("details");
+
+                tagNode = tagNode.parentElement.closest(".tag");
                 lastTag = false;
             }
-
-            const tagNode = titleNode.closest(".tag");
-            this.InternalSelectTag(tagNode);
         }
     }
     else {
