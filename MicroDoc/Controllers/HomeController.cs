@@ -51,6 +51,17 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        public IActionResult MoveTag(string domain, string selectedTag, string targetTag)
+        {
+            var status = _tagTreeService.MoveTag(domain, selectedTag, targetTag, out string newTagId);
+                
+            if (status != ErrorCode.Ok)
+                return Error(status);
+
+            return Content(newTagId);
+        }
+
+        [HttpPost]
         public IActionResult DeleteTag(string domain, string selectedTag)
         {
             if (string.IsNullOrEmpty(selectedTag))

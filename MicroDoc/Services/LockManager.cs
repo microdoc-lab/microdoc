@@ -13,6 +13,9 @@ namespace MicroDoc.Services
         public IDisposable Write(string domain, string path) =>
             Acquire(domain, path, writeTarget: true);
 
+        public IDisposable Write2(string domain, string source, string destination) =>
+            Acquire(domain, source, destination);
+
         public IDisposable WriteFolder(string domain, string folderId) =>
             Acquire(domain, folderId, writeTarget: true);
 
@@ -74,6 +77,69 @@ namespace MicroDoc.Services
             }
 
             return keys;
+        }
+
+        private IDisposable Acquire(
+            string domain,
+            string source,
+            string destination)
+        {
+            ValidateDomain(domain);
+            ValidatePath(source);
+            ValidatePath(destination);
+
+            var lockModes = new Dictionary<string, bool>(StringComparer.Ordinal);
+
+            AddPathLocks(lockModes, domain, source, writeTarget: true);
+            AddPathLocks(lockModes, domain, destination, writeTarget: true);
+
+            var acquired = new List<(ReaderWriterLockSlim Lock, bool Write)>();
+
+            try
+            {
+                foreach (var entry in lockModes.OrderBy(x => x.Key, StringComparer.Ordinal))
+                {
+                    var rwLock = lockHash.GetOrAdd(
+                        entry.Key,
+                        static _ => new ReaderWriterLockSlim(
+                            LockRecursionPolicy.SupportsRecursion));
+
+                    bool write = entry.Value;
+
+                    if (write)
+                        rwLock.EnterWriteLock();
+                    else
+                        rwLock.EnterReadLock();
+
+                    acquired.Add((rwLock, write));
+                }
+
+                return new Lease(acquired);
+            }
+            catch
+            {
+                Release(acquired);
+                throw;
+            }
+        }
+
+        private static void AddPathLocks(
+            Dictionary<string, bool> lockModes,
+            string domain,
+            string path,
+            bool writeTarget)
+        {
+            var keys = GetLockKeys(domain, path);
+
+            for (int i = 0; i < keys.Count; i++)
+            {
+                bool write = writeTarget && i == keys.Count - 1;
+
+                if (!lockModes.TryGetValue(keys[i], out bool existingWrite))
+                    lockModes.Add(keys[i], write);
+                else if (write && !existingWrite)
+                    lockModes[keys[i]] = true;
+            }
         }
 
         private static void ValidateDomain(string domain)

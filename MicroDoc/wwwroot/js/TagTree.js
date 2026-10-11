@@ -86,6 +86,42 @@ TagTree.prototype.New = async function () {
     }
 }
 
+TagTree.prototype.Move = async function () {
+    var domain = this.domain;
+    var selectedTag = this.selectedTag;
+
+    // Prompt new tag name
+    var tagPath = this.TagPath(domain, selectedTag);
+
+    var targetTag = prompt(`Move Tag ${tagPath}? Enter target tag name`);
+    if (!targetTag || !targetTag.trim())
+        return;
+
+    // Create Tag
+    const response = await this.service.MoveTag(domain, selectedTag, targetTag);
+    if (!response.ok) {
+        this.error(`Move Tag ${tagPath} to ${targetTag} failed`, await response.text());
+        return;
+    }
+
+    var newTag = await response.text();
+
+    var explorerElement = this.element.closest(".explorer");
+
+    // reload tree and select moved tag
+    await this.Load(newTag);
+
+    // expand selectedTag
+    explorerElement.explorer.tagTree().ExpandTag(newTag);
+
+    // reload docMatrix
+    if (explorerElement) {
+        var docMatrix = explorerElement.explorer.docMatrix();
+        docMatrix.selectedTag = newTag;
+        docMatrix.Reload();
+    }
+}
+
 TagTree.prototype.Delete = async function () {
     var domain = this.domain;
     var selectedTag = this.selectedTag;
@@ -146,6 +182,18 @@ TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
         })
     });
 }
+
+TagTreeService.prototype.MoveTag = function (domain, selectedTag, targetTag) {
+    return fetch("/Home/MoveTag", {
+        method: "POST",
+        body: new URLSearchParams({
+            domain: domain,
+            selectedTag: selectedTag ?? "",
+            targetTag: targetTag
+        })
+    });
+}
+
 
 TagTreeService.prototype.DeleteTag = function (domain, selectedTag) {
     return fetch("/Home/DeleteTag", {

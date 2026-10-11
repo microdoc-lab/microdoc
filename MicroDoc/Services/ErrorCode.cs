@@ -5,7 +5,9 @@
         Ok,
 
         TagNotFound,
+        TagExists,
         RootTag,
+        MoveIntoNestedTag,
         NestedTagsExists,
         NestedDocumentsExists,
 

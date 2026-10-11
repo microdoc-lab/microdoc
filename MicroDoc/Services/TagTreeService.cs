@@ -66,7 +66,7 @@
             using (_lockManager.Write(domain, selectedTag + "/" + newTagName))
             {
                 if (Directory.Exists(folder))
-                    return ErrorCode.TagNotFound;
+                    return ErrorCode.TagExists;
 
                 // create directory
                 Directory.CreateDirectory(folder);
@@ -77,6 +77,56 @@
             {
                 TagView view = BuildView(domain, selectedTag);
                 var viewPath = Path.Combine(rootFolder, selectedTag, ViewFileName);
+                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            }
+
+            return ErrorCode.Ok;
+        }
+
+        public ErrorCode MoveTag(string domain, string selectedTag, string targetTag, out string newTagId)
+        {
+            selectedTag = selectedTag ?? "";
+            targetTag = targetTag ?? "";
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+
+            var (parentTag, name) = DocumentParser.SplitId(selectedTag);
+            newTagId = targetTag + "/" + name;
+
+            if (targetTag.StartsWith(selectedTag + "/"))
+                return ErrorCode.MoveIntoNestedTag;
+
+            var source = Path.Combine(rootFolder, selectedTag);
+            var destination = Path.Combine(rootFolder, targetTag);
+            var newPath = Path.Combine(rootFolder, newTagId);
+
+            using (_lockManager.Write2(domain, selectedTag, newTagId))
+            {
+                if (!Directory.Exists(source))
+                    return ErrorCode.TagNotFound;
+
+                if (!Directory.Exists(destination))
+                    return ErrorCode.TagNotFound;
+
+                if (Directory.Exists(newPath))
+                    return ErrorCode.TagExists;
+
+                // create directory
+                Directory.Move(source, newPath);
+            }
+
+            // update source parent tag view
+            using (_lockManager.Write(domain, parentTag + "/" + ViewFileName))
+            {
+                TagView view = BuildView(domain, parentTag);
+                var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
+                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            }
+
+            // update target view
+            using (_lockManager.Write(domain, targetTag + "/" + ViewFileName))
+            {
+                TagView view = BuildView(domain, targetTag);
+                var viewPath = Path.Combine(rootFolder, targetTag, ViewFileName);
                 ViewConfigLoader.SaveTagsToFile(viewPath, view);
             }
 
@@ -107,9 +157,8 @@
                 Directory.Delete(folder);
             }
 
-            var parentTag = Path.GetDirectoryName(selectedTag);
-
             // update parent tag view
+            var (parentTag, _) = DocumentParser.SplitId(selectedTag);
             using (_lockManager.Write(domain, parentTag + "/" + ViewFileName))
             {
                 TagView view = BuildView(domain, parentTag);
