@@ -14,7 +14,16 @@
 }
 
 <div id="@Model.Id" class="tag-tree">
+
+    <style id="tagSearchStyle"></style>
+
 	<div class="toolbar">
+		<button class="icon-button clearSearch" onclick='document.getElementById("@Model.Id").tagTree.ClearSearch()' title="Clear search">
+			<img src="/icons/Close.png">
+		</button>
+        
+        <input class="search" name="search" type="text" title="Search tree" />
+
 		<button class="icon-button" onclick='document.getElementById("@Model.Id").tagTree.New()' title="New Tag">
 			<img src="/icons/New.png">
 		</button>
