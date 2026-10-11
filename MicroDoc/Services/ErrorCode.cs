@@ -12,6 +12,7 @@
         NestedDocumentsExists,
 
         DocumentNotFound,
+        ImageNotFound,
 
         TagNotClosed,
         WrongImageName,

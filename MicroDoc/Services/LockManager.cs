@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace MicroDoc.Services
 {
@@ -7,10 +8,15 @@ namespace MicroDoc.Services
         private readonly ConcurrentDictionary<string, ReaderWriterLockSlim> lockHash =
             new(StringComparer.Ordinal);
 
+        private readonly ILogger<LockManager> _logger;
         private readonly DomainOptions _domainOptions;
-        
-        public LockManager(DomainOptions domainOptions)
+
+        private static readonly TimeSpan SlowLockThreshold =
+            TimeSpan.FromSeconds(1);
+
+        public LockManager(ILogger<LockManager> logger, DomainOptions domainOptions)
         {
+            _logger = logger;
             _domainOptions = domainOptions;
         }
 
@@ -37,6 +43,9 @@ namespace MicroDoc.Services
             var keys = GetLockKeys(domain, path);
             var acquired = new List<(ReaderWriterLockSlim Lock, bool Write)>();
 
+            string mode = writeTarget ? "Write" : "Read";
+            var waitTimer = Stopwatch.StartNew();
+
             try
             {
                 for (int i = 0; i < keys.Count; i++)
@@ -56,7 +65,31 @@ namespace MicroDoc.Services
                     acquired.Add((rwLock, useWriteLock));
                 }
 
-                return new Lease(acquired);
+                waitTimer.Stop();
+
+                if (_logger.IsEnabled(LogLevel.Trace))
+                {
+                    _logger.LogTrace(
+                        "Document lock acquired: Mode={Mode}, Domain={Domain}, " +
+                        "{Path}, WaitMs={WaitMs}",
+                        mode, domain, path, waitTimer.ElapsedMilliseconds);
+                }
+
+                if (waitTimer.Elapsed >= SlowLockThreshold)
+                {
+                    _logger.LogWarning(
+                        "Slow document lock acquisition: Mode={Mode}, Domain={Domain}, " +
+                        "{Path}, WaitMs={WaitMs}",
+                        mode, domain, path, waitTimer.Elapsed.TotalMilliseconds);
+                }
+
+                return new Lease(
+                    acquired,
+                    _logger,
+                    mode,
+                    domain,
+                    path,
+                    waitTimer.Elapsed);
             }
             catch
             {
@@ -108,6 +141,9 @@ namespace MicroDoc.Services
 
             var acquired = new List<(ReaderWriterLockSlim Lock, bool Write)>();
 
+            string mode = "Write2";
+            var waitTimer = Stopwatch.StartNew();
+
             try
             {
                 foreach (var entry in lockModes.OrderBy(x => x.Key, StringComparer.Ordinal))
@@ -127,7 +163,31 @@ namespace MicroDoc.Services
                     acquired.Add((rwLock, write));
                 }
 
-                return new Lease(acquired);
+                waitTimer.Stop();
+
+                if (_logger.IsEnabled(LogLevel.Trace))
+                {
+                    _logger.LogTrace(
+                        "Document lock acquired: Mode={Mode}, Domain={Domain}, " +
+                        "{Source} | {Destination}, WaitMs={WaitMs}",
+                        mode, domain, source, destination, waitTimer.ElapsedMilliseconds);
+                }
+
+                if (waitTimer.Elapsed >= SlowLockThreshold)
+                {
+                    _logger.LogWarning(
+                        "Slow document lock acquisition: Mode={Mode}, Domain={Domain}, " +
+                        "{Source} | {Destination}, WaitMs={WaitMs}",
+                        mode, domain, source, destination, waitTimer.Elapsed.TotalMilliseconds);
+                }
+
+                return new Lease(
+                    acquired,
+                    _logger,
+                    mode,
+                    domain,
+                    source + " | " + destination,
+                    waitTimer.Elapsed);
             }
             catch
             {
@@ -200,18 +260,58 @@ namespace MicroDoc.Services
             }
         }
 
-        private sealed class Lease(
-            List<(ReaderWriterLockSlim Lock, bool Write)> acquired)
-            : IDisposable
+        private sealed class Lease : IDisposable
         {
-            private List<(ReaderWriterLockSlim Lock, bool Write)> locks = acquired;
+            private List<(ReaderWriterLockSlim Lock, bool Write)> _locks;
+            private readonly ILogger _logger;
+            private readonly string _mode;
+            private readonly string _domain;
+            private readonly string _path;
+            private readonly TimeSpan _waitTime;
+            private readonly Stopwatch _holdTimer = Stopwatch.StartNew();
+
+            public Lease(
+                List<(ReaderWriterLockSlim Lock, bool Write)> locks,
+                ILogger logger,
+                string mode,
+                string domain,
+                string path,
+                TimeSpan waitTime)
+            {
+                _locks = locks;
+                _logger = logger;
+                _mode = mode;
+                _domain = domain;
+                _path = path;
+                _waitTime = waitTime;
+            }
 
             public void Dispose()
             {
-                var current = Interlocked.Exchange(ref locks, null);
+                var locks = Interlocked.Exchange(ref _locks, null);
+                if (locks is null)
+                    return;
 
-                if (current is not null)
-                    Release(current);
+                _holdTimer.Stop();
+
+                try
+                {
+                    Release(locks);
+                }
+                finally
+                {
+                    if (_logger.IsEnabled(LogLevel.Trace))
+                    {
+                        _logger.LogTrace(
+                            "Document lock released: Mode={Mode}, Domain={Domain}, " +
+                            "{Path}, WaitMs={WaitMs}, HeldMs={HeldMs}",
+                            _mode,
+                            _domain,
+                            _path,
+                            _waitTime.TotalMilliseconds,
+                            _holdTimer.Elapsed.TotalMilliseconds);
+                    }
+                }
             }
         }
     }

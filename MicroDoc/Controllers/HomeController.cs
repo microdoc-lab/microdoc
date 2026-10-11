@@ -26,15 +26,18 @@ namespace MicroDoc.Controllers
             _docService = docService;
         }
 
+        #region TagTree
+
         public IActionResult TagTree(string clientId, string domain, string selectedTag)
         {
-            var model = new TagTreeViewModel
-            {
-                Id = clientId,
-                Domain = _domainOptions.Find(domain),
-                SelectedTag = selectedTag,
-                Nodes = _tagTreeService.GetTagTree(domain),
-            };
+            var model = LoggingHelper.Execute(_logger, nameof(TagTree), new { clientId, domain, selectedTag }, () =>
+                new TagTreeViewModel
+                {
+                    Id = clientId,
+                    Domain = _domainOptions.Find(domain),
+                    SelectedTag = selectedTag,
+                    Nodes = _tagTreeService.GetTagTree(domain),
+                });
 
             return PartialView("_TagTree", model);
         }
@@ -42,8 +45,11 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult NewTag(string domain, string selectedTag, string newTagName)
         {
-            var status = _tagTreeService.NewTag(domain, selectedTag, newTagName, out string newTagId);
-                
+            string newTagId = null;
+
+            var status = LoggingHelper.Execute(_logger, nameof(NewTag), new { domain, selectedTag, newTagName }, () =>
+                _tagTreeService.NewTag(domain, selectedTag, newTagName, out newTagId));
+
             if (status != ErrorCode.Ok)
                 return Error(status);
 
@@ -53,7 +59,10 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult MoveTag(string domain, string selectedTag, string targetTag)
         {
-            var status = _tagTreeService.MoveTag(domain, selectedTag, targetTag, out string newTagId);
+            string newTagId = null;
+
+            var status = LoggingHelper.Execute(_logger, nameof(MoveTag), new { domain, selectedTag, targetTag }, () =>
+                _tagTreeService.MoveTag(domain, selectedTag, targetTag, out newTagId));
                 
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -64,13 +73,16 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult DeleteTag(string domain, string selectedTag)
         {
-            if (string.IsNullOrEmpty(selectedTag))
-                return Error(ErrorCode.RootTag);
+            var status = LoggingHelper.Execute(_logger, nameof(DeleteTag), new { domain, selectedTag }, () =>
+            {
+                if (string.IsNullOrEmpty(selectedTag))
+                    return ErrorCode.RootTag;
 
-            if (_docService.GetDocuments(domain, selectedTag).Any())
-                return Error(ErrorCode.NestedDocumentsExists);
+                if (_docService.GetDocuments(domain, selectedTag).Any())
+                    return ErrorCode.NestedDocumentsExists;
 
-            var status = _tagTreeService.DeleteTag(domain, selectedTag);
+                return _tagTreeService.DeleteTag(domain, selectedTag);
+            });
 
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -81,52 +93,72 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
-            if (!_tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag))
-                return NotFound();
+            var status = LoggingHelper.Execute(_logger, nameof(ReorderTagsBatch), new { domain, path, tag, targetTag }, () =>
+                _tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag));
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             return Ok();
         }
 
+        #endregion
+
         public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
         {
-            var model = new DocMatrixViewModel
-            {
-                Id = clientId,
-                Domain = _domainOptions.Find(domain),
-                SelectedTag = selectedTag,
-                Rows = _docService.GetTagWithDocuments(domain, selectedTag)
-            };
+            var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag }, () =>
+                new DocMatrixViewModel
+                {
+                    Id = clientId,
+                    Domain = _domainOptions.Find(domain),
+                    SelectedTag = selectedTag,
+                    Rows = _docService.GetTagWithDocuments(domain, selectedTag)
+                });
 
             return PartialView("_DocMatrix", model);
         }
 
         public IActionResult Explorer(string clientId, string domain, string selectedTag)
         {
-            var model = new ExplorerViewModel
-            {
-                Id = clientId,
-                Domain = _domainOptions.Find(domain),
-                SelectedTag = selectedTag,
-                TagTree = {
-                    Nodes = _tagTreeService.GetTagTree(domain),
-                },
-                DocMatrix = {
-                    Rows = _docService.GetTagWithDocuments(domain, selectedTag)
-                },
-                TemplateDoc = { 
-                    Mode = "view",
-                    Doc = new DocNode { }
-                }
-            };
+            var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag }, () =>
+                new ExplorerViewModel
+                {
+                    Id = clientId,
+                    Domain = _domainOptions.Find(domain),
+                    SelectedTag = selectedTag,
+                    TagTree = {
+                        Nodes = _tagTreeService.GetTagTree(domain),
+                    },
+                    DocMatrix = {
+                        Rows = _docService.GetTagWithDocuments(domain, selectedTag)
+                    },
+                    TemplateDoc = {
+                        Mode = "view",
+                        Doc = new DocNode { }
+                    }
+                });
 
             return PartialView("_Explorer", model);
         }
 
+        #region Document
+
         public IActionResult LoadDocument(string domain, string documentId) 
-        { 
-            var doc = _docService.LoadDocument(domain, documentId);
-            if (doc == null)
-                return Error(ErrorCode.DocumentNotFound);
+        {
+            DocNode doc = null;
+
+            var status = LoggingHelper.Execute(_logger, nameof(LoadDocument), new { domain, documentId }, () =>
+            {
+                doc = _docService.LoadDocument(domain, documentId);
+                
+                if (doc == null)
+                    return ErrorCode.DocumentNotFound;
+
+                return ErrorCode.Ok;
+            });
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             return Json(doc);
         }
@@ -136,7 +168,8 @@ namespace MicroDoc.Controllers
         {
             content = content ?? string.Empty;
 
-            var status = _docService.SaveDocument(domain, documentId, content);
+            var status = LoggingHelper.Execute(_logger, nameof(SaveDocument), new { domain, documentId }, () =>
+                _docService.SaveDocument(domain, documentId, content));
             
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -148,7 +181,8 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult DeleteDocument(string domain, string documentId)
         {
-            var status = _docService.DeleteDocument(domain, documentId);
+            var status = LoggingHelper.Execute(_logger, nameof(DeleteDocument), new { domain, documentId }, () =>
+                _docService.DeleteDocument(domain, documentId));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -156,14 +190,26 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
+        #endregion
+
         #region Images
 
         public IActionResult Image(string domain, string documentId, string imageName)
         {
-            string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
+            string filePath = null;
 
-            if (!System.IO.File.Exists(filePath))
-                return NotFound();
+            var status = LoggingHelper.Execute(_logger, nameof(Image), new { domain, documentId, imageName }, () =>
+            {
+                filePath = _docService.GetImageFilePath(domain, documentId, imageName);
+
+                if (!System.IO.File.Exists(filePath))
+                    return ErrorCode.ImageNotFound;
+
+                return ErrorCode.Ok;
+            });
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             var contentType = Path.GetExtension(filePath).ToLowerInvariant() switch
             {
@@ -183,13 +229,21 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadImage(string domain, string documentId, string imageName, IFormFile image)
         {
-            string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
-            string folder = Path.GetDirectoryName(filePath);
-            if (!Directory.Exists(folder))
-                return Error(ErrorCode.TagNotFound);
+            var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
+            {
+                string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
+                string folder = Path.GetDirectoryName(filePath);
+                if (!Directory.Exists(folder))
+                    return ErrorCode.TagNotFound;
 
-            await using var stream = System.IO.File.Create(filePath);
-            await image.CopyToAsync(stream);
+                await using var stream = System.IO.File.Create(filePath);
+                await image.CopyToAsync(stream);
+                
+                return ErrorCode.Ok;
+            });
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             return Ok();
         }
@@ -200,20 +254,25 @@ namespace MicroDoc.Controllers
 
         public IActionResult Background(string domain) 
         {
-            var options = _domainOptions.Find(domain);
-            if (options == null)
-                return NotFound();
+            string filePath = null;
 
-            if (string.IsNullOrEmpty(options.Background))
-                return NotFound();
+            var status = LoggingHelper.Execute(_logger, nameof(Background), new { domain }, () =>
+            {
+                var options = _domainOptions.Find(domain);
 
-            string filePath = _docService.TranslatePathToDocumentId(domain, options.Background);
+                if (string.IsNullOrEmpty(options.Background))
+                    return ErrorCode.ImageNotFound;
 
-            if (filePath == null)
-                return NotFound();
+                filePath = _docService.TranslatePathToDocumentId(domain, options.Background);
 
-            if (!System.IO.File.Exists(filePath))
-                return NotFound();
+                if (!System.IO.File.Exists(filePath))
+                    return ErrorCode.ImageNotFound;
+
+                return ErrorCode.Ok;
+            });
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             var contentType = Path.GetExtension(filePath).ToLowerInvariant() switch
             {
@@ -232,7 +291,8 @@ namespace MicroDoc.Controllers
 
         public IActionResult LoadDomainOptions() 
         {
-            var yaml = DomainOptionsLoader.LoadOptionsAsText(_microDocOptions.Value.DomainOptions);
+            var yaml = LoggingHelper.Execute(_logger, nameof(LoadDomainOptions), new { }, () =>
+                DomainOptionsLoader.LoadOptionsAsText(_microDocOptions.Value.DomainOptions));
 
             return Content(yaml);
         }
@@ -240,16 +300,26 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public IActionResult SaveDomainOptions(string yaml)
         {
-            var domainOptions = DomainOptionsLoader.ValidateOptions(yaml);
+            Dictionary<string, string> domainBackgroundVersions = null;
 
-            DomainOptionsLoader.SaveOptionsToFile(_microDocOptions.Value.DomainOptions, yaml);
+            var status = LoggingHelper.Execute(_logger, nameof(SaveDomainOptions), new { yaml }, () =>
+            {
+                var domainOptions = DomainOptionsLoader.ValidateOptions(yaml);
 
-            // Update singleton in container
-            _domainOptions.Domains = domainOptions.Domains;
+                DomainOptionsLoader.SaveOptionsToFile(_microDocOptions.Value.DomainOptions, yaml);
 
-            _docService.UpdateDomainBackgroundVersions();
+                // Update singleton in container
+                _domainOptions.Domains = domainOptions.Domains;
 
-            var domainBackgroundVersions = _domainOptions.Domains.ToDictionary(o => o.Name, o => o.BackgroundVersion);
+                _docService.UpdateDomainBackgroundVersions();
+
+                domainBackgroundVersions = _domainOptions.Domains.ToDictionary(o => o.Name, o => o.BackgroundVersion);
+
+                return ErrorCode.Ok;
+            });
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
 
             return Json(new { domainBackgroundVersions });
         }
