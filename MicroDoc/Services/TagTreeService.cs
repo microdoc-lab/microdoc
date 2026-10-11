@@ -1,4 +1,6 @@
-﻿namespace MicroDoc.Services
+﻿using System.IO;
+
+namespace MicroDoc.Services
 {
     public class TagTreeService
     {
@@ -82,6 +84,10 @@
 
             if (Directory.GetDirectories(folder).Any())
                 return ErrorCode.NestedTagsExists;
+
+            // remove directory files (view.ini / images)
+            foreach (var file in Directory.GetFiles(folder))
+                File.Delete(file);
 
             // delete directory
             Directory.Delete(folder);
