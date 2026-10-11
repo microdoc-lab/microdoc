@@ -5,7 +5,7 @@
         public string Domain { get; set; }
         public string Path { get; set; }
         public string Tag { get; set; }
-        public string Id => string.IsNullOrEmpty(Path) ? Tag : Path + "/" + Tag;
+        public string Id => DocumentParser.GetDocumentId(Path, Tag);
         public string Color { get; set; }
         public int? Order { get; set; }
         public int Level { get; set; }

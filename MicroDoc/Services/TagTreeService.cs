@@ -20,10 +20,14 @@
             path = path ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var folder = Path.Combine(rootFolder, path);
-            
+
             // load view
-            var viewPath = Path.Combine(folder, ViewFileName);
-            var view = ViewConfigLoader.LoadTagsFromFile(viewPath);
+            TagView view;
+            using (_lockManager.Read(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
+            {
+                var viewPath = Path.Combine(folder, ViewFileName);
+                view = ViewConfigLoader.LoadTagsFromFile(viewPath);
+            }
 
             // Load nodes
             var nodes = new List<TagNode>();
@@ -60,10 +64,10 @@
         {
             selectedTag = selectedTag ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            newTagId = string.IsNullOrEmpty(selectedTag) ? newTagName : selectedTag + "/" + newTagName;
+            newTagId = DocumentParser.GetDocumentId(selectedTag, newTagName);
             var folder = Path.Combine(rootFolder, newTagId);
 
-            using (_lockManager.Write(domain, selectedTag + "/" + newTagName))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(selectedTag, newTagName)))
             {
                 if (Directory.Exists(folder))
                     return ErrorCode.TagExists;
@@ -73,7 +77,7 @@
             }
 
             // update view
-            using (_lockManager.Write(domain, selectedTag + "/" + ViewFileName))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(selectedTag, ViewFileName)))
             {
                 TagView view = BuildView(domain, selectedTag);
                 var viewPath = Path.Combine(rootFolder, selectedTag, ViewFileName);
@@ -90,7 +94,7 @@
             string rootFolder = _domainOptions.Find(domain).RootFolder;
 
             var (parentTag, name) = DocumentParser.SplitId(selectedTag);
-            newTagId = targetTag + "/" + name;
+            newTagId = DocumentParser.GetDocumentId(targetTag, name);
 
             if (targetTag.StartsWith(selectedTag + "/"))
                 return ErrorCode.MoveIntoNestedTag;
@@ -115,7 +119,7 @@
             }
 
             // update source parent tag view
-            using (_lockManager.Write(domain, parentTag + "/" + ViewFileName))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(parentTag, ViewFileName)))
             {
                 TagView view = BuildView(domain, parentTag);
                 var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
@@ -123,7 +127,7 @@
             }
 
             // update target view
-            using (_lockManager.Write(domain, targetTag + "/" + ViewFileName))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(targetTag, ViewFileName)))
             {
                 TagView view = BuildView(domain, targetTag);
                 var viewPath = Path.Combine(rootFolder, targetTag, ViewFileName);
@@ -159,7 +163,7 @@
 
             // update parent tag view
             var (parentTag, _) = DocumentParser.SplitId(selectedTag);
-            using (_lockManager.Write(domain, parentTag + "/" + ViewFileName))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(parentTag, ViewFileName)))
             {
                 TagView view = BuildView(domain, parentTag);
                 var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
@@ -169,10 +173,10 @@
             return ErrorCode.Ok;
         }
 
-        public bool ReorderTagsBatch(string domain, string path, string tag, string targetTag)
+        public ErrorCode ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
             path = path ?? "";
-            using (_lockManager.Write(domain, path + "/" + ViewFileName))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
             {
                 string rootFolder = _domainOptions.Find(domain).RootFolder;
                 TagView view = BuildView(domain, path);
@@ -182,7 +186,7 @@
                 var targetIndex = tags.FindIndex(t => t.Tag == targetTag);
 
                 if (index == -1 || targetIndex == -1 || index == targetIndex)
-                    return false;
+                    return ErrorCode.TagNotFound;
 
                 // Extract dragged item
                 var dragged = tags[index];
@@ -201,7 +205,7 @@
                 ViewConfigLoader.SaveTagsToFile(viewPath, view);
             }
 
-            return true;
+            return ErrorCode.Ok;
         }
 
         private TagView BuildView(string domain, string path)
