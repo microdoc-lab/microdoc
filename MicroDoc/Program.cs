@@ -15,6 +15,7 @@ builder.Services.AddSingleton(sp =>
     var options = sp.GetRequiredService<IOptions<MicroDocOptions>>().Value;
     return DomainOptionsLoader.LoadOptionsFromFile(options.DomainOptions);
 });
+builder.Services.AddSingleton<LockManager>();
 builder.Services.AddSingleton<TagTreeService>();
 builder.Services.AddSingleton<DocService>();
 builder.Services.AddControllersWithViews()

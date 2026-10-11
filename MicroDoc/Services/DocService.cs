@@ -13,11 +13,13 @@
         };
 
         private readonly DomainOptions _domainOptions;
+        private readonly LockManager _lockManager;
         private readonly TagTreeService _tagTreeService;
 
-        public DocService(DomainOptions domainOptions, TagTreeService tagTreeService)
+        public DocService(DomainOptions domainOptions, LockManager lockManager, TagTreeService tagTreeService)
         {
             _domainOptions = domainOptions;
+            _lockManager = lockManager;
             _tagTreeService = tagTreeService;
         }
 
@@ -25,33 +27,37 @@
 
         private List<TagNode> GetTagWithDocuments(string domain, string path, bool recursive)
         {
+            path = path ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            var folder = Path.Combine(rootFolder, path ?? "");
+            var folder = Path.Combine(rootFolder, path);
 
             var nodes = new List<TagNode>();
 
-            if (Directory.Exists(folder))
+            using (_lockManager.Read(domain, path))
             {
-                var (parent, tag) = DocumentParser.SplitId(path);
-                
-                // load requested tag with documents
-                var node = new TagNode
+                if (Directory.Exists(folder))
                 {
-                    Domain = domain,
-                    Path = parent,
-                    Tag = tag,
-                    Documents = GetDocuments(domain, path),
-                    Level = 0,
-                    IsDomain = string.IsNullOrEmpty(tag)
-                };
+                    var (parent, tag) = DocumentParser.SplitId(path);
 
-                nodes.Add(node);
+                    // load requested tag with documents
+                    var node = new TagNode
+                    {
+                        Domain = domain,
+                        Path = parent,
+                        Tag = tag,
+                        Documents = GetDocuments(domain, path),
+                        Level = 0,
+                        IsDomain = string.IsNullOrEmpty(tag)
+                    };
 
-                // load child tags (1 level) with documents
-                var children = _tagTreeService.BuildTree(domain, path, recursive: false, level: 1);
-                foreach (var child in children)
-                    child.Documents = GetDocuments(domain, child.Id);
-                nodes.AddRange(children);
+                    nodes.Add(node);
+
+                    // load child tags (1 level) with documents
+                    var children = _tagTreeService.BuildTree(domain, path, recursive: false, level: 1);
+                    foreach (var child in children)
+                        child.Documents = GetDocuments(domain, child.Id);
+                    nodes.AddRange(children);
+                }
             }
 
             return nodes;
@@ -59,41 +65,52 @@
 
         public List<DocNode> GetDocuments(string domain, string path)
         {
+            path = path ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            var folder = Path.Combine(rootFolder, path ?? "");
+            var folder = Path.Combine(rootFolder, path);
 
             var nodes = new List<DocNode>();
-            foreach (var file in Directory.GetFiles(folder))
+            using (_lockManager.Read(domain, path))
             {
-                string name = Path.GetFileNameWithoutExtension(file);
-                string extension = Path.GetExtension(file);
-
-                // skip view.ini
-                if ((name + extension).Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
-                    continue;
-
-                // skip images
-                if (ImageExtensions.Any(ext => extension.Equals(ext, StringComparison.InvariantCultureIgnoreCase)))
-                    continue;
-
-                // load content only for .txt files
-                string content = "";
-                if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
-                    content = File.ReadAllText(file);
-
-                var node = new DocNode
+                foreach (var file in Directory.GetFiles(folder))
                 {
-                    Domain = domain,
-                    Path = path ?? "",
-                    Name = name,
-                    Extension = extension,
-                    Content = content,
-                };
+                    string name = Path.GetFileNameWithoutExtension(file);
+                    string extension = Path.GetExtension(file);
 
-                // convert content to HTML
-                node.Html = new Markup(this, node.Domain, node.Id).ToHtml(content);
+                    // skip view.ini
+                    if ((name + extension).Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
+                        continue;
 
-                nodes.Add(node);
+                    // skip images
+                    if (ImageExtensions.Any(ext => extension.Equals(ext, StringComparison.InvariantCultureIgnoreCase)))
+                        continue;
+
+                    string documentId = file.Substring(rootFolder.Length).TrimStart('\\').Replace("\\", "/");
+
+                    DocNode node;
+                    using (_lockManager.Read(domain, documentId))
+                    {
+                        node = new DocNode
+                        {
+                            Domain = domain,
+                            Path = path,
+                            Name = name,
+                            Extension = extension,
+                        };
+
+                        // load content only for .txt files
+                        string content = "";
+                        if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
+                            content = File.ReadAllText(file);
+
+                        node.Content = content;
+                    }
+
+                    // convert content to HTML
+                    node.Html = new Markup(this, node.Domain, node.Id).ToHtml(node.Content);
+
+                    nodes.Add(node);
+                }
             }
 
             // order .txt files first
@@ -110,27 +127,31 @@
             string document = Path.GetFileNameWithoutExtension(name);
             string extension = Path.GetExtension(name);
 
-            if (!File.Exists(filePath))
-                return null;
-
-            var node = new DocNode
+            DocNode node;
+            using (_lockManager.Read(domain, documentId))
             {
-                Domain = domain,
-                Path = parent,
-                Name = document,
-                Extension = extension,
-                Content = "",
-            };
+                if (!File.Exists(filePath))
+                    return null;
 
-            // load content only for .txt files
-            string content = "";
-            if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
-                content = File.ReadAllText(filePath);
+                node = new DocNode
+                {
+                    Domain = domain,
+                    Path = parent,
+                    Name = document,
+                    Extension = extension,
+                    Content = "",
+                };
 
-            node.Content = content;
+                // load content only for .txt files
+                string content = "";
+                if (extension.Equals(".txt", StringComparison.InvariantCultureIgnoreCase))
+                    content = File.ReadAllText(filePath);
+    
+                node.Content = content;
+            }
 
             // convert content to HTML
-            node.Html = new Markup(this, node.Domain, node.Id).ToHtml(content);
+            node.Html = new Markup(this, node.Domain, node.Id).ToHtml(node.Content);
 
             return node;
         }
@@ -140,11 +161,14 @@
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var path = Path.Combine(rootFolder, documentId);
 
-            var folder = Path.GetDirectoryName(path);
-            if (!Directory.Exists(folder))
-                return ErrorCode.TagNotFound;
+            using (_lockManager.Write(domain, documentId))
+            {
+                var folder = Path.GetDirectoryName(path);
+                if (!Directory.Exists(folder))
+                    return ErrorCode.TagNotFound;
 
-            File.WriteAllText(path, content);
+                File.WriteAllText(path, content);
+            }
 
             return ErrorCode.Ok;
         }
@@ -154,14 +178,17 @@
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var path = Path.Combine(rootFolder, documentId);
 
-            var folder = Path.GetDirectoryName(path);
-            if (!Directory.Exists(folder))
-                return ErrorCode.TagNotFound;
+            using (_lockManager.Write(domain, documentId))
+            {
+                var folder = Path.GetDirectoryName(path);
+                if (!Directory.Exists(folder))
+                    return ErrorCode.TagNotFound;
 
-            if (!File.Exists(path))
-                return ErrorCode.Ok;
+                if (!File.Exists(path))
+                    return ErrorCode.Ok;
 
-            File.Delete(path);
+                File.Delete(path);
+            }
 
             return ErrorCode.Ok;
         }

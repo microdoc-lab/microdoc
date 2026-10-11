@@ -1,24 +1,25 @@
-﻿using System.IO;
-
-namespace MicroDoc.Services
+﻿namespace MicroDoc.Services
 {
     public class TagTreeService
     {
         internal const string ViewFileName = "view.ini";
 
         private readonly DomainOptions _domainOptions;
+        private readonly LockManager _lockManager;
 
-        public TagTreeService(DomainOptions domainOptions)
+        public TagTreeService(DomainOptions domainOptions, LockManager lockManager)
         {
             _domainOptions = domainOptions;
+            _lockManager = lockManager;
         }
 
         public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: null, recursive: true, level: 0);
 
         internal List<TagNode> BuildTree(string domain, string path, bool recursive, int level)
         {
+            path = path ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            var folder = Path.Combine(rootFolder, path ?? "");
+            var folder = Path.Combine(rootFolder, path);
             
             // load view
             var viewPath = Path.Combine(folder, ViewFileName);
@@ -26,25 +27,29 @@ namespace MicroDoc.Services
 
             // Load nodes
             var nodes = new List<TagNode>();
-            foreach (var dir in Directory.GetDirectories(folder))
+
+            using (_lockManager.Read(domain, path))
             {
-                var tag = Path.GetFileName(dir);
-                var viewTag = view.Tags.FirstOrDefault(t => t.Tag == tag);
-
-                var node = new TagNode
+                foreach (var dir in Directory.GetDirectories(folder))
                 {
-                    Domain = domain,
-                    Path = path ?? "",
-                    Tag = tag,
-                    Order = viewTag?.Order,
-                    Level = level,
-                };
+                    var tag = Path.GetFileName(dir);
+                    var viewTag = view.Tags.FirstOrDefault(t => t.Tag == tag);
 
-                // load child nodes (recursively)
-                if (recursive)
-                    node.Children = BuildTree(domain, node.Id, recursive: true, level + 1);
+                    var node = new TagNode
+                    {
+                        Domain = domain,
+                        Path = path,
+                        Tag = tag,
+                        Order = viewTag?.Order,
+                        Level = level,
+                    };
 
-                nodes.Add(node);
+                    // load child nodes (recursively)
+                    if (recursive)
+                        node.Children = BuildTree(domain, node.Id, recursive: true, level + 1);
+
+                    nodes.Add(node);
+                }
             }
 
             // order tags by Order
@@ -53,20 +58,27 @@ namespace MicroDoc.Services
 
         public ErrorCode NewTag(string domain, string selectedTag, string newTagName, out string newTagId)
         {
+            selectedTag = selectedTag ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             newTagId = string.IsNullOrEmpty(selectedTag) ? newTagName : selectedTag + "/" + newTagName;
             var folder = Path.Combine(rootFolder, newTagId);
-            
-            if (Directory.Exists(folder))
-                return ErrorCode.TagNotFound;
 
-            // create directory
-            Directory.CreateDirectory(folder);
+            using (_lockManager.Write(domain, selectedTag + "/" + newTagName))
+            {
+                if (Directory.Exists(folder))
+                    return ErrorCode.TagNotFound;
+
+                // create directory
+                Directory.CreateDirectory(folder);
+            }
 
             // update view
-            TagView view = BuildView(domain, selectedTag);
-            var viewPath = Path.Combine(rootFolder, selectedTag ?? "", ViewFileName);
-            ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            using (_lockManager.Write(domain, selectedTag + "/" + ViewFileName))
+            {
+                TagView view = BuildView(domain, selectedTag);
+                var viewPath = Path.Combine(rootFolder, selectedTag, ViewFileName);
+                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            }
 
             return ErrorCode.Ok;
         }
@@ -78,57 +90,68 @@ namespace MicroDoc.Services
             if (string.IsNullOrEmpty(selectedTag))
                 return ErrorCode.RootTag;
 
-            var folder = Path.Combine(rootFolder, selectedTag);
-            if (!Directory.Exists(folder))
-                return ErrorCode.TagNotFound;
+            using (_lockManager.Write(domain, selectedTag))
+            {
+                var folder = Path.Combine(rootFolder, selectedTag);
+                if (!Directory.Exists(folder))
+                    return ErrorCode.TagNotFound;
 
-            if (Directory.GetDirectories(folder).Any())
-                return ErrorCode.NestedTagsExists;
+                if (Directory.GetDirectories(folder).Any())
+                    return ErrorCode.NestedTagsExists;
 
-            // remove directory files (view.ini / images)
-            foreach (var file in Directory.GetFiles(folder))
-                File.Delete(file);
+                // remove directory files (view.ini / images)
+                foreach (var file in Directory.GetFiles(folder))
+                    File.Delete(file);
 
-            // delete directory
-            Directory.Delete(folder);
+                // delete directory
+                Directory.Delete(folder);
+            }
 
             var parentTag = Path.GetDirectoryName(selectedTag);
 
             // update parent tag view
-            TagView view = BuildView(domain, parentTag);
-            var viewPath = Path.Combine(rootFolder, parentTag ?? "", ViewFileName);
-            ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            using (_lockManager.Write(domain, parentTag + "/" + ViewFileName))
+            {
+                TagView view = BuildView(domain, parentTag);
+                var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
+                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            }
 
             return ErrorCode.Ok;
         }
 
         public bool ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
-            string rootFolder = _domainOptions.Find(domain).RootFolder;
-            TagView view = BuildView(domain, path);
+            path = path ?? "";
+            using (_lockManager.Write(domain, path + "/" + ViewFileName))
+            {
+                string rootFolder = _domainOptions.Find(domain).RootFolder;
+                TagView view = BuildView(domain, path);
 
-            var tags = view.Tags.ToList();
-            var index = tags.FindIndex(t => t.Tag == tag);
-            var targetIndex = tags.FindIndex(t => t.Tag == targetTag);
+                var tags = view.Tags.ToList();
+                var index = tags.FindIndex(t => t.Tag == tag);
+                var targetIndex = tags.FindIndex(t => t.Tag == targetTag);
 
-            if (index == -1 || targetIndex == -1 || index == targetIndex)
-                return false;
+                if (index == -1 || targetIndex == -1 || index == targetIndex)
+                    return false;
 
-            // Extract dragged item
-            var dragged = tags[index];
+                // Extract dragged item
+                var dragged = tags[index];
 
-            // Remove it first
-            tags.RemoveAt(index);
+                // Remove it first
+                tags.RemoveAt(index);
 
-            // Insert dragged node before target
-            tags.Insert(targetIndex, dragged);
+                // Insert dragged node before target
+                tags.Insert(targetIndex, dragged);
 
-            // Update order fields (optional)
-            for (int i = 0; i < tags.Count; i++)
-                tags[i].Order = i + 1;
+                // Update order fields (optional)
+                for (int i = 0; i < tags.Count; i++)
+                    tags[i].Order = i + 1;
 
-            var viewPath = Path.Combine(rootFolder, path ?? "", ViewFileName);
-            ViewConfigLoader.SaveTagsToFile(viewPath, view);
+                var viewPath = Path.Combine(rootFolder, path, ViewFileName);
+                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+            }
+
             return true;
         }
 
