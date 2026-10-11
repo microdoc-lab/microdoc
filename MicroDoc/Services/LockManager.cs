@@ -7,6 +7,13 @@ namespace MicroDoc.Services
         private readonly ConcurrentDictionary<string, ReaderWriterLockSlim> lockHash =
             new(StringComparer.Ordinal);
 
+        private readonly DomainOptions _domainOptions;
+        
+        public LockManager(DomainOptions domainOptions)
+        {
+            _domainOptions = domainOptions;
+        }
+
         public IDisposable Read(string domain, string path) =>
             Acquire(domain, path, writeTarget: false);
 
@@ -58,10 +65,16 @@ namespace MicroDoc.Services
             }
         }
 
-        private static List<string> GetLockKeys(
+        private List<string> GetLockKeys(
             string domain,
             string path)
         {
+            if (!_domainOptions.Find(domain).IsCaseSensitive)
+            { 
+                domain = domain.ToLowerInvariant();
+                path = path.ToLowerInvariant();
+            }
+
             var keys = new List<string> { domain + ":" };
 
             if (path.Length == 0)
@@ -123,7 +136,7 @@ namespace MicroDoc.Services
             }
         }
 
-        private static void AddPathLocks(
+        private void AddPathLocks(
             Dictionary<string, bool> lockModes,
             string domain,
             string path,

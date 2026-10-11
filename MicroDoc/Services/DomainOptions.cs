@@ -11,6 +11,7 @@ namespace MicroDoc.Services
             public string RootFolder { get; set; }
             public string Background { get; set; }
             public string BackgroundVersion { get; set; }
+            public bool IsCaseSensitive { get; set; }
             public List<string> Documents { get; set; }
             public List<DocumentOptions> DocumentOptions { get; set; } = new();
 
