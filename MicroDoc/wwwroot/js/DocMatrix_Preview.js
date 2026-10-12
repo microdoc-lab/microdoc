@@ -46,6 +46,7 @@
 
         // check click was on doc
         var docInCell = event.target.closest("doc");
+        var justCreated = false;
 
         // if clicked not on doc - check table cell
         if (!docInCell) {
@@ -68,16 +69,8 @@
 
                 docInCell = docCell.querySelector(`doc[data-document=${docName}]`);
                 if (!docInCell) {
-                    // create new document element
-                    docInCell = document.createElement("doc");
-                    docInCell.dataset.domain = this.domain;
-                    docInCell.dataset.id = this.DocId(docCell.closest("tr").dataset.tag, docName + ".txt");
-                    docInCell.dataset.document = docName;
-                    docInCell.dataset.name = docName + ".txt";
-                    docInCell.dataset.content = "";
-
-                    var domain = docInCell.dataset.domain;
-                    var documentId = docInCell.dataset.id;
+                    var domain = this.domain;
+                    var documentId = this.DocId(docCell.closest("tr").dataset.tag, docName + ".txt");
 
                     var docPath = this.DocPath(domain, documentId);
 
@@ -88,8 +81,12 @@
                         return;
                     }
 
-                    // append new document element into cell after save
-                    docCell.querySelector("clip").appendChild(docInCell);
+                    // PublishChanges
+                    var data = await response.json();
+                    window.domain.PublishChanges(data.changes);
+
+                    docInCell = docCell.querySelector(`doc[data-document=${docName}]`);
+                    justCreated = true;
                 }
             }
         }
@@ -116,7 +113,7 @@
         }
 
         // open document in overlay
-        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey && isInRole(domain, "w") ? "edit" : "view");
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || justCreated) && isInRole(domain, "w") ? "edit" : "view");
     });
 }
 

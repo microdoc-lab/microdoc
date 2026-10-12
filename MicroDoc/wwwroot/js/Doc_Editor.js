@@ -44,9 +44,9 @@
         // save and close document editor on ESC
         if (e.key === "Escape") {
             if (isInRole(this.domain, "w"))
-                docElement.doc.SaveDocument(true);
-            else
-                docElement.doc.CloseDocument();
+                docElement.doc.SaveDocument();
+
+            docElement.doc.CloseDocument();
         }
 
         // accept Tab in document editor

@@ -60,18 +60,18 @@ namespace MicroDoc.Controllers
 
             selectedTag = selectedTag ?? string.Empty;
 
-            string newTagId = null;
+            string newTag = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(NewTag), new { domain, selectedTag, newTagName }, () =>
-                _tagService.NewTag(domain, selectedTag, newTagName, out newTagId));
+                _tagService.NewTag(domain, selectedTag, newTagName, out newTag));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
 
             return Json(new
             {
-                newTagId,
-                changes = new[] { new { op = nameof(NewTag), domain, selectedTag, newTagName, newTagId } }
+                newTag,
+                changes = new[] { new { op = nameof(NewTag), domain, selectedTag, newTagName, newTag } }
             });
         }
 
@@ -154,6 +154,8 @@ namespace MicroDoc.Controllers
 
         #endregion
 
+        #region DocMatrix/Explorer
+
         [Authorize(Roles = "r")]
         public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
         {
@@ -202,6 +204,8 @@ namespace MicroDoc.Controllers
 
             return PartialView("_Explorer", model);
         }
+
+        #endregion
 
         #region Document
 
@@ -258,7 +262,11 @@ namespace MicroDoc.Controllers
                 return Error(status);
 
             var html = new Markup(_docService, domain, documentId).ToHtml(content);
-            return Content(html);
+
+            return Json(new
+            {
+                changes = new[] { new { op = nameof(SaveDocument), domain, documentId, content, html } }
+            });
         }
 
         [HttpPost]
@@ -274,7 +282,10 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Ok();
+            return Json(new
+            {
+                changes = new[] { new { op = nameof(DeleteDocument), domain, documentId } }
+            });
         }
 
         #endregion

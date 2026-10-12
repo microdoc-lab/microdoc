@@ -55,8 +55,8 @@ DocMatrix.prototype.HandleChanges = function (change) {
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleChanges);
 
 DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
-    var sender = this.element.querySelector(`.grid tr[data-tag='${this.DocId(parentTag, tagName)}']`);
-    var target = this.element.querySelector(`.grid tr[data-tag='${this.DocId(parentTag, targetTagName)}']`);
+    var sender = this.tagRow(this.DocId(parentTag, tagName));
+    var target = this.tagRow(this.DocId(parentTag, targetTagName));
 
     if (!sender)
         return;

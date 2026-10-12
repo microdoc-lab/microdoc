@@ -111,9 +111,9 @@
 
         var mode = docElement.getAttribute("mode")
         if (mode == "edit" && isInRole(domain, "w"))
-            await docElement.doc.SaveDocument(true);
-        else
-            docElement.doc.CloseDocument();
+            await docElement.doc.SaveDocument();
+
+        docElement.doc.CloseDocument();
     });
 
     toolbar.toolbarInited = true;
@@ -158,13 +158,10 @@ Doc.prototype.ToggleMode = async function () {
     if (mode == "edit") {
         const headingIndex = txtEditor.getHeadingIndexAtCursor(txtEditor);
 
-        if (isInRole(this.domain, "w")) {
-            var documentHtml = await this.SaveDocument(false);
-            docViewer.innerHTML = documentHtml;
-            docElement.dataset.content = txtEditor.value;
-        }
-
         docElement.setAttribute("mode", "view");
+
+        if (isInRole(this.domain, "w"))
+            await this.SaveDocument();
 
         docViewer.SelectAndScroll(headingIndex);
 
@@ -172,4 +169,14 @@ Doc.prototype.ToggleMode = async function () {
     }
 
     docElement.doc.PositionToolbar();
+}
+
+Doc.prototype.UpdateDocument = function (doc) {
+    var docElement = this.element;
+    var docViewer = this.docViewer();
+    var txtEditor = this.txtEditor();
+
+    docElement.dataset.content = doc.content;
+    docViewer.innerHTML = doc.html;
+    txtEditor.value = doc.content;  // doc.external will overwrite user changes
 }
