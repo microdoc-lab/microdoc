@@ -34,6 +34,16 @@ TagTree.prototype.ApplyChanges = function (change) {
 }
 
 // Api
+TagTree.prototype.IsValidTagName = function (name) {
+    return /^[\p{L}\p{N}_\- ]+$/u.test(name);
+}
+
+TagTree.prototype.IsValidTag = function (tag) {
+    return tag.split('/').every(part =>
+        /^[\p{L}\p{N}_\- ]+$/u.test(part)
+    );
+}
+
 TagTree.prototype.TagPath = function (domain, tag) {
     var tags = tag.split('/');
     var tagPath = tags.map(t => `[${t}]`).join(' ');

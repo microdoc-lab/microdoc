@@ -33,7 +33,7 @@
             const headingIndex = -1;
 
             // open document in overlay
-            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey && isInRole(domain, "w") ? "edit" : "view");
+            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole(domain, "w") ? "edit" : "view");
 
             return;
         }
@@ -46,7 +46,6 @@
 
         // check click was on doc
         var docInCell = event.target.closest("doc");
-        var justCreated = false;
 
         // if clicked not on doc - check table cell
         if (!docInCell) {
@@ -67,7 +66,12 @@
                 if (!docName.trim())
                     return;
 
-                docInCell = docCell.querySelector(`doc[data-document=${docName}]`);
+                if (!this.IsValidFileName(docName)) {
+                    alert("Invalid file name. Only symbols, digits, underscore, hyphen, space allowed");
+                    return;
+                }
+
+                docInCell = docCell.querySelector(`doc[data-document="${docName}"]`);
                 if (!docInCell) {
                     var domain = this.domain;
                     var documentId = this.DocId(docCell.closest("tr").dataset.tag, docName + ".txt");
@@ -85,8 +89,7 @@
                     var data = await response.json();
                     window.domain.PublishChanges(data.changes);
 
-                    docInCell = docCell.querySelector(`doc[data-document=${docName}]`);
-                    justCreated = true;
+                    docInCell = docCell.querySelector(`doc[data-document="${docName}"]`);
                 }
             }
         }
@@ -113,7 +116,7 @@
         }
 
         // open document in overlay
-        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || justCreated) && isInRole(domain, "w") ? "edit" : "view");
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole(domain, "w") ? "edit" : "view");
     });
 }
 

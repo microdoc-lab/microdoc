@@ -40,6 +40,11 @@ TagTree.prototype.NewTag = async function () {
     if (!newTagName || !newTagName.trim())
         return;
 
+    if (!this.IsValidTagName(newTagName)) {
+        alert("Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed");
+        return;
+    }
+
     // Create Tag
     const response = await this.service.NewTag(domain, selectedTag, newTagName);
     if (!response.ok) {
@@ -62,6 +67,11 @@ TagTree.prototype.MoveTag = async function () {
     var targetTag = prompt(`Move Tag ${tagPath}? Enter target tag name`);
     if (!targetTag || !targetTag.trim())
         return;
+
+    if (!this.IsValidTag(targetTag)) {
+        alert("Invalid tag. Only symbols, digits, underscore, hyphen, space (/ separated) allowed");
+        return;
+    }
 
     // Create Tag
     const response = await this.service.MoveTag(domain, selectedTag, targetTag);
