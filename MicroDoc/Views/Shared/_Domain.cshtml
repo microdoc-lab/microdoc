@@ -1,7 +1,14 @@
 ﻿@using MicroDoc.Services
 @inject DomainOptions _domainOptions
 
-<div id="domainExplorers"></div>
+<div id="domainExplorers">
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <h1>Welcome to MicroDoc</h1>
+        <br/>
+        <h3>Please, login</h3>
+    }
+</div>
 
 <div id="domainOptions" style="display: none;">
 	<textarea class="editor"></textarea>
@@ -21,5 +28,13 @@
     
     domain.InitBehaviors();
 
-    domain.OpenExplorer("microdoc.doc");
+    @if (User.Identity.IsAuthenticated)
+    {
+        var domain = _domainOptions.Domains.FirstOrDefault(d => User.IsInRole(d.Name + ":" + "r"));
+        if (domain != null)
+        {
+<text>domain.OpenExplorer("microdoc.doc");
+</text>
+        }
+    }
 </script>

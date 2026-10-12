@@ -37,7 +37,8 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        @foreach (var domain in _domainOptions.Domains)
+                        @if (User.Identity.IsAuthenticated)
+                        foreach (var domain in _domainOptions.Domains.Where(d => User.IsInRole(d.Name + ":" + "r")))
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark explorer-link" href="" onclick='window.domain.OpenExplorer("@domain.Name"); return false;' data-domain="@domain.Name">@domain.Name</a>
@@ -95,7 +96,7 @@
     </div>
 
     <footer class="border-top footer text-muted">
-        &copy; 2025 - MicroDoc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; 2026 - MicroDoc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </footer>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

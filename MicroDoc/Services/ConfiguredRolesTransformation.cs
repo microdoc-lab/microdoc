@@ -24,7 +24,7 @@ namespace MicroDoc.Services
 
                 if (user != null)
                 {
-                    foreach (var role in user.Roles.Select(r => r.ToString()))
+                    foreach (var role in (user.Roles ?? "").Select(r => r.ToString()))
                     {
                         if (!principal.IsInRole(role))
                             identity.AddClaim(new Claim(ClaimTypes.Role, role));
