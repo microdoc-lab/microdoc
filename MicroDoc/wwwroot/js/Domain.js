@@ -10,8 +10,10 @@
     // prompt user to save&close editing document on browser tab close/reload
     window.addEventListener("beforeunload", e => {
         // find first editing document (current domain first)
-        var docElement = document.querySelector('.explorerHost[style*="display: flex"] .explorer .overlay .doc[mode=edit]')
-            ?? document.querySelector('.explorerHost[style*="display: none"] .explorer .overlay .doc[mode=edit]');
+        var docElement = [...document.querySelectorAll('.explorerHost[style*="display: flex"] .explorer .overlay .doc[mode=edit]')]
+            .find(doc => doc.doc.txtEditor().value != doc.dataset.content)
+            ?? [...document.querySelectorAll('.explorerHost[style*="display: none"] .explorer .overlay .doc[mode=edit]')]
+            .find(doc => doc.doc.txtEditor().value != doc.dataset.content);
 
         // prompt user to close editing documents
         if (docElement) {

@@ -161,6 +161,7 @@ Doc.prototype.ToggleMode = async function () {
         if (isInRole(this.domain, "w")) {
             var documentHtml = await this.SaveDocument(false);
             docViewer.innerHTML = documentHtml;
+            docElement.dataset.content = txtEditor.value;
         }
 
         docElement.setAttribute("mode", "view");
