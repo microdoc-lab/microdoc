@@ -30,9 +30,9 @@
             const sender = draggedNode.closest(".tag");
             const target = targetNode.closest(".tag");
 
-            const response = await this.service.ReorderTagsBatch(sender.dataset.domain, sender.dataset.path, sender.dataset.tag, target.dataset.tag);
+            const response = await this.service.SwapTags(sender.dataset.domain, sender.dataset.path, sender.dataset.tag, target.dataset.tag);
             if (!response.ok) {
-                console.error("ReorderTagsBatch request failed", await response.text());
+                console.error("SwapTags request failed", await response.text());
                 return;
             }
 
@@ -49,8 +49,8 @@ TagTree.prototype.HandleSwapTags = function(change) {
     if (change.op != "SwapTags")
         return;
 
-    var sender = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag=${change.tag}]`);
-    var target = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag=${change.targetTag}]`);
+    var sender = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag='${change.tag}']`);
+    var target = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag='${change.targetTag}']`);
 
     if (!sender)
         return;
@@ -78,8 +78,8 @@ TagTree.prototype.HandleSwapTags = function(change) {
 TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleSwapTags);
 
 // Service methods
-TagTreeService.prototype.ReorderTagsBatch = function(domain, path, tag, targetTag) {
-    return fetch("/Home/ReorderTagsBatch", {
+TagTreeService.prototype.SwapTags = function(domain, path, tag, targetTag) {
+    return fetch("/Home/SwapTags", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,

@@ -120,22 +120,22 @@ namespace MicroDoc.Controllers
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
+        public IActionResult SwapTags(string domain, string path, string tag, string targetTag)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
 
             path = path ?? string.Empty;
 
-            var status = LoggingHelper.Execute(_logger, nameof(ReorderTagsBatch), new { domain, path, tag, targetTag }, () =>
-                _tagService.ReorderTagsBatch(domain, path, tag, targetTag));
+            var status = LoggingHelper.Execute(_logger, nameof(SwapTags), new { domain, path, tag, targetTag }, () =>
+                _tagService.SwapTags(domain, path, tag, targetTag));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
 
             return Json(new 
             { 
-                changes = new[] { new { op = "SwapTags", domain, path, tag, targetTag } }
+                changes = new[] { new { op = nameof(SwapTags), domain, path, tag, targetTag } }
             });
         }
 

@@ -181,7 +181,7 @@
             return ErrorCode.Ok;
         }
 
-        public ErrorCode ReorderTagsBatch(string domain, string path, string tag, string targetTag)
+        public ErrorCode SwapTags(string domain, string path, string tag, string targetTag)
         {
             path = path ?? "";
             using (_lockManager.Write(domain, DocumentParser.GetDocumentId(path, ViewFileName)))

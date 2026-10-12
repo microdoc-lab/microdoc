@@ -30,8 +30,8 @@ DocMatrix.prototype.HandleSwapTags = function (change) {
     if (this.selectedTag != change.path)
         return;
 
-    var sender = this.element.querySelector(`.grid tr[data-tag=${change.tag}]`);
-    var target = this.element.querySelector(`.grid tr[data-tag=${change.targetTag}]`);
+    var sender = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.path, change.tag)}']`);
+    var target = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.path, change.targetTag)}']`);
 
     if (!sender)
         return;
