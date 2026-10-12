@@ -3,6 +3,7 @@ using MicroDoc.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -28,6 +29,7 @@ namespace MicroDoc.Controllers
 
         #region TagTree
 
+        [Authorize(Roles = "r")]
         public IActionResult TagTree(string clientId, string domain, string selectedTag)
         {
             var model = LoggingHelper.Execute(_logger, nameof(TagTree), new { clientId, domain, selectedTag }, () =>
@@ -43,6 +45,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "w")]
         public IActionResult NewTag(string domain, string selectedTag, string newTagName)
         {
             string newTagId = null;
@@ -57,6 +60,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "w")]
         public IActionResult MoveTag(string domain, string selectedTag, string targetTag)
         {
             string newTagId = null;
@@ -71,6 +75,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "w")]
         public IActionResult DeleteTag(string domain, string selectedTag)
         {
             var status = LoggingHelper.Execute(_logger, nameof(DeleteTag), new { domain, selectedTag }, () =>
@@ -91,6 +96,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "w")]
         public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
             var status = LoggingHelper.Execute(_logger, nameof(ReorderTagsBatch), new { domain, path, tag, targetTag }, () =>
@@ -104,6 +110,7 @@ namespace MicroDoc.Controllers
 
         #endregion
 
+        [Authorize(Roles = "r")]
         public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
         {
             var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag }, () =>
@@ -118,6 +125,7 @@ namespace MicroDoc.Controllers
             return PartialView("_DocMatrix", model);
         }
 
+        [Authorize(Roles = "r")]
         public IActionResult Explorer(string clientId, string domain, string selectedTag)
         {
             var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag }, () =>
@@ -143,6 +151,7 @@ namespace MicroDoc.Controllers
 
         #region Document
 
+        [Authorize(Roles = "r")]
         public IActionResult LoadDocument(string domain, string documentId) 
         {
             DocNode doc = null;
@@ -164,6 +173,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "w")]
         public IActionResult SaveDocument(string domain, string documentId, string content)
         {
             content = content ?? string.Empty;
@@ -179,6 +189,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "w")]
         public IActionResult DeleteDocument(string domain, string documentId)
         {
             var status = LoggingHelper.Execute(_logger, nameof(DeleteDocument), new { domain, documentId }, () =>
@@ -194,6 +205,7 @@ namespace MicroDoc.Controllers
 
         #region Images
 
+        [Authorize(Roles = "r")]
         public IActionResult Image(string domain, string documentId, string imageName)
         {
             string filePath = null;
@@ -227,6 +239,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "w")]
         public async Task<IActionResult> UploadImage(string domain, string documentId, string imageName, IFormFile image)
         {
             var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
@@ -252,6 +265,7 @@ namespace MicroDoc.Controllers
 
         #region Domain (Background/Options)
 
+        [Authorize(Roles = "r")]
         public IActionResult Background(string domain) 
         {
             string filePath = null;
@@ -289,6 +303,7 @@ namespace MicroDoc.Controllers
             return PhysicalFile(filePath, contentType);
         }
 
+        [Authorize(Roles = "a")]
         public IActionResult LoadDomainOptions() 
         {
             var yaml = LoggingHelper.Execute(_logger, nameof(LoadDomainOptions), new { }, () =>
@@ -298,6 +313,7 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "a")]
         public IActionResult SaveDomainOptions(string yaml)
         {
             Dictionary<string, string> domainBackgroundVersions = null;
@@ -310,6 +326,7 @@ namespace MicroDoc.Controllers
 
                 // Update singleton in container
                 _domainOptions.Domains = domainOptions.Domains;
+                _domainOptions.Users = domainOptions.Users;
 
                 _docService.UpdateDomainBackgroundVersions();
 

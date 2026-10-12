@@ -42,8 +42,12 @@
 
     txtEditor.addEventListener("keydown", e => {
         // save and close document editor on ESC
-        if (e.key === "Escape")
-            docElement.doc.SaveDocument(true);
+        if (e.key === "Escape") {
+            if (isInRole("w"))
+                docElement.doc.SaveDocument(true);
+            else
+                docElement.doc.CloseDocument();
+        }
 
         // accept Tab in document editor
         if (e.key === "Tab") {

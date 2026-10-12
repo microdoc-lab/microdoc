@@ -11,3 +11,4 @@ packages
 
 secrets
 appsettings.Development.json
+DomainOptions.Development.ini

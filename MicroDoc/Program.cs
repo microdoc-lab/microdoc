@@ -1,4 +1,5 @@
 using MicroDoc.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.Extensions.Options;
@@ -33,6 +34,12 @@ builder.Services.AddAuthentication(options =>
 {
     builder.Configuration.Bind("Authentication:Google", googleOptions);
 });
+
+builder.Services.AddTransient<
+    IClaimsTransformation,
+    ConfiguredRolesTransformation>();
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 

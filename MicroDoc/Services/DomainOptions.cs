@@ -4,7 +4,7 @@ namespace MicroDoc.Services
 {
     public class DomainOptions
     {
-        public class Domain
+        public sealed  class Domain
         {
             public string Type { get; set; }
             public string Name { get; set; }
@@ -25,6 +25,14 @@ namespace MicroDoc.Services
         }
 
         public List<Domain> Domains { get; set; } = new();
+
+        public sealed class UserAccess
+        {
+            public string Email { get; set; } = "";
+            public string Roles { get; set; } = "";
+        }
+
+        public List<UserAccess> Users { get; set; } = new();
 
         public Domain Find(string name) => Domains.First(d => d.Name == name);
     }

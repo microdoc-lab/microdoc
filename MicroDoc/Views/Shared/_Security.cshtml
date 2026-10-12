@@ -1,0 +1,28 @@
+﻿@{
+    string[] roles = new[] { "r", "w", "a" };
+}
+
+<style type="text/css">
+    @foreach (var role in roles)
+    {
+    <text>.@role { display: @(Context.User.IsInRole(role) ? "revert" : "none") !important; }
+    </text>
+    }
+</style>
+
+<script type="text/javascript">
+    var roles = [];
+
+    @foreach (var role in roles)
+    {
+        if (Context.User.IsInRole(role))
+        {
+        <text>roles.push("@role");
+        </text>
+        }
+    }
+
+    function isInRole(role) {
+        return roles.includes(role);
+    }
+</script>

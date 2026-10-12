@@ -121,10 +121,10 @@
             return;
 
         var mode = docElement.getAttribute("mode")
-        if (mode == "view")
-            docElement.doc.CloseDocument();
-        else
+        if (mode == "edit" && isInRole("w"))
             await docElement.doc.SaveDocument(true);
+        else
+            docElement.doc.CloseDocument();
     });
 
     toolbar.toolbarInited = true;
@@ -169,11 +169,12 @@ Doc.prototype.ToggleMode = async function () {
     if (mode == "edit") {
         const headingIndex = txtEditor.getHeadingIndexAtCursor(txtEditor);
 
-        var documentHtml = await this.SaveDocument(false);
+        if (isInRole("w")) {
+            var documentHtml = await this.SaveDocument(false);
+            docViewer.innerHTML = documentHtml;
+        }
 
         docElement.setAttribute("mode", "view");
-
-        docViewer.innerHTML = documentHtml;
 
         docViewer.SelectAndScroll(headingIndex);
 

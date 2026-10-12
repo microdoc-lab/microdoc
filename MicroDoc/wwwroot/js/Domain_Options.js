@@ -24,6 +24,9 @@
 Domain.prototype.behaviors.push(Domain.prototype.InitDomainOptions);
 
 Domain.prototype.ToggleDomainOptions = async function () {
+    if (!isInRole("a"))
+        return;
+
     if (this.domainOptions.style.display == "none") {
         // load options YAML from server
         const response = await this.service.LoadDomainOptions();
