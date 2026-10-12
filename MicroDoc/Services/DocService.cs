@@ -2,6 +2,11 @@
 {
     public class DocService
     {
+        private static readonly string[] ServiceExtensions =
+        { 
+            ".ini"
+        };
+
         private static readonly string[] ImageExtensions =
         { 
             ".jpg",
@@ -77,8 +82,8 @@
                     string name = Path.GetFileNameWithoutExtension(file);
                     string extension = Path.GetExtension(file);
 
-                    // skip view.ini
-                    if ((name + extension).Equals(TagTreeService.ViewFileName, StringComparison.InvariantCultureIgnoreCase))
+                    // skip .ini
+                    if (ServiceExtensions.Any(ext => extension.Equals(ext, StringComparison.InvariantCultureIgnoreCase)))
                         continue;
 
                     // skip images

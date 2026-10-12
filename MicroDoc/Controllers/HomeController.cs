@@ -17,14 +17,16 @@ namespace MicroDoc.Controllers
         private readonly DomainOptions _domainOptions;
         private readonly TagTreeService _tagTreeService;
         private readonly DocService _docService;
+        private readonly TagMoveService _tagMoveService;
 
-        public HomeController(ILogger<HomeController> logger, IOptions<MicroDocOptions> microDocOptions, DomainOptions domainOptions, TagTreeService tagTreeService, DocService docService)
+        public HomeController(ILogger<HomeController> logger, IOptions<MicroDocOptions> microDocOptions, DomainOptions domainOptions, TagTreeService tagTreeService, DocService docService, TagMoveService tagMoveService)
         {
             _logger = logger;
             _microDocOptions = microDocOptions;
             _domainOptions = domainOptions;
             _tagTreeService = tagTreeService;
             _docService = docService;
+            _tagMoveService = tagMoveService;
         }
 
         #region TagTree
@@ -183,9 +185,22 @@ namespace MicroDoc.Controllers
             var status = LoggingHelper.Execute(_logger, nameof(LoadDocument), new { domain, documentId }, () =>
             {
                 doc = _docService.LoadDocument(domain, documentId);
-                
+
                 if (doc == null)
-                    return ErrorCode.DocumentNotFound;
+                {
+                    // try resolve documentId over TagMoveService
+                    var movedDocumentId = _tagMoveService.ResolveDocument(domain, documentId);
+
+                    if (string.IsNullOrEmpty(movedDocumentId))
+                        return ErrorCode.DocumentNotFound;
+
+                    doc = _docService.LoadDocument(domain, movedDocumentId);
+
+                    if (doc == null)
+                        return ErrorCode.DocumentNotFound;
+                    
+                    return ErrorCode.Ok;
+                }
 
                 return ErrorCode.Ok;
             });

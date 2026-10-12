@@ -59,7 +59,7 @@
 
             // obtain document properties
             const domain = docElement.dataset.domain;
-            const documentId = link.getAttribute("href");
+            var documentId = link.getAttribute("href");
 
             const docPath = link.textContent;
 
@@ -71,6 +71,8 @@
             }
 
             const doc = await response.json();
+
+            documentId = doc.id;
             const documentContent = doc.content;
             const documentHtml = doc.html;
             const headingIndex = -1;

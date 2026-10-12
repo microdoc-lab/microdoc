@@ -21,6 +21,7 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddSingleton<LockManager>();
 builder.Services.AddSingleton<TagTreeService>();
 builder.Services.AddSingleton<DocService>();
+builder.Services.AddSingleton<TagMoveService>();
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation()
 ;

@@ -3,14 +3,17 @@
     public class TagTreeService
     {
         internal const string ViewFileName = "view.ini";
+        internal const string MoveFileName = "move.ini";
 
         private readonly DomainOptions _domainOptions;
         private readonly LockManager _lockManager;
+        private readonly TagMoveService _tagMoveService;
 
-        public TagTreeService(DomainOptions domainOptions, LockManager lockManager)
+        public TagTreeService(DomainOptions domainOptions, LockManager lockManager, TagMoveService tagMoveService)
         {
             _domainOptions = domainOptions;
             _lockManager = lockManager;
+            _tagMoveService = tagMoveService;
         }
 
         public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: null, recursive: true, level: 0);
@@ -136,6 +139,8 @@
                 var viewPath = Path.Combine(rootFolder, targetTag, ViewFileName);
                 ViewConfigLoader.SaveTagsToFile(viewPath, view);
             }
+
+            _tagMoveService.Move(domain, selectedTag, newTagId);
 
             return ErrorCode.Ok;
         }
