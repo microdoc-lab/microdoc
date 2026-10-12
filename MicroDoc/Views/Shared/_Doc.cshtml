@@ -14,16 +14,16 @@
 
 <script>
     (function() {
-        const container = document.getElementById("@Model.Id");
+        const container = document.getElementById("@Html.Raw(Model.Id)");
         if (!container) return;
 
-        var options = window["@Model.Id" + "Options"]
+        var options = window["@Html.Raw(Model.Id)" + "Options"]
 		if (!options)
-			window["@Model.Id" + "Options"] = options = {};
+			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
 
         const doc = new Doc(container, options);
-		doc.domain = "@Model.Domain.Name";
-		doc.documentId = "@Model.Doc.Domain";
+		doc.domain = "@Html.Raw(Model.Domain.Name)";
+		doc.documentId = "@Html.Raw(Model.Doc.Domain)";
 
 		doc.InitBehaviors();
     })();

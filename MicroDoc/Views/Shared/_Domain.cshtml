@@ -20,7 +20,7 @@
     options.domainBackgroundVersions = {};
     @foreach (var domainOptions in _domainOptions.Domains)
 	{
-<text>options.domainBackgroundVersions["@domainOptions.Name"] = "@domainOptions.BackgroundVersion";
+<text>options.domainBackgroundVersions["@Html.Raw(domainOptions.Name)"] = "@domainOptions.BackgroundVersion";
 </text>
 	}
 
@@ -33,7 +33,7 @@
         var domain = _domainOptions.Domains.FirstOrDefault(d => User.IsInRole(d.Name + ":" + "r"));
         if (domain != null)
         {
-<text>domain.OpenExplorer("microdoc.doc");
+<text>domain.OpenExplorer("@Html.Raw(domain.Name)");
 </text>
         }
     }

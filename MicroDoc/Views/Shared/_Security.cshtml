@@ -16,7 +16,7 @@
     @foreach (var domain in _domainOptions.Domains)
     @foreach (var role in domainRoles)
     {
-    <text>.@domain.Name.Replace(".", "\\.") .@role { display: @(Context.User.IsInRole(domain.Name + ":" + role) ? "revert" : "none") !important; }
+    <text>.@Html.Raw(domain.Name.Replace(".", "\\.")) .@role { display: @(Context.User.IsInRole(domain.Name + ":" + role) ? "revert" : "none") !important; }
     </text>
     }
 </style>
@@ -38,7 +38,7 @@
     {
         if (Context.User.IsInRole(domain.Name + ":" + role))
         {
-        <text>roles.push("@(domain.Name + ":" + role)");
+        <text>roles.push("@Html.Raw(domain.Name + ":" + role)");
         </text>
         }
     }

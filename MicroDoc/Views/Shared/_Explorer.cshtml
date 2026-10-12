@@ -37,19 +37,19 @@
 
 <script>
     (function() {
-        const container = document.getElementById("@Model.Id");
+        const container = document.getElementById("@Html.Raw(Model.Id)");
         if (!container) return;
 
-        var options = window["@Model.Id" + "Options"]
+        var options = window["@Html.Raw(Model.Id)" + "Options"]
 		if (!options)
-			window["@Model.Id" + "Options"] = options = {};
+			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
 
         const explorer = new Explorer(container, options);
-        explorer.domain = "@Model.Domain.Name";
-        explorer.selectedTag = "@Model.SelectedTag";
-        explorer.tagTreeId = "@Model.TagTree.Id";
-        explorer.docMatrixId = "@Model.DocMatrix.Id";
-        explorer.templateDocId = "@Model.TemplateDoc.Id";
+        explorer.domain = "@Html.Raw(Model.Domain.Name)";
+        explorer.selectedTag = "@Html.Raw(Model.SelectedTag)";
+        explorer.tagTreeId = "@Html.Raw(Model.TagTree.Id)";
+        explorer.docMatrixId = "@Html.Raw(Model.DocMatrix.Id)";
+        explorer.templateDocId = "@Html.Raw(Model.TemplateDoc.Id)";
         
         explorer.InitBehaviors();
     })();

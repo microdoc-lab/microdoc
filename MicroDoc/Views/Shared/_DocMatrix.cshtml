@@ -71,16 +71,16 @@
 
 <script>
     (function() {
-        const container = document.getElementById("@Model.Id");
+        const container = document.getElementById("@Html.Raw(Model.Id)");
         if (!container) return;
 
-        var options = window["@Model.Id" + "Options"]
+        var options = window["@Html.Raw(Model.Id)" + "Options"]
 		if (!options)
-			window["@Model.Id" + "Options"] = options = {};
+			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
 
         const docMatrix = new DocMatrix(container, options);
-		docMatrix.domain = "@Model.Domain.Name";
-		docMatrix.selectedTag = "@Model.SelectedTag";
+		docMatrix.domain = "@Html.Raw(Model.Domain.Name)";
+		docMatrix.selectedTag = "@Html.Raw(Model.SelectedTag)";
 
 		docMatrix.InitBehaviors();
     })();
@@ -91,11 +91,11 @@
 	{
 		if (!string.IsNullOrWhiteSpace(docOptions.Color))
 		{
-<text>.explorer[data-domain="@Model.Domain.Name"] .docmatrix th[data-document=@docOptions.Name],
-.explorer[data-domain="@Model.Domain.Name"] .docmatrix td.misc doc[data-document=@docOptions.Name]::before,
-.explorer[data-domain="@Model.Domain.Name"] .docmatrix td a[data-document=@docOptions.Name],
-.explorer[data-domain="@Model.Domain.Name"] .overlay .doc[data-document=@docOptions.Name] .label,
-.explorer[data-domain="@Model.Domain.Name"] .overlay .doc a[data-document=@docOptions.Name] { background: @docOptions.Color; }
+<text>.explorer[data-domain="@Html.Raw(Model.Domain.Name)"] .docmatrix th[data-document="@Html.Raw(docOptions.Name)"],
+.explorer[data-domain="@Html.Raw(Model.Domain.Name)"] .docmatrix td.misc doc[data-document="@Html.Raw(docOptions.Name)"]::before,
+.explorer[data-domain="@Html.Raw(Model.Domain.Name)"] .docmatrix td a[data-document="@Html.Raw(docOptions.Name)"],
+.explorer[data-domain="@Html.Raw(Model.Domain.Name)"] .overlay .doc[data-document="@Html.Raw(docOptions.Name)"] .label,
+.explorer[data-domain="@Html.Raw(Model.Domain.Name)"] .overlay .doc a[data-document="@Html.Raw(docOptions.Name)"] { background: @docOptions.Color; }
 </text>
 		}
 	}
