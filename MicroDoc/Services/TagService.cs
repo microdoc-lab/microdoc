@@ -1,6 +1,6 @@
 ﻿namespace MicroDoc.Services
 {
-    public class TagTreeService
+    public class TagService
     {
         internal const string ViewFileName = "view.ini";
         internal const string MoveFileName = "move.ini";
@@ -9,7 +9,7 @@
         private readonly LockManager _lockManager;
         private readonly TagMoveService _tagMoveService;
 
-        public TagTreeService(DomainOptions domainOptions, LockManager lockManager, TagMoveService tagMoveService)
+        public TagService(DomainOptions domainOptions, LockManager lockManager, TagMoveService tagMoveService)
         {
             _domainOptions = domainOptions;
             _lockManager = lockManager;
@@ -29,7 +29,7 @@
             using (_lockManager.Read(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
             {
                 var viewPath = Path.Combine(folder, ViewFileName);
-                view = ViewConfigLoader.LoadTagsFromFile(viewPath);
+                view = TagViewLoader.LoadTagsFromFile(viewPath);
             }
 
             // Load nodes
@@ -84,7 +84,7 @@
             {
                 TagView view = BuildView(domain, selectedTag);
                 var viewPath = Path.Combine(rootFolder, selectedTag, ViewFileName);
-                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+                TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 
             return ErrorCode.Ok;
@@ -129,7 +129,7 @@
             {
                 TagView view = BuildView(domain, parentTag);
                 var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
-                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+                TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 
             // update target view
@@ -137,7 +137,7 @@
             {
                 TagView view = BuildView(domain, targetTag);
                 var viewPath = Path.Combine(rootFolder, targetTag, ViewFileName);
-                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+                TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 
             _tagMoveService.Move(domain, selectedTag, newTagId);
@@ -175,7 +175,7 @@
             {
                 TagView view = BuildView(domain, parentTag);
                 var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
-                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+                TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 
             return ErrorCode.Ok;
@@ -210,7 +210,7 @@
                     tags[i].Order = i + 1;
 
                 var viewPath = Path.Combine(rootFolder, path, ViewFileName);
-                ViewConfigLoader.SaveTagsToFile(viewPath, view);
+                TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 
             return ErrorCode.Ok;

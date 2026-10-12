@@ -19,7 +19,7 @@ builder.Services.AddSingleton(sp =>
     return DomainOptionsLoader.LoadOptionsFromFile(options.DomainOptions);
 });
 builder.Services.AddSingleton<LockManager>();
-builder.Services.AddSingleton<TagTreeService>();
+builder.Services.AddSingleton<TagService>();
 builder.Services.AddSingleton<DocService>();
 builder.Services.AddSingleton<TagMoveService>();
 builder.Services.AddControllersWithViews()

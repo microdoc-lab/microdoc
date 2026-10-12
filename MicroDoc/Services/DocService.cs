@@ -19,13 +19,13 @@
 
         private readonly DomainOptions _domainOptions;
         private readonly LockManager _lockManager;
-        private readonly TagTreeService _tagTreeService;
+        private readonly TagService _tagService;
 
-        public DocService(DomainOptions domainOptions, LockManager lockManager, TagTreeService tagTreeService)
+        public DocService(DomainOptions domainOptions, LockManager lockManager, TagService tagService)
         {
             _domainOptions = domainOptions;
             _lockManager = lockManager;
-            _tagTreeService = tagTreeService;
+            _tagService = tagService;
         }
 
         public List<TagNode> GetTagWithDocuments(string domain, string path) => GetTagWithDocuments(domain, path, recursive: true);
@@ -58,7 +58,7 @@
                     nodes.Add(node);
 
                     // load child tags (1 level) with documents
-                    var children = _tagTreeService.BuildTree(domain, path, recursive: false, level: 1);
+                    var children = _tagService.BuildTree(domain, path, recursive: false, level: 1);
                     foreach (var child in children)
                         child.Documents = GetDocuments(domain, child.Id);
                     nodes.AddRange(children);

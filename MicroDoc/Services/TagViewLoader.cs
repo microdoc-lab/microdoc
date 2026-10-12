@@ -2,7 +2,7 @@
 
 namespace MicroDoc.Services
 {
-    public static class ViewConfigLoader
+    public static class TagViewLoader
     {
         public static TagView LoadTagsFromFile(string path)
         {

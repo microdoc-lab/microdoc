@@ -15,16 +15,16 @@ namespace MicroDoc.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IOptions<MicroDocOptions> _microDocOptions;
         private readonly DomainOptions _domainOptions;
-        private readonly TagTreeService _tagTreeService;
+        private readonly TagService _tagService;
         private readonly DocService _docService;
         private readonly TagMoveService _tagMoveService;
 
-        public HomeController(ILogger<HomeController> logger, IOptions<MicroDocOptions> microDocOptions, DomainOptions domainOptions, TagTreeService tagTreeService, DocService docService, TagMoveService tagMoveService)
+        public HomeController(ILogger<HomeController> logger, IOptions<MicroDocOptions> microDocOptions, DomainOptions domainOptions, TagService tagService, DocService docService, TagMoveService tagMoveService)
         {
             _logger = logger;
             _microDocOptions = microDocOptions;
             _domainOptions = domainOptions;
-            _tagTreeService = tagTreeService;
+            _tagService = tagService;
             _docService = docService;
             _tagMoveService = tagMoveService;
         }
@@ -43,7 +43,7 @@ namespace MicroDoc.Controllers
                     Id = clientId,
                     Domain = _domainOptions.Find(domain),
                     SelectedTag = selectedTag,
-                    Nodes = _tagTreeService.GetTagTree(domain),
+                    Nodes = _tagService.GetTagTree(domain),
                 });
 
             return PartialView("_TagTree", model);
@@ -59,7 +59,7 @@ namespace MicroDoc.Controllers
             string newTagId = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(NewTag), new { domain, selectedTag, newTagName }, () =>
-                _tagTreeService.NewTag(domain, selectedTag, newTagName, out newTagId));
+                _tagService.NewTag(domain, selectedTag, newTagName, out newTagId));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -77,7 +77,7 @@ namespace MicroDoc.Controllers
             string newTagId = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(MoveTag), new { domain, selectedTag, targetTag }, () =>
-                _tagTreeService.MoveTag(domain, selectedTag, targetTag, out newTagId));
+                _tagService.MoveTag(domain, selectedTag, targetTag, out newTagId));
                 
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -100,7 +100,7 @@ namespace MicroDoc.Controllers
                 if (_docService.GetDocuments(domain, selectedTag).Any())
                     return ErrorCode.NestedDocumentsExists;
 
-                return _tagTreeService.DeleteTag(domain, selectedTag);
+                return _tagService.DeleteTag(domain, selectedTag);
             });
 
             if (status != ErrorCode.Ok)
@@ -117,7 +117,7 @@ namespace MicroDoc.Controllers
                 return Forbid();
 
             var status = LoggingHelper.Execute(_logger, nameof(ReorderTagsBatch), new { domain, path, tag, targetTag }, () =>
-                _tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag));
+                _tagService.ReorderTagsBatch(domain, path, tag, targetTag));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -158,7 +158,7 @@ namespace MicroDoc.Controllers
                     Domain = _domainOptions.Find(domain),
                     SelectedTag = selectedTag,
                     TagTree = {
-                        Nodes = _tagTreeService.GetTagTree(domain),
+                        Nodes = _tagService.GetTagTree(domain),
                     },
                     DocMatrix = {
                         Rows = _docService.GetTagWithDocuments(domain, selectedTag)
