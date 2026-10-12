@@ -22,6 +22,7 @@
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitNavigation);
 
+// HandleSwapTags
 DocMatrix.prototype.HandleSwapTags = function (change) {
     if (change.op != "SwapTags")
         return;
@@ -56,6 +57,17 @@ DocMatrix.prototype.HandleSwapTags = function (change) {
 }
 
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleSwapTags);
+
+// HandleNewTag
+DocMatrix.prototype.HandleNewTag = function (change) {
+    if (change.op != "NewTag")
+        return;
+
+    if (this.selectedTag == change.selectedTag)
+        this.Reload();
+}
+
+DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleNewTag);
 
 // Api
 DocMatrix.prototype.MoveTagUp = function () {

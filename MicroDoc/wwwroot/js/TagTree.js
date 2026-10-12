@@ -62,7 +62,7 @@ TagTree.prototype.Load = async function (tagId) {
     tagTree.Search(searchText);
 }
 
-TagTree.prototype.New = async function () {
+TagTree.prototype.NewTag = async function () {
     var domain = this.domain;
     var selectedTag = this.selectedTag;
 
@@ -80,22 +80,27 @@ TagTree.prototype.New = async function () {
         return;
     }
 
+    var data = await response.json();
+    window.domain.PublishChanges(data.changes);
+}
+
+TagTree.prototype.HandleNewTag = async function (change) {
+    if (change.op != "NewTag")
+        return;
+
+    var selectedTag = this.selectedTag;
     var explorerElement = this.element.closest(".explorer");
 
     // reload tree with currently selected tag
     await this.Load(selectedTag);
 
-    // expand selectedTag
-    explorerElement.explorer.tagTree().ExpandTag(selectedTag);
-
-    // reload docMatrix
-    if (explorerElement) {
-        var docMatrix = explorerElement.explorer.docMatrix();
-        docMatrix.Reload();
-    }
+    if (selectedTag == change.selectedTag)
+        explorerElement.explorer.tagTree().ExpandTag(selectedTag);
 }
 
-TagTree.prototype.Move = async function () {
+TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleNewTag);
+
+TagTree.prototype.MoveTag = async function () {
     var domain = this.domain;
     var selectedTag = this.selectedTag;
 
@@ -131,7 +136,7 @@ TagTree.prototype.Move = async function () {
     }
 }
 
-TagTree.prototype.Delete = async function () {
+TagTree.prototype.DeleteTag = async function () {
     var domain = this.domain;
     var selectedTag = this.selectedTag;
 

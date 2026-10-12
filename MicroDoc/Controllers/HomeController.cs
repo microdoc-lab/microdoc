@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.IO;
+using YamlDotNet.Core.Tokens;
 
 namespace MicroDoc.Controllers
 {
@@ -56,6 +58,8 @@ namespace MicroDoc.Controllers
             if (!IsInRole(domain, "w"))
                 return Forbid();
 
+            selectedTag = selectedTag ?? string.Empty;
+
             string newTagId = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(NewTag), new { domain, selectedTag, newTagName }, () =>
@@ -64,7 +68,12 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Content(newTagId);
+            return Json(new
+            {
+                newTagId,
+                changes = new[] { new { op = nameof(NewTag), domain, selectedTag, newTagName } }
+            });
+
         }
 
         [HttpPost]

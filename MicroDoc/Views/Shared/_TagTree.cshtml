@@ -24,13 +24,13 @@
         
         <input class="search r" name="search" type="text" title="Search tree" placeholder="Search" />
 
-		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.New()' title="New Tag">
+		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' title="New Tag">
 			<img src="/icons/New.png">
 		</button>
-		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.Move()' title="Move Tag">
+		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.MoveTag()' title="Move Tag">
 			<img src="/icons/Move.png">
 		</button>
-		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.Delete()' title="Delete Tag">
+		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.DeleteTag()' title="Delete Tag">
 			<img src="/icons/Delete.png">
 		</button>
 		<button class="icon-button r" onclick='document.getElementById("@Model.Id").tagTree.Reload()' title="Reload">

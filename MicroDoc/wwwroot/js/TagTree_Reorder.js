@@ -37,7 +37,6 @@
             }
 
             var data = await response.json();
-
             window.domain.PublishChanges(data.changes);
         });
     });
@@ -45,6 +44,7 @@
 
 TagTree.prototype.behaviors.push(TagTree.prototype.InitDragNDropReorder);
 
+// HandleSwapTags
 TagTree.prototype.HandleSwapTags = function(change) {
     if (change.op != "SwapTags")
         return;
