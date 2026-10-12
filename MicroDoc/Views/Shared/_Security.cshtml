@@ -1,11 +1,22 @@
-﻿@{
-    string[] roles = new[] { "r", "w", "a" };
+﻿@using MicroDoc.Services
+@inject DomainOptions _domainOptions
+
+@{
+    string[] globalRoles = new[] { "r", "w", "a" };
+    string[] domainRoles = new[] { "r", "w" };
 }
 
 <style type="text/css">
-    @foreach (var role in roles)
+    @foreach (var role in globalRoles)
     {
     <text>.@role { display: @(Context.User.IsInRole(role) ? "revert" : "none") !important; }
+    </text>
+    }
+
+    @foreach (var domain in _domainOptions.Domains)
+    @foreach (var role in domainRoles)
+    {
+    <text>.@domain.Name.Replace(".", "\\.") .@role { display: @(Context.User.IsInRole(domain.Name + ":" + role) ? "revert" : "none") !important; }
     </text>
     }
 </style>
@@ -13,7 +24,7 @@
 <script type="text/javascript">
     var roles = [];
 
-    @foreach (var role in roles)
+    @foreach (var role in globalRoles)
     {
         if (Context.User.IsInRole(role))
         {
@@ -22,7 +33,21 @@
         }
     }
 
-    function isInRole(role) {
+    @foreach (var domain in _domainOptions.Domains)
+    @foreach (var role in domainRoles)
+    {
+        if (Context.User.IsInRole(domain.Name + ":" + role))
+        {
+        <text>roles.push("@(domain.Name + ":" + role)");
+        </text>
+        }
+    }
+
+    function isInGlobalRole(role) {
         return roles.includes(role);
+    }
+
+    function isInRole(domain, role) {
+        return roles.includes(domain + ":" + role);
     }
 </script>

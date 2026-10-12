@@ -31,7 +31,7 @@
             const headingIndex = -1;
 
             // open document in overlay
-            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey && isInRole("w") ? "edit" : "view");
+            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey && isInRole(domain, "w") ? "edit" : "view");
 
             return;
         }
@@ -56,7 +56,7 @@
             if (!docCell.classList.contains("misc"))
                 docInCell = docCell.querySelector("doc");
             else {
-                if (!isInRole("w"))
+                if (!isInRole(this.domain, "w"))
                     return;
 
                 // click was made on MISC cell - create MISC document with custom name
@@ -114,7 +114,7 @@
         }
 
         // open document in overlay
-        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey && isInRole("w") ? "edit" : "view");
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, event.ctrlKey && isInRole(domain, "w") ? "edit" : "view");
     });
 }
 

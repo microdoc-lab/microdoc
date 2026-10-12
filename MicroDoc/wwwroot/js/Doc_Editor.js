@@ -43,7 +43,7 @@
     txtEditor.addEventListener("keydown", e => {
         // save and close document editor on ESC
         if (e.key === "Escape") {
-            if (isInRole("w"))
+            if (isInRole(this.domain, "w"))
                 docElement.doc.SaveDocument(true);
             else
                 docElement.doc.CloseDocument();

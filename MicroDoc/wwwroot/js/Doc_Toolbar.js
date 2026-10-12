@@ -121,7 +121,7 @@
             return;
 
         var mode = docElement.getAttribute("mode")
-        if (mode == "edit" && isInRole("w"))
+        if (mode == "edit" && isInRole(domain, "w"))
             await docElement.doc.SaveDocument(true);
         else
             docElement.doc.CloseDocument();
@@ -169,7 +169,7 @@ Doc.prototype.ToggleMode = async function () {
     if (mode == "edit") {
         const headingIndex = txtEditor.getHeadingIndexAtCursor(txtEditor);
 
-        if (isInRole("w")) {
+        if (isInRole(this.domain, "w")) {
             var documentHtml = await this.SaveDocument(false);
             docViewer.innerHTML = documentHtml;
         }

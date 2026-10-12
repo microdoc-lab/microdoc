@@ -15,21 +15,38 @@ namespace MicroDoc.Services
             if (string.IsNullOrWhiteSpace(email))
                 return Task.FromResult(principal);
 
-            var users = domainOptions.Users;
-
-            var user = users.FirstOrDefault(
-                u => string.Equals(
-                    u.Email, email, StringComparison.OrdinalIgnoreCase));
-
-            if (user is null)
-                return Task.FromResult(principal);
-
             var identity = new ClaimsIdentity();
 
-            foreach (var role in user.Roles.Select(r => r.ToString()))
+            {   // global permissions
+                var user = domainOptions.Users.FirstOrDefault(
+                    u => string.Equals(
+                        u.Email, email, StringComparison.OrdinalIgnoreCase));
+
+                if (user != null)
+                {
+                    foreach (var role in user.Roles.Select(r => r.ToString()))
+                    {
+                        if (!principal.IsInRole(role))
+                            identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                    }
+                }
+            }
+
+            // domain permissions
+            foreach (var domain in domainOptions.Domains)
             {
-                if (!principal.IsInRole(role))
-                    identity.AddClaim(new Claim(ClaimTypes.Role, role));
+                var user = domain.Users.FirstOrDefault(
+                    u => string.Equals(
+                        u.Email, email, StringComparison.OrdinalIgnoreCase));
+
+                if (user != null)
+                {
+                    foreach (var role in user.Roles.Select(r => r.ToString()))
+                    {
+                        if (!principal.IsInRole(domain.Name + ":" + role))
+                            identity.AddClaim(new Claim(ClaimTypes.Role, domain.Name + ":" + role));
+                    }
+                }
             }
 
             if (identity.Claims.Any())

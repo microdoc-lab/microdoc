@@ -32,6 +32,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult TagTree(string clientId, string domain, string selectedTag)
         {
+            if (!IsInRole(domain, "r"))
+                return Forbid();
+
             var model = LoggingHelper.Execute(_logger, nameof(TagTree), new { clientId, domain, selectedTag }, () =>
                 new TagTreeViewModel
                 {
@@ -48,6 +51,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public IActionResult NewTag(string domain, string selectedTag, string newTagName)
         {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+
             string newTagId = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(NewTag), new { domain, selectedTag, newTagName }, () =>
@@ -63,6 +69,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public IActionResult MoveTag(string domain, string selectedTag, string targetTag)
         {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+            
             string newTagId = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(MoveTag), new { domain, selectedTag, targetTag }, () =>
@@ -78,6 +87,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public IActionResult DeleteTag(string domain, string selectedTag)
         {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+            
             var status = LoggingHelper.Execute(_logger, nameof(DeleteTag), new { domain, selectedTag }, () =>
             {
                 if (string.IsNullOrEmpty(selectedTag))
@@ -99,6 +111,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public IActionResult ReorderTagsBatch(string domain, string path, string tag, string targetTag)
         {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+
             var status = LoggingHelper.Execute(_logger, nameof(ReorderTagsBatch), new { domain, path, tag, targetTag }, () =>
                 _tagTreeService.ReorderTagsBatch(domain, path, tag, targetTag));
 
@@ -113,6 +128,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
         {
+            if (!IsInRole(domain, "r"))
+                return Forbid();
+
             var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag }, () =>
                 new DocMatrixViewModel
                 {
@@ -128,6 +146,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult Explorer(string clientId, string domain, string selectedTag)
         {
+            if (!IsInRole(domain, "r"))
+                return Forbid();
+
             var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag }, () =>
                 new ExplorerViewModel
                 {
@@ -154,6 +175,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult LoadDocument(string domain, string documentId) 
         {
+            if (!IsInRole(domain, "r"))
+                return Forbid();
+
             DocNode doc = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(LoadDocument), new { domain, documentId }, () =>
@@ -176,6 +200,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public IActionResult SaveDocument(string domain, string documentId, string content)
         {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+
             content = content ?? string.Empty;
 
             var status = LoggingHelper.Execute(_logger, nameof(SaveDocument), new { domain, documentId }, () =>
@@ -192,6 +219,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public IActionResult DeleteDocument(string domain, string documentId)
         {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+
             var status = LoggingHelper.Execute(_logger, nameof(DeleteDocument), new { domain, documentId }, () =>
                 _docService.DeleteDocument(domain, documentId));
 
@@ -208,6 +238,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult Image(string domain, string documentId, string imageName)
         {
+            if (!IsInRole(domain, "r"))
+                return Forbid();
+
             string filePath = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(Image), new { domain, documentId, imageName }, () =>
@@ -242,6 +275,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> UploadImage(string domain, string documentId, string imageName, IFormFile image)
         {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+
             var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
             {
                 string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
@@ -268,6 +304,9 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult Background(string domain) 
         {
+            if (!IsInRole(domain, "r"))
+                return Forbid();
+
             string filePath = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(Background), new { domain }, () =>
@@ -344,6 +383,8 @@ namespace MicroDoc.Controllers
         #endregion
 
         private IActionResult Error(ErrorCode code) => NotFound($"{code}");
+
+        private bool IsInRole(string domain, string role) => User.IsInRole(domain + ":" + role);
 
         #region Misc
         public IActionResult Index()
