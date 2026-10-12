@@ -44,10 +44,7 @@
         }
     });
 
-    if (toolbar.reorderInited)
-        return;
-
-    var grip = toolbar.querySelector(".grip");
+    var grip = this.element;
     grip.draggable = true;
 
     grip.addEventListener("dragstart", e => {
@@ -80,8 +77,6 @@
 
         docMatrix.draggedDoc = null;
     });
-
-    toolbar.reorderInited = true;
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitReorder);

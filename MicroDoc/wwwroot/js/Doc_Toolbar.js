@@ -4,6 +4,11 @@
     var overlay = this.overlay();
     var toolbar = this.toolbar();
 
+    // copy document path to clipboard
+    this.element.querySelector(".label").addEventListener("click", async event => {
+        await navigator.clipboard.writeText(this.element.dataset.tagpath);
+    });
+
     if (toolbar.toolbarInited)
         return;
 
@@ -52,22 +57,6 @@
         toolbar.style.visibility = "hidden";
         // reset toolbar context
         toolbar.dataset.id = null;
-    });
-
-    // copy document path to clipboard
-    toolbar.querySelector(".copy").addEventListener("click", async event => {
-        // obtain document context
-        var domain = toolbar.dataset.domain;
-        var documentId = toolbar.dataset.id;
-
-        var docMatrix = this.docMatrix();
-
-        // find & check docElement
-        var docElement = docMatrix.docElement(domain, documentId);
-        if (!docElement)
-            return;
-
-        await navigator.clipboard.writeText(docElement.dataset.tagpath);
     });
 
     // toggle view/edit mode

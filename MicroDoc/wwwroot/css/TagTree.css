@@ -14,8 +14,7 @@
 
 .tag-tree .toolbar .search {
     display: inline-block;
-    width: 60px;
-    height: 20px;
+    width: 65px;
     padding-right: 2px;
     font-size: 14px;
     vertical-align: middle;
@@ -24,7 +23,7 @@
 
 .tag-tree .toolbar .clearSearch {
     position: absolute;
-    left: -3px;
+    left: -2px;
     top: 50%;
     transform: translateY(-50%)  scale(0.7);
     border: none;

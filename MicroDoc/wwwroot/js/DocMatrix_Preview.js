@@ -150,6 +150,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     docElement.dataset.tagpath = this.DocPath(domain, documentId);
     docElement.dataset.document = this.DocName(documentId);
 
+    docElement.querySelector(".label").textContent = this.DocPath(domain, documentId);
     docElement.querySelector(".viewer").innerHTML = documentHtml;
     docElement.querySelector(".editor").value = documentContent;
 

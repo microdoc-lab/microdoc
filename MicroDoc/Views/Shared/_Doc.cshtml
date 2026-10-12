@@ -6,6 +6,7 @@
 }
 
 <div id="@Model.Id" class="doc" mode="@Model.Mode" data-domain="@Model.Doc.Domain" data-id="@Model.Doc.Id" data-tagpath="@Model.Doc.TagPath" data-document="@Model.Doc.Name">
+    <span class="label" title="Copy">@Model.Doc.TagPath</span>
     <div class="viewer">@Html.Raw(Model.Doc.Html)</div>
     <textarea class="editor">@Model.Doc.Content</textarea>
 </div>

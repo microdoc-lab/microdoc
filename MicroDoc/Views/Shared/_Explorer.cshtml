@@ -18,19 +18,13 @@
 
 	<div class="overlay">
 	    <div class="toolbar">
-			<button class="icon-button grip r" title="Move">
-	    		<img src="/icons/Move.png">
-    		</button>
-			<button class="icon-button copy r" title="Copy">
-	    		<img src="/icons/Clipboard.png">
-    		</button>
 			<button class="icon-button view w" title="Toggle View/Edit">
 	    		<img src="/icons/View.png">
     		</button>
 			<button class="icon-button delete w" title="Delete">
 	    		<img src="/icons/Delete.png">
     		</button>
-			<button class="icon-button close r" title="Save & Close">
+			<button class="icon-button close r" title="@(User.IsInRole(Model.Domain.Name + ":" + "w") ? "Save & Close" : "Close")">
 	    		<img src="/icons/Close.png">
     		</button>
 	    </div>
