@@ -79,7 +79,7 @@ Domain.prototype.ExplorerId = function (domain) {
     return "explorer" + domain.replaceAll(".", "_").replaceAll(" ", "_");;
 }
 
-Domain.prototype.OpenExplorer = function (domain, selectedTag) {
+Domain.prototype.OpenExplorer = function (domain, selectedTag = "") {
 
     // translate domain into explorerId
     var explorerId = this.ExplorerId(domain);

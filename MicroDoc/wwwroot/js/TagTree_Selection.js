@@ -63,7 +63,7 @@ TagTree.prototype.InternalSelectTag = function (tagNode) {
         this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
 
         // Update model property
-        this.selectedTag = null;
+        this.selectedTag = "";
 
         // Call user-provided callback
         this.OnNodeSelected(null);

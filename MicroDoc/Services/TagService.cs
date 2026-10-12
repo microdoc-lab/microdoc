@@ -65,7 +65,6 @@
 
         public ErrorCode NewTag(string domain, string selectedTag, string newTagName, out string newTagId)
         {
-            selectedTag = selectedTag ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             newTagId = DocumentParser.GetDocumentId(selectedTag, newTagName);
             var folder = Path.Combine(rootFolder, newTagId);
@@ -90,14 +89,12 @@
             return ErrorCode.Ok;
         }
 
-        public ErrorCode MoveTag(string domain, string selectedTag, string targetTag, out string newTagId)
+        public ErrorCode MoveTag(string domain, string selectedTag, string targetTag, out string newTag)
         {
-            selectedTag = selectedTag ?? "";
-            targetTag = targetTag ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
 
             var (parentTag, name) = DocumentParser.SplitId(selectedTag);
-            newTagId = DocumentParser.GetDocumentId(targetTag, name);
+            newTag = DocumentParser.GetDocumentId(targetTag, name);
 
             if (string.IsNullOrEmpty(selectedTag))
                 return ErrorCode.RootTag;
@@ -107,9 +104,9 @@
 
             var source = Path.Combine(rootFolder, selectedTag);
             var destination = Path.Combine(rootFolder, targetTag);
-            var newPath = Path.Combine(rootFolder, newTagId);
+            var newPath = Path.Combine(rootFolder, newTag);
 
-            using (_lockManager.Write2(domain, selectedTag, newTagId))
+            using (_lockManager.Write2(domain, selectedTag, newTag))
             {
                 if (!Directory.Exists(source))
                     return ErrorCode.TagNotFound;
@@ -140,7 +137,7 @@
                 TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 
-            _tagMoveService.Move(domain, selectedTag, newTagId);
+            _tagMoveService.Move(domain, selectedTag, newTag);
 
             return ErrorCode.Ok;
         }
@@ -182,17 +179,16 @@
             return ErrorCode.Ok;
         }
 
-        public ErrorCode SwapTags(string domain, string path, string tag, string targetTag)
+        public ErrorCode SwapTags(string domain, string parentTag, string tagName, string targetTagName)
         {
-            path = path ?? "";
-            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(parentTag, ViewFileName)))
             {
                 string rootFolder = _domainOptions.Find(domain).RootFolder;
-                TagView view = BuildView(domain, path);
+                TagView view = BuildView(domain, parentTag);
 
                 var tags = view.Tags.ToList();
-                var index = tags.FindIndex(t => t.Tag == tag);
-                var targetIndex = tags.FindIndex(t => t.Tag == targetTag);
+                var index = tags.FindIndex(t => t.Tag == tagName);
+                var targetIndex = tags.FindIndex(t => t.Tag == targetTagName);
 
                 if (index == -1 || targetIndex == -1 || index == targetIndex)
                     return ErrorCode.TagNotFound;
@@ -210,7 +206,7 @@
                 for (int i = 0; i < tags.Count; i++)
                     tags[i].Order = i + 1;
 
-                var viewPath = Path.Combine(rootFolder, path, ViewFileName);
+                var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
                 TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 

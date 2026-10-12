@@ -27,11 +27,11 @@ DocMatrix.prototype.HandleSwapTags = function (change) {
     if (change.op != "SwapTags")
         return;
 
-    if (this.selectedTag != change.path)
+    if (this.selectedTag != change.parentTag)
         return;
 
-    var sender = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.path, change.tag)}']`);
-    var target = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.path, change.targetTag)}']`);
+    var sender = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.parentTag, change.tagName)}']`);
+    var target = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.parentTag, change.targetTagName)}']`);
 
     if (!sender)
         return;
@@ -81,7 +81,7 @@ DocMatrix.prototype.HandleMoveTag = function (change) {
             this.Reload();
     } else {
         // reload docMatrix on moved tag (if change initiated by current user)
-        this.selectedTag = change.newTagId;
+        this.selectedTag = change.newTag;
         this.Reload();
     }
 }
@@ -94,9 +94,9 @@ DocMatrix.prototype.HandleDeleteTag = function (change) {
     if (change.op != "DeleteTag")
         return;
 
-    if (this.selectedTag == change.selectedTag || this.selectedTag == change.parentTagId) {
+    if (this.selectedTag == change.selectedTag || this.selectedTag == change.parentTag) {
         // reload docMatrix on moved tag (if change initiated by current user)
-        this.selectedTag = change.parentTagId;
+        this.selectedTag = change.parentTag;
         this.Reload();
     }
 }

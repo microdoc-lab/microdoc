@@ -49,8 +49,8 @@ TagTree.prototype.HandleSwapTags = function(change) {
     if (change.op != "SwapTags")
         return;
 
-    var sender = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag='${change.tag}']`);
-    var target = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag='${change.targetTag}']`);
+    var sender = this.element.querySelector(`.tag[data-path='${change.parentTag}'][data-tag='${change.tagName}']`);
+    var target = this.element.querySelector(`.tag[data-path='${change.parentTag}'][data-tag='${change.targetTagName}']`);
 
     if (!sender)
         return;
@@ -78,14 +78,14 @@ TagTree.prototype.HandleSwapTags = function(change) {
 TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleSwapTags);
 
 // Service methods
-TagTreeService.prototype.SwapTags = function(domain, path, tag, targetTag) {
+TagTreeService.prototype.SwapTags = function(domain, parentTag, tagName, targetTagName) {
     return fetch("/Home/SwapTags", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
-            path: path ?? "",
-            tag: tag,
-            targetTag: targetTag
+            parentTag: parentTag,
+            tagName: tagName,
+            targetTagName: targetTagName
         })
     });
 }

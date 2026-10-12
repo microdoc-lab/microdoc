@@ -144,9 +144,9 @@ TagTree.prototype.HandleMoveTag = async function (change) {
     }
     else {
         // reload tree and select moved tag (if change initiated by current user)
-        await this.Load(change.newTagId);
+        await this.Load(change.newTag);
 
-        explorerElement.explorer.tagTree().ExpandTag(change.newTagId);
+        explorerElement.explorer.tagTree().ExpandTag(change.newTag);
     }
 }
 
@@ -192,9 +192,9 @@ TagTree.prototype.HandleDeleteTag = async function (change) {
     }
     else {
         // reload tree and select parent tag (if current tag removed)
-        await this.Load(change.parentTagId);
+        await this.Load(change.parentTag);
 
-        explorerElement.explorer.tagTree().ExpandTag(change.parentTagId);
+        explorerElement.explorer.tagTree().ExpandTag(change.parentTag);
     }
 }
 
@@ -223,7 +223,7 @@ TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
-            selectedTag: selectedTag ?? "",
+            selectedTag: selectedTag,
             newTagName: newTagName
         })
     });
@@ -234,7 +234,7 @@ TagTreeService.prototype.MoveTag = function (domain, selectedTag, targetTag) {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
-            selectedTag: selectedTag ?? "",
+            selectedTag: selectedTag,
             targetTag: targetTag
         })
     });
@@ -246,11 +246,11 @@ TagTreeService.prototype.DeleteTag = function (domain, selectedTag) {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
-            selectedTag: selectedTag ?? ""
+            selectedTag: selectedTag
         })
     });
 }
 
 TagTreeService.prototype.TagTree = function (clientId, domain, selectedTag) {
-    return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag ?? ""}`);
+    return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
 }

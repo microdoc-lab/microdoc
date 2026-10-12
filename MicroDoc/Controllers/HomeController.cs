@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
-using System.IO;
-using YamlDotNet.Core.Tokens;
 
 namespace MicroDoc.Controllers
 {
@@ -38,6 +36,8 @@ namespace MicroDoc.Controllers
         {
             if (!IsInRole(domain, "r"))
                 return Forbid();
+
+            selectedTag = selectedTag ?? string.Empty;
 
             var model = LoggingHelper.Execute(_logger, nameof(TagTree), new { clientId, domain, selectedTag }, () =>
                 new TagTreeViewModel
@@ -85,18 +85,18 @@ namespace MicroDoc.Controllers
             selectedTag = selectedTag ?? string.Empty;
             targetTag = targetTag ?? string.Empty;
 
-            string newTagId = null;
+            string newTag = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(MoveTag), new { domain, selectedTag, targetTag }, () =>
-                _tagService.MoveTag(domain, selectedTag, targetTag, out newTagId));
+                _tagService.MoveTag(domain, selectedTag, targetTag, out newTag));
                 
             if (status != ErrorCode.Ok)
                 return Error(status);
 
             return Json(new
             {
-                newTagId,
-                changes = new[] { new { op = nameof(MoveTag), domain, selectedTag, targetTag, newTagId } }
+                newTag,
+                changes = new[] { new { op = nameof(MoveTag), domain, selectedTag, targetTag, newTag } }
             });
         }
 
@@ -109,7 +109,7 @@ namespace MicroDoc.Controllers
 
             selectedTag = selectedTag ?? string.Empty;
 
-            string parentTagId = null;
+            string parentTag = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(DeleteTag), new { domain, selectedTag }, () =>
             {
@@ -119,7 +119,7 @@ namespace MicroDoc.Controllers
                 if (_docService.GetDocuments(domain, selectedTag).Any())
                     return ErrorCode.NestedDocumentsExists;
 
-                return _tagService.DeleteTag(domain, selectedTag, out parentTagId);
+                return _tagService.DeleteTag(domain, selectedTag, out parentTag);
             });
 
             if (status != ErrorCode.Ok)
@@ -127,28 +127,28 @@ namespace MicroDoc.Controllers
 
             return Json(new
             {
-                changes = new[] { new { op = nameof(DeleteTag), domain, selectedTag, parentTagId } }
+                changes = new[] { new { op = nameof(DeleteTag), domain, selectedTag, parentTag } }
             });
         }
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult SwapTags(string domain, string path, string tag, string targetTag)
+        public IActionResult SwapTags(string domain, string parentTag, string tagName, string targetTagName)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
 
-            path = path ?? string.Empty;
+            parentTag = parentTag ?? string.Empty;
 
-            var status = LoggingHelper.Execute(_logger, nameof(SwapTags), new { domain, path, tag, targetTag }, () =>
-                _tagService.SwapTags(domain, path, tag, targetTag));
+            var status = LoggingHelper.Execute(_logger, nameof(SwapTags), new { domain, parentTag, tagName, targetTagName }, () =>
+                _tagService.SwapTags(domain, parentTag, tagName, targetTagName));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
 
             return Json(new 
             { 
-                changes = new[] { new { op = nameof(SwapTags), domain, path, tag, targetTag } }
+                changes = new[] { new { op = nameof(SwapTags), domain, parentTag, tagName, targetTagName } }
             });
         }
 
@@ -159,6 +159,8 @@ namespace MicroDoc.Controllers
         {
             if (!IsInRole(domain, "r"))
                 return Forbid();
+
+            selectedTag = selectedTag ?? string.Empty;
 
             var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag }, () =>
                 new DocMatrixViewModel
@@ -177,6 +179,8 @@ namespace MicroDoc.Controllers
         {
             if (!IsInRole(domain, "r"))
                 return Forbid();
+
+            selectedTag = selectedTag ?? string.Empty;
 
             var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag }, () =>
                 new ExplorerViewModel

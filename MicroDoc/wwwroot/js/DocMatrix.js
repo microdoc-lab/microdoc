@@ -102,7 +102,7 @@ DocMatrix.prototype.Load = async function (tagId) {
 function DocMatrixService() { }
 
 DocMatrixService.prototype.DocMatrix = function (clientId, domain, selectedTag) {
-    return fetch(`/Home/DocMatrix?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag ?? ""}`);
+    return fetch(`/Home/DocMatrix?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
 }
 
 DocMatrixService.prototype.LoadDocument = function (domain, documentId) {
