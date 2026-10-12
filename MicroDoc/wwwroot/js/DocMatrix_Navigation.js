@@ -23,15 +23,40 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitNavigation);
 
 // HandleSwapTags
-DocMatrix.prototype.HandleSwapTags = function (change) {
-    if (change.op != "SwapTags")
-        return;
+DocMatrix.prototype.HandleChanges = function (change) {
+    var selectedTag = this.selectedTag;
 
-    if (this.selectedTag != change.parentTag)
-        return;
+    switch (change.op) {
+        case "SwapTags":
+            if (selectedTag == change.parentTag)
+                this.SwapRows(change.parentTag, change.tagName, change.targetTagName);
+            break;
 
-    var sender = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.parentTag, change.tagName)}']`);
-    var target = this.element.querySelector(`.grid tr[data-tag='${this.DocId(change.parentTag, change.targetTagName)}']`);
+        case "NewTag":
+            if (selectedTag == change.selectedTag)
+                this.Load(selectedTag);
+            break;
+
+        case "MoveTag":
+            if (change.external) {
+                if (selectedTag == change.selectedTag)
+                    this.Load(selectedTag);
+            } else
+                this.Load(change.newTag);
+            break;
+
+        case "DeleteTag":
+            if (selectedTag == change.selectedTag || selectedTag == change.parentTag)
+                this.Load(change.parentTag);
+            break;
+    }
+}
+
+DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleChanges);
+
+DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
+    var sender = this.element.querySelector(`.grid tr[data-tag='${this.DocId(parentTag, tagName)}']`);
+    var target = this.element.querySelector(`.grid tr[data-tag='${this.DocId(parentTag, targetTagName)}']`);
 
     if (!sender)
         return;
@@ -55,54 +80,6 @@ DocMatrix.prototype.HandleSwapTags = function (change) {
         parentList.appendChild(sender);
     }
 }
-
-DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleSwapTags);
-
-//#region NewTag
-DocMatrix.prototype.HandleNewTag = function (change) {
-    if (change.op != "NewTag")
-        return;
-
-    if (this.selectedTag == change.selectedTag)
-        this.Reload();
-}
-
-DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleNewTag);
-//#endregion
-
-//#region MoveTag
-DocMatrix.prototype.HandleMoveTag = function (change) {
-    if (change.op != "MoveTag")
-        return;
-
-    if (change.external) {
-        // reload docMatrix on currently selected tag (if change came from other user)
-        if (this.selectedTag == change.selectedTag)
-            this.Reload();
-    } else {
-        // reload docMatrix on moved tag (if change initiated by current user)
-        this.selectedTag = change.newTag;
-        this.Reload();
-    }
-}
-
-DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleMoveTag);
-//#endregion
-
-//#region DeleteTag
-DocMatrix.prototype.HandleDeleteTag = function (change) {
-    if (change.op != "DeleteTag")
-        return;
-
-    if (this.selectedTag == change.selectedTag || this.selectedTag == change.parentTag) {
-        // reload docMatrix on moved tag (if change initiated by current user)
-        this.selectedTag = change.parentTag;
-        this.Reload();
-    }
-}
-
-DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleDeleteTag);
-//#endregion
 
 // Api
 DocMatrix.prototype.MoveTagUp = function () {

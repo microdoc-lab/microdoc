@@ -36,6 +36,7 @@
                 return;
             }
 
+            // PublishChanges
             var data = await response.json();
             window.domain.PublishChanges(data.changes);
         });
@@ -46,11 +47,16 @@ TagTree.prototype.behaviors.push(TagTree.prototype.InitDragNDropReorder);
 
 // HandleSwapTags
 TagTree.prototype.HandleSwapTags = function(change) {
-    if (change.op != "SwapTags")
-        return;
+    if (change.op == "SwapTags")
+        this.SwapTags(change.parentTag, change.tagName, change.targetTagName);
+}
 
-    var sender = this.element.querySelector(`.tag[data-path='${change.parentTag}'][data-tag='${change.tagName}']`);
-    var target = this.element.querySelector(`.tag[data-path='${change.parentTag}'][data-tag='${change.targetTagName}']`);
+TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleSwapTags);
+
+// Api
+TagTree.prototype.SwapTags = function (parentTag, tagName, targetTagName) {
+    var sender = this.element.querySelector(`.tag[data-path='${parentTag}'][data-tag='${tagName}']`);
+    var target = this.element.querySelector(`.tag[data-path='${parentTag}'][data-tag='${targetTagName}']`);
 
     if (!sender)
         return;
@@ -74,8 +80,6 @@ TagTree.prototype.HandleSwapTags = function(change) {
         parentList.appendChild(sender);
     }
 }
-
-TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleSwapTags);
 
 // Service methods
 TagTreeService.prototype.SwapTags = function(domain, parentTag, tagName, targetTagName) {

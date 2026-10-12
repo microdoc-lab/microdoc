@@ -34,11 +34,24 @@ TagTree.prototype.ApplyChanges = function (change) {
 }
 
 // Api
+TagTree.prototype.TagPath = function (domain, tag) {
+    var tags = tag.split('/');
+    var tagPath = tags.map(t => `[${t}]`).join(' ');
+    return tagPath && tagPath != "[]" ? tagPath : domain;
+}
+
+TagTree.prototype.ParentTag = function (tag) {
+    var tags = tag.split('/');
+    tags.pop();
+    var tagPath = tags.join('/');
+    return tagPath;
+}
+
 TagTree.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }
 
-TagTree.prototype.Load = async function (tagId) {
+TagTree.prototype.Load = async function (tagId, toExpand) {
     var expandedTag = this.ExpandedTag();
     var searchText = this.searchInput.value;
 
@@ -58,161 +71,8 @@ TagTree.prototype.Load = async function (tagId) {
 
     // expand expandedTag
     var tagTree = explorerElement.explorer.tagTree();
-    tagTree.ExpandTag(expandedTag);
+    tagTree.ExpandTag(toExpand ?? expandedTag);
     tagTree.Search(searchText);
-}
-
-//#region NewTag
-
-TagTree.prototype.NewTag = async function () {
-    var domain = this.domain;
-    var selectedTag = this.selectedTag;
-
-    // Prompt new tag name
-    var tagPath = this.TagPath(domain, selectedTag);
-
-    var newTagName = prompt(`Create new Tag in ${tagPath}? Enter new tag name`);
-    if (!newTagName || !newTagName.trim())
-        return;
-
-    // Create Tag
-    const response = await this.service.NewTag(domain, selectedTag, newTagName);
-    if (!response.ok) {
-        this.error(`Create new Tag in ${tagPath} failed`, await response.text());
-        return;
-    }
-
-    var data = await response.json();
-    window.domain.PublishChanges(data.changes);
-}
-
-TagTree.prototype.HandleNewTag = async function (change) {
-    if (change.op != "NewTag")
-        return;
-
-    var selectedTag = this.selectedTag;
-    var explorerElement = this.element.closest(".explorer");
-
-    // reload tree with currently selected tag
-    await this.Load(selectedTag);
-
-    if (selectedTag == change.selectedTag)
-        explorerElement.explorer.tagTree().ExpandTag(selectedTag);
-}
-
-TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleNewTag);
-
-//#endregion
-
-//#region MoveTag
-
-TagTree.prototype.MoveTag = async function () {
-    var domain = this.domain;
-    var selectedTag = this.selectedTag;
-
-    // Prompt new tag name
-    var tagPath = this.TagPath(domain, selectedTag);
-
-    var targetTag = prompt(`Move Tag ${tagPath}? Enter target tag name`);
-    if (!targetTag || !targetTag.trim())
-        return;
-
-    // Create Tag
-    const response = await this.service.MoveTag(domain, selectedTag, targetTag);
-    if (!response.ok) {
-        this.error(`Move Tag ${tagPath} to ${targetTag} failed`, await response.text());
-        return;
-    }
-
-    var data = await response.json();
-    window.domain.PublishChanges(data.changes);
-}
-
-TagTree.prototype.HandleMoveTag = async function (change) {
-    if (change.op != "MoveTag")
-        return;
-
-    var selectedTag = this.selectedTag;
-    var explorerElement = this.element.closest(".explorer");
-
-    if (change.external) {
-        // reload tree with currently selected tag (if change came from other user)
-        await this.Load(selectedTag);
-
-        if (selectedTag == change.selectedTag)
-            explorerElement.explorer.tagTree().ExpandTag(selectedTag);
-    }
-    else {
-        // reload tree and select moved tag (if change initiated by current user)
-        await this.Load(change.newTag);
-
-        explorerElement.explorer.tagTree().ExpandTag(change.newTag);
-    }
-}
-
-TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleMoveTag);
-
-//#endregion
-
-//#region DeleteTag
-
-TagTree.prototype.DeleteTag = async function () {
-    var domain = this.domain;
-    var selectedTag = this.selectedTag;
-
-    // Prompt new tag name
-    var tagPath = this.TagPath(domain, selectedTag);
-
-    if (!confirm(`Delete tag ${tagPath} ?`))
-        return;
-
-    // Delete Tag
-    const response = await this.service.DeleteTag(domain, selectedTag);
-    if (!response.ok) {
-        this.error(`Delete tag ${tagPath} failed`, await response.text());
-        return;
-    }
-
-    var data = await response.json();
-    window.domain.PublishChanges(data.changes);
-}
-
-TagTree.prototype.HandleDeleteTag = async function (change) {
-    if (change.op != "DeleteTag")
-        return;
-
-    var selectedTag = this.selectedTag;
-    var explorerElement = this.element.closest(".explorer");
-
-    if (selectedTag != change.selectedTag) {
-        // reload tree with currently selected tag (if current node different)
-        await this.Load(selectedTag);
-
-        explorerElement.explorer.tagTree().ExpandTag(selectedTag);
-    }
-    else {
-        // reload tree and select parent tag (if current tag removed)
-        await this.Load(change.parentTag);
-
-        explorerElement.explorer.tagTree().ExpandTag(change.parentTag);
-    }
-}
-
-TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleDeleteTag);
-
-//#endregion
-
-TagTree.prototype.TagPath = function (domain, tag) {
-    var tags = tag.split('/');
-    var tagPath = tags.map(t => `[${t}]`).join(' ');
-    return tagPath && tagPath != "[]" ? tagPath : domain;
-}
-
-TagTree.prototype.ParentTag = function (tag) {
-    var tags = tag.split('/');
-    tags.pop();
-    var tagPath = tags.join('/');
-    return tagPath;
 }
 
 // Service methods
