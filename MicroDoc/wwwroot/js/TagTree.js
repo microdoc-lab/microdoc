@@ -162,7 +162,6 @@ TagTree.prototype.DeleteTag = async function () {
 
     // Prompt new tag name
     var tagPath = this.TagPath(domain, selectedTag);
-    var parentTag = this.ParentTag(selectedTag);
 
     if (!confirm(`Delete tag ${tagPath} ?`))
         return;
@@ -174,21 +173,32 @@ TagTree.prototype.DeleteTag = async function () {
         return;
     }
 
+    var data = await response.json();
+    window.domain.PublishChanges(data.changes);
+}
+
+TagTree.prototype.HandleDeleteTag = async function (change) {
+    if (change.op != "DeleteTag")
+        return;
+
+    var selectedTag = this.selectedTag;
     var explorerElement = this.element.closest(".explorer");
 
-    // reload tree and select parent tag
-    await this.Load(parentTag);
+    if (selectedTag != change.selectedTag) {
+        // reload tree with currently selected tag (if current node different)
+        await this.Load(selectedTag);
 
-    // expand parentTag
-    explorerElement.explorer.tagTree().ExpandTag(parentTag);
+        explorerElement.explorer.tagTree().ExpandTag(selectedTag);
+    }
+    else {
+        // reload tree and select parent tag (if current tag removed)
+        await this.Load(change.parentTagId);
 
-    // reload docMatrix
-    if (explorerElement) {
-        var docMatrix = explorerElement.explorer.docMatrix();
-        docMatrix.selectedTag = parentTag;
-        docMatrix.Reload();
+        explorerElement.explorer.tagTree().ExpandTag(change.parentTagId);
     }
 }
+
+TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleDeleteTag);
 
 //#endregion
 

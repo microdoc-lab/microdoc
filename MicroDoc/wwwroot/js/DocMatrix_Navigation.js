@@ -58,7 +58,7 @@ DocMatrix.prototype.HandleSwapTags = function (change) {
 
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleSwapTags);
 
-// HandleNewTag
+//#region NewTag
 DocMatrix.prototype.HandleNewTag = function (change) {
     if (change.op != "NewTag")
         return;
@@ -68,8 +68,9 @@ DocMatrix.prototype.HandleNewTag = function (change) {
 }
 
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleNewTag);
+//#endregion
 
-// HandleMoveTag
+//#region MoveTag
 DocMatrix.prototype.HandleMoveTag = function (change) {
     if (change.op != "MoveTag")
         return;
@@ -86,6 +87,22 @@ DocMatrix.prototype.HandleMoveTag = function (change) {
 }
 
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleMoveTag);
+//#endregion
+
+//#region DeleteTag
+DocMatrix.prototype.HandleDeleteTag = function (change) {
+    if (change.op != "DeleteTag")
+        return;
+
+    if (this.selectedTag == change.selectedTag || this.selectedTag == change.parentTagId) {
+        // reload docMatrix on moved tag (if change initiated by current user)
+        this.selectedTag = change.parentTagId;
+        this.Reload();
+    }
+}
+
+DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleDeleteTag);
+//#endregion
 
 // Api
 DocMatrix.prototype.MoveTagUp = function () {

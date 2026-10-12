@@ -106,7 +106,11 @@ namespace MicroDoc.Controllers
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
-            
+
+            selectedTag = selectedTag ?? string.Empty;
+
+            string parentTagId = null;
+
             var status = LoggingHelper.Execute(_logger, nameof(DeleteTag), new { domain, selectedTag }, () =>
             {
                 if (string.IsNullOrEmpty(selectedTag))
@@ -115,13 +119,16 @@ namespace MicroDoc.Controllers
                 if (_docService.GetDocuments(domain, selectedTag).Any())
                     return ErrorCode.NestedDocumentsExists;
 
-                return _tagService.DeleteTag(domain, selectedTag);
+                return _tagService.DeleteTag(domain, selectedTag, out parentTagId);
             });
 
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Ok();
+            return Json(new
+            {
+                changes = new[] { new { op = nameof(DeleteTag), domain, selectedTag, parentTagId } }
+            });
         }
 
         [HttpPost]

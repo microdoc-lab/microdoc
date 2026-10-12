@@ -145,9 +145,11 @@
             return ErrorCode.Ok;
         }
 
-        public ErrorCode DeleteTag(string domain, string selectedTag)
+        public ErrorCode DeleteTag(string domain, string selectedTag, out string parentTag)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
+
+            (parentTag, _) = DocumentParser.SplitId(selectedTag);
 
             if (string.IsNullOrEmpty(selectedTag))
                 return ErrorCode.RootTag;
@@ -170,7 +172,6 @@
             }
 
             // update parent tag view
-            var (parentTag, _) = DocumentParser.SplitId(selectedTag);
             using (_lockManager.Write(domain, DocumentParser.GetDocumentId(parentTag, ViewFileName)))
             {
                 TagView view = BuildView(domain, parentTag);
