@@ -1,9 +1,10 @@
-﻿namespace MicroDoc.Services
+﻿using static MicroDoc.Services.TagView;
+
+namespace MicroDoc.Services
 {
     public class TagService
     {
-        internal const string ViewFileName = "view.ini";
-        internal const string MoveFileName = "move.ini";
+        private const string ViewFileName = "view.ini";
 
         private readonly DomainOptions _domainOptions;
         private readonly LockManager _lockManager;
@@ -16,21 +17,15 @@
             _tagMoveService = tagMoveService;
         }
 
-        public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: null, recursive: true, level: 0);
+        public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: "", recursive: true, level: 0);
 
         internal List<TagNode> BuildTree(string domain, string path, bool recursive, int level)
         {
-            path = path ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var folder = Path.Combine(rootFolder, path);
 
             // load view
-            TagView view;
-            using (_lockManager.Read(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
-            {
-                var viewPath = Path.Combine(folder, ViewFileName);
-                view = TagViewLoader.LoadTagsFromFile(viewPath);
-            }
+            TagView view = LoadView(domain, path);
 
             // Load nodes
             var nodes = new List<TagNode>();
@@ -78,13 +73,7 @@
                 Directory.CreateDirectory(folder);
             }
 
-            // update view
-            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(selectedTag, ViewFileName)))
-            {
-                TagView view = BuildView(domain, selectedTag);
-                var viewPath = Path.Combine(rootFolder, selectedTag, ViewFileName);
-                TagViewLoader.SaveTagsToFile(viewPath, view);
-            }
+            UpdateView(domain, selectedTag);
 
             return ErrorCode.Ok;
         }
@@ -121,21 +110,8 @@
                 Directory.Move(source, newPath);
             }
 
-            // update source parent tag view
-            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(parentTag, ViewFileName)))
-            {
-                TagView view = BuildView(domain, parentTag);
-                var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
-                TagViewLoader.SaveTagsToFile(viewPath, view);
-            }
-
-            // update target view
-            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(targetTag, ViewFileName)))
-            {
-                TagView view = BuildView(domain, targetTag);
-                var viewPath = Path.Combine(rootFolder, targetTag, ViewFileName);
-                TagViewLoader.SaveTagsToFile(viewPath, view);
-            }
+            UpdateView(domain, parentTag);
+            UpdateView(domain, targetTag);
 
             _tagMoveService.Move(domain, selectedTag, newTag);
 
@@ -168,24 +144,15 @@
                 Directory.Delete(folder);
             }
 
-            // update parent tag view
-            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(parentTag, ViewFileName)))
-            {
-                TagView view = BuildView(domain, parentTag);
-                var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
-                TagViewLoader.SaveTagsToFile(viewPath, view);
-            }
+            UpdateView(domain, parentTag);
 
             return ErrorCode.Ok;
         }
 
         public ErrorCode SwapTags(string domain, string parentTag, string tagName, string targetTagName)
         {
-            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(parentTag, ViewFileName)))
+            var status = UpdateView(domain, parentTag, view =>
             {
-                string rootFolder = _domainOptions.Find(domain).RootFolder;
-                TagView view = BuildView(domain, parentTag);
-
                 var tags = view.Tags.ToList();
                 var index = tags.FindIndex(t => t.Tag == tagName);
                 var targetIndex = tags.FindIndex(t => t.Tag == targetTagName);
@@ -206,11 +173,10 @@
                 for (int i = 0; i < tags.Count; i++)
                     tags[i].Order = i + 1;
 
-                var viewPath = Path.Combine(rootFolder, parentTag, ViewFileName);
-                TagViewLoader.SaveTagsToFile(viewPath, view);
-            }
+                return ErrorCode.Ok;
+            });
 
-            return ErrorCode.Ok;
+            return status;
         }
 
         private TagView BuildView(string domain, string path)
@@ -218,23 +184,43 @@
             // load directory tags
             var tree = BuildTree(domain, path, recursive: false, level: 0);
 
-            var list = new List<TagView.Node>();
+            // build view
+            var list = tree.Select((node, index) => new Node { Tag = node.Tag, Order = index + 1 }).ToList();
 
-            // reorder directory tags
-            int order = 0;
-            foreach (var node in tree)
-                list.Add(new TagView.Node { Tag = node.Tag, Order = ++order });
+            return new TagView { Tags = list };
+        }
 
-            // reorder directory child tags
-            foreach (var node in tree)
+        private TagView LoadView(string domain, string path)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+
+            using (_lockManager.Read(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
             {
-                order = 0;
-                foreach (var child in node.Children)
-                    list.Add(new TagView.Node { Tag = child.Tag, Order = ++order });
+                var viewPath = Path.Combine(rootFolder, path, ViewFileName);
+                return TagViewLoader.LoadTagsFromFile(viewPath);
+            }
+        }
+
+        private ErrorCode UpdateView(string domain, string path, Func<TagView, ErrorCode> modifyView = null)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+            var status = ErrorCode.Ok;
+
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
+            {
+                TagView view = BuildView(domain, path);
+
+                if (modifyView != null)
+                    status = modifyView(view);
+
+                if (status != ErrorCode.Ok)
+                    return status;
+
+                var viewPath = Path.Combine(rootFolder, path, ViewFileName);
+                TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 
-            var view = new TagView { Tags = list };
-            return view;
+            return ErrorCode.Ok;
         }
     }
 }
