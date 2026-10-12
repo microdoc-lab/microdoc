@@ -55,7 +55,6 @@
 }
 
 Domain.prototype.behaviors = [];
-
 Domain.prototype.InitBehaviors = function () {
     // Run initialization
     for (const init of this.behaviors) {
@@ -63,11 +62,27 @@ Domain.prototype.InitBehaviors = function () {
     }
 }
 
+Domain.prototype.PublishChanges = function (changes) {
+    for (const change of changes) {
+        // translate domain events
+        if (change.domain) {
+            var explorerId = this.ExplorerId(change.domain);
+            var element = document.getElementById(explorerId);
+            if (element)
+                element.explorer.ApplyChanges(change);
+        }
+    }
+}
+
 // Api
+Domain.prototype.ExplorerId = function (domain) {
+    return "explorer" + domain.replaceAll(".", "_").replaceAll(" ", "_");;
+}
+
 Domain.prototype.OpenExplorer = function (domain, selectedTag) {
 
     // translate domain into explorerId
-    var explorerId = "explorer" + domain.replaceAll(".", "_").replaceAll(" ", "_");
+    var explorerId = this.ExplorerId(domain);
 
     // if explorer already opened and not visible - activate it
     var element = document.getElementById(explorerId);

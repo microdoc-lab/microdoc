@@ -22,6 +22,41 @@
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitNavigation);
 
+DocMatrix.prototype.HandleSwapTags = function (change) {
+    if (change.op != "SwapTags")
+        return;
+
+    if (this.selectedTag != change.path)
+        return;
+
+    var sender = this.element.querySelector(`.grid tr[data-tag=${change.tag}]`);
+    var target = this.element.querySelector(`.grid tr[data-tag=${change.targetTag}]`);
+
+    if (!sender)
+        return;
+
+    if (!target)
+        return;
+
+    // Reorder DOM
+    const parentList = sender.parentElement;
+    const nodes = Array.from(parentList.children);
+    const draggedIndex = nodes.indexOf(sender);
+    const targetIndex = nodes.indexOf(target);
+
+    if (draggedIndex === -1 || targetIndex === -1) return;
+
+    if (draggedIndex >= targetIndex) {  // Insert before target                    
+        parentList.insertBefore(sender, target);
+    } else if (target.nextSibling) {    // Insert after target                    
+        parentList.insertBefore(sender, target.nextSibling);
+    } else {                            // Insert last                    
+        parentList.appendChild(sender);
+    }
+}
+
+DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleSwapTags);
+
 // Api
 DocMatrix.prototype.MoveTagUp = function () {
     if (!this.selectedTag)

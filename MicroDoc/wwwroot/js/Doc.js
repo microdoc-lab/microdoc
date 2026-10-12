@@ -19,11 +19,17 @@
 }
 
 Doc.prototype.behaviors = [];
-
 Doc.prototype.InitBehaviors = function () {
     // Run initialization
     for (const init of this.behaviors) {
         init.call(this, this.options);
+    }
+}
+
+Doc.prototype.changeHandlers = [];
+Doc.prototype.ApplyChanges = function (change) {
+    for (const handler of this.changeHandlers) {
+        handler.call(this, change);
     }
 }
 

@@ -116,13 +116,18 @@ namespace MicroDoc.Controllers
             if (!IsInRole(domain, "w"))
                 return Forbid();
 
+            path = path ?? string.Empty;
+
             var status = LoggingHelper.Execute(_logger, nameof(ReorderTagsBatch), new { domain, path, tag, targetTag }, () =>
                 _tagService.ReorderTagsBatch(domain, path, tag, targetTag));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Ok();
+            return Json(new 
+            { 
+                changes = new[] { new { op = "SwapTags", domain, path, tag, targetTag } }
+            });
         }
 
         #endregion

@@ -19,12 +19,23 @@
 }
 
 Explorer.prototype.behaviors = [];
-
 Explorer.prototype.InitBehaviors = function () {
     // Run initialization
     for (const init of this.behaviors) {
         init.call(this, this.options);
     }
+}
+
+Explorer.prototype.changeHandlers = [];
+Explorer.prototype.ApplyChanges = function (change) {
+    for (const handler of this.changeHandlers) {
+        handler.call(this, change);
+    }
+
+    this.tagTree().ApplyChanges(change);
+    this.docMatrix().ApplyChanges(change);
+    for (const docElement of this.element.querySelectorAll(".overlay .doc"))
+        docElement.doc.ApplyChanges(change);
 }
 
 // Api

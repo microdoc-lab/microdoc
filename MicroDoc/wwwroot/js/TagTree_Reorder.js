@@ -36,31 +36,46 @@
                 return;
             }
 
-            // Reorder DOM
-            const parentList = draggedNode.closest(".tag-list");
-            const nodes = Array.from(parentList.children);
-            const draggedIndex = nodes.indexOf(sender);
-            const targetIndex = nodes.indexOf(target);
+            var data = await response.json();
 
-            if (draggedIndex === -1 || targetIndex === -1) return;
-
-            if (draggedIndex >= targetIndex) {  // Insert before target                    
-                parentList.insertBefore(sender, target);
-            } else if (target.nextSibling) {    // Insert after target                    
-                parentList.insertBefore(sender, target.nextSibling);
-            } else {                            // Insert last                    
-                parentList.appendChild(sender);
-            }
-
-            // reload docMatrix
-            var explorerElement = this.element.closest(".explorer");
-            if (explorerElement)
-                explorerElement.explorer.docMatrix().Reload();
+            window.domain.PublishChanges(data.changes);
         });
     });
 }
 
 TagTree.prototype.behaviors.push(TagTree.prototype.InitDragNDropReorder);
+
+TagTree.prototype.HandleSwapTags = function(change) {
+    if (change.op != "SwapTags")
+        return;
+
+    var sender = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag=${change.tag}]`);
+    var target = this.element.querySelector(`.tag[data-path='${change.path}'][data-tag=${change.targetTag}]`);
+
+    if (!sender)
+        return;
+
+    if (!target)
+        return;
+
+    // Reorder DOM
+    const parentList = sender.closest(".tag-list");
+    const nodes = Array.from(parentList.children);
+    const draggedIndex = nodes.indexOf(sender);
+    const targetIndex = nodes.indexOf(target);
+
+    if (draggedIndex === -1 || targetIndex === -1) return;
+
+    if (draggedIndex >= targetIndex) {  // Insert before target                    
+        parentList.insertBefore(sender, target);
+    } else if (target.nextSibling) {    // Insert after target                    
+        parentList.insertBefore(sender, target.nextSibling);
+    } else {                            // Insert last                    
+        parentList.appendChild(sender);
+    }
+}
+
+TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleSwapTags);
 
 // Service methods
 TagTreeService.prototype.ReorderTagsBatch = function(domain, path, tag, targetTag) {
@@ -68,7 +83,7 @@ TagTreeService.prototype.ReorderTagsBatch = function(domain, path, tag, targetTa
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
-            path: path,
+            path: path ?? "",
             tag: tag,
             targetTag: targetTag
         })
