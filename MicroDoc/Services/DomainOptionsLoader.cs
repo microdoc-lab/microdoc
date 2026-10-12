@@ -4,8 +4,12 @@ namespace MicroDoc.Services
 {
     public static class DomainOptionsLoader
     {
+        public static string ContentRootPath { get; set; }
+
         public static DomainOptions LoadOptionsFromFile(string path)
         {
+            path = ResolvePath(path);
+
             if (!File.Exists(path))
                 return new();
 
@@ -17,6 +21,7 @@ namespace MicroDoc.Services
 
         public static string LoadOptionsAsText(string path)
         {
+            path = ResolvePath(path);
             var yaml = File.ReadAllText(path);
             return yaml;
         }
@@ -30,7 +35,21 @@ namespace MicroDoc.Services
 
         public static void SaveOptionsToFile(string path, string yaml)
         {
+            path = ResolvePath(path);
             File.WriteAllText(path, yaml);
+        }
+
+        private static string ResolvePath(string configuredPath)
+        {
+            string absolutePath = configuredPath;
+
+            if (configuredPath.StartsWith("~/"))
+            {
+                string relativePath = configuredPath.Substring(2);
+                absolutePath = Path.Combine(ContentRootPath, relativePath);
+            }
+
+            return absolutePath;
         }
     }
 }

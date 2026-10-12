@@ -6,6 +6,8 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+DomainOptionsLoader.ContentRootPath = builder.Environment.ContentRootPath;
+
 // Bind configuration
 builder.Services.Configure<MicroDocOptions>(
     builder.Configuration.GetSection("MicroDoc"));

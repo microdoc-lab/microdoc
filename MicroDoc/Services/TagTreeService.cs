@@ -96,6 +96,9 @@
             var (parentTag, name) = DocumentParser.SplitId(selectedTag);
             newTagId = DocumentParser.GetDocumentId(targetTag, name);
 
+            if (string.IsNullOrEmpty(selectedTag))
+                return ErrorCode.RootTag;
+
             if (targetTag.StartsWith(selectedTag + "/"))
                 return ErrorCode.MoveIntoNestedTag;
 
@@ -140,7 +143,7 @@
         public ErrorCode DeleteTag(string domain, string selectedTag)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            
+
             if (string.IsNullOrEmpty(selectedTag))
                 return ErrorCode.RootTag;
 
