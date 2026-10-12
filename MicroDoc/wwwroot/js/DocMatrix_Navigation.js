@@ -69,6 +69,24 @@ DocMatrix.prototype.HandleNewTag = function (change) {
 
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleNewTag);
 
+// HandleMoveTag
+DocMatrix.prototype.HandleMoveTag = function (change) {
+    if (change.op != "MoveTag")
+        return;
+
+    if (change.external) {
+        // reload docMatrix on currently selected tag (if change came from other user)
+        if (this.selectedTag == change.selectedTag)
+            this.Reload();
+    } else {
+        // reload docMatrix on moved tag (if change initiated by current user)
+        this.selectedTag = change.newTagId;
+        this.Reload();
+    }
+}
+
+DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleMoveTag);
+
 // Api
 DocMatrix.prototype.MoveTagUp = function () {
     if (!this.selectedTag)

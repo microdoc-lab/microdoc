@@ -71,9 +71,8 @@ namespace MicroDoc.Controllers
             return Json(new
             {
                 newTagId,
-                changes = new[] { new { op = nameof(NewTag), domain, selectedTag, newTagName } }
+                changes = new[] { new { op = nameof(NewTag), domain, selectedTag, newTagName, newTagId } }
             });
-
         }
 
         [HttpPost]
@@ -82,7 +81,10 @@ namespace MicroDoc.Controllers
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
-            
+
+            selectedTag = selectedTag ?? string.Empty;
+            targetTag = targetTag ?? string.Empty;
+
             string newTagId = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(MoveTag), new { domain, selectedTag, targetTag }, () =>
@@ -91,7 +93,11 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Content(newTagId);
+            return Json(new
+            {
+                newTagId,
+                changes = new[] { new { op = nameof(MoveTag), domain, selectedTag, targetTag, newTagId } }
+            });
         }
 
         [HttpPost]

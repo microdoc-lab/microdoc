@@ -62,6 +62,8 @@ TagTree.prototype.Load = async function (tagId) {
     tagTree.Search(searchText);
 }
 
+//#region NewTag
+
 TagTree.prototype.NewTag = async function () {
     var domain = this.domain;
     var selectedTag = this.selectedTag;
@@ -100,6 +102,10 @@ TagTree.prototype.HandleNewTag = async function (change) {
 
 TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleNewTag);
 
+//#endregion
+
+//#region MoveTag
+
 TagTree.prototype.MoveTag = async function () {
     var domain = this.domain;
     var selectedTag = this.selectedTag;
@@ -118,23 +124,37 @@ TagTree.prototype.MoveTag = async function () {
         return;
     }
 
-    var newTag = await response.text();
+    var data = await response.json();
+    window.domain.PublishChanges(data.changes);
+}
 
+TagTree.prototype.HandleMoveTag = async function (change) {
+    if (change.op != "MoveTag")
+        return;
+
+    var selectedTag = this.selectedTag;
     var explorerElement = this.element.closest(".explorer");
 
-    // reload tree and select moved tag
-    await this.Load(newTag);
+    if (change.external) {
+        // reload tree with currently selected tag (if change came from other user)
+        await this.Load(selectedTag);
 
-    // expand selectedTag
-    explorerElement.explorer.tagTree().ExpandTag(newTag);
+        if (selectedTag == change.selectedTag)
+            explorerElement.explorer.tagTree().ExpandTag(selectedTag);
+    }
+    else {
+        // reload tree and select moved tag (if change initiated by current user)
+        await this.Load(change.newTagId);
 
-    // reload docMatrix
-    if (explorerElement) {
-        var docMatrix = explorerElement.explorer.docMatrix();
-        docMatrix.selectedTag = newTag;
-        docMatrix.Reload();
+        explorerElement.explorer.tagTree().ExpandTag(change.newTagId);
     }
 }
+
+TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleMoveTag);
+
+//#endregion
+
+//#region DeleteTag
 
 TagTree.prototype.DeleteTag = async function () {
     var domain = this.domain;
@@ -169,6 +189,8 @@ TagTree.prototype.DeleteTag = async function () {
         docMatrix.Reload();
     }
 }
+
+//#endregion
 
 TagTree.prototype.TagPath = function (domain, tag) {
     var tags = tag.split('/');
