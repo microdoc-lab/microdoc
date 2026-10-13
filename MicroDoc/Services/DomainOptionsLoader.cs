@@ -49,9 +49,12 @@ namespace MicroDoc.Services
 
         private static string ResolvePath(string configuredPath)
         {
+            if (string.IsNullOrWhiteSpace(configuredPath))
+                return configuredPath;
+
             string absolutePath = configuredPath;
 
-            if (configuredPath.StartsWith("~/"))
+            if (configuredPath.StartsWith("~/") || configuredPath.StartsWith("~\\"))
             {
                 string relativePath = configuredPath.Substring(2);
                 absolutePath = Path.Combine(ContentRootPath, relativePath);
