@@ -16,6 +16,10 @@ namespace MicroDoc.Services
             var yaml = File.ReadAllText(path);
             var deserializer = new DeserializerBuilder().Build();
             var options = deserializer.Deserialize<DomainOptions>(yaml);
+
+            foreach (var domain in options.Domains)
+                domain.RootFolder = ResolvePath(domain.RootFolder);
+
             return options;
         }
 
