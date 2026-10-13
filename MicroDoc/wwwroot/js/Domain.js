@@ -128,6 +128,8 @@ Domain.prototype.ActivateExplorer = function(element) {
         other.parentElement.style.display = "none";
     });
 
+    document.querySelector(".landing-page").style.display = "none";
+
     element.parentElement.style.display = "flex";
 
     // toggle link
@@ -135,9 +137,27 @@ Domain.prototype.ActivateExplorer = function(element) {
         other.classList.remove("selected");
     });
 
+    document.querySelector(".landing-page-link").classList.remove("selected");
+
     document.querySelectorAll(`a.explorer-link[data-domain="${element.parentElement.domain}"]`).forEach(other => {
         other.classList.add("selected");
     });
+}
+
+Domain.prototype.ShowLandingPage = function () {
+    // hide explorers
+    document.querySelectorAll(".explorer").forEach(other => {
+        other.parentElement.style.display = "none";
+    });
+
+    document.querySelector(".landing-page").style.display = "block";
+
+    // toggle link
+    document.querySelectorAll("a.explorer-link").forEach(other => {
+        other.classList.remove("selected");
+    });
+
+    document.querySelector(".landing-page-link").classList.add("selected");    
 }
 
 // Service methods

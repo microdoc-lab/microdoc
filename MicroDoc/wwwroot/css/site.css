@@ -83,3 +83,14 @@ footer {
 .icon-button img {
     display: inline-block;
 }
+
+.navbar-brand {
+    padding-right: .5rem;
+    padding-left: .5rem;
+}
+
+.nav-item .nav-link img {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}

@@ -23,6 +23,7 @@
     
     <link rel="stylesheet" href="~/css/Domain.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/Domain_Options.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Domain_Features.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -30,7 +31,7 @@
 
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" href="" onclick='window.domain.ToggleDomainOptions(); return false;'>MicroDoc</a>
+                <a class="navbar-brand landing-page-link" href="" onclick='window.domain.ShowLandingPage(); return false;'>MicroDoc</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -42,6 +43,14 @@
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark explorer-link" href="" onclick='window.domain.OpenExplorer("@domain.Name"); return false;' data-domain="@domain.Name">@domain.Name</a>
+                        </li>
+                        }
+                        @if (User.IsInRole("a"))
+                        {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="" onclick='window.domain.ToggleDomainOptions(); return false;' title="Edit Domain Options">
+                                <img src="/icons/Settings.png">
+                            </a>
                         </li>
                         }
                     </ul>
