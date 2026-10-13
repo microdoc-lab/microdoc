@@ -47,9 +47,35 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "text/plain; charset=utf-8";
+
+        await context.Response.WriteAsync(
+            "An unexpected server error occurred.");
+
+        if (app.Environment.IsDevelopment())
+        {
+            var exception = context.Features
+                .Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()
+                ?.Error;
+            
+            if (exception != null) 
+            {
+                await context.Response.WriteAsync($"\n\n{exception.GetType().FullName}");
+                await context.Response.WriteAsync($"\n{exception.Message}");
+                await context.Response.WriteAsync($"\n{exception.StackTrace}");
+            }
+        }
+    });
+});
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }

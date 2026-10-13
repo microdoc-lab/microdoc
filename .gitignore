@@ -11,4 +11,5 @@ packages
 
 secrets
 appsettings.Development.json
+appsettings.Production.json
 DomainOptions.Development.ini
