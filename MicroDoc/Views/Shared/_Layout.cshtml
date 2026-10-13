@@ -89,6 +89,10 @@
     <script src="~/js/Domain.js" asp-append-version="true"></script>
     <script src="~/js/Domain_Options.js" asp-append-version="true"></script>
 
+    <script src="~/lib/signalr/signalr.js"></script>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
@@ -98,7 +102,39 @@
     <footer class="border-top footer text-muted">
         &copy; 2026 - MicroDoc - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </footer>
-    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script type="text/javascript">
+        (async function() {
+            // setup SignalR connection
+            const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/changeHub")
+            .withAutomaticReconnect()
+            .build();
+
+            // setup changes callback
+            connection.on("Changes", data => {
+                if (clientUID != data.clientUID)
+                {
+                    data.changes.forEach(change => change.external = true);
+                    window.domain.PublishChanges(data.changes);
+                }
+            });
+
+            // connect SignalR
+            await connection.start();
+        })();
+
+        async function apiFetch(url, options = {}) {
+            const headers = new Headers(options.headers);
+            headers.set("X-Client-UID", clientUID);
+
+            return fetch(url, {
+                ...options,
+                headers
+            });
+        }
+    </script>
+
 </body>
 </html>

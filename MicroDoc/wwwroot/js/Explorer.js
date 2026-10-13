@@ -64,5 +64,5 @@ Explorer.prototype.Load = async function (tagId) {
 function ExplorerService() { }
 
 ExplorerService.prototype.Explorer = function (clientId, domain, selectedTag) {
-    return fetch(`/Home/Explorer?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
+    return apiFetch(`/Home/Explorer?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
 }

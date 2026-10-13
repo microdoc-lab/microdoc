@@ -83,7 +83,7 @@ TagTree.prototype.SwapTags = function (parentTag, tagName, targetTagName) {
 
 // Service methods
 TagTreeService.prototype.SwapTags = function(domain, parentTag, tagName, targetTagName) {
-    return fetch("/Home/SwapTags", {
+    return apiFetch("/Home/SwapTags", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,

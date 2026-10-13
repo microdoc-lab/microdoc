@@ -1,3 +1,4 @@
+using MicroDoc.Controllers;
 using MicroDoc.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -25,6 +26,8 @@ builder.Services.AddSingleton<TagMoveService>();
 builder.Services.AddControllersWithViews()
     .AddRazorRuntimeCompilation()
 ;
+
+builder.Services.AddSignalR();
 
 // Add authentication
 builder.Services.AddAuthentication(options =>
@@ -91,6 +94,16 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<ChangeHub>("/changeHub");
+
+app.Use(async (context, next) =>
+{
+    context.Items["ClientUID"] =
+        context.Request.Headers["X-Client-UID"].ToString();
+
+    await next();
+});
 
 // Run UpdateDomainBackgroundVersions
 app.Services.GetRequiredService<DocService>().UpdateDomainBackgroundVersions();

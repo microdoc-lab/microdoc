@@ -144,11 +144,11 @@ Domain.prototype.ActivateExplorer = function(element) {
 function DomainService() { }
 
 DomainService.prototype.LoadDomainOptions = function () {
-    return fetch("/Home/LoadDomainOptions");
+    return apiFetch("/Home/LoadDomainOptions");
 }
 
 DomainService.prototype.SaveDomainOptions = function (yaml) {
-    return fetch("/Home/SaveDomainOptions", {
+    return apiFetch("/Home/SaveDomainOptions", {
         method: "POST",
         body: new URLSearchParams({
             yaml: yaml

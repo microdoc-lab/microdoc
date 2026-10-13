@@ -89,7 +89,7 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
 function TagTreeService() { }
 
 TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
-    return fetch("/Home/NewTag", {
+    return apiFetch("/Home/NewTag", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
@@ -100,7 +100,7 @@ TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
 }
 
 TagTreeService.prototype.MoveTag = function (domain, selectedTag, targetTag) {
-    return fetch("/Home/MoveTag", {
+    return apiFetch("/Home/MoveTag", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
@@ -112,7 +112,7 @@ TagTreeService.prototype.MoveTag = function (domain, selectedTag, targetTag) {
 
 
 TagTreeService.prototype.DeleteTag = function (domain, selectedTag) {
-    return fetch("/Home/DeleteTag", {
+    return apiFetch("/Home/DeleteTag", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
@@ -122,5 +122,5 @@ TagTreeService.prototype.DeleteTag = function (domain, selectedTag) {
 }
 
 TagTreeService.prototype.TagTree = function (clientId, domain, selectedTag) {
-    return fetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
+    return apiFetch(`/Home/TagTree?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
 }

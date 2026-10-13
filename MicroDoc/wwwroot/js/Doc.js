@@ -46,7 +46,7 @@ Doc.prototype.txtEditor = function () { return this.element.querySelector(".edit
 function DocService() { }
 
 DocService.prototype.SaveDocument = function (domain, documentId, content) {
-    return fetch("/Home/SaveDocument", {
+    return apiFetch("/Home/SaveDocument", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
@@ -57,7 +57,7 @@ DocService.prototype.SaveDocument = function (domain, documentId, content) {
 }
 
 DocService.prototype.DeleteDocument = function (domain, documentId) {
-    return fetch("/Home/DeleteDocument", {
+    return apiFetch("/Home/DeleteDocument", {
         method: "POST",
         body: new URLSearchParams({
             domain: domain,
@@ -73,7 +73,7 @@ DocService.prototype.UploadImage = function (domain, documentId, imageName, imag
     formData.append("imageName", imageName);
     formData.append("image", image);
 
-    return fetch("/Home/UploadImage", {
+    return apiFetch("/Home/UploadImage", {
         method: "POST",
         body: formData
     });

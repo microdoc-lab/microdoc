@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using YamlDotNet.Core;
 
 namespace MicroDoc.Controllers
 {
@@ -18,8 +20,12 @@ namespace MicroDoc.Controllers
         private readonly TagService _tagService;
         private readonly DocService _docService;
         private readonly TagMoveService _tagMoveService;
+        private readonly IHubContext<ChangeHub> _changeHub;
 
-        public HomeController(ILogger<HomeController> logger, IOptions<MicroDocOptions> microDocOptions, DomainOptions domainOptions, TagService tagService, DocService docService, TagMoveService tagMoveService)
+        public HomeController(ILogger<HomeController> logger, 
+            IOptions<MicroDocOptions> microDocOptions, DomainOptions domainOptions, 
+            TagService tagService, DocService docService, TagMoveService tagMoveService, 
+            IHubContext<ChangeHub> changeHub)
         {
             _logger = logger;
             _microDocOptions = microDocOptions;
@@ -27,7 +33,10 @@ namespace MicroDoc.Controllers
             _tagService = tagService;
             _docService = docService;
             _tagMoveService = tagMoveService;
+            _changeHub = changeHub;
         }
+
+        private string ClientUID => HttpContext.Items["ClientUID"]?.ToString();
 
         #region TagTree
 
@@ -53,7 +62,7 @@ namespace MicroDoc.Controllers
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult NewTag(string domain, string selectedTag, string newTagName)
+        public async Task<IActionResult> NewTag(string domain, string selectedTag, string newTagName)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
@@ -68,16 +77,21 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Json(new
+            var result = new
             {
+                ClientUID,
                 newTag,
-                changes = new[] { new { op = nameof(NewTag), domain, selectedTag, newTagName, newTag } }
-            });
+                changes = new[] { new { op = nameof(NewTag), domain, selectedTag, newTagName, newTag } },
+            };
+
+            await _changeHub.Clients.All.SendAsync("Changes", result);
+
+            return Json(result);
         }
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult MoveTag(string domain, string selectedTag, string targetTag)
+        public async Task<IActionResult> MoveTag(string domain, string selectedTag, string targetTag)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
@@ -89,20 +103,25 @@ namespace MicroDoc.Controllers
 
             var status = LoggingHelper.Execute(_logger, nameof(MoveTag), new { domain, selectedTag, targetTag }, () =>
                 _tagService.MoveTag(domain, selectedTag, targetTag, out newTag));
-                
+
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Json(new
+            var result = new
             {
+                ClientUID,
                 newTag,
-                changes = new[] { new { op = nameof(MoveTag), domain, selectedTag, targetTag, newTag } }
-            });
+                changes = new[] { new { op = nameof(MoveTag), domain, selectedTag, targetTag, newTag } },
+            };
+
+            await _changeHub.Clients.All.SendAsync("Changes", result);
+
+            return Json(result);
         }
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult DeleteTag(string domain, string selectedTag)
+        public async Task<IActionResult> DeleteTag(string domain, string selectedTag)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
@@ -125,15 +144,20 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Json(new
+            var result = new
             {
-                changes = new[] { new { op = nameof(DeleteTag), domain, selectedTag, parentTag } }
-            });
+                ClientUID,
+                changes = new[] { new { op = nameof(DeleteTag), domain, selectedTag, parentTag } },
+            };
+            
+            await _changeHub.Clients.All.SendAsync("Changes", result);
+
+            return Json(result);
         }
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult SwapTags(string domain, string parentTag, string tagName, string targetTagName)
+        public async Task<IActionResult> SwapTags(string domain, string parentTag, string tagName, string targetTagName)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
@@ -146,10 +170,15 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Json(new 
-            { 
-                changes = new[] { new { op = nameof(SwapTags), domain, parentTag, tagName, targetTagName } }
-            });
+            var result = new
+            {
+                ClientUID,
+                changes = new[] { new { op = nameof(SwapTags), domain, parentTag, tagName, targetTagName } },
+            };
+
+            await _changeHub.Clients.All.SendAsync("Changes", result);
+
+            return Json(result);
         }
 
         #endregion
@@ -248,7 +277,7 @@ namespace MicroDoc.Controllers
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult SaveDocument(string domain, string documentId, string content)
+        public async Task<IActionResult> SaveDocument(string domain, string documentId, string content)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
@@ -263,15 +292,20 @@ namespace MicroDoc.Controllers
 
             var html = new Markup(_docService, domain, documentId).ToHtml(content);
 
-            return Json(new
+            var result = new
             {
-                changes = new[] { new { op = nameof(SaveDocument), domain, documentId, content, html } }
-            });
+                ClientUID,
+                changes = new[] { new { op = nameof(SaveDocument), domain, documentId, content, html } },
+            };
+
+            await _changeHub.Clients.All.SendAsync("Changes", result);
+
+            return Json(result);
         }
 
         [HttpPost]
         [Authorize(Roles = "w")]
-        public IActionResult DeleteDocument(string domain, string documentId)
+        public async Task<IActionResult> DeleteDocument(string domain, string documentId)
         {
             if (!IsInRole(domain, "w"))
                 return Forbid();
@@ -282,10 +316,15 @@ namespace MicroDoc.Controllers
             if (status != ErrorCode.Ok)
                 return Error(status);
 
-            return Json(new
+            var result = new
             {
-                changes = new[] { new { op = nameof(DeleteDocument), domain, documentId } }
-            });
+                ClientUID,
+                changes = new[] { new { op = nameof(DeleteDocument), domain, documentId } },
+            };
+
+            await _changeHub.Clients.All.SendAsync("Changes", result);
+
+            return Json(result);
         }
 
         #endregion
