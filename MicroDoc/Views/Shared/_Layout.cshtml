@@ -124,16 +124,6 @@
             // connect SignalR
             await connection.start();
         })();
-
-        async function apiFetch(url, options = {}) {
-            const headers = new Headers(options.headers);
-            headers.set("X-Client-UID", clientUID);
-
-            return fetch(url, {
-                ...options,
-                headers
-            });
-        }
     </script>
 
 </body>

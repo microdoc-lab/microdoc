@@ -20,3 +20,20 @@ function ReplaceInnerHtml(element, html) {
     element.innerHTML = html;
     RecreateScripts(element);
 }
+
+// setup unique clientId
+const clientUID = crypto.randomUUID();
+
+async function apiFetch(url, options = {}) {
+    const headers = new Headers(options.headers);
+    headers.set("X-Client-UID", clientUID);
+
+    return fetch(url, {
+        ...options,
+        headers
+    });
+}
+
+document.addEventListener("click", event => {
+    // alert(event.target);
+});

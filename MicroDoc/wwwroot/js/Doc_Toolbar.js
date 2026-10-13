@@ -109,8 +109,10 @@
         if (!docElement)
             return;
 
+        var txtEditor = docElement.doc.txtEditor();
+
         var mode = docElement.getAttribute("mode")
-        if (mode == "edit" && isInRole(domain, "w"))
+        if (mode == "edit" && isInRole(domain, "w") && txtEditor.value != docElement.dataset.content)
             await docElement.doc.SaveDocument();
 
         docElement.doc.CloseDocument();
@@ -148,35 +150,24 @@ Doc.prototype.ToggleMode = async function () {
 
         docElement.setAttribute("mode", "edit");
 
+        toggleButtonImage.src = "/icons/View.png";
+
         txtEditor.AdjustHeight(txtEditor);
 
         txtEditor.SelectAndScroll(headingIndex);
-
-        toggleButtonImage.src = "/icons/View.png";
     }
 
     if (mode == "edit") {
         const headingIndex = txtEditor.getHeadingIndexAtCursor(txtEditor);
 
         docElement.setAttribute("mode", "view");
+        toggleButtonImage.src = "/icons/Edit.png";
 
-        if (isInRole(this.domain, "w"))
+        if (isInRole(this.domain, "w") && txtEditor.value != docElement.dataset.content)
             await this.SaveDocument();
 
         docViewer.SelectAndScroll(headingIndex);
-
-        toggleButtonImage.src = "/icons/Edit.png";
     }
 
     docElement.doc.PositionToolbar();
-}
-
-Doc.prototype.UpdateDocument = function (doc) {
-    var docElement = this.element;
-    var docViewer = this.docViewer();
-    var txtEditor = this.txtEditor();
-
-    docElement.dataset.content = doc.content;
-    docViewer.innerHTML = doc.html;
-    txtEditor.value = doc.content;  // doc.external will overwrite user changes
 }

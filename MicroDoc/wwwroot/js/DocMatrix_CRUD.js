@@ -7,8 +7,49 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
             var docElement = this.docElement(change.domain, change.documentId);
             var docInCell = this.docInCell(change.domain, change.documentId);
 
-            if (docElement)
-                docElement.doc.UpdateDocument(change);
+            if (docElement) {
+                var docViewer = docElement.doc.docViewer();
+                var txtEditor = docElement.doc.txtEditor();
+                var mode = docElement.getAttribute("mode");
+
+                const headingIndexView = docViewer.getSelectedHeadingIndex(docViewer);
+                const headingIndexEdit = txtEditor.getHeadingIndexAtCursor(txtEditor);
+
+                if (change.external) {
+                    if (mode == "edit") {   // external edit
+                        if (confirm(`Document ${change.domain}: ${change.documentId} was changed by another user. Reload?`)) {
+                            docElement.dataset.content = change.content;
+                            docViewer.innerHTML = change.html;
+                            txtEditor.value = change.content;
+
+                            txtEditor.AdjustHeight(txtEditor);
+                            txtEditor.SelectAndScroll(headingIndexEdit);
+                        }
+                        else {
+                            docElement.dataset.content = change.content;
+                            docViewer.innerHTML = change.html;
+                        }
+                    } else {                // external view
+                        docElement.dataset.content = change.content;
+                        docViewer.innerHTML = change.html;
+                        txtEditor.value = change.content;
+
+                        docViewer.SelectAndScroll(headingIndexView);
+                    }
+                } else {
+                    if (mode == "edit") {   // local edit
+                        docElement.dataset.content = change.content;
+                        docViewer.innerHTML = change.html;
+                        txtEditor.value = change.content;
+
+                        txtEditor.AdjustHeight(txtEditor);
+                    } else {                // local view
+                        docElement.dataset.content = change.content;
+                        docViewer.innerHTML = change.html;
+                        txtEditor.value = change.content;
+                    }
+                }
+            }
 
             if (docInCell)
                 this.UpdateDocumentInCell(docInCell, change);
@@ -20,9 +61,18 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
         case "DeleteDocument":
             var docElement = this.docElement(change.domain, change.documentId);
             var docInCell = this.docInCell(change.domain, change.documentId);
+            var mode = docElement.getAttribute("mode");
 
-            if (docElement)
-                docElement.doc.CloseDocument();
+            if (docElement) {
+                if (mode == "edit" && change.external) {
+                    if (confirm(`Document ${change.domain}: ${change.documentId} was deleted by another user. Close opened editor?`))
+                        docElement.doc.CloseDocument();
+                    else
+                        docElement.dataset.content = "";
+                }
+                else
+                    docElement.doc.CloseDocument();
+            }
 
             if (docInCell)
                 this.DeleteDocumentInCell(docInCell);
@@ -67,7 +117,7 @@ DocMatrix.prototype.DeleteDocumentInCell = function(docInCell) {
     }
     else {
         // clear single-document cell
-        docInCell.dataset.content = null;
-        docInCell.innerHTML = null;
+        docInCell.dataset.content = "";
+        docInCell.innerHTML = "";
     }
 }

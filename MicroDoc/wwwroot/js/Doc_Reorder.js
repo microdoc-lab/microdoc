@@ -44,7 +44,7 @@
         }
     });
 
-    var grip = this.element;
+    var grip = this.element.querySelector(".label");
     grip.draggable = true;
 
     grip.addEventListener("dragstart", e => {
