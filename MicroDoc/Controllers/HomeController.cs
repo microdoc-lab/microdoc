@@ -99,10 +99,11 @@ namespace MicroDoc.Controllers
             selectedTag = selectedTag ?? string.Empty;
             targetTag = targetTag ?? string.Empty;
 
+            string parentTag = null;
             string newTag = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(MoveTag), new { domain, selectedTag, targetTag }, () =>
-                _tagService.MoveTag(domain, selectedTag, targetTag, out newTag));
+                _tagService.MoveTag(domain, selectedTag, targetTag, out parentTag, out newTag));
 
             if (status != ErrorCode.Ok)
                 return Error(status);
@@ -111,7 +112,7 @@ namespace MicroDoc.Controllers
             {
                 ClientUID,
                 newTag,
-                changes = new[] { new { op = nameof(MoveTag), domain, selectedTag, targetTag, newTag } },
+                changes = new[] { new { op = nameof(MoveTag), domain, selectedTag, targetTag, parentTag, newTag } },
             };
 
             await _changeHub.Clients.All.SendAsync("Changes", result);

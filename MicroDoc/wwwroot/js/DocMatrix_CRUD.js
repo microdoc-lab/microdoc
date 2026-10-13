@@ -11,26 +11,27 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
                 var docViewer = docElement.doc.docViewer();
                 var txtEditor = docElement.doc.txtEditor();
                 var mode = docElement.getAttribute("mode");
+                var isFocusedEditor = txtEditor == document.activeElement;
 
                 const headingIndexView = docViewer.getSelectedHeadingIndex(docViewer);
                 const headingIndexEdit = txtEditor.getHeadingIndexAtCursor(txtEditor);
 
                 if (change.external) {
-                    if (mode == "edit") {   // external edit
+                    if (mode == "edit") {                                       // external edit
                         if (confirm(`Document ${change.domain}: ${change.documentId} was changed by another user. Reload?`)) {
-                            docElement.dataset.content = change.content;
+                            docElement.dataset.content = change.content;        // confirmed - update document in editor, focus if was focused
                             docViewer.innerHTML = change.html;
                             txtEditor.value = change.content;
 
                             txtEditor.AdjustHeight(txtEditor);
-                            txtEditor.SelectAndScroll(headingIndexEdit);
+                            txtEditor.SelectAndScroll(headingIndexEdit, isFocusedEditor);
                         }
                         else {
-                            docElement.dataset.content = change.content;
+                            docElement.dataset.content = change.content;        // not confirmed - update content
                             docViewer.innerHTML = change.html;
                         }
                     } else {                // external view
-                        docElement.dataset.content = change.content;
+                        docElement.dataset.content = change.content;            // update viewer
                         docViewer.innerHTML = change.html;
                         txtEditor.value = change.content;
 
@@ -38,13 +39,13 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
                     }
                 } else {
                     if (mode == "edit") {   // local edit
-                        docElement.dataset.content = change.content;
+                        docElement.dataset.content = change.content;            // update editor, no focus logic (in toggle)
                         docViewer.innerHTML = change.html;
                         txtEditor.value = change.content;
 
                         txtEditor.AdjustHeight(txtEditor);
                     } else {                // local view
-                        docElement.dataset.content = change.content;
+                        docElement.dataset.content = change.content;            // update viewer, no focus logic (in toggle)
                         docViewer.innerHTML = change.html;
                         txtEditor.value = change.content;
                     }
@@ -66,9 +67,9 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
             if (docElement) {
                 if (mode == "edit" && change.external) {
                     if (confirm(`Document ${change.domain}: ${change.documentId} was deleted by another user. Close opened editor?`))
-                        docElement.doc.CloseDocument();
+                        docElement.doc.CloseDocument();     // confirmed delete - close document
                     else
-                        docElement.dataset.content = "";
+                        docElement.dataset.content = "";    // not confirmed - remain opened, reset content, can be re-saved
                 }
                 else
                     docElement.doc.CloseDocument();

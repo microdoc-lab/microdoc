@@ -70,7 +70,7 @@
     txtEditor.AdjustHeight(txtEditor);
 
     // select heading line and scroll it into view
-    txtEditor.SelectAndScroll = function (headingIndex) {
+    txtEditor.SelectAndScroll = function (headingIndex, focus = true) {
         // move cursor to clicked Header position
         if (headingIndex >= 0) {
             // determine cursor position of heading; move cursor to this position
@@ -88,8 +88,10 @@
         scrollCursorToTop(txtEditor);
 
         // focus textEditor
-        txtEditor.blur();
-        txtEditor.focus();
+        if (focus) {
+            txtEditor.blur();
+            txtEditor.focus();
+        }
 
         function getHeadingCursorPosition(textarea, headingIndex) {
             const text = textarea.value;

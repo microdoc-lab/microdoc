@@ -78,11 +78,11 @@ namespace MicroDoc.Services
             return ErrorCode.Ok;
         }
 
-        public ErrorCode MoveTag(string domain, string selectedTag, string targetTag, out string newTag)
+        public ErrorCode MoveTag(string domain, string selectedTag, string targetTag, out string parentTag, out string newTag)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
 
-            var (parentTag, name) = DocumentParser.SplitId(selectedTag);
+            (parentTag, var name) = DocumentParser.SplitId(selectedTag);
             newTag = DocumentParser.GetDocumentId(targetTag, name);
 
             if (string.IsNullOrEmpty(selectedTag))

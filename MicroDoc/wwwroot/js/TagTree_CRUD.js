@@ -7,21 +7,24 @@ TagTree.prototype.HandleCRUD = async function (change) {
             if (change.external)
                 await this.Load(selectedTag);
             else
-                await this.Load(selectedTag, selectedTag);
+                await this.Load(selectedTag, selectedTag);              // reload tree, expand selected tag (to see newly created tag in it)
             break;
 
         case "MoveTag":
             if (change.external)
-                await this.Load(selectedTag);
+                if (selectedTag == change.selectedTag)
+                    await this.Load(change.parentTag);                  // if selected tag is a moved tag - switch tree to parent tag (to see tag gone)
+                if (selectedTag == change.targetTag || selectedTag == change.parentTag)
+                    await this.Load(selectedTag);                       // if selected tag is target/parent - reload tree (to see tag gone)
             else
-                await this.Load(change.newTag, change.newTag);
+                await this.Load(change.newTag, change.newTag);          // switch tree to moved tag, expand moved tag
             break;
 
         case "DeleteTag":
             if (selectedTag != change.selectedTag)
                 await this.Load(selectedTag);
             else
-                await this.Load(change.parentTag, change.parentTag);
+                await this.Load(change.parentTag, change.parentTag);    // if selected tag is deleting tag - switch tree to parent tag, expand parent tag
             break;
     }
 }
