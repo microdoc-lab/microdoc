@@ -40,8 +40,6 @@ TagTree.prototype.NewTag = async function () {
     var tagPath = this.TagPath(domain, selectedTag);
 
     var newTagName = prompt(`Create new Tag in ${tagPath}? Enter new tag name`);
-    if (!newTagName || !newTagName.trim())
-        return;
 
     if (!this.IsValidTagName(newTagName)) {
         alert("Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed");
@@ -68,8 +66,6 @@ TagTree.prototype.MoveTag = async function () {
     var tagPath = this.TagPath(domain, selectedTag);
 
     var targetTag = prompt(`Move Tag ${tagPath}? Enter target tag name`);
-    if (!targetTag || !targetTag.trim())
-        return;
 
     if (!this.IsValidTag(targetTag)) {
         alert("Invalid tag. Only symbols, digits, underscore, hyphen, space (/ separated) allowed");

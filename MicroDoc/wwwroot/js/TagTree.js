@@ -39,6 +39,12 @@ TagTree.prototype.IsValidTagName = function (name) {
 }
 
 TagTree.prototype.IsValidTag = function (tag) {
+    if (tag == null)
+        return false;
+
+    if (tag.trim() == "")   // root tag
+        return true;
+
     return tag.split('/').every(part =>
         /^[\p{L}\p{N}_\- ]+$/u.test(part)
     );
