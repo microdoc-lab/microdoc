@@ -17,20 +17,6 @@ namespace MicroDoc.Services
 
             var identity = new ClaimsIdentity();
 
-            {   // global permissions
-                var user = domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
-                    ?? domainOptions.Users.FirstOrDefault(u => u.Email == "*");
-
-                if (user != null)
-                {
-                    foreach (var role in (user.Roles ?? "").Select(r => r.ToString()))
-                    {
-                        if (!principal.IsInRole(role))
-                            identity.AddClaim(new Claim(ClaimTypes.Role, role));
-                    }
-                }
-            }
-
             // domain permissions
             foreach (var domain in domainOptions.Domains)
             {
@@ -41,6 +27,11 @@ namespace MicroDoc.Services
                 {
                     foreach (var role in user.Roles.Select(r => r.ToString()))
                     {
+                        // global role
+                        if (!principal.IsInRole(role))
+                            identity.AddClaim(new Claim(ClaimTypes.Role, role));
+
+                        // domain role
                         if (!principal.IsInRole(domain.Name + ":" + role))
                             identity.AddClaim(new Claim(ClaimTypes.Role, domain.Name + ":" + role));
                     }

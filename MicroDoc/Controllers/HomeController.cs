@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Security.Claims;
-using YamlDotNet.Core;
 
 namespace MicroDoc.Controllers
 {
@@ -463,7 +462,6 @@ namespace MicroDoc.Controllers
 
                 // Update singleton in container
                 _domainOptions.Domains = domainOptions.Domains;
-                _domainOptions.Users = domainOptions.Users;
 
                 _docService.UpdateDomainBackgroundVersions();
 
@@ -512,8 +510,8 @@ namespace MicroDoc.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(email))
                 {
-                    var user = _domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
-                        ?? _domainOptions.Users.FirstOrDefault(u => u.Email == "*");
+                    var user = _domainOptions.Domains.SelectMany(d => d.Users).FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
+                        ?? _domainOptions.Domains.SelectMany(d => d.Users).FirstOrDefault(u => u.Email == "*");
 
                     if (user == null)
                         return BadRequest(new { error = "Unknown user email" });

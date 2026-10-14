@@ -33,8 +33,6 @@ namespace MicroDoc.Services
             public string Roles { get; set; } = "";
         }
 
-        public List<UserAccess> Users { get; set; } = new();
-
         public bool SimpleLogin { get; set; }
 
         public Domain Find(string name) => Domains.First(d => d.Name == name);
