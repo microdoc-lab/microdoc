@@ -12,4 +12,9 @@
     <PackageReference Include="YamlDotNet" Version="16.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="appsettings.Development.json" CopyToPublishDirectory="Never" />
+    <Content Include="DomainOptions.ini" CopyToPublishDirectory="PreserveNewest" />
+  </ItemGroup>
+  
 </Project>

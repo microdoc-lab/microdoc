@@ -10,6 +10,10 @@ obj
 packages
 
 secrets
+microdoc.exe
+microdoc.zip
+microdoc.doc
+test.doc
+
 appsettings.Development.json
-appsettings.Production.json
 DomainOptions.Development.ini
