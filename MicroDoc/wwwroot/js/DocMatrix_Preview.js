@@ -138,6 +138,9 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
         if (currentMode == "edit")
             docElement.doc.txtEditor().SelectAndScroll(headingIndex);
 
+        // switch view to edit
+        if (currentMode == "view" && mode == "edit")
+            docElement.doc.ToggleMode();
         return false;
     }
 
