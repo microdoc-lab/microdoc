@@ -34,6 +34,24 @@ async function apiFetch(url, options = {}) {
     });
 }
 
-document.addEventListener("click", event => {
-    // alert(event.target);
-});
+async function SimpleLogin() {
+    const email = prompt("Enter user email");
+
+    if (email === null || email.trim() === "")
+        return;
+
+    const response = await apiFetch("/Home/SimpleLogin", {
+        method: "POST",
+        body: new URLSearchParams({
+            email: email
+        })
+    });
+
+    if (!response.ok) {
+        const result = await response.json();
+        alert(result.error);
+        return login();
+    }
+
+    location.reload();
+}

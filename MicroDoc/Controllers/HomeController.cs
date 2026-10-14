@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Security.Claims;
 using YamlDotNet.Core;
 
 namespace MicroDoc.Controllers
@@ -481,24 +482,11 @@ namespace MicroDoc.Controllers
 
         private IActionResult Error(ErrorCode code) => NotFound($"{code}");
 
-        private bool IsInRole(string domain, string role) => User.IsInRole(domain + ":" + role);
 
         #region Misc
         public IActionResult Index()
         {
             return View();
-        }
-
-        public IActionResult Login()
-        {
-            return Challenge(new AuthenticationProperties { RedirectUri = "/" }, 
-                GoogleDefaults.AuthenticationScheme);
-        }
-
-        public IActionResult Logout()
-        {
-            return SignOut(new AuthenticationProperties { RedirectUri = "/" },
-                CookieAuthenticationDefaults.AuthenticationScheme);
         }
 
         public IActionResult Privacy()
@@ -511,6 +499,58 @@ namespace MicroDoc.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
+
+        #region Security
+
+        private bool IsInRole(string domain, string role) => User.IsInRole(domain + ":" + role);
+
+        [HttpPost]
+        public async Task<IActionResult> SimpleLogin(string email)
+        {
+            if (_domainOptions.SimpleLogin)
+            {
+                if (!string.IsNullOrWhiteSpace(email))
+                {
+                    var user = _domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
+                        ?? _domainOptions.Users.FirstOrDefault(u => u.Email == "*");
+
+                    if (user == null)
+                        return BadRequest(new { error = "Unknown user email" });
+
+                    var claims = new[]
+                    {
+                        new Claim(ClaimTypes.Name, email),
+                        new Claim(ClaimTypes.Email, email),
+                    };
+
+                    var identity = new ClaimsIdentity(
+                        claims,
+                        CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(identity));
+
+                    return Ok(new { success = true });
+                }
+            }
+
+            return BadRequest(new { error = "Simple login not supported" });
+        }
+
+        public IActionResult Login()
+        {
+            return Challenge(new AuthenticationProperties { RedirectUri = "/" },
+                GoogleDefaults.AuthenticationScheme);
+        }
+
+        public IActionResult Logout()
+        {
+            return SignOut(new AuthenticationProperties { RedirectUri = "/" },
+                CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+
         #endregion
     }
 }

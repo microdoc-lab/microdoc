@@ -18,9 +18,8 @@ namespace MicroDoc.Services
             var identity = new ClaimsIdentity();
 
             {   // global permissions
-                var user = domainOptions.Users.FirstOrDefault(
-                    u => string.Equals(
-                        u.Email, email, StringComparison.OrdinalIgnoreCase));
+                var user = domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
+                    ?? domainOptions.Users.FirstOrDefault(u => u.Email == "*");
 
                 if (user != null)
                 {
@@ -35,9 +34,8 @@ namespace MicroDoc.Services
             // domain permissions
             foreach (var domain in domainOptions.Domains)
             {
-                var user = domain.Users.FirstOrDefault(
-                    u => string.Equals(
-                        u.Email, email, StringComparison.OrdinalIgnoreCase));
+                var user = domain.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
+                    ?? domain.Users.FirstOrDefault(u => u.Email == "*");
 
                 if (user != null)
                 {
