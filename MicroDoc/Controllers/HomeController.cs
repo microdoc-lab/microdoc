@@ -251,21 +251,17 @@ namespace MicroDoc.Controllers
             {
                 doc = _docService.LoadDocument(domain, documentId);
 
-                if (doc == null)
+                // try resolve documentId over TagMoveService
+                if (doc == null && _domainOptions.Find(domain).TrackTagMoves)
                 {
-                    // try resolve documentId over TagMoveService
                     var movedDocumentId = _tagMoveService.ResolveDocument(domain, documentId);
 
-                    if (string.IsNullOrEmpty(movedDocumentId))
-                        return ErrorCode.DocumentNotFound;
-
-                    doc = _docService.LoadDocument(domain, movedDocumentId);
-
-                    if (doc == null)
-                        return ErrorCode.DocumentNotFound;
-                    
-                    return ErrorCode.Ok;
+                    if (!string.IsNullOrEmpty(movedDocumentId))
+                        doc = _docService.LoadDocument(domain, movedDocumentId);
                 }
+
+                if (doc == null)
+                    return ErrorCode.DocumentNotFound;
 
                 return ErrorCode.Ok;
             });

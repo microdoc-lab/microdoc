@@ -113,7 +113,8 @@ namespace MicroDoc.Services
             UpdateView(domain, parentTag);
             UpdateView(domain, targetTag);
 
-            _tagMoveService.Move(domain, selectedTag, newTag);
+            if (_domainOptions.Find(domain).TrackTagMoves)
+                _tagMoveService.Move(domain, selectedTag, newTag);
 
             return ErrorCode.Ok;
         }
