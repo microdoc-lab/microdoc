@@ -83,7 +83,7 @@
 .docmatrix .grid td clip {
     display: block;
     overflow: clip;
-    max-height: 80px;
+    max-height: 100px;
 }
 
 .docmatrix .grid td:hover { z-index: 10; }
