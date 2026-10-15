@@ -24,7 +24,8 @@
 			</th>
 			@foreach (var column in Model.Domain.Documents)
 			{
-				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column">@column</th>	
+				var title = Model.Domain.DocumentOptions.FirstOrDefault(d => d.Name == @column)?.Title;
+				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column" title="@title">@column</th>	
 			}
 			<th style="width: @(colWidth)%; max-width: @(colWidth)%;"></th>
 		</tr>

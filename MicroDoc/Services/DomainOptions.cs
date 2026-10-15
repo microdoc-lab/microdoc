@@ -22,7 +22,7 @@ namespace MicroDoc.Services
 
         public class DocumentOptions {
             public string Name { get; set; }
-            public string[] Names { get; set; }
+            public string Title { get; set; }
             public string Color { get; set; }
         }
 
