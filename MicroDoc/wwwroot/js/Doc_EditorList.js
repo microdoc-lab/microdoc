@@ -11,6 +11,7 @@
         const start = txtEditor.selectionStart;
         const end = txtEditor.selectionEnd;
         const value = txtEditor.value;
+        const isScrollBottom = txtEditor.scrollHeight - txtEditor.scrollTop - txtEditor.clientHeight < 20;
 
         // Don't handle multiline selections.
         if (/[\r\n]/.test(value.substring(start, end)))
@@ -34,6 +35,9 @@
         if (!itemTextBeforeCaret.trim()) {
             txtEditor.setSelectionRange(lineStart, start);
             document.execCommand("insertText", false, "\n");
+            txtEditor.AdjustHeight(txtEditor);
+            if (isScrollBottom)
+                txtEditor.scrollTop += 2 * parseFloat(getComputedStyle(txtEditor).lineHeight);
             return;
         }
 
@@ -42,7 +46,8 @@
         document.execCommand("insertText", false, "\n" + prefix);
 
         txtEditor.AdjustHeight(txtEditor);
-        txtEditor.scrollTop += parseFloat(getComputedStyle(txtEditor).lineHeight);
+        if (isScrollBottom)
+            txtEditor.scrollTop += 2*parseFloat(getComputedStyle(txtEditor).lineHeight);
     });
 
     // change list-item indentation on Tab/Shift+Tab
