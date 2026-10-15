@@ -24,7 +24,7 @@
 
             for (int i = start; i < end; i++)
             {
-                var text = cells[i].Trim();
+                var text = cells[i];
 
                 int colspan = 1;
                 while (i + 1 < end && cells[i + 1].Length == 0)
@@ -47,7 +47,7 @@
 
             html.Append("<tr>\n");
 
-            var rowColspans = ParseRowColspans(cells);
+            var rowColspans = ParseRowColspans(cells).ToArray();
 
             foreach (var (text, colspan) in rowColspans)
             {
