@@ -1,4 +1,6 @@
-﻿@model ExplorerViewModel
+﻿@using MicroDoc.Services
+@inject DomainOptions _domainOptions
+@model ExplorerViewModel
 
 @if (string.IsNullOrWhiteSpace(Model.Id))
 {
@@ -24,7 +26,7 @@
 			<button class="icon-button delete w" title="Delete">
 	    		<img src="/icons/Delete.png">
     		</button>
-			<button class="icon-button close r" title="@(User.IsInRole(Model.Domain.Name + ":" + "w") ? "Save & Close" : "Close")">
+			<button class="icon-button close r" title="@(User.IsInRole(_domainOptions, Model.Domain.Name, "w") ? "Save & Close" : "Close")">
 	    		<img src="/icons/Close.png">
     		</button>
 	    </div>

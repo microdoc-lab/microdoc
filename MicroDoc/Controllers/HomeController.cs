@@ -43,7 +43,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult TagTree(string clientId, string domain, string selectedTag)
         {
-            if (!IsInRole(domain, "r"))
+            if (!User.IsInRole(_domainOptions, domain, "r"))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -64,7 +64,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> NewTag(string domain, string selectedTag, string newTagName)
         {
-            if (!IsInRole(domain, "w"))
+            if (!User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -93,7 +93,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> RenameTag(string domain, string selectedTag, string newTagName)
         {
-            if (!IsInRole(domain, "w"))
+            if (!User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -123,7 +123,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> MoveTag(string domain, string selectedTag, string targetTag)
         {
-            if (!IsInRole(domain, "w"))
+            if (!User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -154,7 +154,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> DeleteTag(string domain, string selectedTag)
         {
-            if (!IsInRole(domain, "w"))
+            if (!User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -190,7 +190,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> SwapTags(string domain, string parentTag, string tagName, string targetTagName)
         {
-            if (!IsInRole(domain, "w"))
+            if (!User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             parentTag = parentTag ?? string.Empty;
@@ -219,7 +219,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
         {
-            if (!IsInRole(domain, "r"))
+            if (!User.IsInRole(_domainOptions, domain, "r"))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -239,7 +239,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult Explorer(string clientId, string domain, string selectedTag)
         {
-            if (!IsInRole(domain, "r"))
+            if (!User.IsInRole(_domainOptions, domain, "r"))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -272,7 +272,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult LoadDocument(string domain, string documentId) 
         {
-            if (!IsInRole(domain, "r"))
+            if (!User.IsInRole(_domainOptions, domain, "r"))
                 return Forbid();
 
             DocNode doc = null;
@@ -306,7 +306,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> SaveDocument(string domain, string documentId, string content)
         {
-            if (!IsInRole(domain, "w"))
+            if (!   User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             content = content ?? string.Empty;
@@ -334,7 +334,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> DeleteDocument(string domain, string documentId)
         {
-            if (!IsInRole(domain, "w"))
+            if (!User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             var status = LoggingHelper.Execute(_logger, nameof(DeleteDocument), new { domain, documentId }, () =>
@@ -361,7 +361,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult Image(string domain, string documentId, string imageName)
         {
-            if (!IsInRole(domain, "r"))
+            if (!User.IsInRole(_domainOptions, domain, "r"))
                 return Forbid();
 
             string filePath = null;
@@ -398,7 +398,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "w")]
         public async Task<IActionResult> UploadImage(string domain, string documentId, string imageName, IFormFile image)
         {
-            if (!IsInRole(domain, "w"))
+            if (!User.IsInRole(_domainOptions, domain, "w"))
                 return Forbid();
 
             var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
@@ -427,7 +427,7 @@ namespace MicroDoc.Controllers
         [Authorize(Roles = "r")]
         public IActionResult Background(string domain) 
         {
-            if (!IsInRole(domain, "r"))
+            if (!User.IsInRole(_domainOptions,  domain, "r"))
                 return Forbid();
 
             string filePath = null;
@@ -527,8 +527,6 @@ namespace MicroDoc.Controllers
 
         #region Security
 
-        private bool IsInRole(string domain, string role) => User.IsInRole(domain + ":" + role);
-
         [HttpPost]
         public async Task<IActionResult> SimpleLogin(string email)
         {
@@ -536,8 +534,8 @@ namespace MicroDoc.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(email))
                 {
-                    var user = _domainOptions.Domains.SelectMany(d => d.Users).FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
-                        ?? _domainOptions.Domains.SelectMany(d => d.Users).FirstOrDefault(u => u.Email == "*");
+                    var user = _domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
+                        ?? _domainOptions.Users.FirstOrDefault(u => u.Email == "*");
 
                     if (user == null)
                         return BadRequest(new { error = "Unknown user email" });

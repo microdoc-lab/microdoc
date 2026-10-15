@@ -4,6 +4,8 @@ namespace MicroDoc.Services
 {
     public class DomainOptions
     {
+        #region Domain
+
         public sealed  class Domain
         {
             public string Type { get; set; }
@@ -15,7 +17,6 @@ namespace MicroDoc.Services
             public bool TrackTagMoves { get; set; }
             public List<string> Documents { get; set; }
             public List<DocumentOptions> DocumentOptions { get; set; } = new();
-            public List<UserAccess> Users { get; set; } = new();
 
             public string GetDocumentColor(string document) => DocumentOptions.Where(o => o.Name == document).Select(o => o.Color).FirstOrDefault();
         }
@@ -28,14 +29,26 @@ namespace MicroDoc.Services
 
         public List<Domain> Domains { get; set; } = new();
 
+        public Domain Find(string name) => Domains.First(d => d.Name == name);
+
+        #endregion
+
+        #region Security
+
         public sealed class UserAccess
         {
             public string Email { get; set; } = "";
             public string Roles { get; set; } = "";
+            public string Domain { get; set; }
+            public string Document { get; set; }
+
         }
 
         public bool SimpleLogin { get; set; }
+        public bool DomainLevelSecurity { get; set; }
+        public bool DocumentLevelSecurity { get; set; }
+        public List<UserAccess> Users { get; set; } = new();
 
-        public Domain Find(string name) => Domains.First(d => d.Name == name);
+        #endregion
     }
 }

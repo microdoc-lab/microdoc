@@ -95,7 +95,7 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        var domain = _domainOptions.Domains.FirstOrDefault(d => User.IsInRole(d.Name + ":" + "r"));
+        var domain = _domainOptions.Domains.FirstOrDefault(d => User.IsInRole(_domainOptions, d.Name, "r"));
         if (domain != null)
         {
 <text>domain.OpenExplorer("@Html.Raw(domain.Name)");

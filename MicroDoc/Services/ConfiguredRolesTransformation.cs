@@ -17,24 +17,22 @@ namespace MicroDoc.Services
 
             var identity = new ClaimsIdentity();
 
-            // domain permissions
-            foreach (var domain in domainOptions.Domains)
+            var userRoles = domainOptions.Users.Where(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
+                .Union(domainOptions.Users.Where(u => u.Email == "*"))
+                .ToList();
+
+            foreach (var entry in userRoles)
             {
-                var user = domain.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
-                    ?? domain.Users.FirstOrDefault(u => u.Email == "*");
+                string prefix = (!string.IsNullOrWhiteSpace(entry.Domain) ? entry.Domain + ":" : string.Empty)
+                    + (!string.IsNullOrWhiteSpace(entry.Document) ? entry.Document + ":" : string.Empty);
 
-                if (user != null)
+                var roles = entry.Roles.Select(c => c.ToString())
+                    .Union(entry.Roles.Select(c => prefix + c))
+                    .ToArray();
+                foreach (var role in roles)
                 {
-                    foreach (var role in user.Roles.Select(r => r.ToString()))
-                    {
-                        // global role
-                        if (!principal.IsInRole(role))
-                            identity.AddClaim(new Claim(ClaimTypes.Role, role));
-
-                        // domain role
-                        if (!principal.IsInRole(domain.Name + ":" + role))
-                            identity.AddClaim(new Claim(ClaimTypes.Role, domain.Name + ":" + role));
-                    }
+                    if (!principal.IsInRole(role))
+                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
                 }
             }
 
