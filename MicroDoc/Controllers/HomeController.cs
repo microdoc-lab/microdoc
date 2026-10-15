@@ -91,6 +91,36 @@ namespace MicroDoc.Controllers
 
         [HttpPost]
         [Authorize(Roles = "w")]
+        public async Task<IActionResult> RenameTag(string domain, string selectedTag, string newTagName)
+        {
+            if (!IsInRole(domain, "w"))
+                return Forbid();
+
+            selectedTag = selectedTag ?? string.Empty;
+
+            string parentTag = null;
+            string newTag = null;
+
+            var status = LoggingHelper.Execute(_logger, nameof(NewTag), new { domain, selectedTag, newTagName }, () =>
+                _tagService.RenameTag(domain, selectedTag, newTagName, out parentTag, out newTag));
+
+            if (status != ErrorCode.Ok)
+                return Error(status);
+
+            var result = new
+            {
+                ClientUID,
+                newTag,
+                changes = new[] { new { op = nameof(RenameTag), domain, selectedTag, newTagName, parentTag, newTag } },
+            };
+
+            await _changeHub.Clients.All.SendAsync("Changes", result);
+
+            return Json(result);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "w")]
         public async Task<IActionResult> MoveTag(string domain, string selectedTag, string targetTag)
         {
             if (!IsInRole(domain, "w"))

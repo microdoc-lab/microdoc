@@ -37,6 +37,16 @@ DocMatrix.prototype.HandleChanges = function (change) {
                 this.Load(selectedTag);
             break;
 
+        case "RenameTag":
+            if (change.external) {
+                if (selectedTag == change.selectedTag)
+                    this.Load(change.newTag);           // if selected tag is a renamed tag - switch grid to renamed tag
+                else
+                    this.Load(selectedTag);             // reload grid
+            } else
+                this.Load(change.newTag);               // switch grid to renamed tag
+            break;
+
         case "MoveTag":
             if (change.external) {
                 if (selectedTag == change.selectedTag)

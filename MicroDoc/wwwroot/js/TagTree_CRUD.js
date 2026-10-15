@@ -1,6 +1,7 @@
 ﻿// HandleCRUD
 TagTree.prototype.HandleCRUD = async function (change) {
     var selectedTag = this.selectedTag;
+    var expandedTag = this.ExpandedTag();
 
     switch (change.op) {
         case "NewTag":
@@ -10,13 +11,26 @@ TagTree.prototype.HandleCRUD = async function (change) {
                 await this.Load(selectedTag, selectedTag);              // reload tree, expand selected tag (to see newly created tag in it)
             break;
 
+        case "RenameTag":
+            if (change.external) {
+                var toExpand = expandedTag == change.selectedTag ? change.newTag : null;
+                if (selectedTag == change.selectedTag)
+                    await this.Load(change.newTag, toExpand);           // if selected tag is a renamed tag - switch tree to renamed tag
+                else
+                    await this.Load(selectedTag, toExpand);             // reload tree
+            } else
+                await this.Load(change.newTag, change.newTag);          // switch tree to renamed tag, expand renamed tag
+            break;
+
         case "MoveTag":
-            if (change.external)
+            if (change.external) {
                 if (selectedTag == change.selectedTag)
                     await this.Load(change.parentTag);                  // if selected tag is a moved tag - switch tree to parent tag (to see tag gone)
-                if (selectedTag == change.targetTag || selectedTag == change.parentTag)
+                else if (selectedTag == change.targetTag || selectedTag == change.parentTag)
                     await this.Load(selectedTag);                       // if selected tag is target/parent - reload tree (to see tag gone)
-            else
+                else
+                    await this.Load(selectedTag);                       // reload tree
+            } else
                 await this.Load(change.newTag, change.newTag);          // switch tree to moved tag, expand moved tag
             break;
 
@@ -58,6 +72,32 @@ TagTree.prototype.NewTag = async function () {
     window.domain.PublishChanges(data.changes);
 }
 
+TagTree.prototype.RenameTag = async function () {
+    var domain = this.domain;
+    var selectedTag = this.selectedTag;
+
+    // Prompt new tag name
+    var tagPath = this.TagPath(domain, selectedTag);
+
+    var newTagName = prompt(`Rename Tag ${tagPath}? Enter new tag name`);
+
+    if (!this.IsValidTagName(newTagName)) {
+        alert("Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed");
+        return;
+    }
+
+    // Rename Tag
+    const response = await this.service.RenameTag(domain, selectedTag, newTagName);
+    if (!response.ok) {
+        this.error(`Rename Tag ${tagPath} to ${newTagName} failed`, await response.text());
+        return;
+    }
+
+    // PublishChanges
+    var data = await response.json();
+    window.domain.PublishChanges(data.changes);
+}
+
 TagTree.prototype.MoveTag = async function () {
     var domain = this.domain;
     var selectedTag = this.selectedTag;
@@ -72,7 +112,7 @@ TagTree.prototype.MoveTag = async function () {
         return;
     }
 
-    // Create Tag
+    // Move Tag
     const response = await this.service.MoveTag(domain, selectedTag, targetTag);
     if (!response.ok) {
         this.error(`Move Tag ${tagPath} to ${targetTag} failed`, await response.text());

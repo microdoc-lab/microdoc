@@ -105,6 +105,17 @@ TagTreeService.prototype.NewTag = function (domain, selectedTag, newTagName) {
     });
 }
 
+TagTreeService.prototype.RenameTag = function (domain, selectedTag, newTagName) {
+    return apiFetch("/Home/RenameTag", {
+        method: "POST",
+        body: new URLSearchParams({
+            domain: domain,
+            selectedTag: selectedTag,
+            newTagName: newTagName
+        })
+    });
+}
+
 TagTreeService.prototype.MoveTag = function (domain, selectedTag, targetTag) {
     return apiFetch("/Home/MoveTag", {
         method: "POST",

@@ -58,11 +58,11 @@ namespace MicroDoc.Services
             return nodes.OrderBy(n => n.Order ?? 999).ThenBy(n => n.Tag).ToList();
         }
 
-        public ErrorCode NewTag(string domain, string selectedTag, string newTagName, out string newTagId)
+        public ErrorCode NewTag(string domain, string selectedTag, string newTagName, out string newTag)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            newTagId = DocumentParser.GetDocumentId(selectedTag, newTagName);
-            var folder = Path.Combine(rootFolder, newTagId);
+            newTag = DocumentParser.GetDocumentId(selectedTag, newTagName);
+            var folder = Path.Combine(rootFolder, newTag);
 
             using (_lockManager.Write(domain, DocumentParser.GetDocumentId(selectedTag, newTagName)))
             {
@@ -74,6 +74,39 @@ namespace MicroDoc.Services
             }
 
             UpdateView(domain, selectedTag);
+
+            return ErrorCode.Ok;
+        }
+
+        public ErrorCode RenameTag(string domain, string selectedTag, string newTagName, out string parentTag, out string newTag)
+        {
+            string rootFolder = _domainOptions.Find(domain).RootFolder;
+
+            (parentTag, var name) = DocumentParser.SplitId(selectedTag);
+            newTag = DocumentParser.GetDocumentId(parentTag, newTagName);
+
+            if (string.IsNullOrEmpty(selectedTag))
+                return ErrorCode.RootTag;
+
+            var source = Path.Combine(rootFolder, selectedTag);
+            var newPath = Path.Combine(rootFolder, newTag);
+
+            using (_lockManager.Write2(domain, selectedTag, newTag))
+            {
+                if (!Directory.Exists(source))
+                    return ErrorCode.TagNotFound;
+
+                if (Directory.Exists(newPath))
+                    return ErrorCode.TagExists;
+
+                // create directory
+                Directory.Move(source, newPath);
+            }
+
+            UpdateView(domain, parentTag);
+
+            if (_domainOptions.Find(domain).TrackTagMoves)
+                _tagMoveService.Move(domain, selectedTag, newTag);
 
             return ErrorCode.Ok;
         }

@@ -12,9 +12,13 @@
     text-align: right;
 }
 
+.tag-tree .toolbar div {
+    position: relative;
+}
+
 .tag-tree .toolbar .search {
     display: inline-block;
-    width: 65px;
+    width: 120px;
     padding-right: 2px;
     font-size: 14px;
     vertical-align: middle;
