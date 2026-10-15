@@ -35,16 +35,19 @@
         if (!itemTextBeforeCaret.trim()) {
             txtEditor.setSelectionRange(lineStart, start);
             document.execCommand("insertText", false, "\n");
-            txtEditor.AdjustHeight(txtEditor);
-            if (isScrollBottom)
-                txtEditor.scrollTop += 2 * parseFloat(getComputedStyle(txtEditor).lineHeight);
-            return;
+        }
+        else if (itemTextBeforeCaret.trim() == "-") {
+            // Move item to the next line, start list item in current line.
+            txtEditor.setSelectionRange(lineStart, end);
+            document.execCommand("insertText", false, prefix + "\n");
+            txtEditor.setSelectionRange(start + itemTextBeforeCaret.length, start + itemTextBeforeCaret.length);
+        } else {
+            // Split the item and continue the list at the same level.
+            txtEditor.setSelectionRange(start, end);
+            document.execCommand("insertText", false, "\n" + prefix);
         }
 
-        // Split the item and continue the list at the same level.
-        txtEditor.setSelectionRange(start, end);
-        document.execCommand("insertText", false, "\n" + prefix);
-
+        // adjust height of text editor; move scroll down is we near the bottom
         txtEditor.AdjustHeight(txtEditor);
         if (isScrollBottom)
             txtEditor.scrollTop += 2*parseFloat(getComputedStyle(txtEditor).lineHeight);
