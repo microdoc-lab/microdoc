@@ -272,7 +272,7 @@ namespace MicroDoc.Controllers
         [Authorize]
         public IActionResult LoadDocument(string domain, string documentId) 
         {
-            if (!User.IsInRole(_domainOptions, "r", domain))
+            if (!User.IsInRole(_domainOptions, "r", domain, documentId))
                 return Forbid();
 
             DocNode doc = null;
@@ -306,7 +306,7 @@ namespace MicroDoc.Controllers
         [Authorize]
         public async Task<IActionResult> SaveDocument(string domain, string documentId, string content)
         {
-            if (!   User.IsInRole(_domainOptions, "w", domain))
+            if (!   User.IsInRole(_domainOptions, "w", domain, documentId))
                 return Forbid();
 
             content = content ?? string.Empty;

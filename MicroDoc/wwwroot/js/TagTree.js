@@ -34,35 +34,6 @@ TagTree.prototype.ApplyChanges = function (change) {
 }
 
 // Api
-TagTree.prototype.IsValidTagName = function (name) {
-    return /^[\p{L}\p{N}_\- ]+$/u.test(name);
-}
-
-TagTree.prototype.IsValidTag = function (tag) {
-    if (tag == null)
-        return false;
-
-    if (tag.trim() == "")   // root tag
-        return true;
-
-    return tag.split('/').every(part =>
-        /^[\p{L}\p{N}_\- ]+$/u.test(part)
-    );
-}
-
-TagTree.prototype.TagPath = function (domain, tag) {
-    var tags = tag.split('/');
-    var tagPath = tags.map(t => `[${t}]`).join(' ');
-    return tagPath && tagPath != "[]" ? tagPath : domain;
-}
-
-TagTree.prototype.ParentTag = function (tag) {
-    var tags = tag.split('/');
-    tags.pop();
-    var tagPath = tags.join('/');
-    return tagPath;
-}
-
 TagTree.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }

@@ -67,8 +67,8 @@ DocMatrix.prototype.HandleChanges = function (change) {
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleChanges);
 
 DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
-    var sender = this.tagRow(this.DocId(parentTag, tagName));
-    var target = this.tagRow(this.DocId(parentTag, targetTagName));
+    var sender = this.tagRow(DocParser.DocId(parentTag, tagName));
+    var target = this.tagRow(DocParser.DocId(parentTag, targetTagName));
 
     if (!sender)
         return;
@@ -99,7 +99,7 @@ DocMatrix.prototype.MoveTagUp = function () {
         return;
 
     // determine parent tag
-    var parentTag = this.TagParent(this.selectedTag);
+    var parentTag = DocParser.TagParent(this.selectedTag);
 
     // select parent tag
     this.explorer().tagTree().SelectTag(parentTag);

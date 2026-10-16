@@ -33,7 +33,7 @@
             const headingIndex = -1;
 
             // open document in overlay
-            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain) ? "edit" : "view");
+            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
 
             return;
         }
@@ -66,17 +66,17 @@
                 if (!docName.trim())
                     return;
 
-                if (!this.IsValidFileName(docName)) {
-                    alert("Invalid file name. Only symbols, digits, underscore, hyphen, space allowed");
+                if (!DocParser.IsValidDocName(docName)) {
+                    alert("Invalid document name. Only symbols, digits, underscore, hyphen, space allowed");
                     return;
                 }
 
                 docInCell = docCell.querySelector(`doc[data-document="${docName}"]`);
                 if (!docInCell) {
                     var domain = this.domain;
-                    var documentId = this.DocId(docCell.closest("tr").dataset.tag, docName + ".txt");
+                    var documentId = DocParser.DocId(docCell.closest("tr").dataset.tag, docName + ".txt");
 
-                    var docPath = this.DocPath(domain, documentId);
+                    var docPath = DocParser.DocPath(documentId);
 
                     // Save NEW empty document
                     const response = await this.service.SaveDocument(domain, documentId, "");
@@ -116,7 +116,7 @@
         }
 
         // open document in overlay
-        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain) ? "edit" : "view");
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
     });
 }
 
@@ -152,11 +152,11 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     docElement.setAttribute("mode", mode);
     docElement.dataset.domain = domain;
     docElement.dataset.id = documentId;
-    docElement.dataset.tagpath = this.DocPath(domain, documentId);
-    docElement.dataset.document = this.DocName(documentId);
+    docElement.dataset.tagpath = DocParser.DocPath(documentId);
+    docElement.dataset.document = DocParser.DocName(documentId);
     docElement.dataset.content = documentContent;
 
-    docElement.querySelector(".label").textContent = this.DocPath(domain, documentId);
+    docElement.querySelector(".label").textContent = DocParser.DocPath(documentId);
     docElement.querySelector(".viewer").innerHTML = documentHtml;
     docElement.querySelector(".editor").value = documentContent;
 

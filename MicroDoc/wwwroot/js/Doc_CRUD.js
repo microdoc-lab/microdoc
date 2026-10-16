@@ -13,7 +13,6 @@
 }
 
 Doc.prototype.SaveDocument = async function () {
-    var docMatrix = this.docMatrix();
     var docElement = this.element;
     var txtEditor = this.txtEditor();
 
@@ -22,7 +21,7 @@ Doc.prototype.SaveDocument = async function () {
     var documentId = docElement.dataset.id;
     var content = txtEditor.value;
 
-    var docPath = docMatrix.DocPath(domain, documentId);
+    var docPath = DocParser.DocPath(documentId);
 
     // save document
     const response = await this.service.SaveDocument(domain, documentId, content);
@@ -37,14 +36,13 @@ Doc.prototype.SaveDocument = async function () {
 }
 
 Doc.prototype.DeleteDocument = async function () {
-    var docMatrix = this.docMatrix();
     var docElement = this.element;
 
     // obtain document context
     var domain = docElement.dataset.domain;
     var documentId = docElement.dataset.id;
 
-    var docPath = docMatrix.DocPath(domain, documentId);
+    var docPath = DocParser.DocPath(documentId);
 
     // save document
     const response = await this.service.DeleteDocument(domain, documentId);

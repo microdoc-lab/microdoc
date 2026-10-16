@@ -31,7 +31,6 @@
 
     // paste image from clipboard
     txtEditor.addEventListener("paste", async function (e) {
-        var docMatrix = explorer.docMatrix();
 
         // obtain document context
         var domain = docElement.dataset.domain;
@@ -49,8 +48,8 @@
             if (!image)
                 continue;
 
-            var imageName = docMatrix.DocName(image.name);
-            var imageType = docMatrix.DocType(image.name);
+            var imageName = DocParser.DocName(image.name);
+            var imageType = DocParser.DocType(image.name);
 
             // prompt image name
             imageName = prompt("Enter image name", imageName);

@@ -4,10 +4,20 @@ namespace MicroDoc.Services
 {
     public static class SecurityExtensions
     {
-        public static bool IsInRole(this ClaimsPrincipal user, DomainOptions domainOptions, string role, string domain)
+        public static bool IsInRole(this ClaimsPrincipal user, DomainOptions domainOptions, string role, string domain = null, string documentId = null)
         {
-            return domainOptions.DomainLevelSecurity && user.IsInRole(domain + ":" + role)
-                || !domainOptions.DomainLevelSecurity && user.IsInRole(role);
+            if (!string.IsNullOrWhiteSpace(domain) && domainOptions.DomainLevelSecurity)
+            {
+                if (!string.IsNullOrWhiteSpace(documentId) && domainOptions.Find(domain).DocumentLevelSecurity)
+                {
+                    string document = Path.GetFileNameWithoutExtension(documentId);
+                    return user.IsInRole($"{domain}:{document}:{role}");
+                }
+
+                return user.IsInRole($"{domain}:{role}");
+            }
+
+            return user.IsInRole(role);
         }
 
         public static IEnumerable<string> AllRoles(this DomainOptions.UserAccess userAccess)

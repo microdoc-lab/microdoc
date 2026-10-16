@@ -23,19 +23,20 @@
         var domain = docElement.dataset.domain;
         var documentId = docElement.dataset.id;
 
-        docElement.doc.PositionToolbar();
-
         // show toolbar
         toolbar.style.visibility = "visible";
         // set toolbar context
         toolbar.dataset.domain = domain;
         toolbar.dataset.id = documentId;
+        toolbar.dataset.document = DocParser.DocName(documentId);
 
         var mode = docElement.getAttribute("mode");
         if (mode == "view")
             toolbar.querySelector(".view img").src = "/icons/Edit.png";
         else
             toolbar.querySelector(".view img").src = "/icons/View.png";
+
+        docElement.doc.PositionToolbar();
     });
 
     // hide toolbar on mouseout
@@ -57,6 +58,7 @@
         toolbar.style.visibility = "hidden";
         // reset toolbar context
         toolbar.dataset.id = null;
+        toolbar.dataset.document = null;
     });
 
     // toggle view/edit mode
@@ -83,7 +85,7 @@
 
         var docMatrix = this.docMatrix();
 
-        var docPath = docMatrix.DocPath(domain, documentId);
+        var docPath = DocParser.DocPath(documentId);
 
         if (!confirm(`Delete document ${docPath} ?`))
             return;
@@ -112,7 +114,7 @@
         var txtEditor = docElement.doc.txtEditor();
 
         var mode = docElement.getAttribute("mode")
-        if (mode == "edit" && isInRole("w", domain) && txtEditor.value != docElement.dataset.content)
+        if (mode == "edit" && isInRole("w", domain, documentId) && txtEditor.value != docElement.dataset.content)
             await docElement.doc.SaveDocument();
 
         docElement.doc.CloseDocument();
@@ -138,6 +140,10 @@ Doc.prototype.PositionToolbar = function () {
 
 Doc.prototype.ToggleMode = async function () {
     var docElement = this.element;
+
+    if (!isInRole("w", this.domain, docElement.dataset.id))
+        return;
+
     var toolbar = this.toolbar();
     var docViewer = this.docViewer();
     var txtEditor = this.txtEditor();
@@ -163,7 +169,7 @@ Doc.prototype.ToggleMode = async function () {
         docElement.setAttribute("mode", "view");
         toggleButtonImage.src = "/icons/Edit.png";
 
-        if (isInRole("w", this.domain) && txtEditor.value != docElement.dataset.content)
+        if (isInRole("w", this.domain, docElement.dataset.id) && txtEditor.value != docElement.dataset.content)
             await this.SaveDocument();
 
         docViewer.SelectAndScroll(headingIndex);

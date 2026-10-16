@@ -12,8 +12,6 @@
         var domain = docElement.dataset.domain;
         var documentId = docElement.dataset.id;
 
-        var docMatrix = this.docMatrix();
-
         // selection should exist
         const selection = window.getSelection();
         if (!selection || selection.isCollapsed || selection.anchorNode != selection.focusNode)
@@ -22,7 +20,7 @@
         // copy heading commit: [tag] [tag] heading
         var heading = selection.anchorNode.closest("h1,h2,h3");
         if (heading) {
-            var docPath = docMatrix.TagPath(domain, documentId);
+            var docPath = DocParser.DocTagPath(domain, documentId);
             event.preventDefault();
             event.clipboardData.setData("text/plain", docPath + " " + heading.innerText);
             return;
@@ -78,7 +76,7 @@
             const headingIndex = -1;
 
             // open document in overlay
-            docMatrix.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain) ? "edit" : "view");
+            docMatrix.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
 
             return;
         }

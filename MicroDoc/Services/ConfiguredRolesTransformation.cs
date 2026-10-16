@@ -21,14 +21,9 @@ namespace MicroDoc.Services
                 .Union(domainOptions.Users.Where(u => u.Email == "*"))
                 .ToList();
 
-            foreach (var entry in userRoles)
-            {
-                foreach (var role in entry.AllRoles())
-                {
-                    if (!principal.IsInRole(role))
-                        identity.AddClaim(new Claim(ClaimTypes.Role, role));
-                }
-            }
+            var roles = userRoles.SelectMany(u => u.AllRoles()).Distinct().ToArray();
+            foreach (var role in roles)
+                identity.AddClaim(new Claim(ClaimTypes.Role, role));
 
             if (identity.Claims.Any())
                 principal.AddIdentity(identity);

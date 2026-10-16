@@ -51,11 +51,11 @@ TagTree.prototype.NewTag = async function () {
     var selectedTag = this.selectedTag;
 
     // Prompt new tag name
-    var tagPath = this.TagPath(domain, selectedTag);
+    var tagPath = DocParser.TagPath(domain, selectedTag);
 
     var newTagName = prompt(`Create new Tag in ${tagPath}? Enter new tag name`);
 
-    if (!this.IsValidTagName(newTagName)) {
+    if (!DocParser.IsValidTagName(newTagName)) {
         alert("Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed");
         return;
     }
@@ -77,11 +77,11 @@ TagTree.prototype.RenameTag = async function () {
     var selectedTag = this.selectedTag;
 
     // Prompt new tag name
-    var tagPath = this.TagPath(domain, selectedTag);
+    var tagPath = DocParser.TagPath(domain, selectedTag);
 
     var newTagName = prompt(`Rename Tag ${tagPath}? Enter new tag name`);
 
-    if (!this.IsValidTagName(newTagName)) {
+    if (!DocParser.IsValidTagName(newTagName)) {
         alert("Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed");
         return;
     }
@@ -103,11 +103,11 @@ TagTree.prototype.MoveTag = async function () {
     var selectedTag = this.selectedTag;
 
     // Prompt new tag name
-    var tagPath = this.TagPath(domain, selectedTag);
+    var tagPath = DocParser.TagPath(domain, selectedTag);
 
     var targetTag = prompt(`Move Tag ${tagPath}? Enter target tag name`);
 
-    if (!this.IsValidTag(targetTag)) {
+    if (!DocParser.IsValidTag(targetTag)) {
         alert("Invalid tag. Only symbols, digits, underscore, hyphen, space (/ separated) allowed");
         return;
     }
@@ -129,7 +129,7 @@ TagTree.prototype.DeleteTag = async function () {
     var selectedTag = this.selectedTag;
 
     // Prompt new tag name
-    var tagPath = this.TagPath(domain, selectedTag);
+    var tagPath = DocParser.TagPath(domain, selectedTag);
 
     if (!confirm(`Delete tag ${tagPath} ?`))
         return;

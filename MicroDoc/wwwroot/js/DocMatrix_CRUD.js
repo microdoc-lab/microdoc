@@ -85,7 +85,7 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleCRUD);
 
 DocMatrix.prototype.CreateDocumentInCellMisc = function (doc) {
-    var tag = this.TagParent(doc.documentId);
+    var tag = DocParser.TagParent(doc.documentId);
     var row = this.tagRow(tag);
     if (!row)
         return;
@@ -97,7 +97,7 @@ DocMatrix.prototype.CreateDocumentInCellMisc = function (doc) {
     var docInCell = document.createElement("doc");
     docInCell.dataset.domain = doc.domain;
     docInCell.dataset.id = doc.documentId;
-    docInCell.dataset.document = this.DocName(doc.documentId);
+    docInCell.dataset.document = DocParser.DocName(doc.documentId);
     docInCell.dataset.name = docInCell.dataset.document + ".txt";
 
     docInCell.dataset.content = doc.content;

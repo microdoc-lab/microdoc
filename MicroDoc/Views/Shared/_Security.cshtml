@@ -1,8 +1,9 @@
 ﻿@using MicroDoc.Services
+@using System.Security.Claims
 @inject DomainOptions _domainOptions
 
 @{
-    string[] globalRoles = new[] { "a" };
+    string[] globalRoles = new[] { "r", "w", "a" };
     string[] domainRoles = new[] { "r", "w" };
 }
 
@@ -13,47 +14,56 @@
     </text>
     }
 
-    @foreach (var domain in _domainOptions.Domains)
-    @foreach (var role in domainRoles)
+    @if (_domainOptions.DomainLevelSecurity)
     {
-    <text>.explorer.@Html.Raw(domain.Name.Replace(".", "\\.")) .@role { display: @(Context.User.IsInRole(_domainOptions, role, domain.Name) ? "revert" : "none") !important; }
+        @foreach (var domain in _domainOptions.Domains)
+        @foreach (var role in domainRoles)
+        {
+            var domainCss = domain.Name.Replace(".", "\\.");
+            var display = Context.User.IsInRole(_domainOptions, role, domain.Name) ? "revert" : "none";
+
+    <text>.explorer.@Html.Raw(domainCss) .@role { display: @display !important; }
     </text>
+        }
+
+        @foreach (var domain in _domainOptions.Domains.Where(d => d.DocumentLevelSecurity))
+        @foreach (var document in domain.Documents.Union(domain.DocumentOptions.Select(o => o.Name)).Distinct())
+        @foreach (var role in domainRoles)
+        {
+            var domainCss = domain.Name.Replace(".", "\\.");
+            var display = Context.User.IsInRole(_domainOptions, role, domain.Name, document) ? "revert" : "none";
+
+    <text>.explorer.@Html.Raw(domainCss) .toolbar[data-document="@document"] .@role { display: @display !important; }
+    </text>
+        }
     }
 </style>
 
 <script type="text/javascript">
     var roles = [];
-
-    @foreach (var role in globalRoles)
+    
+    @foreach (var role in Context.User.Claims.Where(c => c.Type == ClaimTypes.Role))
     {
-        if (Context.User.IsInRole(role))
-        {
-        <text>roles.push("@role");
+        <text>roles.push("@role.Value");
         </text>
-        }
     }
 
-    @foreach (var domain in _domainOptions.Domains)
-    @foreach (var role in domainRoles)
-    {
-        if (Context.User.IsInRole(_domainOptions, role, domain.Name))
+    function isInRole(role, domain, documentId) {
+        if (domain && @_domainOptions.DomainLevelSecurity.ToString().ToLower())
         {
-        <text>roles.push("@Html.Raw(domain.Name + ":" + role)");
+    @foreach (var domain in _domainOptions.Domains.Where(d => d.DocumentLevelSecurity))
+    {
+        <text>
+            if (documentId && domain == "@domain.Name")
+            {
+                var docName = DocParser.DocName(documentId);
+                return roles.includes(`${domain}:${docName}:${role}`);
+            }
         </text>
-        }
     }
 
-    function isInRole(role, domain) {
-        if (!domain)
-            return roles.includes(role);
-
-    @if (_domainOptions.DomainLevelSecurity)
-    {
-        <text>return roles.includes(domain + ":" + role);</text>
-    }
-    else
-    {
-        <text>return roles.includes(role);</text>
-    }
+            return roles.includes(`${domain}:${role}`);
+        }   
+        return roles.includes(role);
     }
 </script>

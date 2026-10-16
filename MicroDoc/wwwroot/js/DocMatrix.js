@@ -42,49 +42,6 @@ DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 
-DocMatrix.prototype.IsValidFileName = function(name) {
-    return /^[\p{L}\p{N}_\- ]+$/u.test(name);
-}
-
-DocMatrix.prototype.TagParent = function (tag) {
-    var tags = tag.split('/');
-    tags.pop();
-    var parentTag = tags.join('/');
-    return parentTag;
-}
-
-DocMatrix.prototype.TagPath = function (domain, documentId) {
-    var tags = documentId.split('/');
-    tags.pop();
-    var tagPath = tags.map(t => `[${t}]`).join(' ');
-    return (tagPath ? tagPath : domain);
-}
-
-DocMatrix.prototype.DocId = function (tags, document) {
-    return tags ? tags + "/" + document : document;
-}
-
-DocMatrix.prototype.DocPath = function (domain, documentId) {
-    var tags = documentId.split('/');
-    var docName = tags.pop();
-    var tagPath = tags.map(t => `[${t}]`).join(' ');
-    return tagPath ? tagPath + " " + docName : docName;
-}
-
-DocMatrix.prototype.DocName = function (documentId) {
-    var tags = documentId.split('/');
-    var docName = tags.pop();
-    const index = docName.lastIndexOf(".");
-    return index > 0 ? docName.substring(0, index) : docName;
-}
-
-DocMatrix.prototype.DocType = function (documentId) {
-    var tags = documentId.split('/');
-    var docName = tags.pop();
-    const index = docName.lastIndexOf(".");
-    return index > 0 ? docName.substring(index) : "";
-}
-
 DocMatrix.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }
