@@ -9,6 +9,14 @@
 
     // prompt user to save&close editing document on browser tab close/reload
     window.addEventListener("beforeunload", e => {
+
+        // check opened domain options window
+        if (this.domainOptions.style.display == "block" && this.domainOptionsEditor.content != this.domainOptionsEditor.value) {
+            e.preventDefault();
+            e.returnValue = "Please close domain options editor";
+            return;
+        }
+
         // find first editing document (current domain first)
         var docElement = [...document.querySelectorAll('.explorerHost[style*="display: flex"] .explorer .overlay .doc[mode=edit]')]
             .find(doc => doc.doc.txtEditor().value != doc.dataset.content)
@@ -25,6 +33,7 @@
 
             e.preventDefault();
             e.returnValue = "Please close all active document editors";
+            return;
         }
     });
 

@@ -38,6 +38,7 @@ Domain.prototype.ToggleDomainOptions = async function () {
         var yaml = await response.text();
 
         // update UI
+        this.domainOptionsEditor.content = yaml;
         this.domainOptionsEditor.value = yaml;
 
         // show editor panel
@@ -76,5 +77,9 @@ Domain.prototype.ToggleDomainOptions = async function () {
 
         // hide editor panel
         this.domainOptions.style.display = "none";
+
+        // update UI
+        this.domainOptionsEditor.content = null;
+        this.domainOptionsEditor.value = null;
     }
 }
