@@ -50,7 +50,7 @@ namespace MicroDoc.Services
             foreach (var user in options.Users.Where(u => !string.IsNullOrWhiteSpace(u.Domain) && u.Document == "*"))
             {
                 var domain = options.Find(user.Domain);
-                user.Documents = domain.AllDocuments();
+                user.Documents = domain.KnownDocuments();
             }
         }
 

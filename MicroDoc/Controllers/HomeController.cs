@@ -488,6 +488,7 @@ namespace MicroDoc.Controllers
 
                 // Update singleton in container
                 _domainOptions.Domains = domainOptions.Domains;
+                _domainOptions.Users = domainOptions.Users;
 
                 _docService.UpdateDomainBackgroundVersions();
 

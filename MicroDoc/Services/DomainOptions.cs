@@ -15,8 +15,8 @@ namespace MicroDoc.Services
             public string BackgroundVersion { get; set; }
             public bool IsCaseSensitive { get; set; }
             public bool TrackTagMoves { get; set; }
-            public List<string> Documents { get; set; }
-            public List<DocumentOptions> DocumentOptions { get; set; } = new();
+            public string[] Documents { get; set; }
+            public DocumentOptions[] DocumentOptions { get; set; } = [];
             public bool DocumentLevelSecurity { get; set; }
 
             public string GetDocumentColor(string document) => DocumentOptions.Where(o => o.Name == document).Select(o => o.Color).FirstOrDefault();
@@ -28,7 +28,7 @@ namespace MicroDoc.Services
             public string Color { get; set; }
         }
 
-        public List<Domain> Domains { get; set; } = new();
+        public Domain[] Domains { get; set; } = [];
 
         public Domain Find(string name) => Domains.First(d => d.Name == name);
 
@@ -48,7 +48,7 @@ namespace MicroDoc.Services
 
         public bool SimpleLogin { get; set; }
         public bool DomainLevelSecurity { get; set; }
-        public List<UserAccess> Users { get; set; } = new();
+        public UserAccess[] Users { get; set; } = [];
 
         #endregion
     }

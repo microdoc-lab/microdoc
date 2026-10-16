@@ -8,10 +8,12 @@ namespace MicroDoc.Services
         {
             if (!string.IsNullOrWhiteSpace(domain) && domainOptions.DomainLevelSecurity)
             {
-                if (!string.IsNullOrWhiteSpace(documentId) && domainOptions.Find(domain).DocumentLevelSecurity)
+                var options = domainOptions.Find(domain);
+                if (!string.IsNullOrWhiteSpace(documentId) && options.DocumentLevelSecurity)
                 {
                     string document = Path.GetFileNameWithoutExtension(documentId);
-                    return user.IsInRole($"{domain}:{document}:{role}");
+                    if (options.KnownDocuments().Contains(document))
+                        return user.IsInRole($"{domain}:{document}:{role}");
                 }
 
                 return user.IsInRole($"{domain}:{role}");
@@ -20,9 +22,21 @@ namespace MicroDoc.Services
             return user.IsInRole(role);
         }
 
-        public static string[] AllDocuments(this DomainOptions.Domain domain) 
+        public static string[] GridColumnDocuments(this ClaimsPrincipal user, DomainOptions domainOptions, string domain)
         {
-            return domain.Documents.Union(domain.DocumentOptions.Select(o => o.Name)).Distinct().ToArray(); ;
+            var documents = domainOptions.Find(domain).Documents;
+
+            documents = documents.Where(d => IsInRole(user, domainOptions, "r", domain, d)).ToArray();
+
+            return documents;
+        }
+
+        public static string[] KnownDocuments(this DomainOptions.Domain domain) 
+        {
+            return domain.Documents
+                .Union(domain.DocumentOptions.Select(o => o.Name))
+                .Distinct()
+                .ToArray();
         }
 
         public static IEnumerable<string> AllRoles(this DomainOptions.UserAccess userAccess)

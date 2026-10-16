@@ -27,13 +27,13 @@
         }
 
         @foreach (var domain in _domainOptions.Domains.Where(d => d.DocumentLevelSecurity))
-        @foreach (var document in domain.AllDocuments())
+        @foreach (var document in domain.KnownDocuments())
         @foreach (var role in domainRoles)
         {
             var domainCss = domain.Name.Replace(".", "\\.");
             var display = Context.User.IsInRole(_domainOptions, role, domain.Name, document) ? "revert" : "none";
 
-    <text>.explorer.@Html.Raw(domainCss) .toolbar[data-document="@document"] .@role { display: @display !important; }
+    <text>.explorer.@Html.Raw(domainCss) .toolbar[data-document="@Html.Raw(document)"] .@role { display: @display !important; }
     </text>
         }
     }
@@ -56,8 +56,10 @@
         <text>
             if (documentId && domain == "@domain.Name")
             {
+                var knownDocuments = [ @Html.Raw(string.Join(", ", domain.KnownDocuments().Select(d => $"\"{d}\""))) ];
                 var docName = DocParser.DocName(documentId);
-                return roles.includes(`${domain}:${docName}:${role}`);
+                if (knownDocuments.includes(docName))
+                    return roles.includes(`${domain}:${docName}:${role}`);
             }
         </text>
     }
