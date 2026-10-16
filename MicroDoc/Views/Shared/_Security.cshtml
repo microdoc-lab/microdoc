@@ -27,7 +27,7 @@
         }
 
         @foreach (var domain in _domainOptions.Domains.Where(d => d.DocumentLevelSecurity))
-        @foreach (var document in domain.Documents.Union(domain.DocumentOptions.Select(o => o.Name)).Distinct())
+        @foreach (var document in domain.AllDocuments())
         @foreach (var role in domainRoles)
         {
             var domainCss = domain.Name.Replace(".", "\\.");

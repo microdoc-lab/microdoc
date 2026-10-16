@@ -20,20 +20,27 @@ namespace MicroDoc.Services
             return user.IsInRole(role);
         }
 
+        public static string[] AllDocuments(this DomainOptions.Domain domain) 
+        {
+            return domain.Documents.Union(domain.DocumentOptions.Select(o => o.Name)).Distinct().ToArray(); ;
+        }
+
         public static IEnumerable<string> AllRoles(this DomainOptions.UserAccess userAccess)
         {
             foreach (var role in userAccess.Roles)
                 yield return $"{role}";
 
-            if (!string.IsNullOrWhiteSpace(userAccess.Domain))
+            if (string.IsNullOrWhiteSpace(userAccess.Domain))
+                yield break;
+
                 foreach (var role in userAccess.Roles)
                     yield return $"{userAccess.Domain}:{role}";
 
-            if (!string.IsNullOrWhiteSpace(userAccess.Domain) && !string.IsNullOrWhiteSpace(userAccess.Document))
+            if (!string.IsNullOrWhiteSpace(userAccess.Document) && userAccess.Document != "*")
                 foreach (var role in userAccess.Roles)
                     yield return $"{userAccess.Domain}:{userAccess.Document}:{role}";
 
-            if (!string.IsNullOrWhiteSpace(userAccess.Domain) && userAccess.Documents != null)
+            if (userAccess.Documents != null)
                 foreach (var document in userAccess.Documents)
                     foreach (var role in userAccess.Roles)
                         yield return $"{userAccess.Domain}:{document}:{role}";

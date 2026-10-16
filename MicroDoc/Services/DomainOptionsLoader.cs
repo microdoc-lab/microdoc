@@ -16,10 +16,7 @@ namespace MicroDoc.Services
             var yaml = File.ReadAllText(path);
             var deserializer = new DeserializerBuilder().Build();
             var options = deserializer.Deserialize<DomainOptions>(yaml);
-
-            foreach (var domain in options.Domains)
-                domain.RootFolder = ResolvePath(domain.RootFolder);
-
+            InitOptions(options);
             return options;
         }
 
@@ -34,10 +31,7 @@ namespace MicroDoc.Services
         {
             var deserializer = new DeserializerBuilder().Build();
             var options = deserializer.Deserialize<DomainOptions>(yaml);
-
-            foreach (var domain in options.Domains)
-                domain.RootFolder = ResolvePath(domain.RootFolder);
-
+            InitOptions(options);
             return options;
         }
 
@@ -45,6 +39,19 @@ namespace MicroDoc.Services
         {
             path = ResolvePath(path);
             File.WriteAllText(path, yaml);
+        }
+
+        private static void InitOptions(DomainOptions options) 
+        {
+            // Init root folder
+            foreach (var domain in options.Domains)
+                domain.RootFolder = ResolvePath(domain.RootFolder);
+
+            foreach (var user in options.Users.Where(u => !string.IsNullOrWhiteSpace(u.Domain) && u.Document == "*"))
+            {
+                var domain = options.Find(user.Domain);
+                user.Documents = domain.AllDocuments();
+            }
         }
 
         private static string ResolvePath(string configuredPath)
