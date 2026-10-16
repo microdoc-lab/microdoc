@@ -39,18 +39,31 @@ namespace MicroDoc.Services
                 .ToArray();
         }
 
-        public static IEnumerable<string> AllRoles(this DomainOptions.UserAccess userAccess)
+        public static IEnumerable<string> AllRoles(this DomainOptions.UserAccess userAccess, DomainOptions domainOptions)
         {
-            foreach (var role in userAccess.Roles)
-                yield return $"{role}";
+            // process global roles
+            if (string.IsNullOrWhiteSpace(userAccess.Domain) && string.IsNullOrWhiteSpace(userAccess.Document) && (userAccess.Documents?.Length ?? 0) == 0)
+                foreach (var role in userAccess.Roles)
+                    yield return $"{role}";
 
+            // DomainLevelSecurity roles
+            if (!domainOptions.DomainLevelSecurity)
+                yield break;
+            
             if (string.IsNullOrWhiteSpace(userAccess.Domain))
                 yield break;
 
+            // process domain roles
+            if (string.IsNullOrWhiteSpace(userAccess.Document) && (userAccess.Documents?.Length ?? 0) == 0)
                 foreach (var role in userAccess.Roles)
                     yield return $"{userAccess.Domain}:{role}";
 
-            if (!string.IsNullOrWhiteSpace(userAccess.Document) && userAccess.Document != "*")
+            // DocumentLevelSecurity roles
+            if (!domainOptions.Find(userAccess.Domain).DocumentLevelSecurity)
+                yield break;
+
+            // process Document roles
+            if (!string.IsNullOrWhiteSpace(userAccess.Document))
                 foreach (var role in userAccess.Roles)
                     yield return $"{userAccess.Domain}:{userAccess.Document}:{role}";
 

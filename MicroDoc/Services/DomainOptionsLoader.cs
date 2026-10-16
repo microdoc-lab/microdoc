@@ -51,6 +51,7 @@ namespace MicroDoc.Services
             {
                 var domain = options.Find(user.Domain);
                 user.Documents = domain.KnownDocuments();
+                user.Document = null;
             }
         }
 

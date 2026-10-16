@@ -50,7 +50,7 @@ async function SimpleLogin() {
     if (!response.ok) {
         const result = await response.json();
         alert(result.error);
-        return login();
+        return;
     }
 
     location.reload();
