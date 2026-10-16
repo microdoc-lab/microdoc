@@ -39,7 +39,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         @if (User.Identity.IsAuthenticated)
-                        foreach (var domain in _domainOptions.Domains.Where(d => User.IsInRole(_domainOptions, d.Name, "r")))
+                        foreach (var domain in _domainOptions.Domains.Where(d => User.IsInRole(_domainOptions, "r", d.Name)))
                         {
                         <li class="nav-item">
                             <a class="nav-link text-dark explorer-link" href="" onclick='window.domain.OpenExplorer("@domain.Name"); return false;' data-domain="@domain.Name">@domain.Name</a>
@@ -47,7 +47,7 @@
                         }
                         @if (User.IsInRole("a"))
                         {
-                        <li class="nav-item">
+                        <li class="nav-item a">
                             <a class="nav-link text-dark" href="" onclick='window.domain.ToggleDomainOptions(); return false;' title="Edit Domain Options">
                                 <img src="/icons/Settings.png">
                             </a>

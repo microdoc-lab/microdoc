@@ -2,7 +2,7 @@
 @inject DomainOptions _domainOptions
 
 @{
-    string[] globalRoles = new[] { "r", "w", "a" };
+    string[] globalRoles = new[] { "a" };
     string[] domainRoles = new[] { "r", "w" };
 }
 
@@ -16,7 +16,7 @@
     @foreach (var domain in _domainOptions.Domains)
     @foreach (var role in domainRoles)
     {
-    <text>.@Html.Raw(domain.Name.Replace(".", "\\.")) .@role { display: @(Context.User.IsInRole(_domainOptions, domain.Name, role) ? "revert" : "none") !important; }
+    <text>.explorer.@Html.Raw(domain.Name.Replace(".", "\\.")) .@role { display: @(Context.User.IsInRole(_domainOptions, role, domain.Name) ? "revert" : "none") !important; }
     </text>
     }
 </style>
@@ -36,19 +36,18 @@
     @foreach (var domain in _domainOptions.Domains)
     @foreach (var role in domainRoles)
     {
-        if (Context.User.IsInRole(_domainOptions, domain.Name, role))
+        if (Context.User.IsInRole(_domainOptions, role, domain.Name))
         {
         <text>roles.push("@Html.Raw(domain.Name + ":" + role)");
         </text>
         }
     }
 
-    function isInGlobalRole(role) {
-        return roles.includes(role);
-    }
+    function isInRole(role, domain) {
+        if (!domain)
+            return roles.includes(role);
 
-    function isInRole(domain, role) {
-    @if (_domainOptions.DocumentLevelSecurity)
+    @if (_domainOptions.DomainLevelSecurity)
     {
         <text>return roles.includes(domain + ":" + role);</text>
     }

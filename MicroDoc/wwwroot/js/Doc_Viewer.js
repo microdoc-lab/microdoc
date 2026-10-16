@@ -78,7 +78,7 @@
             const headingIndex = -1;
 
             // open document in overlay
-            docMatrix.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole(domain, "w") ? "edit" : "view");
+            docMatrix.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain) ? "edit" : "view");
 
             return;
         }

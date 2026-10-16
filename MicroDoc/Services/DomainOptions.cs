@@ -17,6 +17,7 @@ namespace MicroDoc.Services
             public bool TrackTagMoves { get; set; }
             public List<string> Documents { get; set; }
             public List<DocumentOptions> DocumentOptions { get; set; } = new();
+            public bool DocumentLevelSecurity { get; set; }
 
             public string GetDocumentColor(string document) => DocumentOptions.Where(o => o.Name == document).Select(o => o.Color).FirstOrDefault();
         }
@@ -41,12 +42,12 @@ namespace MicroDoc.Services
             public string Roles { get; set; } = "";
             public string Domain { get; set; }
             public string Document { get; set; }
+            public string[] Documents { get; set; }
 
         }
 
         public bool SimpleLogin { get; set; }
         public bool DomainLevelSecurity { get; set; }
-        public bool DocumentLevelSecurity { get; set; }
         public List<UserAccess> Users { get; set; } = new();
 
         #endregion

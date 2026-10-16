@@ -40,10 +40,10 @@ namespace MicroDoc.Controllers
 
         #region TagTree
 
-        [Authorize(Roles = "r")]
+        [Authorize]
         public IActionResult TagTree(string clientId, string domain, string selectedTag)
         {
-            if (!User.IsInRole(_domainOptions, domain, "r"))
+            if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -61,10 +61,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> NewTag(string domain, string selectedTag, string newTagName)
         {
-            if (!User.IsInRole(_domainOptions, domain, "w"))
+            if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -90,10 +90,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> RenameTag(string domain, string selectedTag, string newTagName)
         {
-            if (!User.IsInRole(_domainOptions, domain, "w"))
+            if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -120,10 +120,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> MoveTag(string domain, string selectedTag, string targetTag)
         {
-            if (!User.IsInRole(_domainOptions, domain, "w"))
+            if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -151,10 +151,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> DeleteTag(string domain, string selectedTag)
         {
-            if (!User.IsInRole(_domainOptions, domain, "w"))
+            if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -187,10 +187,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> SwapTags(string domain, string parentTag, string tagName, string targetTagName)
         {
-            if (!User.IsInRole(_domainOptions, domain, "w"))
+            if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             parentTag = parentTag ?? string.Empty;
@@ -216,10 +216,10 @@ namespace MicroDoc.Controllers
 
         #region DocMatrix/Explorer
 
-        [Authorize(Roles = "r")]
+        [Authorize]
         public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
         {
-            if (!User.IsInRole(_domainOptions, domain, "r"))
+            if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -236,10 +236,10 @@ namespace MicroDoc.Controllers
             return PartialView("_DocMatrix", model);
         }
 
-        [Authorize(Roles = "r")]
+        [Authorize]
         public IActionResult Explorer(string clientId, string domain, string selectedTag)
         {
-            if (!User.IsInRole(_domainOptions, domain, "r"))
+            if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
@@ -269,10 +269,10 @@ namespace MicroDoc.Controllers
 
         #region Document
 
-        [Authorize(Roles = "r")]
+        [Authorize]
         public IActionResult LoadDocument(string domain, string documentId) 
         {
-            if (!User.IsInRole(_domainOptions, domain, "r"))
+            if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
             DocNode doc = null;
@@ -303,10 +303,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> SaveDocument(string domain, string documentId, string content)
         {
-            if (!   User.IsInRole(_domainOptions, domain, "w"))
+            if (!   User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             content = content ?? string.Empty;
@@ -331,10 +331,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> DeleteDocument(string domain, string documentId)
         {
-            if (!User.IsInRole(_domainOptions, domain, "w"))
+            if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             var status = LoggingHelper.Execute(_logger, nameof(DeleteDocument), new { domain, documentId }, () =>
@@ -358,10 +358,10 @@ namespace MicroDoc.Controllers
 
         #region Images
 
-        [Authorize(Roles = "r")]
+        [Authorize]
         public IActionResult Image(string domain, string documentId, string imageName)
         {
-            if (!User.IsInRole(_domainOptions, domain, "r"))
+            if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
             string filePath = null;
@@ -395,10 +395,10 @@ namespace MicroDoc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "w")]
+        [Authorize]
         public async Task<IActionResult> UploadImage(string domain, string documentId, string imageName, IFormFile image)
         {
-            if (!User.IsInRole(_domainOptions, domain, "w"))
+            if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
             var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
@@ -424,10 +424,10 @@ namespace MicroDoc.Controllers
 
         #region Domain (Background/Options)
 
-        [Authorize(Roles = "r")]
+        [Authorize]
         public IActionResult Background(string domain) 
         {
-            if (!User.IsInRole(_domainOptions,  domain, "r"))
+            if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
             string filePath = null;
@@ -530,35 +530,35 @@ namespace MicroDoc.Controllers
         [HttpPost]
         public async Task<IActionResult> SimpleLogin(string email)
         {
-            if (_domainOptions.SimpleLogin)
+            if (!_domainOptions.SimpleLogin)
+                return BadRequest(new { error = "Simple login not supported" });
+
+            if (string.IsNullOrWhiteSpace(email))
+                return BadRequest(new { error = "Empty email" });
+
+            // Find user or *
+            var user = _domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
+                ?? _domainOptions.Users.FirstOrDefault(u => u.Email == "*");
+
+            if (user == null)
+                return BadRequest(new { error = "Unknown user email" });
+
+            // sign-in user
+            var claims = new[]
             {
-                if (!string.IsNullOrWhiteSpace(email))
-                {
-                    var user = _domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
-                        ?? _domainOptions.Users.FirstOrDefault(u => u.Email == "*");
+                new Claim(ClaimTypes.Name, email),
+                new Claim(ClaimTypes.Email, email),
+            };
 
-                    if (user == null)
-                        return BadRequest(new { error = "Unknown user email" });
+            var identity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    var claims = new[]
-                    {
-                        new Claim(ClaimTypes.Name, email),
-                        new Claim(ClaimTypes.Email, email),
-                    };
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(identity));
 
-                    var identity = new ClaimsIdentity(
-                        claims,
-                        CookieAuthenticationDefaults.AuthenticationScheme);
-
-                    await HttpContext.SignInAsync(
-                        CookieAuthenticationDefaults.AuthenticationScheme,
-                        new ClaimsPrincipal(identity));
-
-                    return Ok(new { success = true });
-                }
-            }
-
-            return BadRequest(new { error = "Simple login not supported" });
+            return Ok(new { success = true });
         }
 
         public IActionResult Login()

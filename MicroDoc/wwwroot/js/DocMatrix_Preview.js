@@ -33,7 +33,7 @@
             const headingIndex = -1;
 
             // open document in overlay
-            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole(domain, "w") ? "edit" : "view");
+            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain) ? "edit" : "view");
 
             return;
         }
@@ -58,7 +58,7 @@
             if (!docCell.classList.contains("misc"))
                 docInCell = docCell.querySelector("doc");
             else {
-                if (!isInRole(this.domain, "w"))
+                if (!isInRole("w", this.domain))
                     return;
 
                 // click was made on MISC cell - create MISC document with custom name
@@ -116,7 +116,7 @@
         }
 
         // open document in overlay
-        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole(domain, "w") ? "edit" : "view");
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain) ? "edit" : "view");
     });
 }
 

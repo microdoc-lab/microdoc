@@ -24,7 +24,7 @@
 Domain.prototype.behaviors.push(Domain.prototype.InitDomainOptions);
 
 Domain.prototype.ToggleDomainOptions = async function () {
-    if (!isInGlobalRole("a"))
+    if (!isInRole("a"))
         return;
 
     if (this.domainOptions.style.display == "none") {

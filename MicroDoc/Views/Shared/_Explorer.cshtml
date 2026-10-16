@@ -26,7 +26,7 @@
 			<button class="icon-button delete w" title="Delete">
 	    		<img src="/icons/Delete.png">
     		</button>
-			<button class="icon-button close r" title="@(User.IsInRole(_domainOptions, Model.Domain.Name, "w") ? "Save & Close" : "Close")">
+			<button class="icon-button close r" title="@(User.IsInRole(_domainOptions, "w", Model.Domain.Name) ? "Save & Close" : "Close")">
 	    		<img src="/icons/Close.png">
     		</button>
 	    </div>

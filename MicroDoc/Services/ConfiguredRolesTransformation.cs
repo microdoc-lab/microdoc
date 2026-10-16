@@ -23,13 +23,7 @@ namespace MicroDoc.Services
 
             foreach (var entry in userRoles)
             {
-                string prefix = (!string.IsNullOrWhiteSpace(entry.Domain) ? entry.Domain + ":" : string.Empty)
-                    + (!string.IsNullOrWhiteSpace(entry.Document) ? entry.Document + ":" : string.Empty);
-
-                var roles = entry.Roles.Select(c => c.ToString())
-                    .Union(entry.Roles.Select(c => prefix + c))
-                    .ToArray();
-                foreach (var role in roles)
+                foreach (var role in entry.AllRoles())
                 {
                     if (!principal.IsInRole(role))
                         identity.AddClaim(new Claim(ClaimTypes.Role, role));

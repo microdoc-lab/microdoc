@@ -112,7 +112,7 @@
         var txtEditor = docElement.doc.txtEditor();
 
         var mode = docElement.getAttribute("mode")
-        if (mode == "edit" && isInRole(domain, "w") && txtEditor.value != docElement.dataset.content)
+        if (mode == "edit" && isInRole("w", domain) && txtEditor.value != docElement.dataset.content)
             await docElement.doc.SaveDocument();
 
         docElement.doc.CloseDocument();
@@ -163,7 +163,7 @@ Doc.prototype.ToggleMode = async function () {
         docElement.setAttribute("mode", "view");
         toggleButtonImage.src = "/icons/Edit.png";
 
-        if (isInRole(this.domain, "w") && txtEditor.value != docElement.dataset.content)
+        if (isInRole("w", this.domain) && txtEditor.value != docElement.dataset.content)
             await this.SaveDocument();
 
         docViewer.SelectAndScroll(headingIndex);
