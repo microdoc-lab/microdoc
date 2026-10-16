@@ -8,10 +8,11 @@
 }
 
 #domainOptions .editor {
-    position:relative;
+    position: relative;
     width: 100%;
     height: 100%;
     background-color: white;
     font-family: Consolas, "Courier New", monospace;
     tab-size: 4;
+    resize: both;
 }
