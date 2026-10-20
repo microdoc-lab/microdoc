@@ -1,24 +1,28 @@
 ﻿TagTree.prototype.InitSearch = function (options) {
     this.log('InitSearch');
 
-    this.searchStyle = this.element.querySelector("#tagSearchStyle");
+    this.searchStyle = this.element.querySelector(".search-style");
     this.searchInput = this.element.querySelector(".toolbar .search");
 
     this.searchInput.addEventListener("focus", () => this.searchInput.select());
     this.searchInput.addEventListener("input", () => this.Search());
+
+    // handle Esc key to clear search
+    this.searchInput.addEventListener("keydown", e => {
+        if (e.key == "Escape") {
+            var initialValue = this.searchInput.value;
+            this.searchInput.value = "";
+            this.Search();
+
+            if (!initialValue)
+                this.searchInput.blur();
+        }
+    });
 }
 
 TagTree.prototype.behaviors.push(TagTree.prototype.InitSearch);
 
-TagTree.prototype.ClearSearch = function () {
-    this.Search("");
-    this.searchInput.focus();
-}
-
-TagTree.prototype.Search = function (search) {
-    if (search != null)
-        this.searchInput.value = search;
-
+TagTree.prototype.Search = function () {
     const sheet = this.searchStyle.sheet;
 
     // Delete all existing rules
@@ -32,7 +36,7 @@ TagTree.prototype.Search = function (search) {
     searchText = CSS.escape(searchText);
 
     // Add a new rule
-    sheet.insertRule(".tag { display: none; }", sheet.cssRules.length);
-    sheet.insertRule(`.tag[data-tag*="${searchText}" i] { display: list-item; }`, sheet.cssRules.length);
-    sheet.insertRule(`.tag:has(.tag[data-tag*="${searchText}" i]) { display: list-item; }`, sheet.cssRules.length);
+    sheet.insertRule(`.tag-tree#${this.id} .tag { display: none; }`, sheet.cssRules.length);
+    sheet.insertRule(`.tag-tree#${this.id} .tag[data-tag*="${searchText}" i] { display: list-item; }`, sheet.cssRules.length);
+    sheet.insertRule(`.tag-tree#${this.id} .tag:has(.tag[data-tag*="${searchText}" i]) { display: list-item; }`, sheet.cssRules.length);
 }

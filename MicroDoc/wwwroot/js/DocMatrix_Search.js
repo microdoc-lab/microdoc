@@ -13,9 +13,12 @@
         // handle Esc key to clear search
         input.addEventListener("keydown", e => {
             if (e.key == "Escape") {
+                var initialValue = input.value;
                 input.value = "";
-                input.blur();
-                this.Search(input);
+                this.Search();
+
+                if (!initialValue)
+                    input.blur();
             }
         });
     });
@@ -57,6 +60,6 @@ DocMatrix.prototype.Search = function () {
         return;
     
     // Add a new rule
-    sheet.insertRule("tr[data-tag] { display: none; }", sheet.cssRules.length);
-    sheet.insertRule(`tr[data-tag]${predicates.join("")} { display: table-row; }`, sheet.cssRules.length);
+    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag] { display: none; }`, sheet.cssRules.length);
+    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag]${predicates.join("")} { display: table-row; }`, sheet.cssRules.length);
 }

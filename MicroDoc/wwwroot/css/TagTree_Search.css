@@ -1,0 +1,31 @@
+﻿/* Search input */
+.tag-tree .toolbar .search {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    box-sizing: border-box;
+    width: 24px;
+    height: 28px;
+    padding: 2px 0 2px 26px;
+    border: 1px solid transparent;
+    outline: none;
+    background-color: transparent;
+    background-image: url("/icons/Search.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 24px 24px;
+    cursor: pointer;
+    text-align: right;
+}
+
+.tag-tree .toolbar .search:focus,
+.tag-tree .toolbar .search:not(:focus):not(:placeholder-shown) {
+    width: 100px;
+    padding-left: 28px;
+    padding-right: 8px;
+    background-color: white;
+    border-color: #aaa;
+    border-radius: 4px;
+    cursor: text;
+}

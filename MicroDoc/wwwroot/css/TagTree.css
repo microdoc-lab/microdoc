@@ -10,10 +10,7 @@
     top: 0px;
     font-size: 0;
     text-align: right;
-}
-
-.tag-tree .toolbar div {
-    position: relative;
+    padding-right: 30px;
 }
 
 .tag-tree .toolbar .search {
@@ -23,19 +20,6 @@
     font-size: 14px;
     vertical-align: middle;
     text-align: right;
-}
-
-.tag-tree .toolbar .clearSearch {
-    position: absolute;
-    left: -2px;
-    top: 50%;
-    transform: translateY(-50%)  scale(0.7);
-    border: none;
-    padding: 0px;
-    background: transparent;
-    cursor: pointer;
-    z-index: 1;
-    line-height: 0;
 }
 
 .tag-tree .toolbar button {

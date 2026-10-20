@@ -15,34 +15,26 @@
 
 <div id="@Model.Id" class="tag-tree">
 
-    <style id="tagSearchStyle"></style>
+    <style class="search-style"></style>
 
 	<div class="toolbar">
-        <div>
-		    <button class="icon-button clearSearch r" onclick='document.getElementById("@Model.Id").tagTree.ClearSearch()' title="Clear search">
-			    <img src="/icons/Close.png">
-		    </button>
-        
-            <input class="search r" name="search" type="text" title="Search tree" placeholder="Search"></input>
-        </div>
+        <input class="search r" name="search" type="text" title="Search tree" placeholder="Search"></input>
 
-        <div>
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' title="New Tag">
-			    <img src="/icons/New.png">
-		    </button>
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.RenameTag()' title="Rename Tag">
-			    <img src="/icons/Edit.png">
-		    </button>
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.MoveTag()' title="Move Tag">
-			    <img src="/icons/Move.png">
-		    </button>
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.DeleteTag()' title="Delete Tag">
-			    <img src="/icons/Delete.png">
-		    </button>
-		    <button class="icon-button r" onclick='document.getElementById("@Model.Id").tagTree.Reload()' title="Reload">
-			    <img src="/icons/Refresh.png">
-		    </button>
-        </div>
+		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' title="New Tag">
+			<img src="/icons/New.png">
+		</button>
+		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.RenameTag()' title="Rename Tag">
+			<img src="/icons/Edit.png">
+		</button>
+		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.MoveTag()' title="Move Tag">
+			<img src="/icons/Move.png">
+		</button>
+		<button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.DeleteTag()' title="Delete Tag">
+			<img src="/icons/Delete.png">
+		</button>
+		<button class="icon-button r" onclick='document.getElementById("@Model.Id").tagTree.Reload()' title="Reload">
+			<img src="/icons/Refresh.png">
+		</button>
 	</div>
 
     <div class="domain tag @(Model.SelectedTag == "" ? "selected" : "")" data-domain="@Model.Domain.Name" data-path="" data-tag="" data-id="">
