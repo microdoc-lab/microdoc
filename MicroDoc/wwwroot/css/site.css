@@ -35,31 +35,19 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .container {
     display: flex;
     flex-direction: row;
-    min-height: calc(100vh - 160px); /* subtract footer height */
+    min-height: calc(100vh - 85px); /* subtract footer height */
+    padding: 0px;
 }
 
 main {
     width: 100%;
-}
-
-.left-panel {
-    width: 350px;
-    overflow-y: visible;
-    border-right: 1px solid #ccc;
-    padding: 1em;
-}
-
-.main-content {
-    flex-grow: 1;
-    padding: 1em;
-    overflow-y: auto;
 }
 
 footer {
