@@ -217,7 +217,7 @@ namespace MicroDoc.Controllers
         #region DocMatrix/Explorer
 
         [Authorize]
-        public IActionResult DocMatrix(string clientId, string domain, string selectedTag)
+        public IActionResult DocMatrix(string clientId, string domain, string selectedTag, bool loadDeepLevels = false)
         {
             if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
@@ -230,14 +230,15 @@ namespace MicroDoc.Controllers
                     Id = clientId,
                     Domain = _domainOptions.Find(domain),
                     SelectedTag = selectedTag,
-                    Rows = _docService.GetTagWithDocuments(domain, selectedTag)
+                    LoadDeepLevels = loadDeepLevels,
+                    Rows = _docService.GetTagWithDocuments(domain, selectedTag, loadDeepLevels)
                 });
 
             return PartialView("_DocMatrix", model);
         }
 
         [Authorize]
-        public IActionResult Explorer(string clientId, string domain, string selectedTag)
+        public IActionResult Explorer(string clientId, string domain, string selectedTag, bool loadDeepLevels = false)
         {
             if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
@@ -254,7 +255,8 @@ namespace MicroDoc.Controllers
                         Nodes = _tagService.GetTagTree(domain),
                     },
                     DocMatrix = {
-                        Rows = _docService.GetTagWithDocuments(domain, selectedTag)
+                        LoadDeepLevels = loadDeepLevels,
+                        Rows = _docService.GetTagWithDocuments(domain, selectedTag, loadDeepLevels)
                     },
                     TemplateDoc = {
                         Mode = "view",

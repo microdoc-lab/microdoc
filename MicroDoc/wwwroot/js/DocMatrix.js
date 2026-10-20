@@ -51,7 +51,7 @@ DocMatrix.prototype.Load = async function (tagId) {
     this.selectedTag = tagId;
 
     // Reload HTML content
-    const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag);
+    const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag, this.loadDeepLevels);
     if (!response.ok) {
         this.error("DocMatrix request failed", await response.text());
         return;
@@ -63,8 +63,8 @@ DocMatrix.prototype.Load = async function (tagId) {
 // Service methods
 function DocMatrixService() { }
 
-DocMatrixService.prototype.DocMatrix = function (clientId, domain, selectedTag) {
-    return apiFetch(`/Home/DocMatrix?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
+DocMatrixService.prototype.DocMatrix = function (clientId, domain, selectedTag, loadDeepLevels) {
+    return apiFetch(`/Home/DocMatrix?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}&loadDeepLevels=${loadDeepLevels}`);
 }
 
 DocMatrixService.prototype.LoadDocument = function (domain, documentId) {

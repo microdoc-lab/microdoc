@@ -24,6 +24,8 @@
 					<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.MoveTagUp()' title="Up">
 						<img src="/icons/Up.png">
 					</button>
+					<input type="checkbox" class="load-deep-levels" @(Model.LoadDeepLevels ? "checked" : "") title="Load deep levels"
+						onchange='document.getElementById("@Model.Id").docMatrix.LoadDeepLevelsChanged()' />
 				</div>
 				<input type="text" class="search r" placeholder="Search" />
 			</th>
@@ -92,6 +94,7 @@
         const docMatrix = new DocMatrix(container, options);
 		docMatrix.domain = "@Html.Raw(Model.Domain.Name)";
 		docMatrix.selectedTag = "@Html.Raw(Model.SelectedTag)";
+		docMatrix.loadDeepLevels = @Model.LoadDeepLevels.ToString().ToLower();
 
 		docMatrix.InitBehaviors();
     })();

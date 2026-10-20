@@ -1,6 +1,8 @@
 ﻿DocMatrix.prototype.InitNavigation = function (options) {
     this.log('InitNavigation');
 
+    this.loadDeepLevelsInput = this.element.querySelector(".load-deep-levels");
+
     var grid = this.grid();
 
     // browse TagTree from DocMatrix - handle click on Tag in DocMatrix
@@ -21,6 +23,11 @@
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitNavigation);
+
+DocMatrix.prototype.LoadDeepLevelsChanged = function () {
+    this.loadDeepLevels = this.loadDeepLevelsInput.checked;
+    this.Reload();
+}
 
 // HandleSwapTags
 DocMatrix.prototype.HandleChanges = function (change) {

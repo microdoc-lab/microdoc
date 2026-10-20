@@ -28,9 +28,7 @@
             _tagService = tagService;
         }
 
-        public List<TagNode> GetTagWithDocuments(string domain, string path) => GetTagWithDocuments(domain, path, recursive: true);
-
-        private List<TagNode> GetTagWithDocuments(string domain, string path, bool recursive)
+        public List<TagNode> GetTagWithDocuments(string domain, string path, bool loadDeepLevels = false)
         {
             path = path ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
@@ -50,18 +48,27 @@
                         Domain = domain,
                         Path = parent,
                         Tag = tag,
-                        Documents = GetDocuments(domain, path),
                         Level = 0,
                         IsDomain = string.IsNullOrEmpty(tag)
                     };
 
-                    nodes.Add(node);
+                    // load child tags (1 level or all)
+                    var children = _tagService.BuildTree(domain, path, recursive: loadDeepLevels, level: 1);
+                    node.Children.AddRange(children);
 
-                    // load child tags (1 level) with documents
-                    var children = _tagService.BuildTree(domain, path, recursive: false, level: 1);
-                    foreach (var child in children)
-                        child.Documents = GetDocuments(domain, child.Id);
-                    nodes.AddRange(children);
+                    // load recursively tags documents
+                    Action<TagNode> loadDocuments = null;
+                    loadDocuments = tag =>
+                    {
+                        tag.Documents = GetDocuments(domain, tag.Id);
+                        nodes.Add(tag);
+
+                        if (tag.Children != null)
+                            foreach (var child in tag.Children)
+                                loadDocuments(child);
+                    };
+                    
+                    loadDocuments(node);
                 }
             }
 
