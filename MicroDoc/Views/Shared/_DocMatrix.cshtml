@@ -13,6 +13,7 @@
 }
 
 <div id="@Model.Id" class="docmatrix">
+	<style class="search-style"></style>
 	<table class="grid">
 		<tr>
 			<th style="width: @(colWidth)%; max-width: @(colWidth)%;">
@@ -24,13 +25,19 @@
 						<img src="/icons/Up.png">
 					</button>
 				</div>
+				<input type="text" class="search r" placeholder="Search" />
 			</th>
 			@foreach (var column in columnDocuments)
 			{
 				var title = Model.Domain.DocumentOptions.FirstOrDefault(d => d.Name == @column)?.Title;
-				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column" title="@title">@column</th>	
+				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column" title="@title">
+					@column
+					<input type="text" class="search r" placeholder="Search" />
+				</th>
 			}
-			<th style="width: @(colWidth)%; max-width: @(colWidth)%;"></th>
+			<th class="misc" style="width: @(colWidth)%; max-width: @(colWidth)%;">
+				<input type="text" class="search r" placeholder="Search" />
+			</th>
 		</tr>
 
 		@foreach (var row in Model.Rows)
@@ -60,7 +67,7 @@
 						};
 					}
 
-					<td><clip><doc data-domain="@doc.Domain" data-id="@doc.Id" data-content="@doc.Content">@Html.Raw(doc.Html)</doc></clip></td>
+					<td data-document="@column"><clip><doc data-domain="@doc.Domain" data-id="@doc.Id" data-document="@column" data-content="@doc.Content">@Html.Raw(doc.Html)</doc></clip></td>
 				}
 				<td class="misc"><clip>
 					@foreach (var doc in row.Documents.Where(d => !columnDocuments.Contains(d.Name)).Where(d => User.IsInRole(_domainOptions, "r", Model.Domain.Name, d.Id)))

@@ -41,6 +41,7 @@
 
 /* Column headers in first row */
 .docmatrix .grid tr:nth-child(1) th {
+    position: relative;
     text-align: center;
     padding: 0px 5px;
     min-width: 100px;
@@ -51,7 +52,6 @@
     position: relative;
     overflow: visible;    
     padding-left: calc(var(--tag-level) * 10px);
-    cursor: pointer;
 }
 
 .docmatrix .grid th clip { 
@@ -67,6 +67,7 @@
     position: relative;
     display: inline-block;
     padding: 0px 3px;
+    cursor: pointer;
 }
 
 .docmatrix .grid th:hover tag {
