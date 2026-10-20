@@ -97,6 +97,8 @@
 .explorer .overlay .doc .viewer table th,
 .explorer .overlay .doc .viewer table td {
     border: 1px solid #ccc;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 /* Image */

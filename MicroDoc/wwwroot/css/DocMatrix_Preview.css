@@ -63,6 +63,8 @@
 .docmatrix .grid td doc table th,
 .docmatrix .grid td doc table td {
     border: 1px solid #ccc;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 /* Image */
