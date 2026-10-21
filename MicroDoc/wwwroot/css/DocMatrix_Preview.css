@@ -52,67 +52,17 @@
     border: 1px solid #ccc;
 }
 
-/* Paragraph */
-.docmatrix .grid td doc p { margin: 4px 0px 4px 0px; }
-
-/* Table */
-.docmatrix .grid td doc table {
-    border: 1px solid #ccc;
-}
-
-.docmatrix .grid td doc table th,
-.docmatrix .grid td doc table td {
-    border: 1px solid #ccc;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
 /* Image */
+/* discard shared styles */
 .docmatrix .grid td doc gallery {
-    margin-left: 5px;
-    display: flex;
-    gap: 25px;
-    margin: 8px 14px;
+    position: initial;
 }
 
-.docmatrix .grid td doc gallery imgw {
-    min-width: 50px;
-    min-height: 75px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.docmatrix .grid td doc gallery + * {
+    padding-top: 0px;
 }
 
-.docmatrix .grid td doc gallery imgc {
-    width: 50px;
-    height: 50px;
-    max-width: 50px;
-    max-height: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.docmatrix .grid td doc gallery imgw div {
-    font-size: small;
-}
-
-.docmatrix .grid td doc gallery img {
-    max-width: 50px;
-    max-height: 50px;
-    transition: transform 0.15s ease;
-    transform-origin: bottom left;
-}
-
+/* Custom scale in preview */
 .docmatrix .grid td doc gallery imgw:hover img {
     transform: scale(5);
-}
-
-/* Error */
-error {
-    display: block;
-    color: red;
-    font-weight: bold;
 }

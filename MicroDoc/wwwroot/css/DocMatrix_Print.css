@@ -1,4 +1,4 @@
-﻿/* Title */
+﻿/* Window title */
 .explorer .modal .doc-container::before {
     position: absolute;
     content: attr(data-document);
@@ -32,14 +32,6 @@
 }
 
 /* Viewer HTML*/
-/* Headings */
-.explorer .modal doc :is(h1,h2,h3) {
-    margin: 4px 0px 4px 0px;
-}
-.explorer .modal doc h1 { font-size: 1.6rem; }
-.explorer .modal doc h2 { font-size: 1.4rem; }
-.explorer .modal doc h3 { font-size: 1.2rem; }
-
 /* Heading prefix */
 .explorer .modal doc[data-tagpath] {
     --heading-prefix: attr(data-tagpath);
@@ -49,66 +41,12 @@
     content: var(--heading-prefix) ' ';
 }
 
-/* Paragraph */
-.explorer .modal doc p { margin: 4px 0px 4px 0px; }
-
-/* Table */
-.explorer .modal doc table {
-    border: 1px solid #ccc;
-}
-
-.explorer .modal doc table th,
-.explorer .modal doc table td {
-    border: 1px solid #ccc;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
 /* Image */
-.explorer .modal doc gallery {
-    position: absolute;
-    display: flex;
-    gap: 25px;
-    margin: 8px 14px;
-    cursor: default;
-}
-
-.explorer .modal doc gallery + * {
-    padding-top: 75px;
-}
-
-.explorer .modal doc gallery imgw {
-    min-width: 50px; 
-    min-height: 75px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.explorer .modal doc gallery imgc {
-    width: 50px; 
-    height: 50px;
-    max-width: 50px;
-    max-height: 50px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.explorer .modal doc gallery imgw div {
-    font-size: small;
-}
-
-.explorer .modal doc gallery img {
-    display: inline-block;
-    max-width: 50px;
-    max-height: 50px;
-    transition: transform 0.15s ease;
-    transform-origin: bottom left;
+/* Custom direction and scale in preview */
+.explorer .modal doc gallery img, doc gallery img {
+    transform-origin: top left;
 }
 
 .explorer .modal doc gallery imgw:hover img {
-    transform: scale(15);
+    transform: scale(10);
 }

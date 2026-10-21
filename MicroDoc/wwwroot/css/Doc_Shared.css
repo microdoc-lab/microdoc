@@ -1,0 +1,80 @@
+﻿/* Viewer HTML*/
+/* Headings */
+.doc :is(h1,h2,h3), doc :is(h1,h2,h3) {
+    margin: 4px 0px 4px 0px;
+}
+.doc h1, doc h1 { font-size: 1.6rem; }
+.doc h2, doc h2 { font-size: 1.4rem; }
+.doc h3, doc h3 { font-size: 1.2rem; }
+
+/* Paragraph */
+.doc p, doc p { margin: 4px 0px 4px 0px; }
+
+/* Table */
+.doc table, doc table {
+    border: 1px solid #ccc;
+}
+
+.doc table th, doc table th,
+.doc table td, doc table td
+{
+    border: 1px solid #ccc;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* Image */
+.doc gallery, doc gallery {
+    position: absolute;
+    display: flex;
+    gap: 25px;
+    margin: 8px 14px;
+    cursor: default;
+}
+
+.doc gallery + *, doc gallery + * {
+    padding-top: 75px;
+}
+
+.doc gallery imgw, doc gallery imgw {
+    min-width: 50px; 
+    min-height: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.doc gallery imgc, doc gallery imgc {
+    width: 50px; 
+    height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.doc gallery imgw div, doc gallery imgw div {
+    font-size: small;
+}
+
+.doc gallery img, doc gallery img {
+    display: inline-block;
+    max-width: 50px;
+    max-height: 50px;
+    transition: transform 0.15s ease;
+    transform-origin: bottom left;
+}
+
+.doc gallery imgw:hover img, doc gallery imgw:hover img {
+    transform: scale(15);
+}
+
+/* Error */
+error {
+    display: block;
+    color: red;
+    font-weight: bold;
+}
