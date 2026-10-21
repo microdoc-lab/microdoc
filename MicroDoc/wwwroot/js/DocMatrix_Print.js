@@ -33,27 +33,7 @@
         if (!docElement)
             return;
 
-        // obtain document context
-        var domain = docElement.dataset.domain;
-        var documentId = docElement.dataset.id;
-
-        // copy heading commit: [tag] [tag] heading
-        var heading = selection.anchorNode.closest("h1,h2,h3");
-        if (heading) {
-            var docPath = DocParser.DocTagPath(documentId);
-            event.preventDefault();
-            event.clipboardData.setData("text/plain", docPath + " " + heading.innerText);
-            return;
-        }
-
-        // copy image link: [tag] [tag] document+image.png
-        var imageContainer = selection.anchorNode.closest("imgw");
-        if (imageContainer) {
-            var imagePath = imageContainer.dataset.imagepath;
-            event.preventDefault();
-            event.clipboardData.setData("text/plain", imagePath);
-            return;
-        }
+        this.HandleCopy(event, docElement);
     });
 
     // capture mousedown coordinates to distinguish mouse selection from click
@@ -67,38 +47,6 @@
 
     // select heading when document section clicked
     container.addEventListener("click", async event => {
-
-        // open embeded link
-        const link = event.target.closest("a");
-        if (link && link.dataset.document) {
-            event.preventDefault();
-
-            // obtain document properties
-            const domain = docElement.dataset.domain;
-            var documentId = link.getAttribute("href");
-
-            const docPath = link.textContent;
-
-            // load document content
-            const response = await this.service.LoadDocument(domain, documentId);
-            if (!response.ok) {
-                this.error(`Load document ${docPath} failed`, await response.text());
-                return;
-            }
-
-            const doc = await response.json();
-
-            documentId = doc.id;
-            const documentContent = doc.content;
-            const documentHtml = doc.html;
-            const headingIndex = -1;
-
-            // open document in overlay
-            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
-
-            return;
-        }
-
         const dx = event.clientX - mouseDownX;
         const dy = event.clientY - mouseDownY;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -106,32 +54,8 @@
         if (distance > 5)
             return;
 
-        // find possible clicked image
-        const imageWrapper = event.target.closest("imgw");
-        if (imageWrapper) {
-            SelectElement(imageWrapper.querySelector("div"));
-            return;
-        }
-
-        // find & check the section
-        const section = event.target.closest("section");
-        if (!section || !container.contains(section))
-            return;
-
-        // obtain section heading
-        var heading = section.querySelector("h1, h2, h3");
-        if (heading)
-            SelectElement(heading);
+        await this.HandleClick(event, true);
     });
-
-    function SelectElement(heading) {
-        const range = document.createRange();
-        range.selectNodeContents(heading);
-
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);

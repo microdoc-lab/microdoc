@@ -1,39 +1,14 @@
 ﻿Doc.prototype.InitViewer = function (options) {
     this.log('InitViewer');
 
-    var docElement = this.element;
     var docViewer = this.docViewer();
 
     // intercept Ctrl+C event and perform custom copy logic
     docViewer.addEventListener("copy", event => {
         const docElement = this.element;
 
-        // obtain document context
-        var domain = docElement.dataset.domain;
-        var documentId = docElement.dataset.id;
-
-        // selection should exist
-        const selection = window.getSelection();
-        if (!selection || selection.isCollapsed || selection.anchorNode != selection.focusNode)
-            return;
-
-        // copy heading commit: [tag] [tag] heading
-        var heading = selection.anchorNode.closest("h1,h2,h3");
-        if (heading) {
-            var docPath = DocParser.DocTagPath(documentId);
-            event.preventDefault();
-            event.clipboardData.setData("text/plain", docPath + " " + heading.innerText);
-            return;
-        }
-
-        // copy image link: [tag] [tag] document+image.png
-        var imageContainer = selection.anchorNode.closest("imgw");
-        if (imageContainer) {
-            var imagePath = imageContainer.dataset.imagepath;
-            event.preventDefault();
-            event.clipboardData.setData("text/plain", imagePath);
-            return;
-        }
+        var docMatrix = this.docMatrix();
+        docMatrix.HandleCopy(event, docElement);
     });
 
     // capture mousedown coordinates to distinguish mouse selection from click
@@ -47,40 +22,6 @@
 
     // select heading when document section clicked
     docViewer.addEventListener("click", async event => {
-
-        // open embeded link
-        const link = event.target.closest("a");
-        if (link && link.dataset.document) { 
-            event.preventDefault();
-
-            var docMatrix = this.docMatrix();
-
-            // obtain document properties
-            const domain = docElement.dataset.domain;
-            var documentId = link.getAttribute("href");
-
-            const docPath = link.textContent;
-
-            // load document content
-            const response = await docMatrix.service.LoadDocument(domain, documentId);
-            if (!response.ok) {
-                this.error(`Load document ${docPath} failed`, await response.text());
-                return;
-            }
-
-            const doc = await response.json();
-
-            documentId = doc.id;
-            const documentContent = doc.content;
-            const documentHtml = doc.html;
-            const headingIndex = -1;
-
-            // open document in overlay
-            docMatrix.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
-
-            return;
-        }
-
         const dx = event.clientX - mouseDownX;
         const dy = event.clientY - mouseDownY;
         const distance = Math.sqrt(dx * dx + dy * dy);
@@ -88,22 +29,8 @@
         if (distance > 5)
             return;
 
-        // find possible clicked image
-        const imageWrapper = event.target.closest("imgw");
-        if (imageWrapper) {
-            SelectElement(imageWrapper.querySelector("div"));
-            return;
-        }
-
-        // find & check the section
-        const section = event.target.closest("section");
-        if (!section || !docViewer.contains(section))
-            return;
-
-        // obtain section heading
-        var heading = section.querySelector("h1, h2, h3");
-        if (heading)
-            SelectElement(heading);
+        var docMatrix = this.docMatrix();
+        await docMatrix.HandleClick(event, true);
     });
 
     // select heading and scroll it into view

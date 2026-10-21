@@ -3,41 +3,26 @@
 
     var grid = this.grid();
 
+    // capture mousedown coordinates to distinguish mouse selection from click
+    let mouseDownX = 0;
+    let mouseDownY = 0;
+
+    grid.addEventListener("mousedown", event => {
+        mouseDownX = event.clientX;
+        mouseDownY = event.clientY;
+    });
+
     // open document by click in grid
     grid.addEventListener("click", async event => {
-
-        // open embeded link
-        const link = event.target.closest("a");
-        // link should be document-related
-        if (link && link.dataset.document) {
-            event.preventDefault();
-
-            // obtain document properties
-            const domain = this.domain;
-            var documentId = link.getAttribute("href");
-
-            const docPath = link.textContent;
-
-            // load document content
-            const response = await this.service.LoadDocument(domain, documentId);
-            if (!response.ok) {
-                this.error(`Load document ${docPath} failed`, await response.text());
-                return;
-            }
-
-            const doc = await response.json();
-
-            documentId = doc.id;
-            const documentContent = doc.content;
-            const documentHtml = doc.html;
-            const headingIndex = -1;
-
-            // open document in overlay
-            this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
-
+        const dx = event.clientX - mouseDownX;
+        const dy = event.clientY - mouseDownY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        // treat as selection/drag, not a click
+        if (distance > 5)
             return;
-        }
 
+        if (await this.HandleClick(event, false))
+            return;
 
         // don't open document if user select some text in the cell
         const selection = window.getSelection();
@@ -123,6 +108,100 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPreview);
 
 // Api
+DocMatrix.prototype.HandleClick = async function (event, select) {
+    // open embeded link
+    const link = event.target.closest("a");
+    // link should be document-related
+    if (link && link.dataset.document) {
+        event.preventDefault();
+
+        // obtain document properties
+        const domain = this.domain;
+        var documentId = link.getAttribute("href");
+
+        const docPath = link.textContent;
+
+        // load document content
+        const response = await this.service.LoadDocument(domain, documentId);
+        if (!response.ok) {
+            this.error(`Load document ${docPath} failed`, await response.text());
+            return true;
+        }
+
+        const doc = await response.json();
+
+        documentId = doc.id;
+        const documentContent = doc.content;
+        const documentHtml = doc.html;
+        const headingIndex = -1;
+
+        // open document in overlay
+        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
+
+        return true;
+    }
+
+    if (select) {
+        // find possible clicked image
+        const imageWrapper = event.target.closest("imgw");
+        if (imageWrapper) {
+            SelectElement(imageWrapper.querySelector("div"));
+            return false;
+        }
+
+        // find & check the section
+        const section = event.target.closest("section");
+        if (!section)
+            return false;
+
+        // obtain section heading
+        var heading = section.querySelector("h1, h2, h3");
+        if (heading)
+            SelectElement(heading);
+
+        return true;
+    }
+
+    return false;
+
+    function SelectElement(heading) {
+        const range = document.createRange();
+        range.selectNodeContents(heading);
+
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
+
+DocMatrix.prototype.HandleCopy = function (event, docElement) {
+    // obtain document context
+    var documentId = docElement.dataset.id;
+
+    // selection should exist
+    const selection = window.getSelection();
+    if (!selection || selection.isCollapsed || selection.anchorNode != selection.focusNode)
+        return;
+
+    // copy heading commit: [tag] [tag] heading
+    var heading = selection.anchorNode.closest("h1,h2,h3");
+    if (heading) {
+        var docPath = DocParser.DocTagPath(documentId);
+        event.preventDefault();
+        event.clipboardData.setData("text/plain", docPath + " " + heading.innerText);
+        return;
+    }
+
+    // copy image link: [tag] [tag] document+image.png
+    var imageContainer = selection.anchorNode.closest("imgw");
+    if (imageContainer) {
+        var imagePath = imageContainer.dataset.imagepath;
+        event.preventDefault();
+        event.clipboardData.setData("text/plain", imagePath);
+        return;
+    }
+}
+
 DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, headingIndex, mode) {
     var explorer = this.explorer();
     var overlay = this.overlay();
