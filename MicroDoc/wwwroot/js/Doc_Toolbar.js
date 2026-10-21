@@ -152,7 +152,7 @@ Doc.prototype.ToggleMode = async function () {
     var mode = docElement.getAttribute("mode");
 
     if (mode == "view") {
-        const headingIndex = docViewer.getSelectedHeadingIndex(docViewer);
+        const headingIndex = GetSelectedHeadingIndex(docViewer);
 
         docElement.setAttribute("mode", "edit");
 
@@ -164,7 +164,7 @@ Doc.prototype.ToggleMode = async function () {
     }
 
     if (mode == "edit") {
-        const headingIndex = txtEditor.getHeadingIndexAtCursor(txtEditor);
+        const headingIndex = GetHeadingIndexAtCursor(txtEditor);
 
         docElement.setAttribute("mode", "view");
         toggleButtonImage.src = "/icons/Edit.png";

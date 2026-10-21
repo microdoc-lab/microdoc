@@ -56,6 +56,28 @@
 
         await this.HandleClick(event, true);
     });
+
+    // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop
+    // manually clip absolute positioned <gallery> outside document viewer bounds
+    container.addEventListener("scroll", () => {
+        const scrollTop = container.scrollTop;
+        const viewerRect = container.getBoundingClientRect();
+
+        container.querySelectorAll("gallery").forEach(gallery => {
+            // scroll gallery manually
+            gallery.style.marginTop = `${-scrollTop}px`;
+
+            const rect = gallery.getBoundingClientRect();
+            const galleryCenter = (rect.top + rect.bottom) / 2;
+
+            // control gallery visibility
+            gallery.style.visibility =
+                galleryCenter >= viewerRect.top &&
+                    galleryCenter <= viewerRect.bottom
+                    ? "visible"
+                    : "hidden";
+        });
+    });
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
@@ -75,6 +97,8 @@ DocMatrix.prototype.Print = function (button) {
     container.dataset.document = document;
     container.innerHTML = html;
     modal.style.display = "block";
+
+    SelectAndScrollViewer(container, 0);
 
     this.modalOpened = true;
 }

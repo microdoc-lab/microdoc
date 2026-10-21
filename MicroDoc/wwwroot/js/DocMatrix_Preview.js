@@ -163,15 +163,6 @@ DocMatrix.prototype.HandleClick = async function (event, select) {
     }
 
     return false;
-
-    function SelectElement(heading) {
-        const range = document.createRange();
-        range.selectNodeContents(heading);
-
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
 }
 
 DocMatrix.prototype.HandleCopy = function (event, docElement) {

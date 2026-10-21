@@ -34,67 +34,7 @@
     });
 
     // select heading and scroll it into view
-    docViewer.SelectAndScroll = function (headingIndex) {
-        // move cursor to clicked Header position
-        if (headingIndex >= 0) {
-            const heading = docViewer.querySelectorAll("h1, h2, h3")[headingIndex];
-            if (heading) {
-                // scroll heading into view (if not fully visible above document viewer middle line)
-                if (!IsFullyVisibleAndAboveMiddle(heading, docViewer))
-                    heading.scrollIntoView({ behavior: "auto", block: "start" });
-
-                // put selection on heading
-                SelectElement(heading);
-            }
-        }
-        else {
-            // if no heading specified - scroll document to top
-            docViewer.scrollTo({ behavior: "auto", top: 0 });
-        }
-    }
-
-    docViewer.getSelectedHeadingIndex = function (viewer) {
-        const selection = window.getSelection();
-
-        if (!selection.rangeCount || selection.isCollapsed)
-            return -1;
-
-        const range = selection.getRangeAt(0);
-
-        if (!viewer.contains(range.commonAncestorContainer))
-            return -1;
-
-        const headings = [...viewer.querySelectorAll("h1, h2, h3")];
-
-        for (let i = 0; i < headings.length; i++) {
-            if (range.intersectsNode(headings[i]))
-                return i;
-        }
-
-        return -1;
-    }
-
-    function SelectElement(heading) {
-        const range = document.createRange();
-        range.selectNodeContents(heading);
-
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
-
-    function IsFullyVisibleAndAboveMiddle(element, container) {
-        const rect = element.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-
-        const top = containerRect.top + container.clientTop;
-        const bottom = top + container.clientHeight;
-        const middle = (top + bottom) / 2;
-
-        return rect.top >= top
-            && rect.bottom <= bottom
-            && rect.top < middle;
-    }
+    docViewer.SelectAndScroll = headingIndex => SelectAndScrollViewer(docViewer, headingIndex);
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitViewer);

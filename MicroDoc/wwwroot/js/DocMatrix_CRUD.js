@@ -13,8 +13,8 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
                 var mode = docElement.getAttribute("mode");
                 var isFocusedEditor = txtEditor == document.activeElement;
 
-                const headingIndexView = docViewer.getSelectedHeadingIndex(docViewer);
-                const headingIndexEdit = txtEditor.getHeadingIndexAtCursor(txtEditor);
+                const headingIndexView = GetSelectedHeadingIndexViewer(docViewer);
+                const headingIndexEdit = GetHeadingIndexAtCursor(txtEditor);
 
                 if (change.external) {
                     if (mode == "edit") {                                       // external edit
