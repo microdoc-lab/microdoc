@@ -36,6 +36,7 @@ DocMatrix.prototype.ApplyChanges = function (change) {
 // Api
 DocMatrix.prototype.explorer = function () { return this.element.closest(".explorer").explorer; }
 DocMatrix.prototype.overlay = function () { return this.element.closest(".explorer").querySelector(".overlay"); }
+DocMatrix.prototype.modal = function () { return this.element.closest(".explorer").querySelector(".modal"); }
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
 
 DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(`.grid tr[data-tag="${tag}"]`); }

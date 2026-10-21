@@ -1,0 +1,114 @@
+﻿/* Title */
+.explorer .modal .doc-container::before {
+    position: absolute;
+    content: attr(data-document);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0px 3px;
+    font-size: smaller;
+    font-weight: bold;
+    background: var(--doc-background);
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    pointer-events: initial;
+}
+
+/* doc */
+.explorer .modal doc {
+    position: relative;
+    padding: 20px 0 20px 0px;
+    display: block;
+}
+
+.explorer .modal doc:not(:last-child)::after {
+    content: ""; /* Required for pseudo-elements to render */
+    position: absolute;
+    bottom: 0; /* Places the line at the bottom of the div */
+    left: 0; /* Aligns line starting point */
+    width: 100%; /* Spans the full width of the div */
+    height: 1px; /* Thickness of your line */
+    background-color: #ccc; /* Color of your line */
+}
+
+/* Viewer HTML*/
+/* Headings */
+.explorer .modal doc :is(h1,h2,h3) {
+    margin: 4px 0px 4px 0px;
+}
+.explorer .modal doc h1 { font-size: 1.6rem; }
+.explorer .modal doc h2 { font-size: 1.4rem; }
+.explorer .modal doc h3 { font-size: 1.2rem; }
+
+/* Heading prefix */
+.explorer .modal doc[data-tagpath] {
+    --heading-prefix: attr(data-tagpath);
+}
+
+.explorer .modal doc :is(h1,h2,h3)::before {
+    content: var(--heading-prefix) ' ';
+}
+
+/* Paragraph */
+.explorer .modal doc p { margin: 4px 0px 4px 0px; }
+
+/* Table */
+.explorer .modal doc table {
+    border: 1px solid #ccc;
+}
+
+.explorer .modal doc table th,
+.explorer .modal doc table td {
+    border: 1px solid #ccc;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+/* Image */
+.explorer .modal doc gallery {
+    position: absolute;
+    display: flex;
+    gap: 25px;
+    margin: 8px 14px;
+    cursor: default;
+}
+
+.explorer .modal doc gallery + * {
+    padding-top: 75px;
+}
+
+.explorer .modal doc gallery imgw {
+    min-width: 50px; 
+    min-height: 75px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.explorer .modal doc gallery imgc {
+    width: 50px; 
+    height: 50px;
+    max-width: 50px;
+    max-height: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.explorer .modal doc gallery imgw div {
+    font-size: small;
+}
+
+.explorer .modal doc gallery img {
+    display: inline-block;
+    max-width: 50px;
+    max-height: 50px;
+    transition: transform 0.15s ease;
+    transform-origin: bottom left;
+}
+
+.explorer .modal doc gallery imgw:hover img {
+    transform: scale(15);
+}

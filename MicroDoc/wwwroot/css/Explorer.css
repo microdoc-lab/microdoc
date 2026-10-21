@@ -15,6 +15,37 @@
     font-size: 0px;
 }
 
+.explorer > .modal {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    z-index: 30;
+    
+    display: none;
+
+    background-color: rgba(100, 100, 100, 0.5);
+    overflow: hidden;
+}
+
+.explorer > .modal .doc-container {
+    width: calc(50% + 40px);
+    height: calc(100% - 100px);
+
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+
+    padding-left: 20px;
+    padding-right: 20px;
+
+    overflow: auto;
+    --color: var(--doc-background);
+    --opacity: 100%;
+    background: color-mix(in srgb, var(--color) var(--opacity), transparent);
+}
+
 .explorer .tree-panel {
     --color: var(--tree-background);
     --opacity: 90%;

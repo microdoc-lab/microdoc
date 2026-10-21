@@ -96,6 +96,7 @@ DocMatrix.prototype.CreateDocumentInCellMisc = function (doc) {
 
     var docInCell = document.createElement("doc");
     docInCell.dataset.domain = doc.domain;
+    docInCell.dataset.tagpath = DocParser.DocTagPath(doc.documentId);
     docInCell.dataset.id = doc.documentId;
     docInCell.dataset.document = DocParser.DocName(doc.documentId);
     docInCell.dataset.name = docInCell.dataset.document + ".txt";

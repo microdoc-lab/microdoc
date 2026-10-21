@@ -6,8 +6,13 @@
 
     this.domainOptionsEditor.addEventListener("keydown", e => {
         // save and close domain options editor on ESC
-        if (e.key === "Escape")
+        if (e.key === "Escape") {
+            // skip if modal window opened
+            if (document.querySelector('.explorerHost[style*="display: flex"] .explorer .modal[style*="display: block"]'))
+                return;
+
             this.ToggleDomainOptions();
+        }
 
         // accept Tab in domain options editor
         if (e.key === "Tab") {

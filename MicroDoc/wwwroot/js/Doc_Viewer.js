@@ -20,7 +20,7 @@
         // copy heading commit: [tag] [tag] heading
         var heading = selection.anchorNode.closest("h1,h2,h3");
         if (heading) {
-            var docPath = DocParser.DocTagPath(domain, documentId);
+            var docPath = DocParser.DocTagPath(documentId);
             event.preventDefault();
             event.clipboardData.setData("text/plain", docPath + " " + heading.innerText);
             return;

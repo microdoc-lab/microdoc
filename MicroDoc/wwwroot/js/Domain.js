@@ -40,6 +40,10 @@
     // close document viewer (with active selection) on ESC
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
+            // skip if modal window opened
+            if (document.querySelector('.explorerHost[style*="display: flex"] .explorer .modal[style*="display: block"]'))
+                return;
+
             // current document viewer can be determined by having selection in it
             const selection = window.getSelection();
             if (!selection || selection.isCollapsed)

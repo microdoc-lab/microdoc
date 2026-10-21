@@ -27,11 +27,11 @@ DocParser.TagParent = function (tag) {
     return parentTag;
 }
 
-DocParser.DocTagPath = function (domain, documentId) {
+DocParser.DocTagPath = function (documentId) {
     var tags = documentId.split('/');
     tags.pop();
     var tagPath = tags.map(t => `[${t}]`).join(' ');
-    return (tagPath ? tagPath : domain);
+    return (tagPath ? tagPath : "");
 }
 
 DocParser.TagPath = function (domain, tag) {
