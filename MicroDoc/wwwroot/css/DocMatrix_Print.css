@@ -20,14 +20,8 @@
     display: block;
 }
 
-.explorer .modal doc:not(:last-child)::after {
-    content: ""; /* Required for pseudo-elements to render */
-    position: absolute;
-    bottom: 0; /* Places the line at the bottom of the div */
-    left: 0; /* Aligns line starting point */
-    width: 100%; /* Spans the full width of the div */
-    height: 1px; /* Thickness of your line */
-    background-color: #ccc; /* Color of your line */
+.explorer .modal doc:not(:last-child) {
+    border-bottom: 1px solid #ccc;
 }
 
 /* Viewer HTML*/
@@ -50,3 +44,33 @@
     transform: scale(10);
     z-index: 10;
 }
+
+/* TOC */
+.explorer .modal doc :is(h1,h2,h3)::after {
+    position: absolute;
+    top: calc(var(--index) * 24px);
+    content: var(--heading-prefix) ' ' attr(content);
+    cursor: pointer;
+
+    padding-left: 4px;
+
+    font-size: 16px; 
+    font-weight: normal; 
+
+    white-space: nowrap;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.explorer .modal doc :is(h1,h2,h3):hover::after {
+    text-decoration: underline;
+}
+
+.explorer .modal doc :is(h1,h2,h3).selected::after {
+    background-color: var(--selection-background);
+}
+
+.explorer .modal doc h1::after { left: 0px; }
+.explorer .modal doc h2::after { left: 10px; }
+.explorer .modal doc h3::after { left: 20px; }

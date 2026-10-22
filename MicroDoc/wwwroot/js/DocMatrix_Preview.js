@@ -108,7 +108,7 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPreview);
 
 // Api
-DocMatrix.prototype.HandleClick = async function (event, select, activate) {
+DocMatrix.prototype.HandleClick = async function (event, select, activate, container) {
     // open embeded link
     const link = event.target.closest("a");
     // link should be document-related
@@ -130,7 +130,10 @@ DocMatrix.prototype.HandleClick = async function (event, select, activate) {
         // find possible clicked image
         const imageWrapper = event.target.closest("imgw");
         if (imageWrapper) {
+            // select image
             SelectElement(imageWrapper.querySelector("div"));
+
+            // update window title/URL (docViewer)
             if (activate)
                 docElement.doc.OnActivation();
             return false;
@@ -144,9 +147,23 @@ DocMatrix.prototype.HandleClick = async function (event, select, activate) {
         // obtain section heading
         var heading = section.querySelector("h1, h2, h3");
         if (heading) {
+            // select heading
             SelectElement(heading);
+
+            // scroll heading into view (print preview TOC)
+            if (container && !IsFullyVisibleAndAboveMiddle(heading, container))
+                heading.scrollIntoView({ behavior: "auto", block: "start" });
+
+            // add selected class to heading (print preview TOC)
+            if (container) {
+                container.querySelectorAll("h1, h2, h3").forEach(heading => heading.classList.remove('selected'));
+                heading.classList.add('selected');
+            }
+
+            // update window title/URL (docViewer)
             if (activate)
                 docElement.doc.OnActivation();
+
             return true;
         }
     }
@@ -254,9 +271,14 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     doc.InitBehaviors();
 
     // select and scroll viewer/editor depending on specified mode
-    if (mode == "view")
-        docElement.doc.docViewer().SelectAndScroll(headingIndex);
+    if (mode == "view") {
+        var docViewer = docElement.doc.docViewer();
+        docViewer.SelectAndScroll(headingIndex);
+        AdjustGalleryOnScroll(docViewer);
+    }
 
-    if (mode == "edit")
-        docElement.doc.txtEditor().SelectAndScroll(headingIndex);
+    if (mode == "edit") {
+        var  txtEditor = docElement.doc.txtEditor();
+        txtEditor.SelectAndScroll(headingIndex);
+    }
 }

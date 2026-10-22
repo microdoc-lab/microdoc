@@ -1,7 +1,6 @@
 ﻿Doc.prototype.InitImages = function (options) {
     this.log('InitImages');
 
-    var explorer = this.explorer();
     var docElement = this.element;
     var docViewer = this.docViewer();
     var txtEditor = this.txtEditor();
@@ -9,25 +8,7 @@
 
     // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop
     // manually clip absolute positioned <gallery> outside document viewer bounds
-    docViewer.addEventListener("scroll", () => {
-        const scrollTop = docViewer.scrollTop;
-        const viewerRect = docViewer.getBoundingClientRect();
-
-        docViewer.querySelectorAll("gallery").forEach(gallery => {
-            // scroll gallery manually
-            gallery.style.marginTop = `${-scrollTop}px`;
-
-            const rect = gallery.getBoundingClientRect();
-            const galleryCenter = (rect.top + rect.bottom) / 2;
-
-            // control gallery visibility
-            gallery.style.visibility =
-                galleryCenter >= viewerRect.top &&
-                    galleryCenter <= viewerRect.bottom
-                    ? "visible"
-                    : "hidden";
-        });
-    });
+    docViewer.addEventListener("scroll", () => AdjustGalleryOnScroll(docViewer));
 
     // paste image from clipboard
     txtEditor.addEventListener("paste", async function (e) {
@@ -102,3 +83,24 @@
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitImages);
+
+// Static functions
+function AdjustGalleryOnScroll(container) {
+    const scrollTop = container.scrollTop;
+    const viewerRect = container.getBoundingClientRect();
+
+    container.querySelectorAll("gallery").forEach(gallery => {
+        // scroll gallery manually
+        gallery.style.marginTop = `${-scrollTop}px`;
+
+        const rect = gallery.getBoundingClientRect();
+        const galleryCenter = (rect.top + rect.bottom) / 2;
+
+        // control gallery visibility
+        gallery.style.visibility =
+            galleryCenter >= viewerRect.top &&
+                galleryCenter <= viewerRect.bottom
+                ? "visible"
+                : "hidden";
+    });
+}

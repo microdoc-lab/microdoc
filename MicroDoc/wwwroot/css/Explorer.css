@@ -10,6 +10,7 @@
     right: 0px;
     bottom: 0px;
     z-index: 10;
+    overflow: hidden;
     pointer-events: none;  
     
     font-size: 0px;
@@ -21,6 +22,7 @@
     right: 0px;
     bottom: 0px;
     z-index: 30;
+    overflow: hidden;
     
     display: none;
 
@@ -28,7 +30,9 @@
 }
 
 .explorer > .modal .doc-container {
-    width: calc(50% + 40px);
+    position: relative;
+
+    width: calc(50% + 20px + 20px + 300px);
     height: calc(100% - 100px);
 
     margin-left: auto;
@@ -36,11 +40,24 @@
     margin-top: 50px;
     margin-bottom: 50px;
 
+    padding-left: 300px;
+
+    --color: var(--doc-background);
+    --opacity: 80%;
+    background: color-mix(in srgb, var(--color) var(--opacity), transparent);
+}
+
+.explorer > .modal .doc-container .scroll-area {
+    width: 100%;
+    height: 100%;
     padding-left: 20px;
     padding-right: 20px;
 
+    border-left: 1px solid #ccc;
+
     overflow-x: hidden;
     overflow-y: auto;
+
     --color: var(--doc-background);
     --opacity: 100%;
     background: color-mix(in srgb, var(--color) var(--opacity), transparent);

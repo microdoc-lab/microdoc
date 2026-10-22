@@ -3,7 +3,7 @@
 
     var docMatrix = this;
     var modal = this.modal();
-    var container = modal.querySelector(".doc-container");
+    var container = modal.querySelector(".doc-container .scroll-area");
 
     // close print preview on ESC
     document.addEventListener("keydown", function (e) {
@@ -54,51 +54,48 @@
         if (distance > 5)
             return;
 
-        await this.HandleClick(event, true);
+        await this.HandleClick(event, true, false, container);
     });
 
     // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop
     // manually clip absolute positioned <gallery> outside document viewer bounds
-    container.addEventListener("scroll", () => {
-        const scrollTop = container.scrollTop;
-        const viewerRect = container.getBoundingClientRect();
-
-        container.querySelectorAll("gallery").forEach(gallery => {
-            // scroll gallery manually
-            gallery.style.marginTop = `${-scrollTop}px`;
-
-            const rect = gallery.getBoundingClientRect();
-            const galleryCenter = (rect.top + rect.bottom) / 2;
-
-            // control gallery visibility
-            gallery.style.visibility =
-                galleryCenter >= viewerRect.top &&
-                    galleryCenter <= viewerRect.bottom
-                    ? "visible"
-                    : "hidden";
-        });
-    });
+    container.addEventListener("scroll", () => AdjustGalleryOnScroll(container));
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
 DocMatrix.prototype.Print = function (button) {
+    // detect document/column
     var document = button.closest("th").dataset.document;
 
     var modal = this.modal();
-    var container = modal.querySelector(".doc-container");
+    var container = modal.querySelector(".doc-container .scroll-area");
 
+    // combine HTML for all doc rows in a specified column
     var html = "";
     this.grid().querySelectorAll(`tr[data-tag] td[data-document="${document}"] doc`).forEach(doc => {
         if (doc.dataset.content)
             html += doc.outerHTML;
     });
 
+    // update container HTML
     container.dataset.document = document;
     container.innerHTML = html;
+
+    // number Headings
+    var headingIndex = 0;
+    container.querySelectorAll("h1, h2, h3").forEach(heading => {
+        heading.style.setProperty('--index', headingIndex++);
+        heading.setAttribute("content", heading.textContent);
+        heading.title = heading.textContent;
+    });
+
+    // show container
     modal.style.display = "block";
 
-    SelectAndScrollViewer(container, 0);
+    SelectAndScrollViewer(container, 0, container);
+
+    AdjustGalleryOnScroll(container);
 
     this.modalOpened = true;
 }
