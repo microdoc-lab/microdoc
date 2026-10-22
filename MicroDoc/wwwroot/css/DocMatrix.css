@@ -13,6 +13,9 @@
     --color: var(--grid-background);
     --opacity: 90%;
     background: color-mix(in srgb, var(--color) var(--opacity), transparent);
+
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
 .docmatrix .grid:hover {
@@ -47,10 +50,13 @@
 
 /* Column headers in first row */
 .docmatrix .grid tr:nth-child(1) th {
-    position: relative;
     text-align: center;
     padding: 0px 5px;
     min-width: 100px;
+
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 /* Row headers (tag name) in first column */
