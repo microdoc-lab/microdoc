@@ -35,7 +35,10 @@
             // prompt image name
             imageName = prompt("Enter image name", imageName);
 
-            if (!imageName)
+            if (imageName == null)
+                return;
+
+            if (!imageName.trim())
                 return;
 
             imageName = imageName + imageType;

@@ -48,6 +48,10 @@
 
                 // click was made on MISC cell - create MISC document with custom name
                 var docName = prompt("Enter document name (without extension)");
+
+                if (docName == null)
+                    return;
+
                 if (!docName.trim())
                     return;
 
