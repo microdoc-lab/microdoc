@@ -108,7 +108,7 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPreview);
 
 // Api
-DocMatrix.prototype.HandleClick = async function (event, select) {
+DocMatrix.prototype.HandleClick = async function (event, select, activate) {
     // open embeded link
     const link = event.target.closest("a");
     // link should be document-related
@@ -119,33 +119,20 @@ DocMatrix.prototype.HandleClick = async function (event, select) {
         const domain = this.domain;
         var documentId = link.getAttribute("href");
 
-        const docPath = link.textContent;
-
-        // load document content
-        const response = await this.service.LoadDocument(domain, documentId);
-        if (!response.ok) {
-            this.error(`Load document ${docPath} failed`, await response.text());
-            return true;
-        }
-
-        const doc = await response.json();
-
-        documentId = doc.id;
-        const documentContent = doc.content;
-        const documentHtml = doc.html;
-        const headingIndex = -1;
-
-        // open document in overlay
-        this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
+        this.LoadDocumentAndOpen(domain, documentId);
 
         return true;
     }
 
     if (select) {
+        var docElement = event.target.closest(".doc");
+
         // find possible clicked image
         const imageWrapper = event.target.closest("imgw");
         if (imageWrapper) {
             SelectElement(imageWrapper.querySelector("div"));
+            if (activate)
+                docElement.doc.OnActivation();
             return false;
         }
 
@@ -156,10 +143,12 @@ DocMatrix.prototype.HandleClick = async function (event, select) {
 
         // obtain section heading
         var heading = section.querySelector("h1, h2, h3");
-        if (heading)
+        if (heading) {
             SelectElement(heading);
-
-        return true;
+            if (activate)
+                docElement.doc.OnActivation();
+            return true;
+        }
     }
 
     return false;
@@ -191,6 +180,28 @@ DocMatrix.prototype.HandleCopy = function (event, docElement) {
         event.clipboardData.setData("text/plain", imagePath);
         return;
     }
+}
+
+DocMatrix.prototype.LoadDocumentAndOpen = async function (domain, documentId) {
+    var docPath = DocParser.DocPath(documentId);
+
+    // load document content
+    const response = await this.service.LoadDocument(domain, documentId);
+    if (!response.ok) {
+        this.error(`Load document ${docPath} failed`, await response.text());
+        return false;
+    }
+
+    const doc = await response.json();
+
+    documentId = doc.id;
+    const documentContent = doc.content;
+    const documentHtml = doc.html;
+    const headingIndex = 0;
+
+    // open document in overlay
+    this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, !documentContent && isInRole("w", domain, documentId) ? "edit" : "view");
+    return true;
 }
 
 DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, headingIndex, mode) {

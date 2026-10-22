@@ -7,6 +7,16 @@
 
     window.domain = this;
 
+    window.addEventListener("popstate", () => {
+        var parts = location.pathname.split('/', 3);
+
+        if (parts.length == 2) // domain only
+            this.OpenExplorer(parts[1], "", "");
+
+        if (parts.length == 3) // domain + document
+            this.OpenExplorer(parts[1], "", parts[2]);
+    });
+
     // prompt user to save&close editing document on browser tab close/reload
     window.addEventListener("beforeunload", e => {
 
@@ -92,17 +102,18 @@ Domain.prototype.ExplorerId = function (domain) {
     return "explorer" + domain.replaceAll(".", "_").replaceAll(" ", "_");;
 }
 
-Domain.prototype.OpenExplorer = function (domain, selectedTag = "") {
+Domain.prototype.OpenExplorer = async function(domain, selectedTag = "", activeDocumentId) {
 
     // translate domain into explorerId
     var explorerId = this.ExplorerId(domain);
 
-    // if explorer already opened and not visible - activate it
+    // if explorer already opened and not visible - activate it along with document
     var element = document.getElementById(explorerId);
     if (element) {
-        if (element.parentElement.style.display == "none") {
-            this.ActivateExplorer(element);
-        }
+        if (element.parentElement.style.display == "none")
+            this.ActivateExplorer(element, activeDocumentId);
+        else
+            element.explorer.ActivateDocument(activeDocumentId);
         return;
     }
 
@@ -113,6 +124,7 @@ Domain.prototype.OpenExplorer = function (domain, selectedTag = "") {
 
     // set background url, obtain background version from options
     var backgroundVersion = this.options.domainBackgroundVersions[domain];
+    host.style.display = "none";
     host.style.backgroundImage = `url("/Home/Background?domain=${domain}&v=${backgroundVersion}")`;
 
     // create explorer 
@@ -130,12 +142,13 @@ Domain.prototype.OpenExplorer = function (domain, selectedTag = "") {
     explorer.selectedTag = selectedTag;
 
     // load explorer content
-    explorer.Reload();
+    await explorer.Reload();
 
-    this.ActivateExplorer(element);
+    // activate explorer
+    this.ActivateExplorer(document.getElementById(explorerId), activeDocumentId);
 }
 
-Domain.prototype.ActivateExplorer = function(element) {
+Domain.prototype.ActivateExplorer = function (element, activeDocumentId) {
     // toggle explorer
     document.querySelectorAll(`.explorer:not(#${element.id})`).forEach(other => {
         other.parentElement.style.display = "none";
@@ -155,6 +168,9 @@ Domain.prototype.ActivateExplorer = function(element) {
     document.querySelectorAll(`a.explorer-link[data-domain="${element.parentElement.domain}"]`).forEach(other => {
         other.classList.add("selected");
     });
+
+    // activate explorer document
+    element.explorer.ActivateDocument(activeDocumentId);
 }
 
 Domain.prototype.ShowLandingPage = function () {
@@ -170,7 +186,13 @@ Domain.prototype.ShowLandingPage = function () {
         other.classList.remove("selected");
     });
 
-    document.querySelector(".landing-page-link").classList.add("selected");    
+    document.querySelector(".landing-page-link").classList.add("selected");
+
+    // update landing page title
+    document.title = "MicroDoc";
+
+    // put base URL in history
+    history.replaceState(null, "", "/Home/LandingPage");
 }
 
 // Service methods

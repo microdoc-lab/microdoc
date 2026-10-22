@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Security.Claims;
+using static MicroDoc.Services.DomainOptions;
 
 namespace MicroDoc.Controllers
 {
@@ -514,6 +515,27 @@ namespace MicroDoc.Controllers
         public IActionResult Index()
         {
             return View();
+        }
+
+        public IActionResult LandingPage()
+        {
+            ViewData["domain"] = "--landing--page--";
+            return View("Index");
+        }
+
+        [HttpGet("/{domain:regex(^(?i:((?!Home$).)+)$)}")]
+        public IActionResult Domain(string domain)
+        {
+            ViewData["domain"] = domain;
+            return View("Index");
+        }
+
+        [HttpGet("/{domain:regex(^(?i:((?!Home$).)+)$)}/{**documentId}")]
+        public IActionResult Document(string domain, string documentId)
+        {
+            ViewData["domain"] = domain;
+            ViewData["documentId"] = documentId;
+            return View("Index");
         }
 
         public IActionResult Privacy()

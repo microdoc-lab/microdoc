@@ -2,6 +2,7 @@
     var overlay = this.overlay();
     var toolbar = this.toolbar();
     var docElement = this.element;
+    var explorer = this.explorer();
 
     // remove docElement
     overlay.removeChild(docElement);
@@ -10,6 +11,16 @@
     // reset toolbar context
     toolbar.dataset.domain = null;
     toolbar.dataset.id = null;
+
+    // update domain title
+    document.title = `${this.element.dataset.domain}`;
+
+    // reset active document context
+    explorer.activeDocumentId = null;
+    explorer.selectedHeadingIndex = -1;
+
+    // put domain URL in history
+    history.replaceState(null, "", `/${docElement.dataset.domain}`);
 }
 
 Doc.prototype.SaveDocument = async function () {

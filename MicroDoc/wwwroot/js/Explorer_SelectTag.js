@@ -10,3 +10,26 @@
 }
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitSelectTag);
+
+Explorer.prototype.ActivateDocument = function (activeDocumentId) {
+    var docMatrix = this.docMatrix();
+
+    // update domain title
+    document.title = `${this.domain}`;
+
+    // put domain URL in history
+    history.replaceState(null, "", `/${this.domain}`);
+
+    if (activeDocumentId == null)
+        activeDocumentId = this.activeDocumentId;
+
+    if (!activeDocumentId)
+        return;
+
+    // activate document or load document and open
+    var docElement = docMatrix.docElement(this.domain, activeDocumentId);
+    if (docElement)
+        docElement.doc.OnActivation(true);
+    else
+        docMatrix.LoadDocumentAndOpen(this.domain, activeDocumentId);
+}

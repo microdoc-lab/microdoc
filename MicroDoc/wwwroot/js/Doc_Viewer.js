@@ -30,11 +30,14 @@
             return;
 
         var docMatrix = this.docMatrix();
-        await docMatrix.HandleClick(event, true);
+        await docMatrix.HandleClick(event, true, true);
     });
 
     // select heading and scroll it into view
-    docViewer.SelectAndScroll = headingIndex => SelectAndScrollViewer(docViewer, headingIndex);
+    docViewer.SelectAndScroll = headingIndex => {
+        SelectAndScrollViewer(docViewer, headingIndex);
+        this.OnActivation();
+    };
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitViewer);

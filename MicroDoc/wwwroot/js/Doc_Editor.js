@@ -24,7 +24,13 @@
     txtEditor.AdjustHeight(txtEditor);
 
     // select heading line and scroll it into view
-    txtEditor.SelectAndScroll = (headingIndex, focus = true) => SelectAndScrollEditor(txtEditor, headingIndex, focus);
+    txtEditor.SelectAndScroll = (headingIndex, focus = true) => {
+        SelectAndScrollEditor(txtEditor, headingIndex, focus);
+        this.OnActivation();
+    }
+
+    // activate document when editor got focus
+    txtEditor.addEventListener("focus", e => this.OnActivation());
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitEditor);

@@ -95,11 +95,24 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        var domain = _domainOptions.Domains.FirstOrDefault(d => User.IsInRole(_domainOptions, "r", d.Name));
+        string domainToOpen = (string)ViewData["domain"];
+        string documentIdToOpen = (string)ViewData["documentId"];
+
+        var domain = _domainOptions.Domains
+            .Where(d => domainToOpen == null || d.Name == domainToOpen)
+            .FirstOrDefault(d => User.IsInRole(_domainOptions, "r", d.Name));
         if (domain != null)
         {
-<text>domain.OpenExplorer("@Html.Raw(domain.Name)");
+            if (documentIdToOpen != null)
+            {
+<text>domain.OpenExplorer("@Html.Raw(domain.Name)", "" , "@Html.Raw(documentIdToOpen)");
 </text>
+            }
+            else
+            {
+<text>domain.OpenExplorer("@Html.Raw(domain.Name)", "");
+</text>
+            }
         }
     }
 </script>
