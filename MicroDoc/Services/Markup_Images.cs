@@ -39,7 +39,7 @@
 
             html.Append($"<imgw data-imagepath=\"{imageLink}\" title=\"{onlyName}\">")
                 .Append("<imgc>")
-                .Append($"<img src=\"Home/Image?domain={domain}&documentId={parsedDocumentId}&imageName={parsedImageName}&v={version}\">")
+                .Append($"<img src=\"/Home/Image?domain={domain}&documentId={parsedDocumentId}&imageName={parsedImageName}&v={version}\">")
                 .Append("</imgc>")
                 .Append($"<div>{onlyName}</div>")
                 .Append("</imgw>\n");
