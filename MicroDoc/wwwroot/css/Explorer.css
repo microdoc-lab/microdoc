@@ -69,7 +69,7 @@
     background: color-mix(in srgb, var(--color) var(--opacity), transparent);
 }
 
-.explorer .tree-panel:hover {
+.explorer .tree-panel:has(.tag-tree.hover) {
     --opacity: 100%;
 }
 
@@ -77,7 +77,7 @@
     position: relative;
 }
 
-.explorer .tree-panel .tag-tree:hover {
+.explorer .tree-panel .tag-tree.hover {
     z-index: 20;
     background: var(--tree-background);
 }

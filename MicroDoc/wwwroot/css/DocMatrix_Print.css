@@ -40,7 +40,7 @@
     transform-origin: top left;
 }
 
-.explorer .modal doc gallery imgw:hover img {
+.explorer .modal doc gallery imgw.hover img {
     transform: scale(10);
     z-index: 10;
 }

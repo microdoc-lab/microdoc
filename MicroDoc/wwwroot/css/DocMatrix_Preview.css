@@ -43,7 +43,7 @@
     padding: 0px 3px 0px 3px;
 }
 
-.docmatrix .grid td:not(.misc) doc section:hover > content:not(:empty) {
+.docmatrix .grid td:not(.misc) doc section.hover > content:not(:empty) {
     display: block;
     background-color: var(--doc-background);
     margin-top: -8px;
@@ -63,6 +63,6 @@
 }
 
 /* Custom scale in preview */
-.docmatrix .grid td doc gallery imgw:hover img {
+.docmatrix .grid td doc gallery imgw.hover img {
     transform: scale(5);
 }

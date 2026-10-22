@@ -7,6 +7,11 @@
     this.tagTree().options.OnNodeSelected = this.tagTree().OnNodeSelected = function (tagId) {
         explorer.docMatrix().Load(tagId);
     };
+
+    enableSoftHover(`#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`);
+    enableSoftHover(`#${this.id} .docmatrix .grid td`);
+    enableSoftHover(`#${this.id} .docmatrix .grid td:not(.misc) doc section`);
+    enableSoftHover(`#${this.id} .docmatrix .grid td:not(.misc) doc gallery imgw, #${this.id} .overlay .doc gallery imgw, #${this.id} .modal doc gallery imgw`);
 }
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitSelectTag);

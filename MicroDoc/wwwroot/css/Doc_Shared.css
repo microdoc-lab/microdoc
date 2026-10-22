@@ -68,7 +68,7 @@
     transform-origin: bottom left;
 }
 
-.doc gallery imgw:hover img, doc gallery imgw:hover img {
+.doc gallery imgw.hover img, doc gallery imgw.hover img {
     transform: scale(15);
 }
 

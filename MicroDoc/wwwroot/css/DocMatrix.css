@@ -18,7 +18,7 @@
     border-spacing: 0;
 }
 
-.docmatrix .grid:hover {
+.docmatrix .grid.hover {
     z-index: 20;
     --opacity: 100%;
 }
@@ -99,8 +99,8 @@
     max-height: 100px;
 }
 
-.docmatrix .grid td:hover { z-index: 10; }
-.docmatrix .grid td:hover clip { overflow: visible; }
+.docmatrix .grid td.hover { z-index: 10; }
+.docmatrix .grid td.hover clip { overflow: visible; }
 
 /* Doc in cell */
 .docmatrix .grid td doc {
@@ -109,7 +109,7 @@
     margin-left: 6px;
 }
 
-.docmatrix .grid td:not(.misc):hover doc {
+.docmatrix .grid td:not(.misc).hover doc {
     background-color: var(--grid-background);
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }
