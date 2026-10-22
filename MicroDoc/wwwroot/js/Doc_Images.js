@@ -8,7 +8,7 @@
 
     // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop
     // manually clip absolute positioned <gallery> outside document viewer bounds
-    docViewer.addEventListener("scroll", () => AdjustGalleryOnScroll(docViewer));
+    docViewer.addEventListener("scroll", () => AdjustImageGalleryPositionAndVisibility(docViewer));
 
     // paste image from clipboard
     txtEditor.addEventListener("paste", async function (e) {
@@ -88,7 +88,7 @@
 Doc.prototype.behaviors.push(Doc.prototype.InitImages);
 
 // Static functions
-function AdjustGalleryOnScroll(container) {
+function AdjustImageGalleryPositionAndVisibility(container) {
     const scrollTop = container.scrollTop;
     const viewerRect = container.getBoundingClientRect();
 

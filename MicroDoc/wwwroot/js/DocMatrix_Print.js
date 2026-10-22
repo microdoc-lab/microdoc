@@ -59,7 +59,7 @@
 
     // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop
     // manually clip absolute positioned <gallery> outside document viewer bounds
-    container.addEventListener("scroll", () => AdjustGalleryOnScroll(container));
+    container.addEventListener("scroll", () => AdjustImageGalleryPositionAndVisibility(container));
 }
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
@@ -95,7 +95,7 @@ DocMatrix.prototype.Print = function (button) {
 
     SelectAndScrollViewer(container, 0, container);
 
-    AdjustGalleryOnScroll(container);
+    AdjustImageGalleryPositionAndVisibility(container);
 
     this.modalOpened = true;
 }

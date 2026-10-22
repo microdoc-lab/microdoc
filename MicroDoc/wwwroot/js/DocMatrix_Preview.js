@@ -278,7 +278,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     if (mode == "view") {
         var docViewer = docElement.doc.docViewer();
         docViewer.SelectAndScroll(headingIndex);
-        AdjustGalleryOnScroll(docViewer);
+        AdjustImageGalleryPositionAndVisibility(docViewer);
     }
 
     if (mode == "edit") {

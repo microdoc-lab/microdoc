@@ -74,6 +74,13 @@
         }
     });
 
+    // AdjustImageGalleryPositionAndVisibility on window resize
+    window.addEventListener("resize", () => {
+        document.querySelectorAll(".explorer .overlay .doc .viewer, .explorer .modal .doc-container .scroll-area").forEach(container =>
+            AdjustImageGalleryPositionAndVisibility(container));        
+    });
+
+
     this.service = new DomainService();
 }
 
