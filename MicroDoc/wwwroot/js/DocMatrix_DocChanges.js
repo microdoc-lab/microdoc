@@ -13,7 +13,7 @@ DocMatrix.prototype.HandleDocChanges = async function (change) {
                 var mode = docElement.getAttribute("mode");
                 var isFocusedEditor = txtEditor == document.activeElement;
 
-                const headingIndexView = GetSelectedHeadingIndexViewer(docViewer);
+                const headingIndexView = GetSelectedHeadingIndex(docViewer);
                 const headingIndexEdit = GetHeadingIndexAtCursor(txtEditor);
 
                 if (change.external) {
