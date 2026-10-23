@@ -7,3 +7,8 @@
     background-color: var(--selection-background);
     border-radius: 4px;
 }
+
+.tag-tree summary:focus {
+    outline: none;
+    box-shadow: none;
+}
