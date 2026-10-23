@@ -6,17 +6,20 @@ function DocMatrix(element, options = {}) {
     if (!options) options = {};
 
     this.instanceId = ++docMatrixInstanceId;
-    this.element = element;
     this.options = options;
-    this.id = element.id;
-    this.element.docMatrix = this;
-
-    if (options.style)
-        element.setAttribute('style', options.style);
-
     this.service = new DocMatrixService();
 
+    this.UpdateElement(element);
+
     this.log(`new instance #${this.instanceId}`);
+}
+
+DocMatrix.prototype.UpdateElement = function (element) {
+    this.id = element.id;
+    this.element = element;
+    this.element.docMatrix = this;
+    if (this.options.style)
+        this.element.setAttribute('style', this.options.style);
 }
 
 // Logging
@@ -68,8 +71,6 @@ DocMatrix.prototype.Load = async function (tagId) {
 
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
-    UpdateCanonicalInstance(this, parentElement.firstElementChild.docMatrix);
-    this.element.docMatrix = this;
 }
 
 // Service methods

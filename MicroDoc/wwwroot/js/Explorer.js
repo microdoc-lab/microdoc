@@ -6,17 +6,20 @@ function Explorer(element, options = {}) {
     if (!options) options = {};
 
     this.instanceId = ++explorerInstanceId;
-    this.element = element;
     this.options = options;
-    this.id = element.id;
-    this.element.explorer = this;
-
-    if (options.style)
-        element.setAttribute('style', options.style);
-
     this.service = new ExplorerService();
 
+    this.UpdateElement(element);
+
     this.log(`new instance #${this.instanceId}`);
+}
+
+Explorer.prototype.UpdateElement = function (element) {
+    this.id = element.id;
+    this.element = element;
+    this.element.explorer = this;
+    if (this.options.style)
+        this.element.setAttribute('style', this.options.style);
 }
 
 // Logging
@@ -68,8 +71,6 @@ Explorer.prototype.Load = async function (tagId) {
 
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
-    UpdateCanonicalInstance(this, parentElement.firstElementChild.explorer);
-    this.element.explorer = this;
 }
 
 // Service methods

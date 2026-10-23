@@ -96,11 +96,12 @@
 		if (!options)
 			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
 
-        const docMatrix = new DocMatrix(container, options);
+		const docMatrix = GetInstanceOrCreate(container.parentElement, () => new DocMatrix(container, options));
 		docMatrix.domain = "@Html.Raw(Model.Domain.Name)";
 		docMatrix.selectedTag = "@Html.Raw(Model.SelectedTag)";
 		docMatrix.loadDeepLevels = @Model.LoadDeepLevels.ToString().ToLower();
 
+		docMatrix.UpdateElement(container);
 		docMatrix.InitBehaviors();
     })();
 </script>

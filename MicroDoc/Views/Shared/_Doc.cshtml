@@ -21,10 +21,11 @@
 		if (!options)
 			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
 
-        const doc = new Doc(container, options);
+        const doc = GetInstanceOrCreate(container.parentElement, () => new Doc(container, options));
 		doc.domain = "@Html.Raw(Model.Domain.Name)";
 		doc.documentId = "@Html.Raw(Model.Doc.Domain)";
 
+        doc.UpdateElement(container);
 		doc.InitBehaviors();
     })();
 </script>

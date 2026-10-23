@@ -6,17 +6,20 @@ function TagTree(element, options = {}) {
     if (!options) options = {};
 
     this.instanceId = ++tagTreeInstanceId;
-    this.element = element;
     this.options = options;
-    this.id = element.id;
-    this.element.tagTree = this;
-
-    if (options.style)
-        element.setAttribute('style', options.style);
-
     this.service = new TagTreeService();
 
+    this.UpdateElement(element);
+
     this.log(`new instance #${this.instanceId}`);
+}
+
+TagTree.prototype.UpdateElement = function (element) {
+    this.id = element.id;
+    this.element = element;
+    this.element.tagTree = this;
+    if (this.options.style)
+        this.element.setAttribute('style', this.options.style);
 }
 
 TagTree.prototype.debug = function (text) { console.debug(`TagTree #${this.id}: ${text}`); }
@@ -65,8 +68,6 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
 
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
-    UpdateCanonicalInstance(this, parentElement.firstElementChild.tagTree);
-    this.element.tagTree = this;
 
     // expand expandedTag
     explorer.tagTree().ExpandTag(toExpand ?? expandedTag);

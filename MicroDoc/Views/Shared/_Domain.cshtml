@@ -99,8 +99,9 @@
 </text>
 	    }
 
-        const domain = new Domain(container, options);
+        const domain = GetInstanceOrCreate(container.parentElement, () => new Domain(container, options));
     
+        domain.UpdateElement(container);
         domain.InitBehaviors();
 
         @if (User.Identity.IsAuthenticated)

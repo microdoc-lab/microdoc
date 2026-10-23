@@ -6,17 +6,20 @@ function Doc(element, options = {}) {
     if (!options) options = {};
 
     this.instanceId = ++docInstanceId;
-    this.element = element;
     this.options = options;
-    this.id = element.id;
-    this.element.doc = this;
-
-    if (options.style)
-        element.setAttribute('style', options.style);
-
     this.service = new DocService();
 
+    this.UpdateElement(element);
+
     this.log(`new instance #${this.instanceId}`);
+}
+
+Doc.prototype.UpdateElement = function (element) {
+    this.id = element.id;
+    this.element = element;
+    this.element.doc = this;
+    if (this.options.style)
+        this.element.setAttribute('style', this.options.style);
 }
 
 // Logging

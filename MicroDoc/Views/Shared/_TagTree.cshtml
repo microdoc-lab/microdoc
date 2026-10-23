@@ -98,10 +98,11 @@
 		if (!options)
 			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
 
-        const tagTree = new TagTree(container, options);
+        const tagTree = GetInstanceOrCreate(container.parentElement, () => new TagTree(container, options));
         tagTree.domain = "@Html.Raw(Model.Domain.Name)";
         tagTree.selectedTag = "@Html.Raw(Model.SelectedTag)";
 
+        tagTree.UpdateElement(container);
         tagTree.InitBehaviors();
     })();
 </script>

@@ -6,19 +6,22 @@ function Domain(element, options = {}) {
     if (!options) options = {};
 
     this.instanceId = ++domainInstanceId;
-    this.element = element;
     this.options = options;
-    this.id = element.id;
-    this.element.domain = this;
-
-    if (options.style)
-        element.setAttribute('style', options.style);
-
-    window.domain = this;
-
     this.service = new DomainService();
 
+    this.UpdateElement(element);
+
     this.log(`new instance #${this.instanceId}`);
+}
+
+Domain.prototype.UpdateElement = function (element) {
+    this.id = element.id;
+    this.element = element;
+    this.element.domain = this;
+    if (this.options.style)
+        this.element.setAttribute('style', this.options.style);
+
+    window.domain = this;
 }
 
 Domain.prototype.debug = function (text) { console.debug(`Domain #${this.id}: ${text}`); }

@@ -53,13 +53,14 @@
 		if (!options)
 			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
 
-        const explorer = new Explorer(container, options);
+        const explorer = GetInstanceOrCreate(container.parentElement, () => new Explorer(container, options));
         explorer.domain = "@Html.Raw(Model.Domain.Name)";
         explorer.selectedTag = "@Html.Raw(Model.SelectedTag)";
         explorer.tagTreeId = "@Html.Raw(Model.TagTree.Id)";
         explorer.docMatrixId = "@Html.Raw(Model.DocMatrix.Id)";
         explorer.templateDocId = "@Html.Raw(Model.TemplateDoc.Id)";
         
+        explorer.UpdateElement(container);
         explorer.InitBehaviors();
     })();
 </script>
