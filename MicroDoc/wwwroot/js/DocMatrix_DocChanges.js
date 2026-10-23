@@ -1,5 +1,5 @@
-﻿// HandleCRUD
-DocMatrix.prototype.HandleCRUD = async function (change) {
+﻿// HandleDocChanges
+DocMatrix.prototype.HandleDocChanges = async function (change) {
 
     switch (change.op) {
 
@@ -82,7 +82,7 @@ DocMatrix.prototype.HandleCRUD = async function (change) {
     }
 }
 
-DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleCRUD);
+DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleDocChanges);
 
 DocMatrix.prototype.CreateDocumentInCellMisc = function (doc) {
     var tag = DocParser.TagParent(doc.documentId);

@@ -1,5 +1,5 @@
-﻿// HandleCRUD
-TagTree.prototype.HandleCRUD = async function (change) {
+﻿// HandleTagChanges
+TagTree.prototype.HandleTagChanges = async function (change) {
     var selectedTag = this.selectedTag;
     var expandedTag = this.ExpandedTag();
 
@@ -43,7 +43,7 @@ TagTree.prototype.HandleCRUD = async function (change) {
     }
 }
 
-TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleCRUD);
+TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleTagChanges);
 
 // Api
 TagTree.prototype.NewTag = async function () {
