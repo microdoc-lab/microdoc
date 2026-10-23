@@ -5,20 +5,11 @@ function Doc(element, options = {}) {
 
     if (!options) options = {};
 
-    element.doc = this;
-
     this.instanceId = ++docInstanceId;
-
     this.element = element;
     this.options = options;
-
     this.id = element.id;
-
-    this.debug = function (text) { console.debug(`Doc #${this.id}: ${text}`); }
-    this.info = function (text) { console.info(`Doc #${this.id}: ${text}`); }
-    this.log = function (text) { console.log(`Doc #${this.id}: ${text}`); }
-    this.warn = function (text) { console.warn(`Doc #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(`Doc #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+    this.element.doc = this;
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -27,6 +18,13 @@ function Doc(element, options = {}) {
 
     this.log(`new instance #${this.instanceId}`);
 }
+
+// Logging
+Doc.prototype.debug = function (text) { console.debug(`Doc #${this.id}: ${text}`); }
+Doc.prototype.info = function (text) { console.info(`Doc #${this.id}: ${text}`); }
+Doc.prototype.log = function (text) { console.log(`Doc #${this.id}: ${text}`); }
+Doc.prototype.warn = function (text) { console.warn(`Doc #${this.id}: ${text}`); }
+Doc.prototype.error = function (text, error) { console.error(`Doc #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
 
 Doc.prototype.behaviors = [];
 Doc.prototype.InitBehaviors = function () {

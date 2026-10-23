@@ -5,20 +5,11 @@ function Domain(element, options = {}) {
 
     if (!options) options = {};
 
-    element.domain = this;
-
     this.instanceId = ++domainInstanceId;
-
     this.element = element;
     this.options = options;
-
     this.id = element.id;
-
-    this.debug = function (text) { console.debug(`Domain #${this.id}: ${text}`); }
-    this.info = function (text) { console.info(`Domain #${this.id}: ${text}`); }
-    this.log = function (text) { console.log(`Domain #${this.id}: ${text}`); }
-    this.warn = function (text) { console.warn(`Domain #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(`Domain: ${text}`, error); alert(text + "\n\n" + error); }
+    this.element.domain = this;
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -29,6 +20,12 @@ function Domain(element, options = {}) {
 
     this.log(`new instance #${this.instanceId}`);
 }
+
+Domain.prototype.debug = function (text) { console.debug(`Domain #${this.id}: ${text}`); }
+Domain.prototype.info = function (text) { console.info(`Domain #${this.id}: ${text}`); }
+Domain.prototype.log = function (text) { console.log(`Domain #${this.id}: ${text}`); }
+Domain.prototype.warn = function (text) { console.warn(`Domain #${this.id}: ${text}`); }
+Domain.prototype.error = function (text, error) { console.error(`Domain: ${text}`, error); alert(text + "\n\n" + error); }
 
 Domain.prototype.behaviors = [];
 Domain.prototype.InitBehaviors = function () {

@@ -5,20 +5,11 @@ function Explorer(element, options = {}) {
 
     if (!options) options = {};
 
-    element.explorer = this;
-
     this.instanceId = ++explorerInstanceId;
-
     this.element = element;
     this.options = options;
-
     this.id = element.id;
-
-    this.debug = function (text) { console.debug(`Explorer #${this.id}: ${text}`); }
-    this.info = function (text) { console.info(`Explorer #${this.id}: ${text}`); }
-    this.log = function (text) { console.log(`Explorer #${this.id}: ${text}`); }
-    this.warn = function (text) { console.warn(`Explorer #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(`Explorer #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+    this.element.explorer = this;
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -27,6 +18,13 @@ function Explorer(element, options = {}) {
 
     this.log(`new instance #${this.instanceId}`);
 }
+
+// Logging
+Explorer.prototype.debug = function (text) { console.debug(`Explorer #${this.id}: ${text}`); }
+Explorer.prototype.info = function (text) { console.info(`Explorer #${this.id}: ${text}`); }
+Explorer.prototype.log = function (text) { console.log(`Explorer #${this.id}: ${text}`); }
+Explorer.prototype.warn = function (text) { console.warn(`Explorer #${this.id}: ${text}`); }
+Explorer.prototype.error = function (text, error) { console.error(`Explorer #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
 
 Explorer.prototype.behaviors = [];
 Explorer.prototype.InitBehaviors = function () {
@@ -71,6 +69,7 @@ Explorer.prototype.Load = async function (tagId) {
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
     UpdateCanonicalInstance(this, parentElement.firstElementChild.explorer);
+    this.element.explorer = this;
 }
 
 // Service methods

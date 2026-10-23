@@ -5,20 +5,11 @@ function DocMatrix(element, options = {}) {
 
     if (!options) options = {};
 
-    element.docMatrix = this;
-
     this.instanceId = ++docMatrixInstanceId;
-
     this.element = element;
     this.options = options;
-
     this.id = element.id;
-
-    this.debug = function (text) { console.debug(`DocMatrix #${this.id}: ${text}`); }
-    this.info = function (text) { console.info(`DocMatrix #${this.id}: ${text}`); }
-    this.log = function (text) { console.log(`DocMatrix #${this.id}: ${text}`); }
-    this.warn = function (text) { console.warn(`DocMatrix #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(`DocMatrix #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+    this.element.docMatrix = this;
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -27,6 +18,13 @@ function DocMatrix(element, options = {}) {
 
     this.log(`new instance #${this.instanceId}`);
 }
+
+// Logging
+DocMatrix.prototype.debug = function (text) { console.debug(`DocMatrix #${this.id}: ${text}`); }
+DocMatrix.prototype.info = function (text) { console.info(`DocMatrix #${this.id}: ${text}`); }
+DocMatrix.prototype.log = function (text) { console.log(`DocMatrix #${this.id}: ${text}`); }
+DocMatrix.prototype.warn = function (text) { console.warn(`DocMatrix #${this.id}: ${text}`); }
+DocMatrix.prototype.error = function (text, error) { console.error(`DocMatrix #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
 
 DocMatrix.prototype.behaviors = [];
 DocMatrix.prototype.InitBehaviors = function () {
@@ -71,6 +69,7 @@ DocMatrix.prototype.Load = async function (tagId) {
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
     UpdateCanonicalInstance(this, parentElement.firstElementChild.docMatrix);
+    this.element.docMatrix = this;
 }
 
 // Service methods

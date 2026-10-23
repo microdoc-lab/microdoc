@@ -5,20 +5,11 @@ function TagTree(element, options = {}) {
 
     if (!options) options = {};
 
-    element.tagTree = this;
-
     this.instanceId = ++tagTreeInstanceId;
-
     this.element = element;
     this.options = options;
-
     this.id = element.id;
-
-    this.debug = function (text) { console.debug(`TagTree #${this.id}: ${text}`); }
-    this.info = function (text) { console.info(`TagTree #${this.id}: ${text}`); }
-    this.log = function (text) { console.log(`TagTree #${this.id}: ${text}`); }
-    this.warn = function (text) { console.warn(`TagTree #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(`TagTree #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+    this.element.tagTree = this;
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -27,6 +18,12 @@ function TagTree(element, options = {}) {
 
     this.log(`new instance #${this.instanceId}`);
 }
+
+TagTree.prototype.debug = function (text) { console.debug(`TagTree #${this.id}: ${text}`); }
+TagTree.prototype.info = function (text) { console.info(`TagTree #${this.id}: ${text}`); }
+TagTree.prototype.log = function (text) { console.log(`TagTree #${this.id}: ${text}`); }
+TagTree.prototype.warn = function (text) { console.warn(`TagTree #${this.id}: ${text}`); }
+TagTree.prototype.error = function (text, error) { console.error(`TagTree #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
 
 TagTree.prototype.behaviors = [];
 TagTree.prototype.InitBehaviors = function () {
@@ -69,6 +66,7 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
     UpdateCanonicalInstance(this, parentElement.firstElementChild.tagTree);
+    this.element.tagTree = this;
 
     // expand expandedTag
     explorer.tagTree().ExpandTag(toExpand ?? expandedTag);
