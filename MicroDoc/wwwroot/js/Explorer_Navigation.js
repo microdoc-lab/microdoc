@@ -1,12 +1,11 @@
 ﻿Explorer.prototype.InitNavigation = function (options) {
     this.debug('InitNavigation');
 
-    var explorer = this;
+    var tagTree = this.tagTree();
+    var docMatrix = this.docMatrix();
 
     // synchronize DocMatrix with selected tag in TagTree
-    this.tagTree().options.OnNodeSelected = this.tagTree().OnNodeSelected = function (tagId) {
-        explorer.docMatrix().Load(tagId);
-    };
+    tagTree.options.OnNodeSelected = tagTree.OnNodeSelected = tagId => docMatrix.Load(tagId);
 
     enableSoftHover(`#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`);
     enableSoftHover(`#${this.id} .docmatrix .grid td`);

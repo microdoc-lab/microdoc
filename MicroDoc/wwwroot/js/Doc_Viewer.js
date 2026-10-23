@@ -2,11 +2,11 @@
     this.debug('InitViewer');
 
     var explorer = this.explorer();
+    var docMatrix = this.docMatrix();
     var docViewer = this.docViewer();
 
     // intercept Ctrl+C event and perform custom copy logic
     docViewer.addEventListener("copy", event => {
-        var docMatrix = this.docMatrix();
         docMatrix.HandleDocumentCopy(event, this);
     });
 
@@ -28,7 +28,6 @@
         if (distance > 5)
             return;
 
-        var docMatrix = this.docMatrix();
         await docMatrix.HandleDocumentClick(event, true);
 
         explorer.OnDocumentActivated(this);

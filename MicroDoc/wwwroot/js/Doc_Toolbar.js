@@ -3,6 +3,7 @@
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();
+    var docMatrix = this.docMatrix();
 
     // copy document path to clipboard
     this.element.querySelector(".label").addEventListener("click", async event => {
@@ -67,8 +68,6 @@
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
 
-        var docMatrix = this.docMatrix();
-
         // find & check docElement
         var docElement = docMatrix.docElement(domain, documentId);
         if (!docElement)
@@ -82,8 +81,6 @@
         // obtain document context
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
-
-        var docMatrix = this.docMatrix();
 
         var docPath = DocParser.DocPath(documentId);
 
@@ -103,8 +100,6 @@
         // obtain document context
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
-
-        var docMatrix = this.docMatrix();
 
         // find & check docElement
         var docElement = docMatrix.docElement(domain, documentId);
