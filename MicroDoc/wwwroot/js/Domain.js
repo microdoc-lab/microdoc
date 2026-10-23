@@ -2,8 +2,11 @@
     this.options = options;
     this.container = document.querySelector("#domainExplorers");
 
-    this.log = function (text) { console.log(`Domain: ${text}`); }
-    this.error = function (text, error) { console.error(text, error); alert(text + "\n\n" + error); }
+    this.debug = function (text) { console.debug(`Domain #${this.id}: ${text}`); }
+    this.info = function (text) { console.info(`Domain #${this.id}: ${text}`); }
+    this.log = function (text) { console.log(`Domain #${this.id}: ${text}`); }
+    this.warn = function (text) { console.warn(`Domain #${this.id}: ${text}`); }
+    this.error = function (text, error) { console.error(`Domain: ${text}`, error); alert(text + "\n\n" + error); }
 
     window.domain = this;
 

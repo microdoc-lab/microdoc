@@ -1,16 +1,24 @@
-﻿function TagTree(element, options = {}) {
+﻿var tagTreeInstanceId = 0;
+
+function TagTree(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
 
     element.tagTree = this;
 
+    this.instanceId = ++tagTreeInstanceId;
+
     this.element = element;
     this.options = options;
 
     this.id = element.id;
+
+    this.debug = function (text) { console.debug(`TagTree #${this.id}: ${text}`); }
+    this.info = function (text) { console.info(`TagTree #${this.id}: ${text}`); }
     this.log = function (text) { console.log(`TagTree #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(text, error); alert(text + "\n\n" + error); }
+    this.warn = function (text) { console.warn(`TagTree #${this.id}: ${text}`); }
+    this.error = function (text, error) { console.error(`TagTree #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -27,9 +35,9 @@ TagTree.prototype.InitBehaviors = function () {
 }
 
 TagTree.prototype.changeHandlers = [];
-TagTree.prototype.ApplyChanges = function (change) {
+TagTree.prototype.ApplyChanges = async function (change) {
     for (const handler of this.changeHandlers) {
-        handler.call(this, change);
+        await handler.call(this, change);
     }
 }
 
@@ -54,7 +62,9 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
         return;
     }
 
-    ReplaceInnerHtml(this.element.parentElement, await response.text());
+    const parentElement = this.element.parentElement;
+    ReplaceInnerHtml(parentElement, await response.text());
+    UpdateCanonicalInstance(this, parentElement.firstElementChild.tagTree);
 
     // expand expandedTag
     var tagTree = explorerElement.explorer.tagTree();

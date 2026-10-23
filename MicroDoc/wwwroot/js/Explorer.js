@@ -1,16 +1,24 @@
-﻿function Explorer(element, options = {}) {
+﻿var explorerInstanceId = 0;
+
+function Explorer(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
 
     element.explorer = this;
 
+    this.instanceId = ++explorerInstanceId;
+
     this.element = element;
     this.options = options;
 
     this.id = element.id;
+
+    this.debug = function (text) { console.debug(`Explorer #${this.id}: ${text}`); }
+    this.info = function (text) { console.info(`Explorer #${this.id}: ${text}`); }
     this.log = function (text) { console.log(`Explorer #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(text, error); alert(text + "\n\n" + error); }
+    this.warn = function (text) { console.warn(`Explorer #${this.id}: ${text}`); }
+    this.error = function (text, error) { console.error(`Explorer #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -27,13 +35,14 @@ Explorer.prototype.InitBehaviors = function () {
 }
 
 Explorer.prototype.changeHandlers = [];
-Explorer.prototype.ApplyChanges = function (change) {
+Explorer.prototype.ApplyChanges = async function (change) {
     for (const handler of this.changeHandlers) {
-        handler.call(this, change);
+        await handler.call(this, change);
     }
 
-    this.tagTree().ApplyChanges(change);
-    this.docMatrix().ApplyChanges(change);
+    await this.tagTree().ApplyChanges(change);
+    await this.docMatrix().ApplyChanges(change);
+
     for (const docElement of this.element.querySelectorAll(".overlay .doc"))
         docElement.doc.ApplyChanges(change);
 }
@@ -57,7 +66,9 @@ Explorer.prototype.Load = async function (tagId) {
         return;
     }
 
-    ReplaceInnerHtml(this.element.parentElement, await response.text());
+    const parentElement = this.element.parentElement;
+    ReplaceInnerHtml(parentElement, await response.text());
+    UpdateCanonicalInstance(this, parentElement.firstElementChild.explorer);
 }
 
 // Service methods

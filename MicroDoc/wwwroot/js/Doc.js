@@ -1,16 +1,24 @@
-﻿function Doc(element, options = {}) {
+﻿var docInstanceId = 0;
+
+function Doc(element, options = {}) {
     if (!element) return;
 
     if (!options) options = {};
 
     element.doc = this;
 
+    this.instanceId = ++docInstanceId;
+
     this.element = element;
     this.options = options;
 
     this.id = element.id;
+
+    this.debug = function (text) { console.debug(`Doc #${this.id}: ${text}`); }
+    this.info = function (text) { console.info(`Doc #${this.id}: ${text}`); }
     this.log = function (text) { console.log(`Doc #${this.id}: ${text}`); }
-    this.error = function (text, error) { console.error(text, error); alert(text + "\n\n" + error); }
+    this.warn = function (text) { console.warn(`Doc #${this.id}: ${text}`); }
+    this.error = function (text, error) { console.error(`Doc #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
 
     if (options.style)
         element.setAttribute('style', options.style);
@@ -27,9 +35,9 @@ Doc.prototype.InitBehaviors = function () {
 }
 
 Doc.prototype.changeHandlers = [];
-Doc.prototype.ApplyChanges = function (change) {
+Doc.prototype.ApplyChanges = async function (change) {
     for (const handler of this.changeHandlers) {
-        handler.call(this, change);
+        await handler.call(this, change);
     }
 }
 

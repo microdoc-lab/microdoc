@@ -21,6 +21,37 @@ function ReplaceInnerHtml(element, html) {
     RecreateScripts(element);
 }
 
+function UpdateCanonicalInstance(target, source) {
+    // source should be always a new object on replacement (no owner must be)
+    if (source.owner)
+        throw new Error(`Source has owner ${source} #${source.instanceId}, owner ${source.owner} #${source.owner.instanceId}`); 
+
+    // if replacemennt initiated by copy itself - resolve canonical instance
+    if (target.owner)
+        target = target.owner;
+
+    // instanceId should be always 1 (canonical instance)
+    if (target.instanceId !== 1)
+        throw new Error(`Target has instanceId <> 1 ${target} #${target.instanceId}`);
+
+    // remove properties on target that doesn't exist on source
+    for (const key of Reflect.ownKeys(target)) {
+        if (!Reflect.has(source, key))
+            delete target[key];
+    }
+
+    // copy source -> target (except instanceId)
+    for (const key of Reflect.ownKeys(source)) {
+        if (key !== "instanceId")
+            target[key] = source[key];
+    }
+
+    // set canonical instance on copy
+    source.owner = target;
+
+    return target;
+}
+
 // setup unique clientId
 const clientUID = crypto.randomUUID();
 

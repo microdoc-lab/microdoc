@@ -1,5 +1,5 @@
 ﻿// HandleTagChanges
-DocMatrix.prototype.HandleTagChanges = function (change) {
+DocMatrix.prototype.HandleTagChanges = async function (change) {
     var selectedTag = this.selectedTag;
 
     switch (change.op) {
@@ -10,32 +10,32 @@ DocMatrix.prototype.HandleTagChanges = function (change) {
 
         case "NewTag":
             if (selectedTag == change.selectedTag)      // if selected tag is parent of new tag - reload grid (to see newly created tag in it)
-                this.Load(selectedTag);
+                await this.Load(selectedTag);
             break;
 
         case "RenameTag":
             if (change.external) {
                 if (selectedTag == change.selectedTag)
-                    this.Load(change.newTag);           // if selected tag is a renamed tag - switch grid to renamed tag
+                    await this.Load(change.newTag);           // if selected tag is a renamed tag - switch grid to renamed tag
                 else
-                    this.Load(selectedTag);             // reload grid
+                    await this.Load(selectedTag);             // reload grid
             } else
-                this.Load(change.newTag);               // switch grid to renamed tag
+                await this.Load(change.newTag);               // switch grid to renamed tag
             break;
 
         case "MoveTag":
             if (change.external) {
                 if (selectedTag == change.selectedTag)
-                    this.Load(change.parentTag);        // if selected tag is a moved tag - switch grid to parent tag (to see tag gone)
+                    await this.Load(change.parentTag);        // if selected tag is a moved tag - switch grid to parent tag (to see tag gone)
                 if (selectedTag == change.targetTag || selectedTag == change.parentTag)
-                    this.Load(selectedTag);             // if selected tag is target/parent - reload grid (to see tag gone)
+                    await this.Load(selectedTag);             // if selected tag is target/parent - reload grid (to see tag gone)
             } else
-                this.Load(change.newTag);               // switch grid to moved tag
+                await this.Load(change.newTag);               // switch grid to moved tag
             break;
 
         case "DeleteTag":
             if (selectedTag == change.selectedTag || selectedTag == change.parentTag)   // if selected tag is deleting tag/parent - switch grid to parent tag
-                this.Load(change.parentTag);
+                await this.Load(change.parentTag);
             break;
     }
 }

@@ -46,7 +46,7 @@
 TagTree.prototype.behaviors.push(TagTree.prototype.InitDragNDropReorder);
 
 // HandleSwapTags
-TagTree.prototype.HandleSwapTags = function(change) {
+TagTree.prototype.HandleSwapTags = async function(change) {
     if (change.op == "SwapTags")
         this.SwapTags(change.parentTag, change.tagName, change.targetTagName);
 }
