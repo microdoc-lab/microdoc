@@ -3,13 +3,12 @@
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();
+    var docMatrix = this.docMatrix();
 
     var docElement = this.element;
 
     docElement.addEventListener("dragover", e => {
-        var docMatrix = this.docMatrix();
-
-        if (!docMatrix.draggedDoc)
+        if (!overlay.draggedDoc)
             return;
 
         e.preventDefault();
@@ -17,14 +16,12 @@
     });
 
     docElement.addEventListener("drop", e => {
-        var docMatrix = this.docMatrix();
-
-        if (!docMatrix.draggedDoc)
+        if (!overlay.draggedDoc)
             return;
 
         e.preventDefault();
 
-        const sender = docMatrix.draggedDoc;
+        const sender = overlay.draggedDoc;
         const target = docElement;
 
         // Reorder DOM
@@ -53,8 +50,6 @@
             return;
         }
 
-        var docMatrix = this.docMatrix();
-
         // obtain document context
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
@@ -69,13 +64,11 @@
         e.dataTransfer.setData("text/plain", documentId);
         e.dataTransfer.setData("application/x-drag-type", "Doc");
 
-        docMatrix.draggedDoc = docElement;
+        overlay.draggedDoc = docElement;
     });
 
     grip.addEventListener("dragend", () => {
-        var docMatrix = this.docMatrix();
-
-        docMatrix.draggedDoc = null;
+        overlay.draggedDoc = null;
     });
 }
 
