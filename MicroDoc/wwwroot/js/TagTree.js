@@ -44,6 +44,8 @@ TagTree.prototype.ApplyChanges = async function (change) {
 }
 
 // Api
+TagTree.prototype.explorer = function () { return this.element.closest(".explorer").explorer; }
+
 TagTree.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }
@@ -55,7 +57,7 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
     // Update model property
     this.selectedTag = tagId;
 
-    var explorerElement = this.element.closest(".explorer");
+    var explorer = this.explorer();
 
     // Reload HTML content
     const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);
@@ -69,9 +71,8 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
     UpdateCanonicalInstance(this, parentElement.firstElementChild.tagTree);
 
     // expand expandedTag
-    var tagTree = explorerElement.explorer.tagTree();
-    tagTree.ExpandTag(toExpand ?? expandedTag);
-    tagTree.Search(searchText);
+    explorer.tagTree().ExpandTag(toExpand ?? expandedTag);
+    explorer.tagTree().Search(searchText);
 }
 
 // Service methods

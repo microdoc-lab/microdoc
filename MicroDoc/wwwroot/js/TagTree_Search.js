@@ -22,7 +22,10 @@
 
 TagTree.prototype.behaviors.push(TagTree.prototype.InitSearch);
 
-TagTree.prototype.Search = function () {
+TagTree.prototype.Search = function (text) {
+    if (text)
+        this.searchInput.value = text;
+
     const sheet = this.searchStyle.sheet;
 
     // Delete all existing rules
