@@ -1,5 +1,5 @@
 ﻿Doc.prototype.InitEditor = function (options) {
-    this.log('InitEditor');
+    this.debug('InitEditor');
 
     var docElement = this.element;
     var txtEditor = this.txtEditor();

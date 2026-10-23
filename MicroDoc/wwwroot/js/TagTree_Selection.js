@@ -1,5 +1,5 @@
 ﻿TagTree.prototype.InitSelection = function (options) {
-    this.log('InitSelection');
+    this.debug('InitSelection');
 
     // Node click for selection
     const treeNodes = this.element.querySelectorAll(".title");

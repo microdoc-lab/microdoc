@@ -1,5 +1,5 @@
 ﻿Doc.prototype.InitImages = function (options) {
-    this.log('InitImages');
+    this.debug('InitImages');
 
     var docElement = this.element;
     var docViewer = this.docViewer();

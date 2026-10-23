@@ -1,5 +1,5 @@
 ﻿Explorer.prototype.InitResize = function (options) {
-    this.log('InitResize');
+    this.debug('InitResize');
 
     const container = this.element;
     const left = this.element.querySelector(".tree-panel");

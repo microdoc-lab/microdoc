@@ -1,5 +1,5 @@
 ﻿Doc.prototype.InitEditorFormat = function (options) {
-    this.log('InitEditorFormat');
+    this.debug('InitEditorFormat');
 
     var txtEditor = this.txtEditor();
 

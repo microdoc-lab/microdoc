@@ -1,5 +1,5 @@
 ﻿DocMatrix.prototype.InitPreview = function (options) {
-    this.log('InitPreview');
+    this.debug('InitPreview');
 
     var grid = this.grid();
 

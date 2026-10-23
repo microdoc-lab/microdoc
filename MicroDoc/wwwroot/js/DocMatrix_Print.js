@@ -1,5 +1,5 @@
 ﻿DocMatrix.prototype.InitPrint = function (options) {
-    this.log('InitPrint');
+    this.debug('InitPrint');
 
     var docMatrix = this;
     var modal = this.modal();

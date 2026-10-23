@@ -1,5 +1,5 @@
 ﻿Doc.prototype.InitViewer = function (options) {
-    this.log('InitViewer');
+    this.debug('InitViewer');
 
     var docViewer = this.docViewer();
 

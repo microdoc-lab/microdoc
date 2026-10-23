@@ -1,5 +1,5 @@
 ﻿Domain.prototype.InitDomainOptions = function (options) {
-    this.log('InitDomainOptions');
+    this.debug('InitDomainOptions');
 
     this.domainOptions = document.querySelector("#domainOptions");
     this.domainOptionsEditor = document.querySelector("#domainOptions .editor");

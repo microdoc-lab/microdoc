@@ -1,5 +1,5 @@
 ﻿Explorer.prototype.InitNavigation = function (options) {
-    this.log('InitNavigation');
+    this.debug('InitNavigation');
 
     var explorer = this;
 

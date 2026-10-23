@@ -1,5 +1,5 @@
 ﻿DocMatrix.prototype.InitSearch = function (options) {
-    this.log('InitSearch');
+    this.debug('InitSearch');
 
     this.searchStyle = this.element.querySelector(".search-style");
 

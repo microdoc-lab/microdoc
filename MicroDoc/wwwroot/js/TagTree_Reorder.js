@@ -1,5 +1,5 @@
 ﻿TagTree.prototype.InitDragNDropReorder = function (options) {
-    this.log('InitDragNDropReorder');
+    this.debug('InitDragNDropReorder');
 
     let draggedNode = null;
     this.element.querySelectorAll(".title").forEach(node => {

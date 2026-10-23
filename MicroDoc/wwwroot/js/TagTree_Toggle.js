@@ -1,5 +1,5 @@
 ﻿TagTree.prototype.InitToggle = function (options) {
-    this.log('InitToggle');
+    this.debug('InitToggle');
 
     // Prevent toggle by clicking on Title
     const titleElements = this.element.querySelectorAll(".title");

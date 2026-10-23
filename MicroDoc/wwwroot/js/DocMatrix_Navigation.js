@@ -1,5 +1,5 @@
 ﻿DocMatrix.prototype.InitNavigation = function (options) {
-    this.log('InitNavigation');
+    this.debug('InitNavigation');
 
     this.loadDeepLevelsInput = this.element.querySelector(".load-deep-levels");
 

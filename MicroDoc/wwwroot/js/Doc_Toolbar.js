@@ -1,5 +1,5 @@
 ﻿Doc.prototype.InitToolbar = function (options) {
-    this.log('InitToolbar');
+    this.debug('InitToolbar');
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();

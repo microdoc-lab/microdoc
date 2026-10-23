@@ -1,5 +1,5 @@
 ﻿Doc.prototype.InitReorder = function (options) {
-    this.log('InitReorder');
+    this.debug('InitReorder');
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();
