@@ -3,7 +3,6 @@
 
     var overlay = this.overlay();
     var toolbar = this.toolbar();
-    var docMatrix = this.docMatrix();
 
     var docElement = this.element;
 
@@ -54,6 +53,7 @@
         var domain = toolbar.dataset.domain;
         var documentId = toolbar.dataset.id;
 
+        var docMatrix = this.docMatrix();
         var docElement = docMatrix.docElement(domain, documentId);
         if (!docElement) {
             e.preventDefault();
