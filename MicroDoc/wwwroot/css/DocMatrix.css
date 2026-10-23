@@ -39,6 +39,7 @@
 .docmatrix .toolbar {
     position: absolute;
     top: -2px;
+    white-space: nowrap;
 }
 
 .docmatrix .toolbar .load-deep-levels {

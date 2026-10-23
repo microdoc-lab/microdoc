@@ -41,6 +41,7 @@
     white-space: nowrap;
     pointer-events: auto;
     font-size: 0;
+    white-space: nowrap;
 }
 
 .explorer .overlay .toolbar .grip { cursor: move; }
