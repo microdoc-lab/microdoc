@@ -1,7 +1,11 @@
 ﻿@using MicroDoc.Services
 @inject DomainOptions _domainOptions
 
-<div id="domainExplorers">
+@{
+    Model.Id = "domainExplorers";
+}
+
+<div id="@Model.Id">
     <div class="landing-page">
         <h1>Welcome to MicroDoc</h1>
         <p>
@@ -80,39 +84,46 @@
 </div>
 
 <script>
-    var options = {};
+    (function() {
+        const container = document.getElementById("@Html.Raw(Model.Id)");
+        if (!container) return;
 
-    options.domainBackgroundVersions = {};
-    @foreach (var domainOptions in _domainOptions.Domains)
-	{
+        var options = window["@Html.Raw(Model.Id)" + "Options"]
+		if (!options)
+			window["@Html.Raw(Model.Id)" + "Options"] = options = {};
+
+        options.domainBackgroundVersions = {};
+        @foreach (var domainOptions in _domainOptions.Domains)
+	    {
 <text>options.domainBackgroundVersions["@Html.Raw(domainOptions.Name)"] = "@domainOptions.BackgroundVersion";
 </text>
-	}
+	    }
 
-    var domain = new Domain(options);
+        const domain = new Domain(container, options);
     
-    domain.InitBehaviors();
+        domain.InitBehaviors();
 
-    @if (User.Identity.IsAuthenticated)
-    {
-        string domainToOpen = (string)ViewData["domain"];
-        string documentIdToOpen = (string)ViewData["documentId"];
-
-        var domain = _domainOptions.Domains
-            .Where(d => domainToOpen == null || d.Name == domainToOpen)
-            .FirstOrDefault(d => User.IsInRole(_domainOptions, "r", d.Name));
-        if (domain != null)
+        @if (User.Identity.IsAuthenticated)
         {
-            if (documentIdToOpen != null)
+            string domainToOpen = (string)ViewData["domain"];
+            string documentIdToOpen = (string)ViewData["documentId"];
+
+            var domain = _domainOptions.Domains
+                .Where(d => domainToOpen == null || d.Name == domainToOpen)
+                .FirstOrDefault(d => User.IsInRole(_domainOptions, "r", d.Name));
+            if (domain != null)
             {
+                if (documentIdToOpen != null)
+                {
 <text>domain.OpenExplorer("@Html.Raw(domain.Name)", "" , "@Html.Raw(documentIdToOpen)");
 </text>
-            }
-            else
-            {
+                }
+                else
+                {
 <text>domain.OpenExplorer("@Html.Raw(domain.Name)", "");
 </text>
+                }
             }
         }
-    }
+    })();
 </script>

@@ -24,6 +24,8 @@ function Doc(element, options = {}) {
         element.setAttribute('style', options.style);
 
     this.service = new DocService();
+
+    this.log(`new instance #${this.instanceId}`);
 }
 
 Doc.prototype.behaviors = [];

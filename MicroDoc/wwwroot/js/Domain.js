@@ -1,6 +1,18 @@
-﻿function Domain(options) {
+﻿var domainInstanceId = 0;
+
+function Domain(element, options = {}) {
+    if (!element) return;
+
+    if (!options) options = {};
+
+    element.domain = this;
+
+    this.instanceId = ++domainInstanceId;
+
+    this.element = element;
     this.options = options;
-    this.container = document.querySelector("#domainExplorers");
+
+    this.id = element.id;
 
     this.debug = function (text) { console.debug(`Domain #${this.id}: ${text}`); }
     this.info = function (text) { console.info(`Domain #${this.id}: ${text}`); }
@@ -8,7 +20,11 @@
     this.warn = function (text) { console.warn(`Domain #${this.id}: ${text}`); }
     this.error = function (text, error) { console.error(`Domain: ${text}`, error); alert(text + "\n\n" + error); }
 
+    if (options.style)
+        element.setAttribute('style', options.style);
+
     window.domain = this;
+
 
     window.addEventListener("popstate", () => {
         var parts = location.pathname.split('/', 3);
@@ -83,8 +99,9 @@
             AdjustImageGalleryPositionAndVisibility(container));        
     });
 
-
     this.service = new DomainService();
+
+    this.log(`new instance #${this.instanceId}`);
 }
 
 Domain.prototype.behaviors = [];
@@ -143,7 +160,7 @@ Domain.prototype.OpenExplorer = async function(domain, selectedTag = "", activeD
 
     // add component to DOM
     host.appendChild(element);
-    this.container.appendChild(host);
+    this.element.appendChild(host);
 
     // setup client component
     var options = {};

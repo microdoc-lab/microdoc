@@ -24,6 +24,8 @@ function TagTree(element, options = {}) {
         element.setAttribute('style', options.style);
 
     this.service = new TagTreeService();
+
+    this.log(`new instance #${this.instanceId}`);
 }
 
 TagTree.prototype.behaviors = [];

@@ -24,6 +24,8 @@ function DocMatrix(element, options = {}) {
         element.setAttribute('style', options.style);
 
     this.service = new DocMatrixService();
+
+    this.log(`new instance #${this.instanceId}`);
 }
 
 DocMatrix.prototype.behaviors = [];

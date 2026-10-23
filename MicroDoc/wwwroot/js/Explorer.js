@@ -24,6 +24,8 @@ function Explorer(element, options = {}) {
         element.setAttribute('style', options.style);
 
     this.service = new ExplorerService();
+
+    this.log(`new instance #${this.instanceId}`);
 }
 
 Explorer.prototype.behaviors = [];
