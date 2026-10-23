@@ -2,6 +2,7 @@
     this.debug('InitEditor');
 
     var docElement = this.element;
+    var explorer = this.explorer();
     var txtEditor = this.txtEditor();
 
     // save and close document editor on ESC
@@ -26,11 +27,11 @@
     // select heading line and scroll it into view
     txtEditor.SelectAndScroll = (headingIndex, focus = true) => {
         SelectAndScrollEditor(txtEditor, headingIndex, focus);
-        this.explorer().OnDocumentActivated(this);
+        explorer.OnDocumentActivated(this);
     }
 
     // activate document when editor got focus
-    txtEditor.addEventListener("focus", e => this.explorer().OnDocumentActivated(this));
+    txtEditor.addEventListener("focus", e => explorer.OnDocumentActivated(this));
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitEditor);

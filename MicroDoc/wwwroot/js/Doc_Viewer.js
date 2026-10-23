@@ -1,6 +1,7 @@
 ﻿Doc.prototype.InitViewer = function (options) {
     this.debug('InitViewer');
 
+    var explorer = this.explorer();
     var docViewer = this.docViewer();
 
     // intercept Ctrl+C event and perform custom copy logic
@@ -30,14 +31,13 @@
         var docMatrix = this.docMatrix();
         await docMatrix.HandleDocumentClick(event, true);
 
-        var explorer = this.explorer();
         explorer.OnDocumentActivated(this);
     });
 
     // select heading and scroll it into view
     docViewer.SelectAndScroll = headingIndex => {
         SelectAndScrollViewer(docViewer, headingIndex);
-        this.explorer().OnDocumentActivated(this);
+        explorer.OnDocumentActivated(this);
     };
 }
 
