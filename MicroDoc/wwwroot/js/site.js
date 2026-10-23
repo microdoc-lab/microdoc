@@ -31,8 +31,8 @@ function UpdateCanonicalInstance(target, source) {
         target = target.owner;
 
     // instanceId should be always 1 (canonical instance)
-    if (target.instanceId !== 1)
-        throw new Error(`Target has instanceId <> 1 ${target} #${target.instanceId}`);
+    if (target.owner)
+        throw new Error(`Resolved target should not have owner ${target} #${target.instanceId}`);
 
     // remove properties on target that doesn't exist on source
     for (const key of Reflect.ownKeys(target)) {
