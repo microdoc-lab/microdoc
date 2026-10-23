@@ -5,10 +5,8 @@
 
     // intercept Ctrl+C event and perform custom copy logic
     docViewer.addEventListener("copy", event => {
-        const docElement = this.element;
-
         var docMatrix = this.docMatrix();
-        docMatrix.HandleCopy(event, docElement);
+        docMatrix.HandleDocumentCopy(event, this);
     });
 
     // capture mousedown coordinates to distinguish mouse selection from click
@@ -30,13 +28,16 @@
             return;
 
         var docMatrix = this.docMatrix();
-        await docMatrix.HandleClick(event, true, true);
+        await docMatrix.HandleDocumentClick(event, true);
+
+        var explorer = this.explorer();
+        explorer.OnDocumentActivated(this);
     });
 
     // select heading and scroll it into view
     docViewer.SelectAndScroll = headingIndex => {
         SelectAndScrollViewer(docViewer, headingIndex);
-        this.OnActivation();
+        this.explorer().OnDocumentActivated(this);
     };
 }
 

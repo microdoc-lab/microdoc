@@ -12,15 +12,7 @@
     toolbar.dataset.domain = null;
     toolbar.dataset.id = null;
 
-    // update domain title
-    document.title = `${this.element.dataset.domain}`;
-
-    // reset active document context
-    explorer.activeDocumentId = null;
-    explorer.selectedHeadingIndex = -1;
-
-    // put domain URL in history
-    history.replaceState(null, "", `/${docElement.dataset.domain}`);
+    explorer.OnDocumentClosed(this);
 }
 
 Doc.prototype.SaveDocument = async function () {

@@ -42,31 +42,6 @@ Doc.prototype.toolbar = function () { return this.element.closest(".explorer").q
 Doc.prototype.docViewer = function () { return this.element.querySelector(".viewer"); }
 Doc.prototype.txtEditor = function () { return this.element.querySelector(".editor"); }
 
-Doc.prototype.OnActivation = function (restore) {
-    // update document title
-    document.title = `${this.element.dataset.domain} ${this.element.dataset.tagpath}`;
-
-    var mode = this.element.getAttribute("mode");
-    var explorer = this.explorer();
-
-    if (!restore) {
-        // capture active document context
-        explorer.activeDocumentId = this.element.dataset.id;
-        if (mode == "view")
-            explorer.selectedHeadingIndex = GetSelectedHeadingIndex(this.docViewer());
-
-        // put document URL in history
-        history.replaceState(null, "", `/${this.element.dataset.domain}/${this.element.dataset.id}`);
-    }
-    else {
-        // restore active document
-        if (mode == "view")
-            this.docViewer().SelectAndScroll(explorer.selectedHeadingIndex);
-        if (mode == "edit")
-            this.txtEditor().focus();
-    }
-}
-
 // Service methods
 function DocService() { }
 

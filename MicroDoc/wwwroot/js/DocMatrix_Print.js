@@ -33,7 +33,7 @@
         if (!docElement)
             return;
 
-        this.HandleCopy(event, docElement);
+        this.HandleDocumentCopy(event, docElement.doc);
     });
 
     // capture mousedown coordinates to distinguish mouse selection from click
@@ -54,7 +54,7 @@
         if (distance > 5)
             return;
 
-        await this.HandleClick(event, true, false, container);
+        await this.HandleDocumentClick(event, true, container);
     });
 
     // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop

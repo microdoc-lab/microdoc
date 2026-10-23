@@ -21,7 +21,7 @@
         if (distance > 5)
             return;
 
-        if (await this.HandleClick(event, false))
+        if (await this.HandleDocumentClick(event))
             return;
 
         // don't open document if user select some text in the cell
@@ -112,119 +112,6 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPreview);
 
 // Api
-DocMatrix.prototype.HandleClick = async function (event, select, activate, container) {
-    // open embeded link
-    const link = event.target.closest("a");
-    // link should be document-related
-    if (link && link.dataset.document) {
-        event.preventDefault();
-
-        // obtain document properties
-        const domain = this.domain;
-        var documentId = link.getAttribute("href");
-
-        this.LoadDocumentAndOpen(domain, documentId);
-
-        return true;
-    }
-
-    if (select) {
-        var docElement = event.target.closest(".doc");
-
-        // find possible clicked image
-        const imageWrapper = event.target.closest("imgw");
-        if (imageWrapper) {
-            // select image
-            SelectElement(imageWrapper.querySelector("div"));
-
-            // update window title/URL (docViewer)
-            if (activate)
-                docElement.doc.OnActivation();
-            return false;
-        }
-
-        // find & check the section
-        const section = event.target.closest("section");
-        if (!section)
-            return false;
-
-        // obtain section heading
-        var heading = section.querySelector("h1, h2, h3");
-        if (heading) {
-            // select heading
-            SelectElement(heading);
-
-            // scroll heading into view (print preview TOC)
-            if (container && !IsFullyVisibleAndAboveMiddle(heading, container))
-                heading.scrollIntoView({ behavior: "auto", block: "start" });
-
-            // add selected class to heading (print preview TOC)
-            if (container) {
-                container.querySelectorAll("h1, h2, h3").forEach(heading => heading.classList.remove('selected'));
-                heading.classList.add('selected');
-            }
-
-            // update window title/URL (docViewer)
-            if (activate)
-                docElement.doc.OnActivation();
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
-DocMatrix.prototype.HandleCopy = function (event, docElement) {
-    // obtain document context
-    var documentId = docElement.dataset.id;
-
-    // selection should exist
-    const selection = window.getSelection();
-    if (!selection || selection.isCollapsed || selection.anchorNode != selection.focusNode)
-        return;
-
-    // copy heading commit: [tag] [tag] heading
-    var heading = selection.anchorNode.closest("h1,h2,h3");
-    if (heading) {
-        var docPath = DocParser.DocTagPath(documentId);
-        event.preventDefault();
-        event.clipboardData.setData("text/plain", docPath + " " + heading.innerText);
-        return;
-    }
-
-    // copy image link: [tag] [tag] document+image.png
-    var imageContainer = selection.anchorNode.closest("imgw");
-    if (imageContainer) {
-        var imagePath = imageContainer.dataset.imagepath;
-        event.preventDefault();
-        event.clipboardData.setData("text/plain", imagePath);
-        return;
-    }
-}
-
-DocMatrix.prototype.LoadDocumentAndOpen = async function (domain, documentId) {
-    var docPath = DocParser.DocPath(documentId);
-
-    // load document content
-    const response = await this.service.LoadDocument(domain, documentId);
-    if (!response.ok) {
-        this.error(`Load document ${docPath} failed`, await response.text());
-        return false;
-    }
-
-    const doc = await response.json();
-
-    documentId = doc.id;
-    const documentContent = doc.content;
-    const documentHtml = doc.html;
-    const headingIndex = 0;
-
-    // open document in overlay
-    this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, !documentContent && isInRole("w", domain, documentId) ? "edit" : "view");
-    return true;
-}
-
 DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, headingIndex, mode) {
     var explorer = this.explorer();
     var overlay = this.overlay();
@@ -285,4 +172,26 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
         var  txtEditor = docElement.doc.txtEditor();
         txtEditor.SelectAndScroll(headingIndex);
     }
+}
+
+DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId) {
+    var docPath = DocParser.DocPath(documentId);
+
+    // load document content
+    const response = await this.service.LoadDocument(domain, documentId);
+    if (!response.ok) {
+        this.error(`Load document ${docPath} failed`, await response.text());
+        return false;
+    }
+
+    const doc = await response.json();
+
+    documentId = doc.id;
+    const documentContent = doc.content;
+    const documentHtml = doc.html;
+    const headingIndex = 0;
+
+    // open document in overlay
+    this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, !documentContent && isInRole("w", domain, documentId) ? "edit" : "view");
+    return true;
 }
