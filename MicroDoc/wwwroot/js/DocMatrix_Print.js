@@ -53,6 +53,14 @@
         await this.HandleDocumentClick(event, true, container);
     });
 
+    // remove heading selection when user starts selection
+    container.addEventListener("pointerdown", event => {
+        const selection = window.getSelection();
+
+        if (selection?.rangeCount && IsHeadingSelection(selection))
+            selection.removeAllRanges();
+    });
+
     // synchronize absolute positioned <gallery> marginTop with document viewer scrollTop
     // manually clip absolute positioned <gallery> outside document viewer bounds
     container.addEventListener("scroll", () => AdjustImageGalleryPositionAndVisibility(container));

@@ -33,6 +33,14 @@
         explorer.OnDocumentActivated(this);
     });
 
+    // remove heading selection when user starts selection
+    docViewer.addEventListener("pointerdown", event => {
+        const selection = window.getSelection();
+
+        if (selection?.rangeCount && IsHeadingSelection(selection))
+            selection.removeAllRanges();
+    });
+
     // select heading and scroll it into view
     docViewer.SelectAndScroll = headingIndex => {
         SelectAndScrollViewer(docViewer, headingIndex);
@@ -50,6 +58,14 @@ function SelectElement(element) {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
+}
+
+function IsHeadingSelection(selection) {
+    const node = selection.anchorNode;
+
+    return node?.nodeType === Node.ELEMENT_NODE &&
+        /^H[1-3]$/.test(node.nodeName) &&
+        selection.focusNode === node;
 }
 
 function IsFullyVisibleAndAboveMiddle(element, container) {
