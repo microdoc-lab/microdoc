@@ -79,8 +79,12 @@ DocMatrix.prototype.OpenPrint = function (document) {
             html += doc.outerHTML;
     });
 
+    // update title
+    var title = modal.querySelector(".toolbar .title");
+    title.textContent = document;
+    title.dataset.document = document;
+
     // update container HTML
-    container.dataset.document = document;
     container.innerHTML = html;
 
     // remove preview class

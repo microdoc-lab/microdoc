@@ -24,7 +24,7 @@ async function PrintElement(element, title) {
 
     const doc = printWindow.document;
     doc.open();
-    doc.write(`<!DOCTYPE html><html><head><title>Print ${title}</title></head><body></body></html>`);
+    doc.write(`<!DOCTYPE html><html><head><title>${title}</title></head><body></body></html>`);
     doc.close();
 
     const stylesLoaded = Promise.all([

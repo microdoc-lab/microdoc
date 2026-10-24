@@ -1,16 +1,12 @@
 ﻿/* Window title */
-.explorer .modal .doc-container .scroll-area::before {
-    position: absolute;
-    content: attr(data-document);
-    left: calc(300px + 18mm);
+.explorer .modal .toolbar .title {
+    display: inline-block;
+    vertical-align: middle;
     padding: 0px 3px;
     font-size: smaller;
     font-weight: bold;
-    background: var(--doc-background);
     border: 1px solid #ccc;
     border-radius: 5px;
-    cursor: pointer;
-    pointer-events: initial;
 }
 
 /* doc */
@@ -40,7 +36,7 @@
 .explorer .modal doc :is(h1,h2,h3)::after {
     position: absolute;
     top: calc(var(--index) * 24px);
-    content: var(--heading-prefix) ' ' attr(content);
+    content: attr(content);
     cursor: pointer;
 
     padding-left: 4px;
