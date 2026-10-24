@@ -56,8 +56,9 @@
     justify-content: center;
 }
 
-.doc gallery imgw div, doc gallery imgw div {
+.doc gallery imgw span, doc gallery imgw span {
     font-size: small;
+    display: block;
 }
 
 .doc gallery img, doc gallery img {

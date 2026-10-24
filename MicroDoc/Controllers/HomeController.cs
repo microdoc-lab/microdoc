@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Security.Claims;
-using static MicroDoc.Services.DomainOptions;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats;
 
 namespace MicroDoc.Controllers
 {
@@ -362,7 +364,7 @@ namespace MicroDoc.Controllers
         #region Images
 
         [Authorize]
-        public IActionResult Image(string domain, string documentId, string imageName)
+        public async Task<IActionResult> Image(string domain, string documentId, string imageName, bool thumb = false)
         {
             if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
@@ -393,6 +395,23 @@ namespace MicroDoc.Controllers
             };
 
             Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+
+            if (thumb)
+            {
+                using var image = await SixLabors.ImageSharp.Image.LoadAsync(filePath);
+
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Size = new Size(50, 50),
+                    Mode = ResizeMode.Max
+                }));
+
+                using var stream = new MemoryStream();
+                await image.SaveAsPngAsync(stream);
+                stream.Position = 0;
+
+                return File(stream.ToArray(), "image/png");
+            }
 
             return PhysicalFile(filePath, contentType);
         }

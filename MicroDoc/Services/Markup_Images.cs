@@ -41,7 +41,7 @@
                 .Append("<imgc>")
                 .Append($"<img src=\"/Home/Image?domain={domain}&documentId={parsedDocumentId}&imageName={parsedImageName}&v={version}\">")
                 .Append("</imgc>")
-                .Append($"<div>{onlyName}</div>")
+                .Append($"<span>{onlyName}</span>")
                 .Append("</imgw>\n");
         }
 

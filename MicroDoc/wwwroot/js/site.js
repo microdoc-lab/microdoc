@@ -42,6 +42,8 @@ async function CopyFormatted(element) {
 
     // CopyComputedStyles(element, clone);
     CopyPseudoContent(element, clone);
+    NormalizeTables(clone);
+    await EmbedImages(clone);
 
     const html = clone.outerHTML;
 
@@ -65,6 +67,8 @@ async function PrintElement(element, title) {
     clone.innerHTML = element.innerHTML;
 
     CopyPseudoContent(element, clone);
+    NormalizeTables(clone);
+    await EmbedImages(clone);
 
     const doc = printWindow.document;
     doc.open();
@@ -81,7 +85,7 @@ async function PrintElement(element, title) {
     });
 
     doc.head.append(link);
-    doc.body.append(element.cloneNode(true));
+    doc.body.append(clone);
 
     try {
         await cssLoaded;
@@ -132,6 +136,52 @@ function CopyPseudoContent(source, clone) {
             }
         }
     });
+}
+
+async function EmbedImages(root) {
+    // show all galleries
+    root.querySelectorAll("gallery").forEach(gallery => gallery.style.visibility = "visible");
+
+    const images = [...root.querySelectorAll("img")];
+
+    await Promise.all(images.map(async img => {
+        if (img.src.startsWith("data:"))
+            return;
+
+        const response = await fetch(img.src + "&thumb=true");
+
+        if (!response.ok)
+            throw new Error(`Failed to load image: ${img.src}`);
+
+        const blob = await response.blob();
+
+        const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(blob);
+        });
+
+        img.src = dataUrl;
+        img.removeAttribute("srcset");
+    }));
+}
+
+function NormalizeTables(root) {
+    for (const table of root.querySelectorAll("table")) {
+        table.setAttribute("border", "1");
+        table.setAttribute("cellspacing", "0");
+        table.setAttribute("cellpadding", "4");
+        table.setAttribute("bordercolor", "#000000");
+
+        table.style.borderCollapse = "collapse";
+        table.style.border = "1px solid black";
+
+        for (const cell of table.querySelectorAll("th, td")) {
+            cell.setAttribute("border", "1");
+            cell.style.border = "1px solid black";
+        }
+    }
 }
 
 // setup unique clientId
