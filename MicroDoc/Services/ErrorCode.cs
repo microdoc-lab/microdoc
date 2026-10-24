@@ -16,5 +16,8 @@
 
         TagNotClosed,
         WrongImageName,
+
+        ThumbDimensionExceeded,
+        NotImplemented,
     }
 }

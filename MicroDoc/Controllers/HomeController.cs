@@ -9,9 +9,6 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Security.Claims;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Formats;
 
 namespace MicroDoc.Controllers
 {
@@ -363,10 +360,10 @@ namespace MicroDoc.Controllers
 
         #region Images
 
-        const int ThumbImageDimension = 100;
+        private const int MaxThumbDimension = 300;
 
         [Authorize]
-        public async Task<IActionResult> Image(string domain, string documentId, string imageName, bool thumb = false)
+        public IActionResult Image(string domain, string documentId, string imageName, int? thumbDimension = null)
         {
             if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
@@ -396,30 +393,20 @@ namespace MicroDoc.Controllers
                 _ => "application/octet-stream"
             };
 
-            if (thumb)
+            if (thumbDimension.HasValue && thumbDimension.Value > MaxThumbDimension)
+                return Error(ErrorCode.ThumbDimensionExceeded);
+
+            Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+
+            if (thumbDimension.HasValue)
             {
-                Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
-            }
-            else
-            {
-                Response.Headers.CacheControl = "public, max-age=31536000, immutable";
-            }
+                if (OperatingSystem.IsWindows()) {
 
-            if (thumb)
-            {
-                using var image = await SixLabors.ImageSharp.Image.LoadAsync(filePath);
+                    var bytes = ImageHelper.ThumbnailPng(filePath, thumbDimension.Value);
+                    return File(bytes, "image/png");
+                }
 
-                image.Mutate(x => x.Resize(new ResizeOptions
-                {
-                    Size = new Size(ThumbImageDimension, ThumbImageDimension),
-                    Mode = ResizeMode.Max
-                }));
-
-                using var stream = new MemoryStream();
-                await image.SaveAsPngAsync(stream);
-                stream.Position = 0;
-
-                return File(stream.ToArray(), "image/png");
+                return Error(ErrorCode.NotImplemented);
             }
 
             return PhysicalFile(filePath, contentType);
@@ -451,7 +438,7 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
-        #endregion
+#endregion
 
         #region Domain (Background/Options)
 

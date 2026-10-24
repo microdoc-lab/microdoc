@@ -2,8 +2,7 @@
 .explorer .modal .doc-container .scroll-area::before {
     position: absolute;
     content: attr(data-document);
-    left: 50%;
-    transform: translateX(-50%);
+    left: calc(300px + 18mm);
     padding: 0px 3px;
     font-size: smaller;
     font-weight: bold;

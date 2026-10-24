@@ -139,7 +139,7 @@ async function EmbedImages(root) {
         if (img.src.startsWith("data:"))
             return;
 
-        const response = await fetch(img.src + "&thumb=true&v=xxx");
+        const response = await fetch(img.src + "&thumbDimension=100");
 
         if (!response.ok)
             throw new Error(`Failed to load image: ${img.src}`);
