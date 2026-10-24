@@ -1,16 +1,6 @@
 ﻿// copy HTML
 async function CopyFormatted(element) {
-    // const clone = element.cloneNode(true);
-
-    const clone = document.createElement("div");
-    clone.innerHTML = element.innerHTML;
-
-    // CopyComputedStyles(element, clone);
-    CopyPseudoContent(element, clone);
-    NormalizeTables(clone);
-    await EmbedImages(clone);
-    for (const img of clone.querySelectorAll("img"))
-        await SetImageDimensions(img);
+    const clone = await CloneNodeForPrinting(element);
 
     const html = clone.outerHTML;
 
@@ -30,21 +20,7 @@ async function PrintElement(element, title) {
     if (!printWindow)
         return; // Popup blocked
 
-    const clone = document.createElement("div");
-    clone.className = "print";
-    clone.innerHTML = element.innerHTML;
-
-    CopyPseudoContent(element, clone);
-
-    NormalizeTables(clone);
-
-    await EmbedImages(clone);
-    for (const img of clone.querySelectorAll("img"))
-        await SetImageDimensions(img);
-
-    AddDocumentSeparators(clone);
-    for (const doc of clone.querySelectorAll("doc"))
-        doc.dataset.content = null;
+    const clone = await CloneNodeForPrinting(element);
 
     const doc = printWindow.document;
     doc.open();
@@ -68,6 +44,25 @@ async function PrintElement(element, title) {
     } catch (error) {
         console.error("Failed to load print stylesheet:", linkDoc.href, error);
     }
+}
+
+async function CloneNodeForPrinting(element) {
+    const clone = document.createElement("div");
+    clone.className = "print";
+    clone.innerHTML = element.innerHTML;
+
+    CopyPseudoContent(element, clone);
+
+    NormalizeTables(clone);
+
+    await EmbedImages(clone);
+    for (const img of clone.querySelectorAll("img"))
+        await SetImageDimensions(img);
+
+    AddDocumentSeparators(clone);
+    NormalizeCallouts(clone);
+
+    return clone;
 }
 
 function LoadStylesheet(doc, href) {
@@ -110,13 +105,20 @@ function CopyPseudoContent(source, clone) {
         const copy = cloneElements[index];
 
         for (const pseudo of ["::before"/*, "::after"*/]) {
-            const content = getComputedStyle(element, pseudo).content;
+            const style = getComputedStyle(element, pseudo);
+            const content = style.content;
 
             if (content && content !== "none" && content !== "normal") {
                 const text = content.replace(/^["']|["']$/g, "");
                 const span = document.createElement("span");
 
                 span.textContent = text;
+                span.style.color = style.color;
+                //span.style.backgroundColor = style.backgroundColor;
+                //span.style.font = style.font;
+                //span.style.padding = style.padding;
+                //span.style.border = style.border;
+                //span.style.borderRadius = style.borderRadius;
 
                 if (pseudo === "::before")
                     copy.prepend(span);
@@ -200,4 +202,39 @@ function AddDocumentSeparators(root) {
 
         doc.after(hr);
     });
+}
+
+function NormalizeCallouts(root) {
+    for (const element of root.querySelectorAll(".note, .example")) {
+        const table = document.createElement("table");
+        table.setAttribute("width", "100%");
+        table.setAttribute("cellspacing", "0");
+        table.setAttribute("cellpadding", "8");
+        table.setAttribute("border", "1");
+        table.setAttribute("bordercolor", "#888888");
+
+        table.style.width = "100%";
+        table.style.borderCollapse = "collapse";
+        table.style.border = "1px solid #888888";
+        table.style.margin = "8px 0";
+
+        const cell = table.insertRow().insertCell();
+        cell.setAttribute("border", "1");
+        cell.style.border = "1px solid #888888";
+        cell.style.padding = "8px 12px";
+        cell.style.verticalAlign = "top";
+
+        var accent = "darkgray";
+        if (element.classList.contains("note"))
+            accent = "#527da8";
+        if (element.classList.contains("example"))
+            accent = "#72966b";
+
+        cell.style.borderLeft = `4px solid ${accent}`;
+
+        while (element.firstChild)
+            cell.appendChild(element.firstChild);
+
+        element.replaceWith(table);
+    }
 }

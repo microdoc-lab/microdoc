@@ -83,6 +83,12 @@ DocMatrix.prototype.OpenPrint = function (document) {
     container.dataset.document = document;
     container.innerHTML = html;
 
+    // remove preview class
+    container.querySelectorAll("doc").forEach(doc => {
+        doc.classList.remove("preview");
+        doc.dataset.content = "";
+    });
+
     // number Headings
     var headingIndex = 0;
     container.querySelectorAll("h1, h2, h3").forEach(heading => {

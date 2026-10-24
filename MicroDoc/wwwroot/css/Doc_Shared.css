@@ -10,6 +10,17 @@
     --img-height: 100px;
 }
 
+/* Heading prefix */
+.doc[data-tagpath], doc:not(.preview)[data-tagpath] {
+    --heading-prefix: attr(data-tagpath);
+}
+
+.doc :is(h1,h2,h3)::before, doc:not(.preview) :is(h1,h2,h3)::before {
+    content: var(--heading-prefix) ' ';
+}
+
+.print-page doc:not(.preview) :is(h1,h2,h3)::before { content: ''; }
+
 /* Headings */
 .doc :is(h1,h2,h3), doc :is(h1,h2,h3) {
     margin: 4px 0px 4px 0px;
@@ -87,3 +98,28 @@ error {
     color: red;
     font-weight: bold;
 }
+
+/* Callouts */
+.doc section.callout, doc:not(.preview) section.callout,
+.doc p.callout, doc p.callout {
+    border: 1px solid #888;
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 8px 0;
+    break-inside: avoid;
+}
+
+.doc section.callout::before, doc:not(.preview) section.callout::before,
+.doc p.callout::before, doc p.callout::before {
+    content: attr(callout) ' ';
+    color: darkblue;
+}
+
+.print-page doc:not(.preview) section.callout::before,
+.print-page doc p.callout::before { content: ''; }
+
+/* Note */
+.doc section.note, doc section.note, .doc p.note, doc p.note { border-left: 4px solid #527da8 !important; }
+
+/* Example */
+.doc section.example, doc section.example, .doc p.example, doc p.example { border-left: 4px solid #72966b !important; }

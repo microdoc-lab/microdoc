@@ -27,7 +27,12 @@
         {
             EndSection();
 
-            html.Append("<section>")
+            var callout = ExtractCallout(ref heading);
+            callout = ToCssClass(callout);
+
+            var @class = callout != null ? $" class=\"callout {callout}\" callout=\"({callout})\" title=\"{callout}\"" : null;
+
+            html.Append("<section").Append(@class).Append(">")
                 .Append("<h").Append(level).Append(">")
                 .Append(heading)
                 .Append("</h").Append(level).Append(">\n")
@@ -40,8 +45,8 @@
         {
             if (sectionStarted)
             {
-                html.Append("<p></p>\n");     // content
-                html.Append("</content>\n");     // content
+                html.Append("<p></p>\n");       // content
+                html.Append("</content>\n");    // content
                 html.Append("</section>\n");
             }
         }

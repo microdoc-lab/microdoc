@@ -141,7 +141,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     docElement.setAttribute("mode", mode);
     docElement.dataset.domain = domain;
     docElement.dataset.id = documentId;
-    docElement.dataset.tagpath = DocParser.DocPath(documentId);
+    docElement.dataset.tagpath = DocParser.DocTagPath(documentId);
     docElement.dataset.document = DocParser.DocName(documentId);
     docElement.dataset.content = documentContent;
 

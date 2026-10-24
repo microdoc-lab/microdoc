@@ -25,14 +25,6 @@
 }
 
 /* Viewer HTML*/
-/* Heading prefix */
-.explorer .modal doc[data-tagpath] {
-    --heading-prefix: attr(data-tagpath);
-}
-
-.explorer .modal doc :is(h1,h2,h3)::before {
-    content: var(--heading-prefix) ' ';
-}
 
 /* Image */
 /* Custom direction and scale in preview */

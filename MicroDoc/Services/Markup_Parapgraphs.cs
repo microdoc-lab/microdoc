@@ -18,8 +18,14 @@ namespace MicroDoc.Services
             if (paragraph.Length == 0)
                 return;
 
-            html.Append("<p>")
-                .Append(paragraph)
+            string text = paragraph.ToString();
+            var callout = ExtractCallout(ref text);
+            callout = ToCssClass(callout);
+
+            var @class = callout != null ? $" class=\"callout {callout}\" callout=\"({callout})\" title=\"{callout}\"" : null;
+
+            html.Append("<p").Append(@class).Append(">")
+                .Append(text)
                 .Append("</p>\n");
 
             paragraph.Clear();

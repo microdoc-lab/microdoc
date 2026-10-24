@@ -74,12 +74,12 @@
 						};
 					}
 
-					<td data-document="@column"><clip><doc data-domain="@doc.Domain" data-tagpath="@row.TagPath" data-id="@doc.Id" data-document="@column" data-content="@doc.Content">@Html.Raw(doc.Html)</doc></clip></td>
+					<td data-document="@column"><clip><doc class="preview" data-domain="@doc.Domain" data-tagpath="@row.TagPath" data-id="@doc.Id" data-document="@column" data-content="@doc.Content">@Html.Raw(doc.Html)</doc></clip></td>
 				}
 				<td class="misc"><clip>
 					@foreach (var doc in row.Documents.Where(d => !columnDocuments.Contains(d.Name)).Where(d => User.IsInRole(_domainOptions, "r", Model.Domain.Name, d.Id)))
 					{
-						<doc data-domain="@doc.Domain" data-tagpath="@row.TagPath" data-id="@doc.Id" data-content="@doc.Content" data-document="@doc.Name" data-name="@(doc.Name + doc.Extension)">@Html.Raw(doc.Html)</doc>
+						<doc class="preview" data-domain="@doc.Domain" data-tagpath="@row.TagPath" data-id="@doc.Id" data-content="@doc.Content" data-document="@doc.Name" data-name="@(doc.Name + doc.Extension)">@Html.Raw(doc.Html)</doc>
 					}
 				</clip></td>
 			</tr>
