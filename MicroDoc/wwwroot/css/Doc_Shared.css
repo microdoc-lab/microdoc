@@ -39,10 +39,7 @@
 .doc gallery imgw, doc gallery imgw {
     min-width: 50px; 
     min-height: 75px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    display: inline-block;
 }
 
 .doc gallery imgc, doc gallery imgc {
@@ -57,12 +54,11 @@
 }
 
 .doc gallery imgw span, doc gallery imgw span {
-    font-size: small;
     display: block;
+    font-size: small;
 }
 
 .doc gallery img, doc gallery img {
-    display: inline-block;
     max-width: 50px;
     max-height: 50px;
     transition: transform 0.15s ease;

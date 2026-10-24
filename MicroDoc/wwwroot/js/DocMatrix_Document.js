@@ -20,7 +20,7 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, scrollC
         const imageWrapper = event.target.closest("imgw");
         if (imageWrapper) {
             // select image
-            SelectElement(imageWrapper.querySelector("div"));
+            SelectElement(imageWrapper.querySelector("span"));
             return false;
         }
 
