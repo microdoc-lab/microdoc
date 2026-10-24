@@ -1,5 +1,5 @@
 ﻿/* Window title */
-.explorer .modal .doc-container::before {
+.explorer .modal .doc-container .scroll-area::before {
     position: absolute;
     content: attr(data-document);
     left: 50%;

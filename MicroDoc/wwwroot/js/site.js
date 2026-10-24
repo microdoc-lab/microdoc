@@ -33,6 +33,107 @@ function ReplaceInnerHtml(element, html) {
     RecreateScripts(element);
 }
 
+// copy HTML
+async function CopyFormatted(element) {
+    // const clone = element.cloneNode(true);
+
+    const clone = document.createElement("div");
+    clone.innerHTML = element.innerHTML;
+
+    // CopyComputedStyles(element, clone);
+    CopyPseudoContent(element, clone);
+
+    const html = clone.outerHTML;
+
+    await navigator.clipboard.write([
+        new ClipboardItem(
+        {
+            "text/html":  new Blob([html], { type: "text/html" }),
+            "text/plain": new Blob([element.innerText], { type: "text/plain" })
+        })
+    ]);
+}
+
+// print HTML
+async function PrintElement(element, title) {
+    const printWindow = window.open("", "_blank");
+
+    if (!printWindow)
+        return; // Popup blocked
+
+    const clone = document.createElement("div");
+    clone.innerHTML = element.innerHTML;
+
+    CopyPseudoContent(element, clone);
+
+    const doc = printWindow.document;
+    doc.open();
+    doc.write(`<!DOCTYPE html><html><head><title>Print ${title}</title></head><body></body></html>`);
+    doc.close();
+
+    const link = doc.createElement("link");
+    link.rel = "stylesheet";
+    link.href = `${window.location.origin}/css/Doc_Shared.css`;
+
+    const cssLoaded = new Promise((resolve, reject) => {
+        link.addEventListener("load", resolve, { once: true });
+        link.addEventListener("error", reject, { once: true });
+    });
+
+    doc.head.append(link);
+    doc.body.append(element.cloneNode(true));
+
+    try {
+        await cssLoaded;
+        printWindow.focus();
+        printWindow.print();
+    } catch (error) {
+        console.error("Failed to load print stylesheet:", link.href, error);
+    }
+}
+
+function CopyComputedStyles(source, clone) {
+    const sourceElements = [source, ...source.querySelectorAll("*")];
+    const cloneElements = [clone, ...clone.querySelectorAll("*")];
+
+    sourceElements.forEach((element, index) => {
+        const computed = getComputedStyle(element);
+        const copy = cloneElements[index];
+
+        for (const property of computed) {
+            copy.style.setProperty(
+                property,
+                computed.getPropertyValue(property)
+            );
+        }
+    });
+}
+
+function CopyPseudoContent(source, clone) {
+    const sourceElements = [source, ...source.querySelectorAll("*")];
+    const cloneElements = [clone, ...clone.querySelectorAll("*")];
+
+    sourceElements.forEach((element, index) => {
+        const copy = cloneElements[index];
+
+        for (const pseudo of ["::before"/*, "::after"*/]) {
+            const content = getComputedStyle(element, pseudo).content;
+
+            if (content && content !== "none" && content !== "normal") {
+                const text = content.replace(/^["']|["']$/g, "");
+                const span = document.createElement("span");
+
+                span.textContent = text;
+
+                if (pseudo === "::before")
+                    copy.prepend(span);
+                else
+                    copy.append(span);
+            }
+        }
+    });
+}
+
 // setup unique clientId
 const clientUID = crypto.randomUUID();
 

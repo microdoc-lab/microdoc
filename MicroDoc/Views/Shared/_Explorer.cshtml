@@ -34,6 +34,17 @@
 
     <div class="modal">
         <div class="doc-container">
+            <div class="toolbar">
+				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().CopyPrint()' title="Copy">
+					<img src="/icons/Clipboard.png">
+				</button>
+				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().DialogPrint()' title="Print">
+					<img src="/icons/Print.png">
+				</button>
+			    <button class="icon-button close r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().ClosePrint()' title="Close">
+	    		    <img src="/icons/Close.png">
+    		    </button>
+            </div>
             <div class="scroll-area">
             </div>
         </div>

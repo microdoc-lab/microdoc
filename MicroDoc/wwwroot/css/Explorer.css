@@ -62,6 +62,12 @@
     background: color-mix(in srgb, var(--color) var(--opacity), transparent);
 }
 
+.explorer > .modal .doc-container .toolbar {
+    position: absolute;
+    right: 18px;
+    top: 0px;
+}
+
 .explorer .tree-panel {
     --color: var(--tree-background);
     --opacity: 90%;

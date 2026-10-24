@@ -3,7 +3,7 @@
 
     var docMatrix = this;
     var modal = this.modal();
-    var container = modal.querySelector(".doc-container .scroll-area");
+    var container = this.printContainer();
 
     // close print preview on ESC
     document.addEventListener("keydown", function (e) {
@@ -14,11 +14,7 @@
             e.preventDefault();
             e.stopImmediatePropagation();
 
-            container.dataset.document = "";
-            container.innerHTML = "";
-            modal.style.display = "none";
-
-            docMatrix.modalOpened = false;
+            docMatrix.ClosePrint();
         }
     });
 
@@ -64,10 +60,7 @@
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
-DocMatrix.prototype.Print = function (button) {
-    // detect document/column
-    var document = button.closest("th").dataset.document;
-
+DocMatrix.prototype.OpenPrint = function (document) {
     var modal = this.modal();
     var container = modal.querySelector(".doc-container .scroll-area");
 
@@ -98,4 +91,36 @@ DocMatrix.prototype.Print = function (button) {
     AdjustImageGalleryPositionAndVisibility(container);
 
     this.modalOpened = true;
+}
+
+DocMatrix.prototype.ClosePrint = function () {
+    if (!this.modalOpened)
+        return;
+
+    var modal = this.modal();
+    var container = this.printContainer();
+
+    container.dataset.document = "";
+    container.innerHTML = "";
+    modal.style.display = "none";
+
+    this.modalOpened = false;
+}
+
+DocMatrix.prototype.CopyPrint = async function () {
+    if (!this.modalOpened)
+        return;
+
+    var container = this.printContainer();
+
+    await CopyFormatted(container);
+}
+
+DocMatrix.prototype.DialogPrint = async function () {
+    if (!this.modalOpened)
+        return;
+
+    var container = this.printContainer();
+
+    PrintElement(container, container.dataset.document);
 }
