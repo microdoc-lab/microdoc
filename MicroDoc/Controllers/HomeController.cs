@@ -363,6 +363,8 @@ namespace MicroDoc.Controllers
 
         #region Images
 
+        const int ThumbImageDimension = 100;
+
         [Authorize]
         public async Task<IActionResult> Image(string domain, string documentId, string imageName, bool thumb = false)
         {
@@ -394,7 +396,14 @@ namespace MicroDoc.Controllers
                 _ => "application/octet-stream"
             };
 
-            Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+            if (thumb)
+            {
+                Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+            }
+            else
+            {
+                Response.Headers.CacheControl = "public, max-age=31536000, immutable";
+            }
 
             if (thumb)
             {
@@ -402,7 +411,7 @@ namespace MicroDoc.Controllers
 
                 image.Mutate(x => x.Resize(new ResizeOptions
                 {
-                    Size = new Size(50, 50),
+                    Size = new Size(ThumbImageDimension, ThumbImageDimension),
                     Mode = ResizeMode.Max
                 }));
 

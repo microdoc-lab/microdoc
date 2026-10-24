@@ -44,6 +44,8 @@ async function CopyFormatted(element) {
     CopyPseudoContent(element, clone);
     NormalizeTables(clone);
     await EmbedImages(clone);
+    for (const img of clone.querySelectorAll("img"))
+        await SetImageDimensions(img);
 
     const html = clone.outerHTML;
 
@@ -64,11 +66,14 @@ async function PrintElement(element, title) {
         return; // Popup blocked
 
     const clone = document.createElement("div");
+    clone.className = "print";
     clone.innerHTML = element.innerHTML;
 
     CopyPseudoContent(element, clone);
     NormalizeTables(clone);
     await EmbedImages(clone);
+    for (const img of clone.querySelectorAll("img"))
+        await SetImageDimensions(img);
 
     const doc = printWindow.document;
     doc.open();
@@ -77,7 +82,7 @@ async function PrintElement(element, title) {
 
     const link = doc.createElement("link");
     link.rel = "stylesheet";
-    link.href = `${window.location.origin}/css/Doc_Shared.css`;
+    link.href = `${window.location.origin}/css/Doc_Shared.css?v=${crypto.randomUUID()}`;
 
     const cssLoaded = new Promise((resolve, reject) => {
         link.addEventListener("load", resolve, { once: true });
@@ -148,7 +153,7 @@ async function EmbedImages(root) {
         if (img.src.startsWith("data:"))
             return;
 
-        const response = await fetch(img.src + "&thumb=true");
+        const response = await fetch(img.src + "&thumb=true&v=xxx");
 
         if (!response.ok)
             throw new Error(`Failed to load image: ${img.src}`);
@@ -165,6 +170,21 @@ async function EmbedImages(root) {
         img.src = dataUrl;
         img.removeAttribute("srcset");
     }));
+}
+
+async function SetImageDimensions(img) {
+    if (!img.complete || !img.naturalWidth) {
+        await new Promise((resolve, reject) => {
+            img.onload = resolve;
+            img.onerror = reject;
+        });
+    }
+
+    img.setAttribute("width", img.naturalWidth);
+    img.setAttribute("height", img.naturalHeight);
+
+    img.style.width = `${img.naturalWidth}px`;
+    img.style.height = `${img.naturalHeight}px`;
 }
 
 function NormalizeTables(root) {

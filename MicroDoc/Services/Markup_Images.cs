@@ -42,7 +42,7 @@
                 .Append($"<img src=\"/Home/Image?domain={domain}&documentId={parsedDocumentId}&imageName={parsedImageName}&v={version}\">")
                 .Append("</imgc>")
                 .Append($"<span>{onlyName}</span>")
-                .Append("</imgw>\n");
+                .Append("</imgw>");
         }
 
         private void EndImageGallery()
@@ -50,7 +50,7 @@
             if (!imageGalleryStarted)
                 return;
 
-            html.Append("</gallery>\n");
+            html.Append("</gallery>");
             imageGalleryStarted = false;
         }
     }
