@@ -1,0 +1,35 @@
+@media screen {
+    body {
+        margin: 0;
+        padding: 30px 0;
+        background: #e8e8e8;
+    }
+
+    .print-page {
+        box-sizing: border-box;
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0 auto;
+        padding: 15mm 18mm;
+        background: white;
+        box-shadow: 0 2px 12px #0003;
+        border: 1px solid #ccc;
+    }
+}
+
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+        background: white;
+    }
+
+    .print-page {
+        width: auto;
+        min-height: 0;
+        margin: 0;
+        padding: 0;
+        border: none;
+        box-shadow: none;
+    }
+}

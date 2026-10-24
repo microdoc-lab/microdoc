@@ -2,6 +2,7 @@
 .doc, doc {
     --img-width: 50px;
     --img-height: 50px;
+    display: block;
 }
 
 .print doc {
