@@ -174,12 +174,15 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     }
 }
 
-DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId) {
+DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId, silentError) {
     var docPath = DocParser.DocPath(documentId);
 
     // load document content
     const response = await this.service.LoadDocument(domain, documentId);
     if (!response.ok) {
+        if (silentError)
+            return false;
+
         this.error(`Load document ${docPath} failed`, await response.text());
         return false;
     }

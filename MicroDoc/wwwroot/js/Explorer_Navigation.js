@@ -44,7 +44,7 @@ Explorer.prototype.ActivateDocument = function (activeDocumentId) {
             docElement.doc.txtEditor().focus();
     }
     else
-        docMatrix.LoadAndOpenDocument(this.domain, activeDocumentId);
+        docMatrix.LoadAndOpenDocument(this.domain, activeDocumentId, true);
 }
 
 Explorer.prototype.OnDocumentActivated = function (doc, restore) {
