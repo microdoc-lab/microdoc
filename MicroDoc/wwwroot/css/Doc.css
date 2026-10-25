@@ -80,6 +80,6 @@
 
 /* Viewer HTML*/
 /* Hide toolbar on image preview */
-.explorer .overlay:has(.doc .viewer gallery imgw:hover) .toolbar {
-    display: none;
+.explorer .overlay:has(.doc .viewer gallery imgw.hover) .toolbar {
+    visibility: hidden !important;
 }
