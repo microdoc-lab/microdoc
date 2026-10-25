@@ -14,7 +14,7 @@ async function CopyFormatted(element) {
 }
 
 // print HTML
-async function PrintElement(element, title) {
+async function PrintElement(element, title, keepPrintWindowOpen) {
     const printWindow = window.open("", "_blank");
 
     if (!printWindow)
@@ -39,6 +39,12 @@ async function PrintElement(element, title) {
 
     try {
         await stylesLoaded;
+
+        printWindow.addEventListener("afterprint", () => {
+            if (!keepPrintWindowOpen)
+                printWindow.close();
+        }, { once: true });
+
         printWindow.focus();
         printWindow.print();
     } catch (error) {

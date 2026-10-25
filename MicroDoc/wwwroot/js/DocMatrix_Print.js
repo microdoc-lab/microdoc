@@ -166,12 +166,12 @@ DocMatrix.prototype.CopyPrint = async function () {
     await CopyFormatted(container);
 }
 
-DocMatrix.prototype.DialogPrint = async function () {
+DocMatrix.prototype.DialogPrint = async function (event) {
     if (!this.modalOpened)
         return;
 
     var container = this.printContainer();
     var printTitle = this.printTitle();
 
-    PrintElement(container, printTitle.textContent);
+    PrintElement(container, printTitle.textContent, event.altKey);
 }
