@@ -15,7 +15,7 @@
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitNavigation);
 
-Explorer.prototype.ActivateDocument = function (activeDocumentId) {
+Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
     var docMatrix = this.docMatrix();
 
     // update domain title
@@ -24,14 +24,13 @@ Explorer.prototype.ActivateDocument = function (activeDocumentId) {
     // put domain URL in history
     history.replaceState(null, "", `/${this.domain}`);
 
-    if (activeDocumentId == null)
-        activeDocumentId = this.activeDocumentId;
-
-    if (!activeDocumentId)
+    if (!documentId)
         return;
 
+    var selectedHeadingIndex = this.GetCookieDocumentHeadingIndex(documentId);
+
     // activate document or load document and open
-    var docElement = docMatrix.docElement(this.domain, activeDocumentId);
+    var docElement = docMatrix.docElement(this.domain, documentId);
     if (docElement) {
         this.OnDocumentActivated(docElement.doc, true);
 
@@ -39,12 +38,12 @@ Explorer.prototype.ActivateDocument = function (activeDocumentId) {
 
         // restore active document
         if (mode == "view")
-            docElement.doc.docViewer().SelectAndScroll(this.selectedHeadingIndex);
+            docElement.doc.docViewer().SelectAndScroll(selectedHeadingIndex);
         if (mode == "edit")
             docElement.doc.txtEditor().focus();
     }
     else
-        docMatrix.LoadAndOpenDocument(this.domain, activeDocumentId, true);
+        await docMatrix.LoadAndOpenDocument(this.domain, documentId, selectedHeadingIndex, true);
 }
 
 Explorer.prototype.OnDocumentActivated = function (doc, restore) {
@@ -53,6 +52,7 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
     const documentId = doc.element.dataset.id;
     const tagpath = DocParser.DocPath(documentId);
 
+    var selectedHeadingIndex = 0;
     if (!restore) {
         const mode = doc.element.getAttribute("mode");
 
@@ -60,7 +60,9 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
         this.activeDocumentId = documentId;
 
         if (mode == "view")
-            this.selectedHeadingIndex = GetSelectedHeadingIndex(doc.docViewer());
+            selectedHeadingIndex = GetSelectedHeadingIndex(doc.docViewer());
+        if (mode == "edit")
+            selectedHeadingIndex = GetHeadingIndexAtCursor(doc.txtEditor());
     }
 
     // update document title
@@ -68,16 +70,30 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
 
     // put document URL in history
     history.replaceState(null, "", `/${domain}/${documentId}`);
+
+    // store active document
+    this.AddCookieDocument(documentId, selectedHeadingIndex);
+}
+
+Explorer.prototype.OnDocumentEditorSelectionChanged = function (doc) {
+    // capture document context
+    const documentId = doc.element.dataset.id;
+    const selectedHeadingIndex = GetHeadingIndexAtCursor(doc.txtEditor());
+
+    // store active document
+    this.AddCookieDocument(documentId, selectedHeadingIndex);
 }
 
 Explorer.prototype.OnDocumentClosed = function (doc) {
-    // reset active document context
-    this.activeDocumentId = null;
-    this.selectedHeadingIndex = -1;
-
     // update domain title
     document.title = `${this.domain}`;
 
     // put domain URL in history
     history.replaceState(null, "", `/${this.domain}`);
+
+    // remove active document
+    const prevDocumentId = this.RemoveCookieDocument(doc.documentId);
+    // activate previous document
+    if (prevDocumentId)
+        this.ActivateDocumentOrLoadAndOpen(prevDocumentId);
 }

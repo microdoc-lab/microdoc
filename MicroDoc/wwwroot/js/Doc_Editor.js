@@ -32,6 +32,11 @@
 
     // activate document when editor got focus
     txtEditor.addEventListener("focus", e => explorer.OnDocumentActivated(this));
+
+    // update selectedHeadingIndex in cookie
+    txtEditor.addEventListener('select', e => explorer.OnDocumentEditorSelectionChanged(this));
+    txtEditor.addEventListener('keyup', e => explorer.OnDocumentEditorSelectionChanged(this));
+    txtEditor.addEventListener('click', e => explorer.OnDocumentEditorSelectionChanged(this));
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitEditor);

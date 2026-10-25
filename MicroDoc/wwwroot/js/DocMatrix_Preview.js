@@ -174,7 +174,7 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     }
 }
 
-DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId, silentError) {
+DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId, headingIndex, silentError) {
     var docPath = DocParser.DocPath(documentId);
 
     // load document content
@@ -192,7 +192,6 @@ DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId, si
     documentId = doc.id;
     const documentContent = doc.content;
     const documentHtml = doc.html;
-    const headingIndex = 0;
 
     // open document in overlay
     this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, !documentContent && isInRole("w", domain, documentId) ? "edit" : "view");

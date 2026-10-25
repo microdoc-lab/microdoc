@@ -87,9 +87,16 @@ Domain.prototype.OpenExplorer = async function (domain, selectedTag = "", active
     var element = document.getElementById(explorerId);
     if (element) {
         if (element.parentElement.style.display == "none")
-            this.ActivateExplorer(element, activeDocumentId);
-        else
-            element.explorer.ActivateDocument(activeDocumentId);
+            this.ActivateExplorer(element);
+        
+        // in no document required - take first from history
+        if (!activeDocumentId)
+            activeDocumentId = element.explorer.GetCookieRecentDocument();
+
+        // activate required document
+        if (activeDocumentId)
+            await element.explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+
         return;
     }
 
@@ -113,7 +120,7 @@ Domain.prototype.OpenExplorer = async function (domain, selectedTag = "", active
 
     // setup client component
     var options = {};
-    var explorer = new Explorer(element, options);
+    const explorer = GetInstanceOrCreate(element.parentElement, () => new Explorer(element, options));
     explorer.domain = domain;
     explorer.selectedTag = selectedTag;
 
@@ -121,10 +128,20 @@ Domain.prototype.OpenExplorer = async function (domain, selectedTag = "", active
     await explorer.Reload();
 
     // activate explorer
-    this.ActivateExplorer(document.getElementById(explorerId), activeDocumentId);
+    this.ActivateExplorer(document.getElementById(explorerId));
+
+    // restore opened documents
+    const state = explorer.cookieState;
+    for (const doc of state.documents) {
+        await explorer.ActivateDocumentOrLoadAndOpen(doc.id);
+    }
+
+    // activate required document
+    if (activeDocumentId)
+        await explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
 }
 
-Domain.prototype.ActivateExplorer = function (element, activeDocumentId) {
+Domain.prototype.ActivateExplorer = function (element) {
     // toggle explorer
     document.querySelectorAll(`.explorer:not(#${element.id})`).forEach(other => {
         other.parentElement.style.display = "none";
@@ -144,9 +161,6 @@ Domain.prototype.ActivateExplorer = function (element, activeDocumentId) {
     document.querySelectorAll(`a.explorer-link[data-domain="${element.parentElement.domain}"]`).forEach(other => {
         other.classList.add("selected");
     });
-
-    // activate explorer document
-    element.explorer.ActivateDocument(activeDocumentId);
 }
 
 Domain.prototype.ShowLandingPage = function () {
