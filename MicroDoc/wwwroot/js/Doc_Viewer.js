@@ -28,7 +28,7 @@
         if (distance > 5)
             return;
 
-        await docMatrix.HandleDocumentClick(event, true);
+        await docMatrix.HandleDocumentClick(event, true, docViewer);
 
         explorer.OnDocumentActivated(this);
     });

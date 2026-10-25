@@ -49,7 +49,7 @@
         if (distance > 5)
             return;
 
-        await this.HandleDocumentClick(event, true, container);
+        await this.HandleDocumentClick(event, true, container, true);
     });
 
     // remove heading selection when user starts selection

@@ -113,7 +113,9 @@
 
 .img-preview img {
     max-width: calc(210mm - 18mm - 18mm);
-    max-height: calc(210mm - 18mm - 18mm);
+    max-height: calc(297mm - 30mm - 30mm);
+    width: auto;
+    height: auto;
 }
 
 /* Error */

@@ -65,8 +65,7 @@ async function CloneNodeForPrinting(element) {
 
     NormalizeGalleries(clone);
     await EmbedImages(clone);
-    for (const img of clone.querySelectorAll("img"))
-        await SetImageDimensions(img);
+    await SetImageDimensions(clone);
 
     AddDocumentSeparators(clone);
     NormalizeCallouts(clone);
@@ -172,8 +171,12 @@ function NormalizeGalleries(root) {
             captionCell.style.paddingRight = "12.5px";
 
             const caption = item.querySelector(":scope > span");
-            if (caption)
-                captionCell.appendChild(caption.cloneNode(true));
+            if (caption) {
+                var label = caption.cloneNode(true);
+                label.setAttribute("align", "center");
+                label.style.textAlign = "center";
+                captionCell.appendChild(label);
+            }
         }
 
         gallery.replaceWith(table);
@@ -182,9 +185,9 @@ function NormalizeGalleries(root) {
 
 async function EmbedImages(root) {
     // show all galleries
-    root.querySelectorAll("gallery").forEach(gallery => gallery.style.visibility = "visible");
+    root.querySelectorAll(".gallery").forEach(gallery => gallery.style.visibility = "visible");
 
-    const images = [...root.querySelectorAll("gallery img")];
+    const images = [...root.querySelectorAll("img")];
 
     await Promise.all(images.map(async img => {
         if (img.src.startsWith("data:"))
@@ -209,19 +212,46 @@ async function EmbedImages(root) {
     }));
 }
 
-async function SetImageDimensions(img) {
-    if (!img.complete || !img.naturalWidth) {
-        await new Promise((resolve, reject) => {
-            img.onload = resolve;
-            img.onerror = reject;
-        });
+async function SetImageDimensions(root) {
+    for (const img of root.querySelectorAll("img")) {
+        if (!img.complete || !img.naturalWidth) {
+            await new Promise((resolve, reject) => {
+                img.onload = resolve;
+                img.onerror = reject;
+            });
+        }
+
+        if (img.closest(".gallery")) {
+            img.setAttribute("width", img.naturalWidth);
+            img.setAttribute("height", img.naturalHeight);
+
+            img.style.width = `${img.naturalWidth}px`;
+            img.style.height = `${img.naturalHeight}px`;
+        }
+
+        if (img.closest(".img-preview")) {
+            // FitImageToPage
+            const MmToPx = mm => mm * 96 / 25.4;
+            const maxWidthPx = MmToPx(210 - 18 - 18);  // 174 mm ≈ 658 px
+            const maxHeightPx = MmToPx(297 - 30 - 30); // 237 mm ≈ 896 px
+
+            const scale = Math.min(
+                1,
+                maxWidthPx / img.naturalWidth,
+                maxHeightPx / img.naturalHeight
+            );
+
+            const width = Math.round(img.naturalWidth * scale);
+            const height = Math.round(img.naturalHeight * scale);
+
+            img.setAttribute("width", width);
+            img.setAttribute("height", height);
+
+            // Avoid conflicting CSS dimensions.
+            img.style.width = `${width}px`;
+            img.style.height = `${height}px`;
+        }
     }
-
-    img.setAttribute("width", img.naturalWidth);
-    img.setAttribute("height", img.naturalHeight);
-
-    img.style.width = `${img.naturalWidth}px`;
-    img.style.height = `${img.naturalHeight}px`;
 }
 
 function TransformGalleriesToImagePages(root) {
@@ -258,6 +288,36 @@ function TransformGalleriesToImagePages(root) {
     }
 
     return result;
+}
+
+function CreateSingleImageGallery(span) {
+    const item = span.closest("imgw");
+    if (!item)
+        return null;
+
+    const doc = document.createElement("doc");
+
+    const gallery = document.createElement("gallery");
+    gallery.style.marginTop = "0px";
+    gallery.style.visibility = "visible";
+
+    const imgw = document.createElement("imgw");
+    imgw.dataset.imagepath = item.dataset.imagepath;
+    imgw.title = item.title;
+
+    const imgc = document.createElement("imgc");
+    const image = item.querySelector("imgc img");
+
+    if (image)
+        imgc.appendChild(image.cloneNode(true));
+
+    imgw.appendChild(imgc);
+    imgw.appendChild(span.cloneNode(true));
+
+    gallery.appendChild(imgw);
+
+    doc.appendChild(gallery);
+    return doc;
 }
 
 function NormalizeTables(root) {

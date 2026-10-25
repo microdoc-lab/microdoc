@@ -76,6 +76,27 @@
         await docMatrix.OpenPrintDocument(docElement);
     });
 
+    // open print document dialog
+    toolbar.querySelector(".print-image").addEventListener("click", async event => {
+        // obtain document context
+        var domain = toolbar.dataset.domain;
+        var documentId = toolbar.dataset.id;
+
+        // find & check docElement
+        var docElement = docMatrix.docElement(domain, documentId);
+        if (!docElement)
+            return;
+
+        var span = docElement.querySelector("gallery imgw span.selected");
+        if (!span)
+            return;
+
+        var docGallery = CreateSingleImageGallery(span);
+        var clone = TransformGalleriesToImagePages(docGallery);
+
+        PrintElement(clone, span.textContent, event.altKey);
+    });
+
     // toggle view/edit mode
     toolbar.querySelector(".view").addEventListener("click", async event => {
         // obtain document context

@@ -1,5 +1,5 @@
 ﻿// Api
-DocMatrix.prototype.HandleDocumentClick = async function (event, select, scrollContainer) {
+DocMatrix.prototype.HandleDocumentClick = async function (event, select, container, scrollOnSelect) {
     // open embeded link
     const link = event.target.closest("a");
     // link should be document-related
@@ -20,7 +20,14 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, scrollC
         const imageWrapper = event.target.closest("imgw");
         if (imageWrapper) {
             // select image
-            SelectElement(imageWrapper.querySelector("span"));
+            var span = imageWrapper.querySelector("span");
+            SelectElement(span);
+
+            if (container) {
+                // add selected class to image
+                container.querySelectorAll("imgw span").forEach(span => span.classList.remove('selected'));
+                span.classList.add('selected');
+            }
             return false;
         }
 
@@ -35,14 +42,13 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, scrollC
             // select heading
             SelectElement(heading);
 
-            // scroll to clicked heading (print preview TOC)
-            if (scrollContainer) {
-                // scroll heading into view
-                if (!IsFullyVisibleAndAboveMiddle(heading, scrollContainer))
+            if (container) {
+                // scroll to clicked heading (print preview TOC)
+                if (scrollOnSelect && !IsFullyVisibleAndAboveMiddle(heading, container))
                     heading.scrollIntoView({ behavior: "auto", block: "start" });
 
                 // add selected class to heading
-                scrollContainer.querySelectorAll("h1, h2, h3").forEach(heading => heading.classList.remove('selected'));
+                container.querySelectorAll("h1, h2, h3").forEach(heading => heading.classList.remove('selected'));
                 heading.classList.add('selected');
             }
 
