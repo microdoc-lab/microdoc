@@ -49,6 +49,7 @@ DocMatrix.prototype.explorer = function () { return this.element.closest(".explo
 DocMatrix.prototype.overlay = function () { return this.element.closest(".explorer").querySelector(".overlay"); }
 DocMatrix.prototype.modal = function () { return this.element.closest(".explorer").querySelector(".modal"); }
 DocMatrix.prototype.printContainer = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .scroll-area"); }
+DocMatrix.prototype.printTitle = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .toolbar .title"); }
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
 
 DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(`.grid tr[data-tag="${tag}"]`); }

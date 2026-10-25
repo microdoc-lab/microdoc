@@ -2,7 +2,6 @@
     this.debug('InitPrint');
 
     var docMatrix = this;
-    var modal = this.modal();
     var container = this.printContainer();
 
     // close print preview on ESC
@@ -70,7 +69,8 @@ DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
 DocMatrix.prototype.OpenPrintColumn = function (document) {
     var modal = this.modal();
-    var container = modal.querySelector(".doc-container .scroll-area");
+    var container = this.printContainer();
+    var printTitle = this.printTitle();
 
     // combine HTML for all doc rows in a specified column
     var html = "";
@@ -80,9 +80,8 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
     });
 
     // update title
-    var title = modal.querySelector(".toolbar .title");
-    title.textContent = document;
-    title.dataset.document = document;
+    printTitle.textContent = document + ".txt";
+    printTitle.dataset.document = document;
 
     // update container HTML
     container.innerHTML = html;
@@ -113,16 +112,15 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
 
 DocMatrix.prototype.OpenPrintDocument = function (docElement) {
     var modal = this.modal();
-    var container = modal.querySelector(".doc-container .scroll-area");
+    var container = this.printContainer();
+    var printTitle = this.printTitle();
 
     // get doc HTML
     var html = docElement.doc.docViewer().innerHTML;
 
     // update title
-    var docPath = DocParser.DocPath(docElement.dataset.id);
-    var title = modal.querySelector(".toolbar .title");
-    title.textContent = docPath;
-    title.dataset.document = docPath;
+    printTitle.textContent = DocParser.DocPath(docElement.dataset.id);
+    printTitle.dataset.document = docElement.dataset.document;
 
     // update container HTML
     container.innerHTML = `<doc>${html}</doc>`;
@@ -173,6 +171,7 @@ DocMatrix.prototype.DialogPrint = async function () {
         return;
 
     var container = this.printContainer();
+    var printTitle = this.printTitle();
 
-    PrintElement(container, container.dataset.document);
+    PrintElement(container, printTitle.textContent);
 }
