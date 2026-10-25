@@ -34,7 +34,7 @@
 				var title = Model.Domain.DocumentOptions.FirstOrDefault(d => d.Name == @column)?.Title;
 				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column" title="@title">
 					<div class="toolbar">
-						<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.OpenPrint("@column")' title="Print">
+						<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.OpenPrintColumn("@column")' title="Print">
 							<img src="/icons/Print.png">
 						</button>
 					</div>

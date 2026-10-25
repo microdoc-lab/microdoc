@@ -62,6 +62,20 @@
         toolbar.dataset.document = null;
     });
 
+    // open print document dialog
+    toolbar.querySelector(".print").addEventListener("click", async event => {
+        // obtain document context
+        var domain = toolbar.dataset.domain;
+        var documentId = toolbar.dataset.id;
+
+        // find & check docElement
+        var docElement = docMatrix.docElement(domain, documentId);
+        if (!docElement)
+            return;
+
+        await docMatrix.OpenPrintDocument(docElement);
+    });
+
     // toggle view/edit mode
     toolbar.querySelector(".view").addEventListener("click", async event => {
         // obtain document context

@@ -68,7 +68,7 @@
 
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
-DocMatrix.prototype.OpenPrint = function (document) {
+DocMatrix.prototype.OpenPrintColumn = function (document) {
     var modal = this.modal();
     var container = modal.querySelector(".doc-container .scroll-area");
 
@@ -92,6 +92,40 @@ DocMatrix.prototype.OpenPrint = function (document) {
         doc.classList.remove("preview");
         doc.dataset.content = "";
     });
+
+    // number Headings
+    var headingIndex = 0;
+    container.querySelectorAll("h1, h2, h3").forEach(heading => {
+        heading.style.setProperty('--index', headingIndex++);
+        heading.setAttribute("content", heading.textContent);
+        heading.title = heading.textContent;
+    });
+
+    // show container
+    modal.style.display = "block";
+
+    SelectAndScrollViewer(container, 0, container);
+
+    AdjustImageGalleryPositionAndVisibility(container);
+
+    this.modalOpened = true;
+}
+
+DocMatrix.prototype.OpenPrintDocument = function (docElement) {
+    var modal = this.modal();
+    var container = modal.querySelector(".doc-container .scroll-area");
+
+    // get doc HTML
+    var html = docElement.doc.docViewer().innerHTML;
+
+    // update title
+    var docPath = DocParser.DocPath(docElement.dataset.id);
+    var title = modal.querySelector(".toolbar .title");
+    title.textContent = docPath;
+    title.dataset.document = docPath;
+
+    // update container HTML
+    container.innerHTML = `<doc>${html}</doc>`;
 
     // number Headings
     var headingIndex = 0;
