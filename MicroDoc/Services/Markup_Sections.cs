@@ -45,7 +45,7 @@
         {
             if (sectionStarted)
             {
-                html.Append("<p></p>");       // content
+                html.Append("<p></p>");         // ensure section not finished with <gallery>
                 html.Append("</content>\n");    // content
                 html.Append("</section>\n");
             }
