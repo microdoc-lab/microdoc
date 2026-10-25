@@ -352,7 +352,7 @@ function AddDocumentSeparators(root) {
 }
 
 function NormalizeCallouts(root) {
-    for (const element of root.querySelectorAll(".note, .example")) {
+    for (const element of root.querySelectorAll(".note, .example, .code content")) {
         const table = document.createElement("table");
         table.setAttribute("width", "100%");
         table.setAttribute("cellspacing", "0");
@@ -376,6 +376,8 @@ function NormalizeCallouts(root) {
             accent = "#527da8";
         if (element.classList.contains("example"))
             accent = "#72966b";
+        if (element.classList.contains("code"))
+            accent = "#d1d5db";
 
         cell.style.borderLeft = `4px solid ${accent}`;
 

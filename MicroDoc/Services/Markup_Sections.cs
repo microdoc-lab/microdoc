@@ -45,7 +45,7 @@
         {
             if (sectionStarted)
             {
-                html.Append("<p></p>\n");       // content
+                html.Append("<p></p>");       // content
                 html.Append("</content>\n");    // content
                 html.Append("</section>\n");
             }

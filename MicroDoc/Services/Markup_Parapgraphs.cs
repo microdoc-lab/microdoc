@@ -26,7 +26,7 @@ namespace MicroDoc.Services
 
             html.Append("<p").Append(@class).Append(">")
                 .Append(text)
-                .Append("</p>\n");
+                .Append("</p>");
 
             paragraph.Clear();
         }

@@ -24,6 +24,12 @@ namespace MicroDoc.Services
                 @"(?<!\w)_([^_\r\n]+)_(?!\w)",
                 "<u>$1</u>");
 
+            // Code: `text`
+            text = Regex.Replace(
+                text,
+                @"(?<!\w)`([^`\r\n]+)`(?!\w)",
+                "<code>$1</code>");
+
             return text;
         }
     }

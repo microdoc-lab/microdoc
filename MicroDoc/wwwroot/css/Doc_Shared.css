@@ -29,6 +29,10 @@
 .doc h2, doc h2 { font-size: 1.4rem; }
 .doc h3, doc h3 { font-size: 1.2rem; }
 
+.doc content, doc content {
+    display: block;
+}
+
 /* Paragraph */
 .doc p, doc p { margin: 4px 0px 4px 0px; }
 
@@ -126,7 +130,7 @@ error {
 }
 
 /* Callouts */
-.doc section.callout, doc:not(.preview) section.callout,
+.doc section.callout:not(.code), doc:not(.preview) section.callout:not(.code),
 .doc p.callout, doc p.callout {
     border: 1px solid #888;
     border-radius: 6px;
@@ -135,7 +139,7 @@ error {
     break-inside: avoid;
 }
 
-.doc section.callout::before, doc:not(.preview) section.callout::before,
+.doc section.callout:not(.code)::before, doc:not(.preview) section.callout:not(.code)::before,
 .doc p.callout::before, doc p.callout::before {
     content: attr(callout) ' ';
     color: darkblue;
@@ -149,3 +153,28 @@ error {
 
 /* Example */
 .doc section.example, doc section.example, .doc p.example, doc p.example { border-left: 4px solid #72966b !important; }
+
+/* Code */
+.doc section.code content, doc section.code content {
+    padding: 3px 6px 1px 6px;
+    overflow-x: auto;
+
+    color: #d63384;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 5px;
+
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre;
+    tab-size: 4;
+}
+
+.doc code, doc code {
+    color: #d63384;
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 3px;
+    padding: 2px;
+}
