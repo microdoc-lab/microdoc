@@ -50,7 +50,8 @@
     text-overflow: ellipsis;
 }
 
-.explorer .modal doc :is(h1,h2,h3):hover::after {
+.explorer .modal doc :is(h1,h2,h3):hover::after,
+.explorer .modal doc :is(h1,h2,h3):has(+ content:hover)::after {
     text-decoration: underline;
 }
 
