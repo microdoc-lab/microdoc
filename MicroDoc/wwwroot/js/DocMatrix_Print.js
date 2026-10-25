@@ -175,3 +175,15 @@ DocMatrix.prototype.DialogPrint = async function (event) {
 
     PrintElement(container, printTitle.textContent, event.altKey);
 }
+
+DocMatrix.prototype.DialogPrintImages = async function (event) {
+    if (!this.modalOpened)
+        return;
+
+    var container = this.printContainer();
+    var printTitle = this.printTitle();
+
+    var clone = TransformGalleriesToImagePages(container);
+
+    PrintElement(clone, printTitle.textContent + " images", event.altKey);
+}

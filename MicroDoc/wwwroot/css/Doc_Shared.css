@@ -100,6 +100,22 @@
     transform: scale(15);
 }
 
+.img-preview {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.img-preview:not(:last-child) {
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 30px;
+}
+
+.img-preview img {
+    max-width: calc(210mm - 18mm - 18mm);
+    max-height: calc(210mm - 18mm - 18mm);
+}
+
 /* Error */
 error {
     display: block;

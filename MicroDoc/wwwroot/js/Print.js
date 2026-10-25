@@ -146,6 +146,7 @@ function NormalizeGalleries(root) {
             continue;
 
         const table = document.createElement("table");
+        table.className = "gallery";
         table.setAttribute("border", "0");
         table.setAttribute("cellspacing", "0");
         table.setAttribute("cellpadding", "0");
@@ -183,13 +184,13 @@ async function EmbedImages(root) {
     // show all galleries
     root.querySelectorAll("gallery").forEach(gallery => gallery.style.visibility = "visible");
 
-    const images = [...root.querySelectorAll("img")];
+    const images = [...root.querySelectorAll("gallery img")];
 
     await Promise.all(images.map(async img => {
         if (img.src.startsWith("data:"))
             return;
 
-        const response = await fetch(img.src + "&thumbDimension=100");
+        const response = await fetch(img.src + (img.closest(".gallery") ? "&thumbDimension=100" : ""));
 
         if (!response.ok)
             throw new Error(`Failed to load image: ${img.src}`);
@@ -223,8 +224,44 @@ async function SetImageDimensions(img) {
     img.style.height = `${img.naturalHeight}px`;
 }
 
+function TransformGalleriesToImagePages(root) {
+    const result = document.createElement("div");
+
+    for (const gallery of root.querySelectorAll("gallery")) {
+        for (const item of gallery.querySelectorAll(":scope > imgw")) {
+            const image = item.querySelector("imgc img");
+            const caption = item.querySelector(":scope > span");
+
+            if (!image)
+                continue;
+
+            const table = document.createElement("table");
+            table.className = "img-preview";
+            table.setAttribute("border", "0");
+            table.setAttribute("cellspacing", "0");
+            table.setAttribute("cellpadding", "4");
+
+            const imageCell = table.insertRow().insertCell();
+            imageCell.setAttribute("align", "center");
+            imageCell.setAttribute("valign", "middle");
+            imageCell.appendChild(image.cloneNode(true));
+
+            const captionCell = table.insertRow().insertCell();
+            captionCell.setAttribute("align", "center");
+            captionCell.setAttribute("valign", "top");
+
+            if (caption)
+                captionCell.textContent = caption.textContent;
+
+            result.appendChild(table);
+        }
+    }
+
+    return result;
+}
+
 function NormalizeTables(root) {
-    for (const table of root.querySelectorAll("table")) {
+    for (const table of root.querySelectorAll("table.table")) {
         table.setAttribute("border", "1");
         table.setAttribute("cellspacing", "0");
         table.setAttribute("cellpadding", "4");
