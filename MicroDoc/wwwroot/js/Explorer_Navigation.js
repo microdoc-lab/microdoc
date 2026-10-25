@@ -51,7 +51,7 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
     // capture document context
     const domain = doc.element.dataset.domain;
     const documentId = doc.element.dataset.id;
-    const tagpath = doc.element.dataset.tagpath;
+    const tagpath = DocParser.DocPath(documentId);
 
     if (!restore) {
         const mode = doc.element.getAttribute("mode");

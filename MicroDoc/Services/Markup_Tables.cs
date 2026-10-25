@@ -41,7 +41,7 @@
         {
             if (!tableStarted)
             {
-                html.Append("<table>\n");
+                html.Append("<table class=\"table\">\n");
                 tableStarted = true;
             }
 

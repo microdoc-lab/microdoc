@@ -111,7 +111,8 @@
         {
             var parts = documentId.Split('/');
             string document = Path.GetFileNameWithoutExtension(documentId);
-            return string.Join(" ", parts[..^1].Select(t => $"[{t}]")) + " " + document + "+" + imageName;
+            string tags = string.Join(" ", parts[..^1].Select(t => $"[{t}]"));
+            return tags.Length > 0 ? tags + " " + document + "+" + imageName : document + "+" + imageName;
         }
 
         public static string GetImageId(string documentId, string imageName)

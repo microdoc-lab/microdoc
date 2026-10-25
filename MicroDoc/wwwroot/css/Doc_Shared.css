@@ -33,12 +33,12 @@
 .doc p, doc p { margin: 4px 0px 4px 0px; }
 
 /* Table */
-.doc table, doc table {
+.doc .table, doc .table {
     border: 1px solid #ccc;
 }
 
-.doc table th, doc table th,
-.doc table td, doc table td
+.doc .table th, doc .table th,
+.doc .table td, doc .table td
 {
     border: 1px solid #ccc;
     padding-left: 5px;
@@ -56,6 +56,14 @@
 
 .doc gallery + *, doc gallery + * {
     padding-top: calc(var(--img-height) + 25px);
+}
+
+.print-page doc gallery {
+    position: initial;
+}
+
+.print-page doc gallery + * {
+    padding-top: 0px;
 }
 
 .doc gallery imgw, doc gallery imgw {

@@ -46,7 +46,9 @@ async function PrintElement(element, title, keepPrintWindowOpen) {
         }, { once: true });
 
         printWindow.focus();
-        printWindow.print();
+
+        if (!keepPrintWindowOpen)
+            printWindow.print();
     } catch (error) {
         console.error("Failed to load print stylesheet:", linkDoc.href, error);
     }
@@ -61,6 +63,7 @@ async function CloneNodeForPrinting(element) {
 
     NormalizeTables(clone);
 
+    NormalizeGalleries(clone);
     await EmbedImages(clone);
     for (const img of clone.querySelectorAll("img"))
         await SetImageDimensions(img);
@@ -133,6 +136,47 @@ function CopyPseudoContent(source, clone) {
             }
         }
     });
+}
+
+function NormalizeGalleries(root) {
+    for (const gallery of root.querySelectorAll("gallery")) {
+        const items = Array.from(gallery.querySelectorAll(":scope > imgw"));
+
+        if (items.length === 0)
+            continue;
+
+        const table = document.createElement("table");
+        table.setAttribute("border", "0");
+        table.setAttribute("cellspacing", "0");
+        table.setAttribute("cellpadding", "0");
+
+        const imagesRow = table.insertRow();
+        const captionsRow = table.insertRow();
+
+        for (const item of items) {
+            const imageCell = imagesRow.insertCell();
+            imageCell.setAttribute("align", "center");
+            imageCell.setAttribute("valign", "center");
+            imageCell.style.paddingLeft = "12.5px";
+            imageCell.style.paddingRight = "12.5px";
+
+            const image = item.querySelector("imgc img");
+            if (image)
+                imageCell.appendChild(image.cloneNode(true));
+
+            const captionCell = captionsRow.insertCell();
+            captionCell.setAttribute("align", "center");
+            captionCell.setAttribute("valign", "top");
+            captionCell.style.paddingLeft = "12.5px";
+            captionCell.style.paddingRight = "12.5px";
+
+            const caption = item.querySelector(":scope > span");
+            if (caption)
+                captionCell.appendChild(caption.cloneNode(true));
+        }
+
+        gallery.replaceWith(table);
+    }
 }
 
 async function EmbedImages(root) {
