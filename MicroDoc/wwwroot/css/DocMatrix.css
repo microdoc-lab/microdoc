@@ -65,6 +65,12 @@
     position: relative;
     overflow: visible;    
     padding-left: calc(var(--tag-level) * 10px);
+    font-weight: normal;
+}
+
+.docmatrix .grid th[data-tag-level="0"]:nth-child(1),
+.docmatrix .grid th[data-tag-level="1"]:nth-child(1) {
+    font-weight: bold;
 }
 
 .docmatrix .grid th clip { 
