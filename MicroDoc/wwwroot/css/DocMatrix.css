@@ -18,7 +18,7 @@
     border-spacing: 0;
 }
 
-.docmatrix .grid.hover {
+.docmatrix .grid:has(tr.hover) {
     z-index: 20;
     --opacity: 100%;
 }

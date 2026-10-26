@@ -30,7 +30,7 @@
         this.SetCookieGridFilter(value);
     };
 
-    enableSoftHover(`#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`);
+    enableSoftHover(`#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid tr:not(:first-child)`);
     enableSoftHover(`#${this.id} .docmatrix .grid td`);
     enableSoftHover(`#${this.id} .docmatrix .grid td:not(.misc) doc section`);
     enableSoftHover(`#${this.id} .docmatrix .grid td:not(.misc) doc gallery imgw, #${this.id} .overlay .doc gallery imgw, #${this.id} .modal doc gallery imgw`, 700, 500);
