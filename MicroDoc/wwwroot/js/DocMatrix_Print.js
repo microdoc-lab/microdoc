@@ -68,6 +68,9 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
 DocMatrix.prototype.OpenPrintColumn = function (document) {
+    // remove hover style
+    window.document.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
+
     var modal = this.modal();
     var container = this.printContainer();
     var printTitle = this.printTitle();
@@ -114,6 +117,9 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
 }
 
 DocMatrix.prototype.OpenPrintDocument = function (docElement) {
+    // remove hover style
+    window.document.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
+
     var modal = this.modal();
     var container = this.printContainer();
     var printTitle = this.printTitle();
