@@ -141,6 +141,8 @@ DocMatrix.prototype.OpenPrintDocument = function (docElement) {
     AdjustImageGalleryPositionAndVisibility(container);
 
     this.modalOpened = true;
+
+    this.explorer().OnDocumentPrintDialogOpened(docElement.doc);
 }
 
 DocMatrix.prototype.ClosePrint = function () {
@@ -155,6 +157,11 @@ DocMatrix.prototype.ClosePrint = function () {
     modal.style.display = "none";
 
     this.modalOpened = false;
+
+    // activate recent document
+    var activeDocumentId = this.explorer().GetCookieRecentDocument();
+    if (activeDocumentId)
+        this.explorer().ActivateDocumentOrLoadAndOpen(activeDocumentId);
 }
 
 DocMatrix.prototype.CopyPrint = async function () {

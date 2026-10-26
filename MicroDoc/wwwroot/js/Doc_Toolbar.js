@@ -73,6 +73,9 @@
         if (!docElement)
             return;
 
+        // activate document
+        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+
         await docMatrix.OpenPrintDocument(docElement);
     });
 
@@ -86,6 +89,9 @@
         var docElement = docMatrix.docElement(domain, documentId);
         if (!docElement)
             return;
+
+        // activate document
+        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
         var span = docElement.querySelector("gallery imgw span.selected");
         if (!span)
@@ -108,6 +114,9 @@
         if (!docElement)
             return;
 
+        // activate document
+        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+
         await docElement.doc.ToggleMode();
     });
 
@@ -119,12 +128,15 @@
 
         var docPath = DocParser.DocPath(documentId);
 
-        if (!confirm(`Delete document ${docPath} ?`))
-            return;
-
         // find & check docElement
         var docElement = docMatrix.docElement(domain, documentId);
         if (!docElement)
+            return;
+
+        // activate document
+        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+
+        if (!confirm(`Delete document ${docPath} ?`))
             return;
 
         await docElement.doc.DeleteDocument();
@@ -140,6 +152,9 @@
         var docElement = docMatrix.docElement(domain, documentId);
         if (!docElement)
             return;
+
+        // activate document
+        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
         var txtEditor = docElement.doc.txtEditor();
 

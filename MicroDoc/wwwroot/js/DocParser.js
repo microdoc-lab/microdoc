@@ -70,3 +70,12 @@ DocParser.DocType = function (documentId) {
     const index = docName.lastIndexOf(".");
     return index > 0 ? docName.substring(index) : "";
 }
+
+DocParser.IsDocPrint = function (documentId) {
+    const isPrint = documentId.endsWith(".print");
+
+    if (isPrint)
+        documentId = documentId.slice(0, -".print".length);
+
+    return { documentId, isPrint };
+}

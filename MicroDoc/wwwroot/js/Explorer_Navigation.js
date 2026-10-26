@@ -41,14 +41,16 @@ Explorer.prototype.behaviors.push(Explorer.prototype.InitNavigation);
 Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
     var docMatrix = this.docMatrix();
 
-    // update domain title
-    document.title = `${this.domain}`;
+    if (!documentId) {
+        // update domain title
+        document.title = `${this.domain}`;
 
-    // put domain URL in history
-    history.replaceState(null, "", `/${this.domain}`);
-
-    if (!documentId)
+        // put domain URL in history
+        history.replaceState(null, "", `/${this.domain}`);
         return;
+    }
+
+    ({ documentId, isPrint } = DocParser.IsDocPrint(documentId));
 
     var selectedHeadingIndex = this.GetCookieDocumentHeadingIndex(documentId);
 
@@ -65,8 +67,15 @@ Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
         if (mode == "edit")
             docElement.doc.txtEditor().focus();
     }
-    else
+    else {
         await docMatrix.LoadAndOpenDocument(this.domain, documentId, selectedHeadingIndex, true);
+    }
+
+    if (isPrint) {
+        docElement = docMatrix.docElement(this.domain, documentId);
+        if (docElement)
+            await docMatrix.OpenPrintDocument(docElement);
+    }
 }
 
 Explorer.prototype.OnDocumentActivated = function (doc, restore) {
@@ -98,6 +107,19 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
     this.AddCookieDocument(documentId, selectedHeadingIndex);
 }
 
+Explorer.prototype.OnDocumentPrintDialogOpened = function (doc) {
+    // capture document context
+    const domain = doc.element.dataset.domain;
+    const documentId = doc.element.dataset.id;
+    const tagpath = DocParser.DocPath(documentId);
+
+    // update document title
+    document.title = `${domain} ${tagpath} print`;
+
+    // put document URL in history
+    history.replaceState(null, "", `/${domain}/${documentId}.print`);
+}
+
 Explorer.prototype.OnDocumentEditorSelectionChanged = function (doc) {
     // capture document context
     const documentId = doc.element.dataset.id;
@@ -108,15 +130,8 @@ Explorer.prototype.OnDocumentEditorSelectionChanged = function (doc) {
 }
 
 Explorer.prototype.OnDocumentClosed = function (doc) {
-    // update domain title
-    document.title = `${this.domain}`;
-
-    // put domain URL in history
-    history.replaceState(null, "", `/${this.domain}`);
-
     // remove active document
     const prevDocumentId = this.RemoveCookieDocument(doc.documentId);
     // activate previous document
-    if (prevDocumentId)
-        this.ActivateDocumentOrLoadAndOpen(prevDocumentId);
+    this.ActivateDocumentOrLoadAndOpen(prevDocumentId);
 }
