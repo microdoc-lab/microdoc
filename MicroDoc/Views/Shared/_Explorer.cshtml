@@ -80,6 +80,7 @@
         explorer.tagTreeId = "@Html.Raw(Model.TagTree.Id)";
         explorer.docMatrixId = "@Html.Raw(Model.DocMatrix.Id)";
         explorer.templateDocId = "@Html.Raw(Model.TemplateDoc.Id)";
+        explorer.loadDeepLevels = @Model.DocMatrix.LoadDeepLevels.ToString().ToLower();
         
         explorer.UpdateElement(container);
         explorer.InitBehaviors();

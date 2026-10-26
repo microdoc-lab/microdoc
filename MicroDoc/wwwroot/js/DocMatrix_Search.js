@@ -17,8 +17,16 @@
                 input.value = "";
                 this.Search();
 
-                if (!initialValue)
+                if (!initialValue) {
                     input.blur();
+
+                    // activate recent document
+                    var activeDocumentId = this.explorer().GetCookieRecentDocument();
+                    if (activeDocumentId)
+                        this.explorer().ActivateDocumentOrLoadAndOpen(activeDocumentId);
+                }
+
+                e.stopPropagation();
             }
         });
     });

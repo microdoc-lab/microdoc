@@ -6,10 +6,10 @@
         var parts = location.pathname.split('/', 3);
 
         if (parts.length == 2) // domain only
-            this.OpenExplorer(parts[1], "", "");
+            this.OpenExplorer(parts[1], "");
 
         if (parts.length == 3) // domain + document
-            this.OpenExplorer(parts[1], "", parts[2]);
+            this.OpenExplorer(parts[1], parts[2]);
     });
 
     // prompt user to save&close editing document on browser tab close/reload
@@ -78,7 +78,7 @@
 
 Domain.prototype.behaviors.push(Domain.prototype.InitDomainExplorer);
 
-Domain.prototype.OpenExplorer = async function (domain, selectedTag = "", activeDocumentId) {
+Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
 
     // translate domain into explorerId
     var explorerId = this.ExplorerId(domain);
@@ -122,10 +122,15 @@ Domain.prototype.OpenExplorer = async function (domain, selectedTag = "", active
     var options = {};
     const explorer = GetInstanceOrCreate(element.parentElement, () => new Explorer(element, options));
     explorer.domain = domain;
-    explorer.selectedTag = selectedTag;
+    explorer.ReadCookie();
+    explorer.selectedTag = explorer.cookieState.tag;
+    explorer.loadDeepLevels = explorer.cookieState.deep;
 
     // load explorer content
     await explorer.Reload();
+
+    if (explorer.cookieState.search)
+        explorer.tagTree().Search(explorer.cookieState.search);
 
     // activate explorer
     this.ActivateExplorer(document.getElementById(explorerId));

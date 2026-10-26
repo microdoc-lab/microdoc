@@ -5,7 +5,25 @@
     var docMatrix = this.docMatrix();
 
     // synchronize DocMatrix with selected tag in TagTree
-    tagTree.options.OnNodeSelected = tagTree.OnNodeSelected = tagId => docMatrix.Load(tagId);
+    // store selectedTag in cookie
+    tagTree.options.OnNodeSelected = tagTree.OnNodeSelected = tagId => {
+        this.selectedTag = tagId;
+        this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
+
+        docMatrix.Load(tagId);
+    };
+
+    // store search in cookie
+    tagTree.options.OnSearchChanged = tagTree.OnSearchChanged = value => {
+        this.search = value;
+        this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
+    };
+
+    // store loadDeepLevels in cookie
+    docMatrix.options.OnLoadDeepLevelsChanged = docMatrix.OnLoadDeepLevelsChanged = value => {
+        this.loadDeepLevels = value;
+        this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
+    };
 
     enableSoftHover(`#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`);
     enableSoftHover(`#${this.id} .docmatrix .grid td`);

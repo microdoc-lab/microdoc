@@ -116,12 +116,12 @@
             {
                 if (documentIdToOpen != null)
                 {
-<text>domain.OpenExplorer("@Html.Raw(domain.Name)", "" , "@Html.Raw(documentIdToOpen)");
+<text>domain.OpenExplorer("@Html.Raw(domain.Name)", "@Html.Raw(documentIdToOpen)");
 </text>
                 }
                 else
                 {
-<text>domain.OpenExplorer("@Html.Raw(domain.Name)", "");
+<text>domain.OpenExplorer("@Html.Raw(domain.Name)");
 </text>
                 }
             }

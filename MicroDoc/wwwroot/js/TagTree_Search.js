@@ -4,6 +4,13 @@
     this.searchStyle = this.element.querySelector(".search-style");
     this.searchInput = this.element.querySelector(".toolbar .search");
 
+    // Default event handler
+    options.OnSearchChanged ??= function (value) {
+        this.log(`OnSearchChanged '${value}'`);
+    };
+
+    this.OnSearchChanged = options.OnSearchChanged;
+
     this.searchInput.addEventListener("focus", () => this.searchInput.select());
     this.searchInput.addEventListener("input", () => this.Search());
 
@@ -14,8 +21,16 @@
             this.searchInput.value = "";
             this.Search();
 
-            if (!initialValue)
+            if (!initialValue) {
                 this.searchInput.blur();
+
+                // activate recent document
+                var activeDocumentId = this.explorer().GetCookieRecentDocument();
+                if (activeDocumentId)
+                    this.explorer().ActivateDocumentOrLoadAndOpen(activeDocumentId);
+            }
+
+            e.stopPropagation();
         }
     });
 }
@@ -33,6 +48,9 @@ TagTree.prototype.Search = function (text) {
         sheet.deleteRule(0);
 
     var searchText = this.searchInput.value.trim();
+
+    this.OnSearchChanged(searchText);
+
     if (!searchText)
         return;
 

@@ -63,7 +63,7 @@ Explorer.prototype.Load = async function (tagId) {
     this.selectedTag = tagId;
 
     // Reload HTML content
-    const response = await this.service.Explorer(this.id, this.domain, this.selectedTag);
+    const response = await this.service.Explorer(this.id, this.domain, this.selectedTag, this.loadDeepLevels);
     if (!response.ok) {
         this.error("Explorer request failed", await response.text());
         return;
@@ -76,6 +76,6 @@ Explorer.prototype.Load = async function (tagId) {
 // Service methods
 function ExplorerService() { }
 
-ExplorerService.prototype.Explorer = function (clientId, domain, selectedTag) {
-    return apiFetch(`/Home/Explorer?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}`);
+ExplorerService.prototype.Explorer = function (clientId, domain, selectedTag, loadDeepLevels) {
+    return apiFetch(`/Home/Explorer?clientId=${clientId}&domain=${domain}&selectedTag=${selectedTag}&loadDeepLevels=${loadDeepLevels}`);
 }

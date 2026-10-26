@@ -1,7 +1,7 @@
 ﻿Explorer.prototype.InitDocuments = function (options) {
     this.debug('InitDocuments');
 
-    this.cookieState = this.ReadCookie();
+    this.ReadCookie();
 }
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitDocuments);
@@ -18,18 +18,20 @@ Explorer.prototype.ReadCookie = function () {
         ?.substring(prefix.length);
 
     if (!value)
-        return { documents: [], activationHistory: [] };
+        this.cookieState = { documents: [], activationHistory: [] };
 
     try {
         const state = JSON.parse(decodeURIComponent(value));
+        if (!state.documents)
+            state.documents = [];
 
-        return {
-            documents: state.documents ?? [],
-            activationHistory: state.activationHistory ?? []
-        };
+        if (!state.activationHistory)
+            state.activationHistory = [];
+
+        this.cookieState = state;
     }
     catch {
-        return { documents: [], activationHistory: [] };
+        this.cookieState = { documents: [], activationHistory: [] };
     }
 };
 
@@ -40,6 +42,16 @@ Explorer.prototype.WriteCookie = function () {
     document.cookie = `${name}=${value}; path=/; max-age=31536000; SameSite=Lax`;
 }
 
+/* Tree */
+Explorer.prototype.SetCookieTag = function (tag, search, deep) {
+    this.cookieState.tag = tag;
+    this.cookieState.search = search;
+    this.cookieState.deep = deep;
+
+    this.WriteCookie();
+}
+
+/* Document */
 Explorer.prototype.AddCookieDocument = function (documentId, headingIndex) {
     var doc = this.cookieState.documents.find(doc => doc.id === documentId);
     if (doc)

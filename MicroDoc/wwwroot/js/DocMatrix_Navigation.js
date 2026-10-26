@@ -5,6 +5,13 @@
 
     var grid = this.grid();
 
+    // Default event handler
+    options.OnLoadDeepLevelsChanged ??= function (value) {
+        this.log(`OnLoadDeepLevelsChanged '${value}'`);
+    };
+
+    this.OnLoadDeepLevelsChanged = options.OnLoadDeepLevelsChanged;
+
     // browse TagTree from DocMatrix - handle click on Tag in DocMatrix
     grid.addEventListener("click", event => {
         // don't navigate if user select some text in the cell
@@ -27,6 +34,9 @@ DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitNavigation);
 // Api
 DocMatrix.prototype.LoadDeepLevelsChanged = function () {
     this.loadDeepLevels = this.loadDeepLevelsInput.checked;
+
+    this.OnLoadDeepLevelsChanged(this.loadDeepLevels);
+
     this.Reload();
 }
 
