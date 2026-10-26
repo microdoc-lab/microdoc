@@ -93,7 +93,7 @@
         // activate document
         await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
-        var span = docElement.querySelector("gallery imgw span.selected");
+        var span = docElement.querySelector("gallery imgw.selected span");
         if (!span)
             return;
 

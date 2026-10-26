@@ -25,8 +25,8 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
 
             if (container) {
                 // add selected class to image
-                container.querySelectorAll("imgw span").forEach(span => span.classList.remove('selected'));
-                span.classList.add('selected');
+                container.querySelectorAll("imgw").forEach(imgw => imgw.classList.remove('selected'));
+                imageWrapper.classList.add('selected');
             }
             return false;
         }

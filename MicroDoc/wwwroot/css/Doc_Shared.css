@@ -91,6 +91,7 @@
     display: block;
     font-size: small;
     text-align: center;
+    margin-top: 1px;
 }
 
 .doc gallery img, doc gallery img {
@@ -102,6 +103,10 @@
 
 .doc gallery imgw.hover img, doc gallery imgw.hover img {
     transform: scale(15);
+}
+
+.doc gallery imgw.selected img, doc gallery imgw.selected img {
+    outline: 1px solid gray;
 }
 
 .img-preview {
