@@ -32,9 +32,11 @@
 /* Toolbar */
 .explorer .overlay .toolbar {
     position: absolute;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     visibility: collapse;
     padding-top: 2px;
+    padding-left: 7px;
     padding-right: 7px;
     width: fit-content;
     z-index: 100;
@@ -44,7 +46,9 @@
     white-space: nowrap;
 }
 
-.explorer .overlay .toolbar .grip { cursor: move; }
+.explorer .overlay .toolbar .right {
+    margin-left: auto;
+}
 
 /* Viewer & Editor */
 .explorer .overlay .doc .viewer,
