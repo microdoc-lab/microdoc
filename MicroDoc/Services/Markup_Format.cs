@@ -30,6 +30,12 @@ namespace MicroDoc.Services
                 @"(?<!\w)`([^`\r\n]+)`(?!\w)",
                 "<code>$1</code>");
 
+            // Status: /status/
+            text = Regex.Replace(
+                text,
+                @"(?<!\w)/([^/\r\n]+)/(?!\w)",
+                "<status class=\"$1\">$1</status>");
+
             return text;
         }
     }

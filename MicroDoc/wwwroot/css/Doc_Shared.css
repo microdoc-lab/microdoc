@@ -178,3 +178,13 @@ error {
     border-radius: 3px;
     padding: 2px;
 }
+
+/* Statuses */
+.doc status, doc status {
+    font-weight: bold;
+    border: 1px solid #d1d5db;
+    border-radius: 3px;
+    padding: 0px 2px;
+}
+
+.doc status.TODO, doc status.TODO { background: lightgreen; }
