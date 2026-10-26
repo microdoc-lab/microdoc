@@ -5,10 +5,17 @@
 
     var grid = this.grid();
 
+    // Default event handler
+    options.OnSearchChanged ??= function (value) {
+        this.log(`OnSearchChanged '${value}'`);
+    };
+
+    this.OnSearchChanged = options.OnSearchChanged;
+
     // search 
     grid.querySelectorAll(".search").forEach(input => {
         input.addEventListener("focus", () => input.select());
-        input.addEventListener("input", () => this.Search(input));
+        input.addEventListener("input", () => this.Search());
 
         // handle Esc key to clear search
         input.addEventListener("keydown", e => {
@@ -39,7 +46,25 @@ DocMatrix.prototype.ClearSearch = function (searchInput) {
     this.Search();
 }
 
-DocMatrix.prototype.Search = function () {
+DocMatrix.prototype.Search = function (value) {
+    var grid = this.grid();
+
+    // init search
+    if (value) {
+        // reset search
+        grid.querySelectorAll(".search").forEach(searchInput => searchInput.value = "");
+
+        // init from data
+        for (const data of value) {
+            if (data.id == "")
+                grid.querySelector("tr:nth-child(1) th:nth-child(1) .search").value = data.search;
+            else if (data.id == "misc")
+                grid.querySelector("tr:nth-child(1) th.misc .search").value = data.search;
+            else
+                grid.querySelector(`tr:nth-child(1) th[data-document=${data.id}] .search`).value = data.search;
+        }
+    }
+
     const sheet = this.searchStyle.sheet;
 
     // Delete all existing rules
@@ -48,7 +73,8 @@ DocMatrix.prototype.Search = function () {
 
     // query predicates from all columns
     var predicates = [];
-    this.grid().querySelectorAll(".search").forEach(searchInput => {
+    var strings = [];
+    grid.querySelectorAll(".search").forEach(searchInput => {
         var searchText = searchInput.value.trim();
         if (!searchText)
             return;
@@ -62,7 +88,17 @@ DocMatrix.prototype.Search = function () {
             predicates.push(`:has(td.misc doc[data-content*="${searchText}" i])`);
         else                                            // document column
             predicates.push(`:has(td[data-document="${document}"] doc[data-content*="${searchText}" i])`);
+
+        // define cookie data
+        if (cell.cellIndex == 0)                        // first column, search all documents
+            strings.push({ id: "", search: searchText });
+        else if (cell.classList.contains("misc"))       // last column MISC
+            strings.push({ id: "misc", search: searchText });
+        else                                            // document column
+            strings.push({ id: document, search: searchText });
     });
+
+    this.OnSearchChanged(strings);
 
     if (predicates.length == 0)
         return;

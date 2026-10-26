@@ -129,8 +129,13 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
     // load explorer content
     await explorer.Reload();
 
+    // init TagTree search
     if (explorer.cookieState.search)
         explorer.tagTree().Search(explorer.cookieState.search);
+
+    // init docMatrix search
+    if (explorer.cookieState.gridFilters.length)
+        explorer.docMatrix().Search(explorer.cookieState.gridFilters);
 
     // activate explorer
     this.ActivateExplorer(document.getElementById(explorerId));

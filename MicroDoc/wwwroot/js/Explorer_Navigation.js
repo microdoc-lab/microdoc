@@ -25,6 +25,11 @@
         this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
     };
 
+    // store loadDeepLevels in cookie
+    docMatrix.options.OnSearchChanged = docMatrix.OnSearchChanged = value => {
+        this.SetCookieGridFilter(value);
+    };
+
     enableSoftHover(`#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`);
     enableSoftHover(`#${this.id} .docmatrix .grid td`);
     enableSoftHover(`#${this.id} .docmatrix .grid td:not(.misc) doc section`);

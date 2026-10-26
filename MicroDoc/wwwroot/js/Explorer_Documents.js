@@ -18,7 +18,7 @@ Explorer.prototype.ReadCookie = function () {
         ?.substring(prefix.length);
 
     if (!value)
-        this.cookieState = { documents: [], activationHistory: [] };
+        this.cookieState = { documents: [], activationHistory: [], gridFilters: [] };
 
     try {
         const state = JSON.parse(decodeURIComponent(value));
@@ -28,10 +28,13 @@ Explorer.prototype.ReadCookie = function () {
         if (!state.activationHistory)
             state.activationHistory = [];
 
+        if (!state.gridFilters)
+            state.gridFilters = [];
+
         this.cookieState = state;
     }
     catch {
-        this.cookieState = { documents: [], activationHistory: [] };
+        this.cookieState = { documents: [], activationHistory: [], gridFilters: [] };
     }
 };
 
@@ -47,6 +50,13 @@ Explorer.prototype.SetCookieTag = function (tag, search, deep) {
     this.cookieState.tag = tag;
     this.cookieState.search = search;
     this.cookieState.deep = deep;
+
+    this.WriteCookie();
+}
+
+/* Grid */
+Explorer.prototype.SetCookieGridFilter = function (value) {
+    this.cookieState.gridFilters = value;
 
     this.WriteCookie();
 }
