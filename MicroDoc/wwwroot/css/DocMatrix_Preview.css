@@ -1,14 +1,15 @@
-﻿/* Section */
+﻿/* Doc */
+.docmatrix .grid td doc:has(section h2) { padding-right: 4px; }
+.docmatrix .grid td doc:has(section h3) { padding-right: 8px; }
+
+/* Section */
 .docmatrix .grid td doc section {
     position: relative;
     cursor: default;
 }
 
-.docmatrix .grid td doc section:hover :is(h1, h2, h3) {
-    color: red;
-    background-color: var(--doc-background);
-    border: 1px solid #ccc;
-}
+.docmatrix .grid td doc section:has(h2) { left: 4px; }
+.docmatrix .grid td doc section:has(h3) { left: 8px; }
 
 /* Headings */
 .docmatrix .grid td doc :is(h1, h2, h3) {
@@ -28,11 +29,22 @@
     margin: 0px;
 }
 
-.docmatrix .grid td doc section:has(h2) { left: 4px; }
-.docmatrix .grid td doc section:has(h3) { left: 8px; }
+.docmatrix .grid td doc section:hover :is(h1, h2, h3) {
+    color: red;
+    background-color: var(--doc-background);
+    border: 1px solid #ccc;
+}
 
-.docmatrix .grid td doc:has(section h2) { padding-right: 4px; }
-.docmatrix .grid td doc:has(section h3) { padding-right: 8px; }
+/* Show image indicator */
+.docmatrix .grid td doc section:has(gallery) :is(h1, h2, h3):after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-left: 6px;
+    vertical-align: bottom;
+    background: url("/icons/Image.png") center / contain no-repeat;
+}
 
 /* Content */
 .docmatrix .grid td doc content {
