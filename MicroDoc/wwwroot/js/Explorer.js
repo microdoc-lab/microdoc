@@ -47,7 +47,7 @@ Explorer.prototype.ApplyChanges = async function (change) {
     await this.docMatrix().ApplyChanges(change);
 
     for (const docElement of this.element.querySelectorAll(".overlay .doc"))
-        docElement.doc.ApplyChanges(change);
+        await docElement.doc.ApplyChanges(change);
 }
 
 // Api

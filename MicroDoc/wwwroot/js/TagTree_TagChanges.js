@@ -72,7 +72,7 @@ TagTree.prototype.NewTag = async function () {
 
     // PublishChanges
     var data = await response.json();
-    window.domain.PublishChanges(data.changes);
+    await window.domain.PublishChanges(data.changes);
 }
 
 TagTree.prototype.RenameTag = async function () {
@@ -101,7 +101,7 @@ TagTree.prototype.RenameTag = async function () {
 
     // PublishChanges
     var data = await response.json();
-    window.domain.PublishChanges(data.changes);
+    await window.domain.PublishChanges(data.changes);
 }
 
 TagTree.prototype.MoveTag = async function () {
@@ -130,7 +130,7 @@ TagTree.prototype.MoveTag = async function () {
 
     // PublishChanges
     var data = await response.json();
-    window.domain.PublishChanges(data.changes);
+    await window.domain.PublishChanges(data.changes);
 }
 
 TagTree.prototype.DeleteTag = async function () {
@@ -152,5 +152,5 @@ TagTree.prototype.DeleteTag = async function () {
 
     // PublishChanges
     var data = await response.json();
-    window.domain.PublishChanges(data.changes);
+    await window.domain.PublishChanges(data.changes);
 }

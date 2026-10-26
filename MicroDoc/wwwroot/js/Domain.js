@@ -38,14 +38,14 @@ Domain.prototype.InitBehaviors = function () {
     }
 }
 
-Domain.prototype.PublishChanges = function (changes) {
+Domain.prototype.PublishChanges = async function (changes) {
     for (const change of changes) {
         // translate domain events
         if (change.domain) {
             var explorerId = this.ExplorerId(change.domain);
             var element = document.getElementById(explorerId);
             if (element)
-                element.explorer.ApplyChanges(change);
+                await element.explorer.ApplyChanges(change);
         }
     }
 }

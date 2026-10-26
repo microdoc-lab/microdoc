@@ -38,7 +38,7 @@
 
             // PublishChanges
             var data = await response.json();
-            window.domain.PublishChanges(data.changes);
+            await window.domain.PublishChanges(data.changes);
         });
     });
 }

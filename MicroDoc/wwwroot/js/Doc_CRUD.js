@@ -35,7 +35,7 @@ Doc.prototype.SaveDocument = async function () {
 
     // PublishChanges
     var data = await response.json();
-    window.domain.PublishChanges(data.changes);
+    await window.domain.PublishChanges(data.changes);
 }
 
 Doc.prototype.DeleteDocument = async function () {
@@ -56,5 +56,5 @@ Doc.prototype.DeleteDocument = async function () {
 
     // PublishChanges
     var data = await response.json();
-    window.domain.PublishChanges(data.changes);
+    await window.domain.PublishChanges(data.changes);
 }
