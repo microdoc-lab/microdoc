@@ -28,9 +28,7 @@
                     input.blur();
 
                     // activate recent document
-                    var activeDocumentId = this.explorer().GetCookieRecentDocument();
-                    if (activeDocumentId)
-                        this.explorer().ActivateDocumentOrLoadAndOpen(activeDocumentId);
+                    this.explorer().ActivateRecentDocument();
                 }
 
                 e.stopPropagation();

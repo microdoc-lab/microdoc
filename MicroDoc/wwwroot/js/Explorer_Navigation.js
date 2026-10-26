@@ -38,6 +38,12 @@
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitNavigation);
 
+Explorer.prototype.ActivateRecentDocument = async function () {
+    var activeDocumentId = this.GetCookieRecentDocument();
+    if (activeDocumentId)
+        this.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+}
+
 Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
     var docMatrix = this.docMatrix();
 
@@ -131,7 +137,8 @@ Explorer.prototype.OnDocumentEditorSelectionChanged = function (doc) {
 
 Explorer.prototype.OnDocumentClosed = function (doc) {
     // remove active document
-    const prevDocumentId = this.RemoveCookieDocument(doc.documentId);
-    // activate previous document
-    this.ActivateDocumentOrLoadAndOpen(prevDocumentId);
+    this.RemoveCookieDocument(doc.documentId);
+
+    // activate recent document
+    this.ActivateRecentDocument();
 }

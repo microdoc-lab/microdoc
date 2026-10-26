@@ -162,9 +162,7 @@ DocMatrix.prototype.ClosePrint = function () {
     this.modalOpened = false;
 
     // activate recent document
-    var activeDocumentId = this.explorer().GetCookieRecentDocument();
-    if (activeDocumentId)
-        this.explorer().ActivateDocumentOrLoadAndOpen(activeDocumentId);
+    this.explorer().ActivateRecentDocument();
 }
 
 DocMatrix.prototype.CopyPrint = async function () {
