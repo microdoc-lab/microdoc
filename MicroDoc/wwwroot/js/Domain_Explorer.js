@@ -2,14 +2,21 @@
     this.debug('InitDomainExplorer');
 
     // handle browser Back button
-    window.addEventListener("popstate", () => {
-        var parts = location.pathname.split('/', 3);
+    window.addEventListener("popstate", async () => {
+        console.log(location.pathname);
+        var parts = location.pathname.split('/');
 
-        if (parts.length == 2) // domain only
-            this.OpenExplorer(parts[1], "");
-
-        if (parts.length == 3) // domain + document
-            this.OpenExplorer(parts[1], parts[2]);
+        this.popState = true;
+        try {
+            if (parts.length < 2) {         // incorrect
+            } else if (parts.length == 2)   // domain only
+                await this.OpenExplorer(parts[1], "");
+            else                            // domain + document
+                await this.OpenExplorer(parts[1], parts.slice(2).join("/"));
+        }
+        finally {
+            this.popState = false;
+        }
     });
 
     // prompt user to save&close editing document on browser tab close/reload
@@ -78,6 +85,11 @@
 
 Domain.prototype.behaviors.push(Domain.prototype.InitDomainExplorer);
 
+Domain.prototype.HistoryNavigate = async function (url) {
+    if (!this.popState)
+        history.pushState(null, "", url);
+}
+
 Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
 
     // translate domain into explorerId
@@ -94,8 +106,7 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
             activeDocumentId = element.explorer.GetCookieRecentDocument();
 
         // activate required document
-        if (activeDocumentId)
-            await element.explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+        await element.explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
 
         return;
     }
@@ -149,8 +160,7 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
     }
 
     // activate required document
-    if (activeDocumentId)
-        await explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+    await explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
 }
 
 Domain.prototype.ActivateExplorer = function (element) {
@@ -194,5 +204,5 @@ Domain.prototype.ShowLandingPage = function () {
     document.title = "MicroDoc";
 
     // put base URL in history
-    history.replaceState(null, "", "/Home/LandingPage");
+    this.HistoryNavigate("/Home/LandingPage");
 }

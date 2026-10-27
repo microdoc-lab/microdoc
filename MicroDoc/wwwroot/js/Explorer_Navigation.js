@@ -46,12 +46,14 @@ Explorer.prototype.ActivateRecentDocument = async function () {
 Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
     var docMatrix = this.docMatrix();
 
+    docMatrix.ClosePrint();
+
     if (!documentId) {
         // update domain title
         document.title = `${this.domain}`;
 
         // put domain URL in history
-        history.replaceState(null, "", `/${this.domain}`);
+        window.domain.HistoryNavigate(`/${this.domain}`);
         return;
     }
 
@@ -128,7 +130,8 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
     document.title = `${domain} ${tagpath}`;
 
     // put document URL in history
-    history.replaceState(null, "", `/${domain}/${documentId}`);
+    window.domain.HistoryNavigate(`/${domain}/${documentId}`);
+    console.log(`/${domain}/${documentId}`);
 
     // store active document
     this.AddCookieDocument(documentId, selectedHeadingIndex);
@@ -147,9 +150,9 @@ Explorer.prototype.OnColumnPrintDialogOpened = function (column) {
 
     // put document URL in history
     if (path)
-        history.replaceState(null, "", `/${domain}/${path}/${column}${deep}.print`);
+        window.domain.HistoryNavigate(`/${domain}/${path}/${column}${deep}.print`);
     else
-        history.replaceState(null, "", `/${domain}/${column}${deep}.print`);
+        window.domain.HistoryNavigate(`/${domain}/${column}${deep}.print`);
 }
 
 Explorer.prototype.OnDocumentPrintDialogOpened = function (doc) {
@@ -162,7 +165,7 @@ Explorer.prototype.OnDocumentPrintDialogOpened = function (doc) {
     document.title = `${domain} ${tagpath} print`;
 
     // put document URL in history
-    history.replaceState(null, "", `/${domain}/${documentId}.print`);
+    window.domain.HistoryNavigate(`/${domain}/${documentId}.print`);
 }
 
 Explorer.prototype.OnDocumentEditorSelectionChanged = function (doc) {
