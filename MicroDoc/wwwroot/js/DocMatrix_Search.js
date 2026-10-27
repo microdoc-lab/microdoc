@@ -80,11 +80,11 @@ DocMatrix.prototype.Search = function (value) {
         const document = cell.dataset.document;
 
         if (cell.cellIndex == 0)                        // first column, search all documents
-            predicates.push(`:has(doc[data-content*="${searchText}" i])`);
+            predicates.push(`td doc[data-content*="${searchText}" i]`);
         else if (cell.classList.contains("misc"))       // last column MISC
-            predicates.push(`:has(td.misc doc[data-content*="${searchText}" i])`);
+            predicates.push(`td.misc doc[data-content*="${searchText}" i]`);
         else                                            // document column
-            predicates.push(`:has(td[data-document="${document}"] doc[data-content*="${searchText}" i])`);
+            predicates.push(`td[data-document="${document}"] doc[data-content*="${searchText}" i]`);
     });
 
     // raise OnSearchChanged event
@@ -94,9 +94,16 @@ DocMatrix.prototype.Search = function (value) {
     if (predicates.length == 0)
         return;
     
-    // Add a new rule
+    // Hide all rows
     sheet.insertRule(`.docmatrix#${this.id} tr[data-tag] { display: none; }`, sheet.cssRules.length);
-    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag]${predicates.join("")} { display: table-row; }`, sheet.cssRules.length);
+    // Show matched rows
+    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag]${predicates.map(p => `:has(${p})`).join("")} { display: table-row; }`, sheet.cssRules.length);
+
+    // Smooth all documents
+    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag] doc { opacity: 0.5; }`, sheet.cssRules.length);
+    // Highlight matched docs
+    for (const p of predicates)
+        sheet.insertRule(`.docmatrix#${this.id} tr[data-tag] ${p} { opacity: 1; }`, sheet.cssRules.length);
 }
 
 DocMatrix.prototype.GetSearchStrings = function () {
