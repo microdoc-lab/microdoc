@@ -33,7 +33,7 @@ namespace MicroDoc.Services
             // Status: /status/
             text = Regex.Replace(
                 text,
-                @"(?<!\w)/([^/\r\n]+)/(?!\w)",
+                @"(?<!\w)/([^/\s]+)/(?!\w)",
                 "<status class=\"$1\">$1</status>");
 
             return text;
