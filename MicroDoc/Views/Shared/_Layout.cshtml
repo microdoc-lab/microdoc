@@ -62,16 +62,16 @@
                     <div class="auth-links">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <span>Hello, @User.Identity.Name!</span>
-                            <a class="btn btn-outline-secondary btn-sm ms-2" href="/Home/Logout">Logout</a>
+                            <span data-loc-content="Auth_Greeting" data-loc-content$0="@User.Identity.Name"></span>
+                            <a class="btn btn-outline-secondary btn-sm ms-2" href="/Home/Logout" data-loc-content="Auth_Logout"></a>
                         }
                         else
                         {
                             if (_domainOptions.SimpleLogin)
                             {
-                            <a class="btn btn-primary btn-sm" href="" onclick='SimpleLogin(); return false;'>Simple Login</a>    
+                            <a class="btn btn-primary btn-sm" href="" onclick='SimpleLogin(); return false;' data-loc-content="Auth_LoginSimple"></a>
                             }
-                            <a class="btn btn-primary btn-sm" href="/Home/Login">Login with Google</a>
+                            <a class="btn btn-primary btn-sm" href="/Home/Login" data-loc-content="Auth_LoginGoogle"></a>
                         }
                     </div>
                 </div>

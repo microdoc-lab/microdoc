@@ -88,6 +88,11 @@ footer {
     padding-left: .5rem;
 }
 
+.nav-item a {
+    outline: none;
+    box-shadow: none;
+}
+
 .nav-item .nav-link img {
     display: inline-block;
     width: 24px;

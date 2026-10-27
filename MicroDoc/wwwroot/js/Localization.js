@@ -1,5 +1,9 @@
 ﻿const LocUS = {
-    Login_Prompt: "Enter user name/email",
+    Auth_Prompt: "Enter user name/email",
+    Auth_LoginSimple: "Simple Login",
+    Auth_LoginGoogle: "Login with Google",
+    Auth_Greeting: "Hello, {0}!",
+    Auth_Logout: "Logout",
 
     Header_EditDomainOptions: "Edit Domain Options",
 
