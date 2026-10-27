@@ -68,9 +68,6 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
 DocMatrix.prototype.OpenPrintColumn = function (document) {
-    // remove hover style
-    window.document.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
-
     var modal = this.modal();
     var container = this.printContainer();
     var printTitle = this.printTitle();
@@ -91,6 +88,9 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
 
     // update container HTML
     container.innerHTML = html;
+
+    // remove hover style
+    container.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
 
     // remove preview class
     container.querySelectorAll("doc").forEach(doc => {
@@ -119,9 +119,6 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
 }
 
 DocMatrix.prototype.OpenPrintDocument = function (docElement) {
-    // remove hover style
-    window.document.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
-
     var modal = this.modal();
     var container = this.printContainer();
     var printTitle = this.printTitle();
@@ -135,6 +132,9 @@ DocMatrix.prototype.OpenPrintDocument = function (docElement) {
 
     // update container HTML
     container.innerHTML = `<doc>${html}</doc>`;
+
+    // remove hover style
+    container.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
 
     // number Headings
     var headingIndex = 0;

@@ -30,10 +30,10 @@
         this.SetCookieGridFilter(value);
     };
 
-    enableSoftHover(`#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid tr:not(:first-child)`);
-    enableSoftHover(`#${this.id} .docmatrix .grid td`);
-    enableSoftHover(`#${this.id} .docmatrix .grid td:not(.misc) doc section`);
-    enableSoftHover(`#${this.id} .docmatrix .grid td:not(.misc) doc gallery imgw, #${this.id} .overlay .doc gallery imgw, #${this.id} .modal doc gallery imgw`, 700, 500);
+    enableSoftHover("tree/grid", `#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`, 700, 500);
+    enableSoftHover("grid td", `#${this.id} .docmatrix .grid td`);
+    enableSoftHover("grid td doc", `#${this.id} .docmatrix .grid td:not(.misc) doc section`);
+    enableSoftHover("imgw", `#${this.id} .docmatrix .grid td:not(.misc) doc gallery imgw, #${this.id} .overlay .doc gallery imgw.selected, #${this.id} .modal doc gallery imgw.selected`, 700, 500);
 }
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitNavigation);

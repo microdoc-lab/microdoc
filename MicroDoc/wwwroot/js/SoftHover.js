@@ -1,5 +1,5 @@
 ﻿// soft hover
-function enableSoftHover(selector, delayEnter = 500, delayLeave = 300) {
+function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
     let enterTimer = null;
     let pendingEnter = null;
     let activeElement = null;
@@ -45,6 +45,8 @@ function enableSoftHover(selector, delayEnter = 500, delayLeave = 300) {
             element.contains(event.relatedTarget))
             return;
 
+        // console.log(code + " pointerover " + element + " " + element.matches(":hover"));
+
         cancelLeave(element);
 
         // Cancel a pending activation if we enter another element.
@@ -72,6 +74,8 @@ function enableSoftHover(selector, delayEnter = 500, delayLeave = 300) {
         if (event.relatedTarget instanceof Node &&
             element.contains(event.relatedTarget))
             return;
+
+        // console.log(code + " pointerout " + element + " " + element.matches(":hover"));
 
         if (pendingEnter === element)
             cancelEnter();
