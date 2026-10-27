@@ -1,0 +1,15 @@
+﻿@{
+    var currentLanguage = Context.Request.Cookies["Language"] ?? "US";
+}
+
+@foreach (var language in new[] { "US", "UA" })
+{
+    if (language == currentLanguage)
+    {
+        <span>[@language]</span>
+    }
+    else
+    {
+        <a href="#" onclick="ChangeLanguage('@language'); return false;">[@language]</a>
+    }
+}

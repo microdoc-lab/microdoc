@@ -22,11 +22,10 @@
     TagTree_InvalidTagName: "Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed",
     TagTree_NewFailed: "Create new Tag in {0} failed",
 
-    TagTree_RenamePrompt: "Create new Tag in {0}? Enter new tag name",
-    TagTree_InvalidTagName: "Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed",
-    TagTree_RenameFailed: "Create new Tag in {0} failed",
+    TagTree_RenamePrompt: "Rename Tag {0}? Enter new tag name",
+    TagTree_RenameFailed: "Rename Tag {0} to {1} failed",
 
-    TagTree_MovePrompt: "Move Tag {0}? Enter target tag name",
+    TagTree_MovePrompt: "Move Tag {0}? Enter target tag (for ex. Domain/Options)",
     TagTree_InvalidTag: "Invalid tag. Only symbols, digits, underscore, hyphen, space (/ separated) allowed",
     TagTree_MoveFailed: "Move Tag {0} to {1} failed",
 
@@ -36,12 +35,12 @@
     TagTree_SwapTagsFailed: "Swap tags failed",
     TagTree_LoadFailed: "TagTree load failed",
 
-    DocMatrix_Reload: "Reload Matrix",
+    DocMatrix_Reload: "Reload document matrix",
     DocMatrix_MoveUp: "Move Up",
     DocMatrix_LoadDeepLevels: "Load Deep Levels",
     DocMatrix_Search: "Search",
     DocMatrix_SearchPH: "Search",
-    DocMatrix_Print: "Print",
+    DocMatrix_Print: "Print column",
 
     DocMatrix_NewPrompt: "Enter document name (without extension)",
     DocMatrix_InvalidDocumentName: "Invalid document name. Only symbols, digits, underscore, hyphen, space allowed",
@@ -55,7 +54,7 @@
 
     Document_Copy: "Copy Document Path",
     Document_Print: "Print",
-    Document_PrintImage: "Print Image",
+    Document_PrintImage: "Print selected Image",
     Document_ToggleViewEdit: "Toggle View/Edit",
     Document_Delete: "Delete",
     Document_Close: "Close",
@@ -73,7 +72,7 @@
 
     ErrorCode_TagNotFound: "Tag not found",
     ErrorCode_TagExists: "Tag already exists",
-    ErrorCode_RootTag: "Root tag",
+    ErrorCode_RootTag: "Not allowed - Root tag",
     ErrorCode_MoveIntoNestedTag: "Move into nested tag",
     ErrorCode_NestedTagsExists: "Nested tags exists",
     ErrorCode_NestedDocumentsExists: "Nested documents exists",
@@ -84,5 +83,3 @@
     ErrorCode_ThumbDimensionExceeded: "Thumb dimension exceeded",
     ErrorCode_NotImplemented: "Not Implemented",
 };
-
-var Loc = LocUS;

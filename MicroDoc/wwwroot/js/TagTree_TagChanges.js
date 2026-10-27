@@ -95,7 +95,7 @@ TagTree.prototype.RenameTag = async function () {
     // Rename Tag
     const response = await this.service.RenameTag(domain, selectedTag, newTagName);
     if (!response.ok) {
-        this.error(format(Loc.TagTree_RenameFailed, tagPath), await response.text());
+        this.error(format(Loc.TagTree_RenameFailed, tagPath, newTagName), await response.text());
         return;
     }
 

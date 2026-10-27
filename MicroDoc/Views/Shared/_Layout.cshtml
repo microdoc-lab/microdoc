@@ -59,6 +59,9 @@
                         }
                     </ul>
 
+                    <div class="lang-links me-3">
+                        @await Html.PartialAsync("_Lang")
+                    </div>
                     <div class="auth-links">
                         @if (User.Identity?.IsAuthenticated == true)
                         {
@@ -121,7 +124,9 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/Print.js" asp-append-version="true"></script>
     <script src="~/js/SoftHover.js" asp-append-version="true"></script>
-    <script src="~/js/Localization.js" asp-append-version="true"></script>
+    <script src="~/js/Lang.js" asp-append-version="true"></script>
+    <script src="~/js/LocUS.js" asp-append-version="true"></script>
+    <script src="~/js/LocUA.js" asp-append-version="true"></script>
 
     <div class="container">
         <main role="main">
@@ -135,6 +140,8 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script type="text/javascript">
+        InitLanguage();
+
         LocalizeElement(document.querySelector("header"));
 
         (async function() {
