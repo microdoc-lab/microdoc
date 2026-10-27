@@ -14,7 +14,7 @@ DocParser.IsValidTagName = function (name) {
     return /^[\p{L}\p{N}_\- ]+$/u.test(name);
 }
 
-DocParser.IsValidTag = function (tag) {
+DocParser.IsValidTagId = function (tag) {
     if (tag == null)
         return false;
 
@@ -46,8 +46,8 @@ DocParser.TagPath = function (domain, tag) {
     return tagPath && tagPath != "[]" ? tagPath : domain;
 }
 
-DocParser.DocId = function (tags, document) {
-    return tags ? tags + "/" + document : document;
+DocParser.DocId = function (tagId, document) {
+    return tagId ? tagId + "/" + document : document;
 }
 
 DocParser.DocPath = function (documentId) {

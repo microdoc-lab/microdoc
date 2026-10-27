@@ -116,7 +116,7 @@ TagTree.prototype.MoveTag = async function () {
     if (targetTag == null)
         return;
 
-    if (!DocParser.IsValidTag(targetTag)) {
+    if (!DocParser.IsValidTagId(targetTag)) {
         alert("Invalid tag. Only symbols, digits, underscore, hyphen, space (/ separated) allowed");
         return;
     }
