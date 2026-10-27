@@ -42,13 +42,17 @@
     width: fit-content;
     z-index: 100;
     white-space: nowrap;
-    pointer-events: auto;
+    pointer-events: none;
     font-size: 0;
     white-space: nowrap;
 }
 
-.explorer .overlay .toolbar .right {
+.explorer .overlay .toolbar button.right {
     margin-left: auto;
+}
+
+.explorer .overlay .toolbar button {
+    pointer-events: auto;
 }
 
 /* Viewer & Editor */

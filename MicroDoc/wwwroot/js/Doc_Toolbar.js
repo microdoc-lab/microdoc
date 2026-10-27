@@ -7,7 +7,9 @@
 
     // copy document path to clipboard
     this.element.querySelector(".label").addEventListener("click", async event => {
-        await navigator.clipboard.writeText(this.element.dataset.tagpath);
+        var documentId = this.element.dataset.id;
+        var docPath = DocParser.DocPath(documentId);
+        await navigator.clipboard.writeText(docPath);
     });
 
     if (toolbar.toolbarInited)
