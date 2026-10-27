@@ -4,11 +4,16 @@ namespace MicroDoc.Services
 {
     public static class DomainOptionsLoader
     {
+        private const string TemplatePath = "~/DomainOptions.template.ini";
+
         public static string ContentRootPath { get; set; }
 
         public static DomainOptions LoadOptionsFromFile(string path)
         {
             path = ResolvePath(path);
+
+            if (!File.Exists(path))
+                path = ResolvePath(TemplatePath);
 
             if (!File.Exists(path))
                 return new();
@@ -23,6 +28,13 @@ namespace MicroDoc.Services
         public static string LoadOptionsAsText(string path)
         {
             path = ResolvePath(path);
+
+            if (!File.Exists(path))
+                path = ResolvePath(TemplatePath);
+
+            if (!File.Exists(path))
+                return "";
+
             var yaml = File.ReadAllText(path);
             return yaml;
         }

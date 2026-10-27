@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Content Update="appsettings.Development.json" CopyToPublishDirectory="Never" />
-    <Content Include="DomainOptions.ini" CopyToPublishDirectory="PreserveNewest" />
+    <Content Include="DomainOptions.template.ini" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
   
 </Project>
