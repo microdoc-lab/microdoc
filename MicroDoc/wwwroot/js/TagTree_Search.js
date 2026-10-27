@@ -54,8 +54,14 @@ TagTree.prototype.Search = function (text) {
 
     searchText = CSS.escape(searchText);
 
-    // Add a new rule
+    // Hide all tags
     sheet.insertRule(`.tag-tree#${this.id} .tag { display: none; }`, sheet.cssRules.length);
+    // Show matched tags
     sheet.insertRule(`.tag-tree#${this.id} .tag[data-tag*="${searchText}" i] { display: list-item; }`, sheet.cssRules.length);
     sheet.insertRule(`.tag-tree#${this.id} .tag:has(.tag[data-tag*="${searchText}" i]) { display: list-item; }`, sheet.cssRules.length);
+
+    // Smooth all titles
+    sheet.insertRule(`.tag-tree#${this.id} .tag .title { opacity: 0.5; }`, sheet.cssRules.length);
+    // Highlight matched titles
+    sheet.insertRule(`.tag-tree#${this.id} .title[data-tag*="${searchText}" i] { opacity: 1; }`, sheet.cssRules.length);
 }

@@ -51,7 +51,7 @@
             data-domain="@module.Domain" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
             <details class="@(!module.Children.Any() ? "empty" : "")" open="@(module.Children.Any() && IsTagNodeOpen(module.Id))">
                 <summary class="title-bar">
-                    <span class="module title">[@module.Tag]</span>
+                    <span class="module title" data-tag="@module.Tag">[@module.Tag]</span>
                 </summary>
 
                 @if (module.Children.Any())
@@ -64,7 +64,7 @@
                                 data-domain="@component.Domain" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
                                 <details class="@(!component.Children.Any() ? "empty" : "")" open="@(component.Children.Any() && IsTagNodeOpen(component.Id))">
                                     <summary class="title-bar">
-                                        <span class="component title">[@component.Tag]</span>
+                                        <span class="component title" data-tag="@component.Tag">[@component.Tag]</span>
                                     </summary>
                                     <ul class="part tag-list popup">
                                         @foreach (var part in component.Children)
@@ -73,7 +73,7 @@
                                                 style="--tag-color:@part.Color" 
                                                 data-domain="@part.Domain" data-path="@part.Path" data-tag="@part.Tag" data-id="@part.Id">
                                                 <div class="title-bar">
-                                                    <span class="part title">[@part.Tag]</span>
+                                                    <span class="part title" data-tag="@part.Tag">[@part.Tag]</span>
                                                 </div>
                                             </li>
                                         }
