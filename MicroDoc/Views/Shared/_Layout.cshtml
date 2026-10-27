@@ -52,7 +52,7 @@
                         @if (User.IsInRole("a"))
                         {
                         <li class="nav-item a">
-                            <a class="nav-link text-dark" href="" onclick='window.domain.ToggleDomainOptions(); return false;' title="Edit Domain Options">
+                            <a class="nav-link text-dark" href="" onclick='window.domain.ToggleDomainOptions(); return false;' data-loc-title="Header_EditDomainOptions">
                                 <img src="/icons/Settings.png">
                             </a>
                         </li>
@@ -121,6 +121,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/Print.js" asp-append-version="true"></script>
     <script src="~/js/SoftHover.js" asp-append-version="true"></script>
+    <script src="~/js/Localization.js" asp-append-version="true"></script>
 
     <div class="container">
         <main role="main">
@@ -134,6 +135,8 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script type="text/javascript">
+        LocalizeElement(document.querySelector("header"));
+
         (async function() {
             // setup SignalR connection
             const connection = new signalR.HubConnectionBuilder()

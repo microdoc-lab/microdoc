@@ -18,32 +18,32 @@
 		<tr>
 			<th style="width: @(colWidth)%; max-width: @(colWidth)%;">
 				<div class="toolbar">
-					<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.Reload()' title="Reload">
+					<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.Reload()' data-loc-title="DocMatrix_Reload">
 						<img src="/icons/Refresh.png">
 					</button>
-					<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.MoveTagUp()' title="Up">
+					<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.MoveTagUp()' data-loc-title="DocMatrix_MoveUp">
 						<img src="/icons/Up.png">
 					</button>
-					<input type="checkbox" class="load-deep-levels" @(Model.LoadDeepLevels ? "checked" : "") title="Load deep levels"
+					<input type="checkbox" class="load-deep-levels" @(Model.LoadDeepLevels ? "checked" : "") data-loc-title="DocMatrix_LoadDeepLevels"
 						onchange='document.getElementById("@Model.Id").docMatrix.LoadDeepLevelsChanged()' />
 				</div>
-				<input type="text" class="search r" placeholder="Search" />
+				<input type="text" class="search r" data-loc-placeholder="DocMatrix_SearchPH" data-loc-title="DocMatrix_Search" />
 			</th>
 			@foreach (var column in columnDocuments)
 			{
 				var title = Model.Domain.DocumentOptions.FirstOrDefault(d => d.Name == @column)?.Title;
 				<th style="width: @(colWidth)%; max-width: @(colWidth)%;" data-document="@column" title="@title">
 					<div class="toolbar">
-						<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.OpenPrintColumn("@column")' title="Print">
+						<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.OpenPrintColumn("@column")' data-loc-title="DocMatrix_Print">
 							<img src="/icons/Print.png">
 						</button>
 					</div>
 					@column
-					<input type="text" class="search r" placeholder="Search" />
+					<input type="text" class="search r" data-loc-placeholder="DocMatrix_SearchPH" data-loc-title="DocMatrix_Search" />
 				</th>
 			}
 			<th class="misc" style="width: @(colWidth)%; max-width: @(colWidth)%;">
-				<input type="text" class="search r" placeholder="Search" />
+				<input type="text" class="search r" data-loc-placeholder="DocMatrix_SearchPH" data-loc-title="DocMatrix_Search" />
 			</th>
 		</tr>
 
@@ -103,6 +103,8 @@
 
 		docMatrix.UpdateElement(container);
 		docMatrix.InitBehaviors();
+
+		LocalizeElement(container.querySelector(".grid tr:first-child"));
     })();
 </script>
 

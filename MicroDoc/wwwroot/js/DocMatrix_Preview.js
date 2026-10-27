@@ -47,7 +47,7 @@
                     return;
 
                 // click was made on MISC cell - create MISC document with custom name
-                var docName = prompt("Enter document name (without extension)");
+                var docName = prompt(Loc.DocMatrix_NewPrompt);
 
                 if (docName == null)
                     return;
@@ -56,7 +56,7 @@
                     return;
 
                 if (!DocParser.IsValidDocName(docName)) {
-                    alert("Invalid document name. Only symbols, digits, underscore, hyphen, space allowed");
+                    alert(Loc.DocMatrix_InvalidDocumentName);
                     return;
                 }
 
@@ -70,7 +70,7 @@
                     // Save NEW empty document
                     const response = await this.service.SaveDocument(domain, documentId, "");
                     if (!response.ok) {
-                        this.error(`Save document ${docPath} failed`, await response.text());
+                        this.error(format(Loc.Document_SaveFailed, docPath), await response.text());
                         return;
                     }
 
@@ -186,7 +186,7 @@ DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId, he
         if (silentError)
             return false;
 
-        this.error(`Load document ${docPath} failed`, await response.text());
+        this.error(format(Loc.Document_LoadFailed, docPath), await response.text());
         return false;
     }
 

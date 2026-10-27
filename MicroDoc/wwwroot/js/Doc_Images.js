@@ -33,7 +33,7 @@
             var imageType = DocParser.DocType(image.name);
 
             // prompt image name
-            imageName = prompt("Enter image name", imageName);
+            imageName = prompt(Loc.DocMatrix_NewImagePrompt, imageName);
 
             if (imageName == null)
                 return;
@@ -41,12 +41,17 @@
             if (!imageName.trim())
                 return;
 
+            if (!DocParser.IsValidImageName(imageName)) {
+                alert(Loc.DocMatrix_InvalidImageName);
+                return;
+            }
+
             imageName = imageName + imageType;
 
             // upload image on server
             const response = await service.UploadImage(domain, documentId, imageName, image);
             if (!response.ok) {
-                this.error(`Upload image ${docPath} failed`, await response.text());
+                this.error(format(Loc.Document_UploadImageFailed, docPath), await response.text());
                 return;
             }
 

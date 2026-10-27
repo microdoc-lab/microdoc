@@ -20,19 +20,19 @@
 
 	<div class="overlay">
 	    <div class="toolbar">
-			<button class="icon-button print r" title="Print">
+			<button class="icon-button print r" data-loc-title="Document_Print">
 				<img src="/icons/Print.png">
 			</button>
-			<button class="icon-button print-image r" title="Print Image">
+			<button class="icon-button print-image r" data-loc-title="Document_PrintImage">
 				<img src="/icons/PrintImage.png">
 			</button>
-			<button class="icon-button view w right" title="Toggle View/Edit">
+			<button class="icon-button view w right" data-loc-title="Document_ToggleViewEdit">
 	    		<img src="/icons/View.png">
     		</button>
-			<button class="icon-button delete w" title="Delete">
+			<button class="icon-button delete w" data-loc-title="Document_Delete">
 	    		<img src="/icons/Delete.png">
     		</button>
-			<button class="icon-button close r" title="@(User.IsInRole(_domainOptions, "w", Model.Domain.Name) ? "Save & Close" : "Close")">
+			<button class="icon-button close r" data-loc-title="@(User.IsInRole(_domainOptions, "w", Model.Domain.Name) ? "Document_SaveAndClose" : "Document_Close")">
 	    		<img src="/icons/Close.png">
     		</button>
 	    </div>
@@ -42,16 +42,16 @@
         <div class="doc-container">
             <div class="toolbar">
                 <span class="title"></span>
-				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().CopyPrint()' title="Copy">
+				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().CopyPrint()' data-loc-title="Print_CopyHTML">
 					<img src="/icons/Clipboard.png">
 				</button>
-				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().DialogPrint(event)' title="Print">
+				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().DialogPrint(event)' data-loc-title="Print_Print">
 					<img src="/icons/Print.png">
 				</button>
-				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().DialogPrintImages(event)' title="Print Images">
+				<button class="icon-button r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().DialogPrintImages(event)' data-loc-title="Print_PrintImages">
 					<img src="/icons/PrintImage.png">
 				</button>
-			    <button class="icon-button close r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().ClosePrint()' title="Close">
+			    <button class="icon-button close r" onclick='document.getElementById("@Model.Id").explorer.docMatrix().ClosePrint()' data-loc-title="Print_Close">
 	    		    <img src="/icons/Close.png">
     		    </button>
             </div>
@@ -84,5 +84,8 @@
         
         explorer.UpdateElement(container);
         explorer.InitBehaviors();
+
+        LocalizeElement(container.querySelector(".overlay .toolbar"));
+        LocalizeElement(container.querySelector(".modal .toolbar"));
     })();
 </script>

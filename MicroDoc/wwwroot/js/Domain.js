@@ -28,7 +28,7 @@ Domain.prototype.debug = function (text) { console.debug(`Domain #${this.id}: ${
 Domain.prototype.info = function (text) { console.info(`Domain #${this.id}: ${text}`); }
 Domain.prototype.log = function (text) { console.log(`Domain #${this.id}: ${text}`); }
 Domain.prototype.warn = function (text) { console.warn(`Domain #${this.id}: ${text}`); }
-Domain.prototype.error = function (text, error) { console.error(`Domain: ${text}`, error); alert(text + "\n\n" + error); }
+Domain.prototype.error = function (text, error) { console.error(`Domain: ${text}`, error); alert(text + "\n\n" + LocalizeError(error)); }
 
 Domain.prototype.behaviors = [];
 Domain.prototype.InitBehaviors = function () {

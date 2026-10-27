@@ -27,7 +27,7 @@ Doc.prototype.debug = function (text) { console.debug(`Doc #${this.id}: ${text}`
 Doc.prototype.info = function (text) { console.info(`Doc #${this.id}: ${text}`); }
 Doc.prototype.log = function (text) { console.log(`Doc #${this.id}: ${text}`); }
 Doc.prototype.warn = function (text) { console.warn(`Doc #${this.id}: ${text}`); }
-Doc.prototype.error = function (text, error) { console.error(`Doc #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+Doc.prototype.error = function (text, error) { console.error(`Doc #${this.id}: ${text}`, error); alert(text + "\n\n" + LocalizeError(error)); }
 
 Doc.prototype.behaviors = [];
 Doc.prototype.InitBehaviors = function () {

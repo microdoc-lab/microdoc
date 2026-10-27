@@ -27,7 +27,7 @@ Explorer.prototype.debug = function (text) { console.debug(`Explorer #${this.id}
 Explorer.prototype.info = function (text) { console.info(`Explorer #${this.id}: ${text}`); }
 Explorer.prototype.log = function (text) { console.log(`Explorer #${this.id}: ${text}`); }
 Explorer.prototype.warn = function (text) { console.warn(`Explorer #${this.id}: ${text}`); }
-Explorer.prototype.error = function (text, error) { console.error(`Explorer #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+Explorer.prototype.error = function (text, error) { console.error(`Explorer #${this.id}: ${text}`, error); alert(text + "\n\n" + LocalizeError(error)); }
 
 Explorer.prototype.behaviors = [];
 Explorer.prototype.InitBehaviors = function () {
@@ -65,7 +65,7 @@ Explorer.prototype.Load = async function (tagId) {
     // Reload HTML content
     const response = await this.service.Explorer(this.id, this.domain, this.selectedTag, this.loadDeepLevels);
     if (!response.ok) {
-        this.error("Explorer request failed", await response.text());
+        this.error(Loc.Explorer_LoadFailed, await response.text());
         return;
     }
 

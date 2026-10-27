@@ -47,7 +47,7 @@ async function apiFetch(url, options = {}) {
 }
 
 async function SimpleLogin() {
-    const email = prompt("Enter user email");
+    const email = prompt(Loc.Login_Prompt);
 
     if (email === null || email.trim() === "")
         return;
@@ -66,4 +66,28 @@ async function SimpleLogin() {
     }
 
     location.reload();
+}
+
+// Localization
+function LocalizeElement(element) {
+    [element, ...element.querySelectorAll('*')].forEach(element => {
+        [...element.attributes]
+            .filter(attr => attr.name.startsWith('data-loc-'))
+            .forEach(attr => {
+                const name = attr.name.substring('data-loc-'.length);
+                const value = Loc[attr.value];
+                element.setAttribute(name, value ?? "*" + attr.value + "*");
+            });
+    });
+}
+
+function LocalizeError(errorCode) {
+    const value = Loc["ErrorCode_" + errorCode];
+    return value ?? "*" + "ErrorCode_" + errorCode + "*";
+}
+
+function format(template, ...args) {
+    return template.replace(/\{(\d+)\}/g, (match, index) =>
+        args[index] ?? match
+    );
 }

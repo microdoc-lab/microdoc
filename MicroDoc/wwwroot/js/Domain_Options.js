@@ -36,7 +36,7 @@ Domain.prototype.ToggleDomainOptions = async function () {
         // load options YAML from server
         const response = await this.service.LoadDomainOptions();
         if (!response.ok) {
-            this.error("Domain options load failed", await response.text());
+            this.error(Loc.DomainOptions_LoadFailed, await response.text());
             return;
         }
 
@@ -60,7 +60,7 @@ Domain.prototype.ToggleDomainOptions = async function () {
         // save options YAML to server
         const response = await this.service.SaveDomainOptions(yaml);
         if (!response.ok) {
-            this.error("Domain options save failed", await response.text());
+            this.error(Loc.DomainOptions_SaveFailed, await response.text());
             return;
         }
 

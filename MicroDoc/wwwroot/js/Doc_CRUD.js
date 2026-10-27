@@ -29,7 +29,7 @@ Doc.prototype.SaveDocument = async function () {
     // save document
     const response = await this.service.SaveDocument(domain, documentId, content);
     if (!response.ok) {
-        this.error(`Save document ${docPath} failed`, await response.text());
+        this.error(format(Loc.Document_SaveFailed, docPath), await response.text());
         return;
     }
 
@@ -50,7 +50,7 @@ Doc.prototype.DeleteDocument = async function () {
     // save document
     const response = await this.service.DeleteDocument(domain, documentId);
     if (!response.ok) {
-        this.error(`Delete document ${docPath} failed`, await response.text());
+        this.error(format(Loc.Document_DeleteFailed, docPath), await response.text());
         return;
     }
 

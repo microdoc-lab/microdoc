@@ -53,20 +53,20 @@ TagTree.prototype.NewTag = async function () {
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
 
-    var newTagName = prompt(`Create new Tag in ${tagPath}? Enter new tag name`);
+    var newTagName = prompt(format(Loc.TagTree_NewPrompt, tagPath));
 
     if (newTagName == null)
         return;
 
     if (!DocParser.IsValidTagName(newTagName)) {
-        alert("Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed");
+        alert(Loc.TagTree_InvalidTagName);
         return;
     }
 
     // Create Tag
     const response = await this.service.NewTag(domain, selectedTag, newTagName);
     if (!response.ok) {
-        this.error(`Create new Tag in ${tagPath} failed`, await response.text());
+        this.error(format(Loc.TagTree_NewFailed, tagPath), await response.text());
         return;
     }
 
@@ -82,20 +82,20 @@ TagTree.prototype.RenameTag = async function () {
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
 
-    var newTagName = prompt(`Rename Tag ${tagPath}? Enter new tag name`);
+    var newTagName = prompt(format(Loc.TagTree_RenamePrompt, tagPath));
 
     if (newTagName == null)
         return;
 
     if (!DocParser.IsValidTagName(newTagName)) {
-        alert("Invalid tag name. Only symbols, digits, underscore, hyphen, space allowed");
+        alert(Loc.TagTree_InvalidTagName);
         return;
     }
 
     // Rename Tag
     const response = await this.service.RenameTag(domain, selectedTag, newTagName);
     if (!response.ok) {
-        this.error(`Rename Tag ${tagPath} to ${newTagName} failed`, await response.text());
+        this.error(format(Loc.TagTree_RenameFailed, tagPath), await response.text());
         return;
     }
 
@@ -111,20 +111,20 @@ TagTree.prototype.MoveTag = async function () {
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
 
-    var targetTag = prompt(`Move Tag ${tagPath}? Enter target tag name`);
+    var targetTag = prompt(format(Loc.TagTree_MovePrompt, tagPath));
 
     if (targetTag == null)
         return;
 
     if (!DocParser.IsValidTagId(targetTag)) {
-        alert("Invalid tag. Only symbols, digits, underscore, hyphen, space (/ separated) allowed");
+        alert(Loc.TagTree_InvalidTag);
         return;
     }
 
     // Move Tag
     const response = await this.service.MoveTag(domain, selectedTag, targetTag);
     if (!response.ok) {
-        this.error(`Move Tag ${tagPath} to ${targetTag} failed`, await response.text());
+        this.error(format(Loc.TagTree_MoveFailed, tagPath, targetTag), await response.text());
         return;
     }
 
@@ -140,13 +140,13 @@ TagTree.prototype.DeleteTag = async function () {
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
 
-    if (!confirm(`Delete tag ${tagPath} ?`))
+    if (!confirm(format(Loc.TagTree_DeletePrompt, tagPath)))
         return;
 
     // Delete Tag
     const response = await this.service.DeleteTag(domain, selectedTag);
     if (!response.ok) {
-        this.error(`Delete tag ${tagPath} failed`, await response.text());
+        this.error(format(Loc.TagTree_DeleteFailed, tagPath), await response.text());
         return;
     }
 

@@ -7,6 +7,13 @@ DocParser.IsValidDocName = function (name) {
     return /^[\p{L}\p{N}_\- ]+$/u.test(name);
 }
 
+DocParser.IsValidImageName = function (name) {
+    if (name == null)
+        return false;
+
+    return /^[\p{L}\p{N}_\- ]+$/u.test(name);
+}
+
 DocParser.IsValidTagName = function (name) {
     if (name == null)
         return false;

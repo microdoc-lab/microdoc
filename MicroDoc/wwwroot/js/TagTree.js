@@ -26,7 +26,7 @@ TagTree.prototype.debug = function (text) { console.debug(`TagTree #${this.id}: 
 TagTree.prototype.info = function (text) { console.info(`TagTree #${this.id}: ${text}`); }
 TagTree.prototype.log = function (text) { console.log(`TagTree #${this.id}: ${text}`); }
 TagTree.prototype.warn = function (text) { console.warn(`TagTree #${this.id}: ${text}`); }
-TagTree.prototype.error = function (text, error) { console.error(`TagTree #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+TagTree.prototype.error = function (text, error) { console.error(`TagTree #${this.id}: ${text}`, error); alert(text + "\n\n" + LocalizeError(error)); }
 
 TagTree.prototype.behaviors = [];
 TagTree.prototype.InitBehaviors = function () {
@@ -61,7 +61,7 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
     // Reload HTML content
     const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);
     if (!response.ok) {
-        this.error("TagTree request failed", await response.text());
+        this.error(TagTree_LoadFailed, await response.text());
         return;
     }
 

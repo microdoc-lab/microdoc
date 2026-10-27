@@ -32,7 +32,7 @@
 
             const response = await this.service.SwapTags(sender.dataset.domain, sender.dataset.tagid, sender.dataset.tag, target.dataset.tag);
             if (!response.ok) {
-                console.error("SwapTags request failed", await response.text());
+                console.error(Loc.TagTree_SwapTagsFailed, await response.text());
                 return;
             }
 

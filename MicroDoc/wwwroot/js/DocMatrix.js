@@ -27,7 +27,7 @@ DocMatrix.prototype.debug = function (text) { console.debug(`DocMatrix #${this.i
 DocMatrix.prototype.info = function (text) { console.info(`DocMatrix #${this.id}: ${text}`); }
 DocMatrix.prototype.log = function (text) { console.log(`DocMatrix #${this.id}: ${text}`); }
 DocMatrix.prototype.warn = function (text) { console.warn(`DocMatrix #${this.id}: ${text}`); }
-DocMatrix.prototype.error = function (text, error) { console.error(`DocMatrix #${this.id}: ${text}`, error); alert(text + "\n\n" + error); }
+DocMatrix.prototype.error = function (text, error) { console.error(`DocMatrix #${this.id}: ${text}`, error); alert(text + "\n\n" + LocalizeError(error)); }
 
 DocMatrix.prototype.behaviors = [];
 DocMatrix.prototype.InitBehaviors = function () {
@@ -70,7 +70,7 @@ DocMatrix.prototype.Load = async function (tagId) {
     // Reload HTML content
     const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag, this.loadDeepLevels);
     if (!response.ok) {
-        this.error("DocMatrix request failed", await response.text());
+        this.error(Loc.DocMatrix_LoadFailed, await response.text());
         return;
     }
 
