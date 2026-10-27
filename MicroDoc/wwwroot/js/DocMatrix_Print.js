@@ -114,6 +114,8 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
     AdjustImageGalleryPositionAndVisibility(container);
 
     this.modalOpened = true;
+
+    this.explorer().OnColumnPrintDialogOpened(document);
 }
 
 DocMatrix.prototype.OpenPrintDocument = function (docElement) {

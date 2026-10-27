@@ -70,8 +70,7 @@ DocMatrix.prototype.Search = function (value) {
         sheet.deleteRule(0);
 
     // query predicates from all columns
-    var predicates = [];
-    var strings = [];
+    const predicates = [];
     grid.querySelectorAll(".search").forEach(searchInput => {
         var searchText = searchInput.value.trim();
         if (!searchText)
@@ -86,6 +85,31 @@ DocMatrix.prototype.Search = function (value) {
             predicates.push(`:has(td.misc doc[data-content*="${searchText}" i])`);
         else                                            // document column
             predicates.push(`:has(td[data-document="${document}"] doc[data-content*="${searchText}" i])`);
+    });
+
+    // raise OnSearchChanged event
+    const strings = this.GetSearchStrings();
+    this.OnSearchChanged(strings);
+
+    if (predicates.length == 0)
+        return;
+    
+    // Add a new rule
+    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag] { display: none; }`, sheet.cssRules.length);
+    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag]${predicates.join("")} { display: table-row; }`, sheet.cssRules.length);
+}
+
+DocMatrix.prototype.GetSearchStrings = function () {
+    var grid = this.grid();
+    var strings = [];
+
+    grid.querySelectorAll(".search").forEach(searchInput => {
+        var searchText = searchInput.value.trim();
+        if (!searchText)
+            return;
+
+        const cell = searchInput.closest("th");
+        const document = cell.dataset.document;
 
         // define cookie data
         if (cell.cellIndex == 0)                        // first column, search all documents
@@ -96,12 +120,5 @@ DocMatrix.prototype.Search = function (value) {
             strings.push({ id: document, search: searchText });
     });
 
-    this.OnSearchChanged(strings);
-
-    if (predicates.length == 0)
-        return;
-    
-    // Add a new rule
-    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag] { display: none; }`, sheet.cssRules.length);
-    sheet.insertRule(`.docmatrix#${this.id} tr[data-tag]${predicates.join("")} { display: table-row; }`, sheet.cssRules.length);
+    return strings;
 }

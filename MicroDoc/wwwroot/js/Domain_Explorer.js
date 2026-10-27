@@ -122,6 +122,8 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
     var options = {};
     const explorer = GetInstanceOrCreate(element.parentElement, () => new Explorer(element, options));
     explorer.domain = domain;
+
+    // obtain selected tag from cookies
     explorer.ReadCookie();
     explorer.selectedTag = explorer.cookieState.tag;
     explorer.loadDeepLevels = explorer.cookieState.deep;

@@ -51,13 +51,12 @@ TagTree.prototype.Reload = async function () {
 }
 
 TagTree.prototype.Load = async function (tagId, toExpand) {
+    // capture state
     var expandedTag = this.ExpandedTag();
     var searchText = this.searchInput.value;
 
     // Update model property
     this.selectedTag = tagId;
-
-    var explorer = this.explorer();
 
     // Reload HTML content
     const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);
@@ -69,9 +68,9 @@ TagTree.prototype.Load = async function (tagId, toExpand) {
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
 
-    // expand expandedTag
-    explorer.tagTree().ExpandTag(toExpand ?? expandedTag);
-    explorer.tagTree().Search(searchText);
+    // restore state
+    this.ExpandTag(toExpand ?? expandedTag);
+    this.Search(searchText);
 }
 
 // Service methods

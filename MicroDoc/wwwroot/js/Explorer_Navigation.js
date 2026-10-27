@@ -40,8 +40,7 @@ Explorer.prototype.behaviors.push(Explorer.prototype.InitNavigation);
 
 Explorer.prototype.ActivateRecentDocument = async function () {
     var activeDocumentId = this.GetCookieRecentDocument();
-    if (activeDocumentId)
-        this.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+    this.ActivateDocumentOrLoadAndOpen(activeDocumentId);
 }
 
 Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
@@ -56,7 +55,29 @@ Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
         return;
     }
 
-    ({ documentId, isPrint } = DocParser.IsDocPrint(documentId));
+    ({ documentId, isDeep, isPrint } = DocParser.IsDocPrint(documentId));
+
+    // try open column print dialog
+    if (isPrint && !DocParser.DocType(documentId)) {
+        const docTag = DocParser.TagParent(documentId);
+        const document = DocParser.DocName(documentId);
+        const { tag, search } = DocParser.ParseTagAndFilter(docTag);
+
+        this.loadDeepLevels = docMatrix.loadDeepLevels = isDeep;
+
+        // navigate docMatrix to tag
+        if (this.selectedTag != tag)
+            await docMatrix.Load(tag);
+
+        // setup docMatrix filters
+        if (search) {
+            var filter = DocParser.ParseCookieGridFilterUrl(search);
+            docMatrix.Search(filter);
+        }
+
+        await docMatrix.OpenPrintColumn(document);
+        return;
+    }
 
     var selectedHeadingIndex = this.GetCookieDocumentHeadingIndex(documentId);
 
@@ -113,6 +134,24 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
     this.AddCookieDocument(documentId, selectedHeadingIndex);
 }
 
+Explorer.prototype.OnColumnPrintDialogOpened = function (column) {
+    // capture document context
+    const domain = this.domain;
+    const selectedTag = this.selectedTag;
+    const tagpath = DocParser.TagPath("", selectedTag);
+    const path = selectedTag + DocParser.GetCookieGridFilterUrl(this.cookieState.gridFilters);
+    const deep = this.loadDeepLevels ? ".deep" : "";
+
+    // update document title
+    document.title = `${domain} ${tagpath} ${column} print`;
+
+    // put document URL in history
+    if (path)
+        history.replaceState(null, "", `/${domain}/${path}/${column}${deep}.print`);
+    else
+        history.replaceState(null, "", `/${domain}/${column}${deep}.print`);
+}
+
 Explorer.prototype.OnDocumentPrintDialogOpened = function (doc) {
     // capture document context
     const domain = doc.element.dataset.domain;
@@ -135,7 +174,7 @@ Explorer.prototype.OnDocumentEditorSelectionChanged = function (doc) {
     this.AddCookieDocument(documentId, selectedHeadingIndex);
 }
 
-Explorer.prototype.OnDocumentClosed = function (doc) {
+Explorer.prototype.OnDocumentClosed = async function (doc) {
     // remove active document
     this.RemoveCookieDocument(doc.documentId);
 

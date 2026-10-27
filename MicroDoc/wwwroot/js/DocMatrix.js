@@ -61,6 +61,9 @@ DocMatrix.prototype.Reload = async function () {
 }
 
 DocMatrix.prototype.Load = async function (tagId) {
+    // capture state
+    const searchStrings = this.GetSearchStrings();
+
     // Update model property
     this.selectedTag = tagId;
 
@@ -73,6 +76,9 @@ DocMatrix.prototype.Load = async function (tagId) {
 
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
+
+    // restore state
+    this.Search(searchStrings);
 }
 
 // Service methods

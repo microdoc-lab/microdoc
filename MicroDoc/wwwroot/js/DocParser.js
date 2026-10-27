@@ -73,9 +73,44 @@ DocParser.DocType = function (documentId) {
 
 DocParser.IsDocPrint = function (documentId) {
     const isPrint = documentId.endsWith(".print");
-
     if (isPrint)
         documentId = documentId.slice(0, -".print".length);
 
-    return { documentId, isPrint };
+    const isDeep = documentId.endsWith(".deep");
+    if (isDeep)
+        documentId = documentId.slice(0, -".deep".length);
+
+    return { documentId, isDeep, isPrint };
 }
+
+DocParser.ParseTagAndFilter = function(value) {
+    const index = value.indexOf('[');
+
+    if (index < 0)
+        return { tag: value, search: null };
+
+    return {
+        tag: value.substring(0, index),
+        search: value.substring(index + 1).replace(/\]$/, '')
+    };
+}
+
+DocParser.GetCookieGridFilterUrl = function(gridFilters) {
+    return gridFilters.length
+        ? "[" + gridFilters.map(t => `${t.id}=${t.search}`).join('&') + "]"
+        : "";
+}
+
+DocParser.ParseCookieGridFilterUrl = function (value) {
+    return decodeURIComponent(value).split("&").map(t => {
+        const index = t.indexOf('=');
+        if (index < 0)
+            return { id: "", search: t };
+
+        return {
+            id: t.substring(0, index),
+            search: t.substring(index + 1)
+        };
+    });
+}
+
