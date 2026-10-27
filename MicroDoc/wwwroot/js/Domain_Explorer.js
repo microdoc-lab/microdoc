@@ -3,7 +3,6 @@
 
     // handle browser Back button
     window.addEventListener("popstate", async () => {
-        console.log(location.pathname);
         var parts = location.pathname.split('/');
 
         this.popState = true;
