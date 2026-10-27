@@ -17,20 +17,20 @@ namespace MicroDoc.Services
             _tagMoveService = tagMoveService;
         }
 
-        public List<TagNode> GetTagTree(string domain) => BuildTree(domain, path: "", recursive: true, level: 0);
+        public List<TagNode> GetTagTree(string domain) => BuildTree(domain, tagId: "", recursive: true, level: 0);
 
-        internal List<TagNode> BuildTree(string domain, string path, bool recursive, int level)
+        internal List<TagNode> BuildTree(string domain, string tagId, bool recursive, int level)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            var folder = Path.Combine(rootFolder, path);
+            var folder = Path.Combine(rootFolder, tagId);
 
             // load view
-            TagView view = LoadView(domain, path);
+            TagView view = LoadView(domain, tagId);
 
             // Load nodes
             var nodes = new List<TagNode>();
 
-            using (_lockManager.Read(domain, path))
+            using (_lockManager.Read(domain, tagId))
             {
                 foreach (var dir in Directory.GetDirectories(folder))
                 {
@@ -40,7 +40,7 @@ namespace MicroDoc.Services
                     var node = new TagNode
                     {
                         Domain = domain,
-                        Path = path,
+                        TagId = tagId,
                         Tag = tag,
                         Order = viewTag?.Order,
                         Level = level,
@@ -213,10 +213,10 @@ namespace MicroDoc.Services
             return status;
         }
 
-        private TagView BuildView(string domain, string path)
+        private TagView BuildView(string domain, string tagId)
         {
             // load directory tags
-            var tree = BuildTree(domain, path, recursive: false, level: 0);
+            var tree = BuildTree(domain, tagId, recursive: false, level: 0);
 
             // build view
             var list = tree.Select((node, index) => new Node { Tag = node.Tag, Order = index + 1 }).ToList();
@@ -224,25 +224,25 @@ namespace MicroDoc.Services
             return new TagView { Tags = list };
         }
 
-        private TagView LoadView(string domain, string path)
+        private TagView LoadView(string domain, string tagId)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
 
-            using (_lockManager.Read(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
+            using (_lockManager.Read(domain, DocumentParser.GetDocumentId(tagId, ViewFileName)))
             {
-                var viewPath = Path.Combine(rootFolder, path, ViewFileName);
+                var viewPath = Path.Combine(rootFolder, tagId, ViewFileName);
                 return TagViewLoader.LoadTagsFromFile(viewPath);
             }
         }
 
-        private ErrorCode UpdateView(string domain, string path, Func<TagView, ErrorCode> modifyView = null)
+        private ErrorCode UpdateView(string domain, string tagId, Func<TagView, ErrorCode> modifyView = null)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             var status = ErrorCode.Ok;
 
-            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(path, ViewFileName)))
+            using (_lockManager.Write(domain, DocumentParser.GetDocumentId(tagId, ViewFileName)))
             {
-                TagView view = BuildView(domain, path);
+                TagView view = BuildView(domain, tagId);
 
                 if (modifyView != null)
                     status = modifyView(view);
@@ -250,7 +250,7 @@ namespace MicroDoc.Services
                 if (status != ErrorCode.Ok)
                     return status;
 
-                var viewPath = Path.Combine(rootFolder, path, ViewFileName);
+                var viewPath = Path.Combine(rootFolder, tagId, ViewFileName);
                 TagViewLoader.SaveTagsToFile(viewPath, view);
             }
 

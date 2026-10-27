@@ -30,7 +30,7 @@
             const sender = draggedNode.closest(".tag");
             const target = targetNode.closest(".tag");
 
-            const response = await this.service.SwapTags(sender.dataset.domain, sender.dataset.path, sender.dataset.tag, target.dataset.tag);
+            const response = await this.service.SwapTags(sender.dataset.domain, sender.dataset.tagid, sender.dataset.tag, target.dataset.tag);
             if (!response.ok) {
                 console.error("SwapTags request failed", await response.text());
                 return;
@@ -55,8 +55,8 @@ TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleSwapTags);
 
 // Api
 TagTree.prototype.SwapTags = function (parentTag, tagName, targetTagName) {
-    var sender = this.element.querySelector(`.tag[data-path='${parentTag}'][data-tag='${tagName}']`);
-    var target = this.element.querySelector(`.tag[data-path='${parentTag}'][data-tag='${targetTagName}']`);
+    var sender = this.element.querySelector(`.tag[data-tagid='${parentTag}'][data-tag='${tagName}']`);
+    var target = this.element.querySelector(`.tag[data-tagid='${parentTag}'][data-tag='${targetTagName}']`);
 
     if (!sender)
         return;

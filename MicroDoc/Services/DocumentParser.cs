@@ -66,15 +66,15 @@
             return ErrorCode.Ok;
         }
 
-        public static (string Parent, string Name) SplitId(string tagId)
+        public static (string parentId, string name) SplitId(string tagId)
         {
             if (string.IsNullOrEmpty(tagId))
                 return ("", "");
             
             string[] parts = (tagId ?? "").Split('/');
-            string parent = string.Join("/", parts[..^1]);
+            string parentId = string.Join("/", parts[..^1]);
             string name = parts.Last();
-            return (parent, name);
+            return (parentId, name);
         }
 
         public static string GetDocumentId(string path)
@@ -87,9 +87,9 @@
             return documentId;
         }
 
-        public static string GetDocumentId(string tags, string document)
+        public static string GetDocumentId(string tagId, string document)
         {
-            return !string.IsNullOrEmpty(tags) ? tags + "/" + document : document;
+            return !string.IsNullOrEmpty(tagId) ? tagId + "/" + document : document;
         }
 
         public static string GetDocumentId(string[] tags, string document)
@@ -117,9 +117,9 @@
 
         public static string GetImageId(string documentId, string imageName)
         {
-            var (parent, name) = SplitId(documentId);
+            var (parentId, name) = SplitId(documentId);
             string document = Path.GetFileNameWithoutExtension(name);
-            string imageId = GetDocumentId(parent, document + "+" + imageName);
+            string imageId = GetDocumentId(parentId, document + "+" + imageName);
             return imageId;
         }
     }

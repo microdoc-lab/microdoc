@@ -28,32 +28,32 @@
             _tagService = tagService;
         }
 
-        public List<TagNode> GetTagWithDocuments(string domain, string path, bool loadDeepLevels = false)
+        public List<TagNode> GetTagWithDocuments(string domain, string tagId, bool loadDeepLevels = false)
         {
-            path = path ?? "";
+            tagId = tagId ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            var folder = Path.Combine(rootFolder, path);
+            var folder = Path.Combine(rootFolder, tagId);
 
             var nodes = new List<TagNode>();
 
-            using (_lockManager.Read(domain, path))
+            using (_lockManager.Read(domain, tagId))
             {
                 if (Directory.Exists(folder))
                 {
-                    var (parent, tag) = DocumentParser.SplitId(path);
+                    var (parentId, tag) = DocumentParser.SplitId(tagId);
 
                     // load requested tag with documents
                     var node = new TagNode
                     {
                         Domain = domain,
-                        Path = parent,
+                        TagId = parentId,
                         Tag = tag,
                         Level = 0,
                         IsDomain = string.IsNullOrEmpty(tag)
                     };
 
                     // load child tags (1 level or all)
-                    var children = _tagService.BuildTree(domain, path, recursive: loadDeepLevels, level: 1);
+                    var children = _tagService.BuildTree(domain, tagId, recursive: loadDeepLevels, level: 1);
                     node.Children.AddRange(children);
 
                     // load recursively tags documents
@@ -75,14 +75,14 @@
             return nodes;
         }
 
-        public List<DocNode> GetDocuments(string domain, string path)
+        public List<DocNode> GetDocuments(string domain, string tagId)
         {
-            path = path ?? "";
+            tagId = tagId ?? "";
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            var folder = Path.Combine(rootFolder, path);
+            var folder = Path.Combine(rootFolder, tagId);
 
             var nodes = new List<DocNode>();
-            using (_lockManager.Read(domain, path))
+            using (_lockManager.Read(domain, tagId))
             {
                 foreach (var file in Directory.GetFiles(folder))
                 {
@@ -105,7 +105,7 @@
                         node = new DocNode
                         {
                             Domain = domain,
-                            Path = path,
+                            TagId = tagId,
                             Name = name,
                             Extension = extension,
                         };
@@ -135,7 +135,7 @@
             string rootFolder = _domainOptions.Find(domain).RootFolder;
             string filePath = Path.Combine(rootFolder, documentId);
 
-            var (parent, name) = DocumentParser.SplitId(documentId);
+            var (parentId, name) = DocumentParser.SplitId(documentId);
             string document = Path.GetFileNameWithoutExtension(name);
             string extension = Path.GetExtension(name);
 
@@ -148,7 +148,7 @@
                 node = new DocNode
                 {
                     Domain = domain,
-                    Path = parent,
+                    TagId = parentId,
                     Name = document,
                     Extension = extension,
                     Content = "",

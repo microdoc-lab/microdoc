@@ -37,7 +37,7 @@
 		</button>
 	</div>
 
-    <div class="domain tag @(Model.SelectedTag == "" ? "selected" : "")" data-domain="@Model.Domain.Name" data-path="" data-tag="" data-id="">
+    <div class="domain tag @(Model.SelectedTag == "" ? "selected" : "")" data-domain="@Model.Domain.Name" data-tagid="" data-tag="" data-id="">
         <span class="title-bar">
             <span class="domain title">@Model.Domain.Name</span>
         </span>
@@ -48,7 +48,7 @@
     {
         <li class="module tag @(module.Id == Model.SelectedTag ? "selected" : "")" 
             style="--tag-color:@module.Color;" 
-            data-domain="@module.Domain" data-path="@module.Path" data-tag="@module.Tag" data-id="@module.Id">
+            data-domain="@module.Domain" data-tagid="@module.TagId" data-tag="@module.Tag" data-id="@module.Id">
             <details class="@(!module.Children.Any() ? "empty" : "")" open="@(module.Children.Any() && IsTagNodeOpen(module.Id))">
                 <summary class="title-bar">
                     <span class="module title" data-tag="@module.Tag">[@module.Tag]</span>
@@ -61,7 +61,7 @@
                         {
                             <li class="component tag @(component.Id == Model.SelectedTag ? "selected" : "")" 
                                 style="--tag-color:@component.Color" 
-                                data-domain="@component.Domain" data-path="@component.Path" data-tag="@component.Tag" data-id="@component.Id">
+                                data-domain="@component.Domain" data-tagid="@component.TagId" data-tag="@component.Tag" data-id="@component.Id">
                                 <details class="@(!component.Children.Any() ? "empty" : "")" open="@(component.Children.Any() && IsTagNodeOpen(component.Id))">
                                     <summary class="title-bar">
                                         <span class="component title" data-tag="@component.Tag">[@component.Tag]</span>
@@ -71,7 +71,7 @@
                                         {
                                             <li class="part tag @(part.Id == Model.SelectedTag ? "selected" : "")" 
                                                 style="--tag-color:@part.Color" 
-                                                data-domain="@part.Domain" data-path="@part.Path" data-tag="@part.Tag" data-id="@part.Id">
+                                                data-domain="@part.Domain" data-tagid="@part.TagId" data-tag="@part.Tag" data-id="@part.Id">
                                                 <div class="title-bar">
                                                     <span class="part title" data-tag="@part.Tag">[@part.Tag]</span>
                                                 </div>

@@ -3,10 +3,10 @@
     public class TagNode
     {
         public string Domain { get; set; }
-        public string Path { get; set; }
+        public string TagId { get; set; }
         public string Tag { get; set; }
         public string TagPath => DocumentParser.GetTagPath(Id);
-        public string Id => DocumentParser.GetDocumentId(Path, Tag);
+        public string Id => DocumentParser.GetDocumentId(TagId, Tag);
         public string Color { get; set; }
         public int? Order { get; set; }
         public int Level { get; set; }
