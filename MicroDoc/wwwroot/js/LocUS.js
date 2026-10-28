@@ -1,4 +1,7 @@
 ﻿const LocUS = {
+    Landing_Heading: "Welcome to MicroDoc",
+    Landing_Description: "Library of well-organized tiny documents",
+
     Auth_Prompt: "Enter user name/email",
     Auth_LoginSimple: "Simple Login",
     Auth_LoginGoogle: "Login with Google",
