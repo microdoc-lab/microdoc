@@ -402,7 +402,7 @@ namespace MicroDoc.Controllers
             if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
-            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(imageName))
+            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(Path.GetFileNameWithoutExtension(imageName)))
                 return Error(ErrorCode.InvalidParameters);
 
             if (thumbDimension.HasValue && thumbDimension.Value > MaxThumbDimension)
@@ -456,7 +456,7 @@ namespace MicroDoc.Controllers
             if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
-            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(imageName))
+            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(Path.GetFileNameWithoutExtension(imageName)))
                 return Error(ErrorCode.InvalidParameters);
 
             var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
