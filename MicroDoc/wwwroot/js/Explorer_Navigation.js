@@ -10,7 +10,7 @@
         this.selectedTag = tagId;
         this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
 
-        docMatrix.Load(tagId);
+        docMatrix.Load(tagId, this.loadDeepLevels);
     };
 
     // store search in cookie
@@ -65,11 +65,9 @@ Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
         const document = DocParser.DocName(documentId);
         const { tag, search } = DocParser.ParseTagAndFilter(docTag);
 
-        this.loadDeepLevels = docMatrix.loadDeepLevels = isDeep;
-
         // navigate docMatrix to tag
-        if (this.selectedTag != tag)
-            await docMatrix.Load(tag);
+        if (this.selectedTag != tag || this.loadDeepLevels != isDeep)
+            await docMatrix.Load(tag, isDeep);
 
         // setup docMatrix filters
         if (search) {

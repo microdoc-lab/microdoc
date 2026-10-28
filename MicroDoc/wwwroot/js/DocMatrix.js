@@ -57,15 +57,16 @@ DocMatrix.prototype.docElement = function (domain, documentId) { return this.ele
 DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 
 DocMatrix.prototype.Reload = async function () {
-    await this.Load(this.selectedTag);
+    await this.Load(this.selectedTag, this.loadDeepLevels);
 }
 
-DocMatrix.prototype.Load = async function (tagId) {
+DocMatrix.prototype.Load = async function (tagId, loadDeepLevels) {
     // capture state
     const searchStrings = this.GetSearchStrings();
 
     // Update model property
     this.selectedTag = tagId;
+    this.loadDeepLevels = loadDeepLevels;
 
     // Reload HTML content
     const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag, this.loadDeepLevels);
