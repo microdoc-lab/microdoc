@@ -82,6 +82,8 @@ function IsFullyVisibleAndAboveMiddle(element, container) {
 }
 
 function SelectAndScrollViewer(viewer, headingIndex, container) {
+    headingIndex = headingIndex ?? 0;
+
     // move cursor to clicked Header position
     if (headingIndex >= 0) {
         const heading = viewer.querySelectorAll("h1, h2, h3")[headingIndex];

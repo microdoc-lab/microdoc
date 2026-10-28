@@ -135,8 +135,8 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
 
     // obtain selected tag from cookies
     explorer.ReadCookie();
-    explorer.selectedTag = explorer.cookieState.tag;
-    explorer.loadDeepLevels = explorer.cookieState.deep;
+    explorer.selectedTag = explorer.cookieState.tag ?? "";
+    explorer.loadDeepLevels = explorer.cookieState.deep ?? false;
 
     // load explorer content
     await explorer.Reload();
