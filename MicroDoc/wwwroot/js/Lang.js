@@ -1,4 +1,5 @@
 ﻿var Loc;
+const LocElements = [];
 
 function InitLanguage() {
     var language = document.cookie
@@ -10,6 +11,11 @@ function InitLanguage() {
         case "UA": Loc = LocUA; break;
         default: Loc = LocUS; break;
     }
+
+    for (const element of LocElements)
+        LocalizeElement(element);
+
+    LocElements.length = 0;
 }
 
 function ChangeLanguage(language) {
@@ -18,6 +24,11 @@ function ChangeLanguage(language) {
 }
 
 function LocalizeElement(element) {
+    if (!Loc) {
+        LocElements.push(element);
+        return;
+    }
+
     [element, ...element.querySelectorAll('*')].forEach(element => {
         [...element.attributes]
             .filter(attr => attr.name.startsWith('data-loc-'))
