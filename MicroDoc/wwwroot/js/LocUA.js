@@ -93,4 +93,5 @@
     ErrorCode_WrongImageName: "Невірна назва зображення",
     ErrorCode_ThumbDimensionExceeded: "Перевищено розмірність міні-зображення",
     ErrorCode_NotImplemented: "Не реалізовано",
+    ErrorCode_InvalidParameters: "Невірні параметри",
 };

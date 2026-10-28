@@ -93,4 +93,5 @@
     ErrorCode_WrongImageName: "Wrong image name",
     ErrorCode_ThumbDimensionExceeded: "Thumb dimension exceeded",
     ErrorCode_NotImplemented: "Not Implemented",
+    ErrorCode_InvalidParameters: "Invalid Parameters",
 };

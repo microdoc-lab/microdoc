@@ -19,5 +19,6 @@
 
         ThumbDimensionExceeded,
         NotImplemented,
+        InvalidParameters,
     }
 }

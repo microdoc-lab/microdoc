@@ -1,7 +1,63 @@
-﻿namespace MicroDoc.Services
+﻿using System.Text.RegularExpressions;
+
+namespace MicroDoc.Services
 {
     public static class DocumentParser
     {
+        public static bool IsValidDomain(string domain)
+        {
+            if (domain == null)
+                return false;
+
+            return Regex.IsMatch(domain, @"^[\p{L}\p{N}_\-\.]+$");
+        }
+
+        public static bool IsValidTagName(string name)
+        {
+            if (name == null)
+                return false;
+
+            return Regex.IsMatch(name, @"^[\p{L}\p{N}_\- ]+$");
+        }
+
+        public static bool IsValidTagId(string tagId)
+        {
+            if (tagId == null)
+                return false;
+
+            if (tagId.Trim() == "")   // root tag
+                return true;
+
+            return tagId.Split('/').All(IsValidTagName);
+        }
+
+        public static bool IsValidDocumentName(string name)
+        {
+            if (name == null)
+                return false;
+
+            return Regex.IsMatch(name, @"^[\p{L}\p{N}_\- ]+$");
+        }
+
+        public static bool IsValidImageName(string name)
+        {
+            if (name == null)
+                return false;
+
+            return Regex.IsMatch(name, @"^[\p{L}\p{N}_\- ]+$");
+        }
+
+        public static bool IsValidDocumentId(string documentId)
+        {
+            if (documentId == null)
+                return false;
+
+            var parts = documentId.Split('/');
+            return parts.Any() 
+                && parts[..^1].All(IsValidTagName) 
+                && IsValidDocumentName(Path.GetFileNameWithoutExtension(parts.Last()));
+        }
+
         public static ErrorCode TryParseDocumentPath(string path, out string[] tags, out string name)
         {
             var parsedTags = new List<string>();

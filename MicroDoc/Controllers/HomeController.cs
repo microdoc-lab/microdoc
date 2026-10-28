@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Security.Claims;
+using static MicroDoc.Services.DocumentParser;
 
 namespace MicroDoc.Controllers
 {
@@ -48,6 +49,9 @@ namespace MicroDoc.Controllers
 
             selectedTag = selectedTag ?? string.Empty;
 
+            if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
+                return Error(ErrorCode.InvalidParameters);
+
             var model = LoggingHelper.Execute(_logger, nameof(TagTree), new { clientId, domain, selectedTag }, () =>
                 new TagTreeViewModel
                 {
@@ -68,6 +72,9 @@ namespace MicroDoc.Controllers
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
+
+            if (!IsValidDomain(domain) || !IsValidTagId(selectedTag) || !IsValidTagName(newTagName))
+                return Error(ErrorCode.InvalidParameters);
 
             string newTag = null;
 
@@ -97,6 +104,9 @@ namespace MicroDoc.Controllers
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
+
+            if (!IsValidDomain(domain) || !IsValidTagId(selectedTag) || !IsValidTagName(newTagName))
+                return Error(ErrorCode.InvalidParameters);
 
             string parentTag = null;
             string newTag = null;
@@ -129,6 +139,9 @@ namespace MicroDoc.Controllers
             selectedTag = selectedTag ?? string.Empty;
             targetTag = targetTag ?? string.Empty;
 
+            if (!IsValidDomain(domain) || !IsValidTagId(selectedTag) || !IsValidTagId(targetTag))
+                return Error(ErrorCode.InvalidParameters);
+
             string parentTag = null;
             string newTag = null;
 
@@ -158,6 +171,9 @@ namespace MicroDoc.Controllers
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
+
+            if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
+                return Error(ErrorCode.InvalidParameters);
 
             string parentTag = null;
 
@@ -195,6 +211,9 @@ namespace MicroDoc.Controllers
 
             parentTag = parentTag ?? string.Empty;
 
+            if (!IsValidDomain(domain) || !IsValidTagId(parentTag) || !IsValidTagName(tagName) || !IsValidTagName(targetTagName))
+                return Error(ErrorCode.InvalidParameters);
+
             var status = LoggingHelper.Execute(_logger, nameof(SwapTags), new { domain, parentTag, tagName, targetTagName }, () =>
                 _tagService.SwapTags(domain, parentTag, tagName, targetTagName));
 
@@ -224,6 +243,9 @@ namespace MicroDoc.Controllers
 
             selectedTag = selectedTag ?? string.Empty;
 
+            if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
+                return Error(ErrorCode.InvalidParameters);
+
             var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag }, () =>
                 new DocMatrixViewModel
                 {
@@ -244,6 +266,9 @@ namespace MicroDoc.Controllers
                 return Forbid();
 
             selectedTag = selectedTag ?? string.Empty;
+
+            if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
+                return Error(ErrorCode.InvalidParameters);
 
             var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag }, () =>
                 new ExplorerViewModel
@@ -276,6 +301,9 @@ namespace MicroDoc.Controllers
         {
             if (!User.IsInRole(_domainOptions, "r", domain, documentId))
                 return Forbid();
+
+            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId))
+                return Error(ErrorCode.InvalidParameters);
 
             DocNode doc = null;
 
@@ -313,6 +341,9 @@ namespace MicroDoc.Controllers
 
             content = content ?? string.Empty;
 
+            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId))
+                return Error(ErrorCode.InvalidParameters);
+
             var status = LoggingHelper.Execute(_logger, nameof(SaveDocument), new { domain, documentId }, () =>
                 _docService.SaveDocument(domain, documentId, content));
             
@@ -338,6 +369,9 @@ namespace MicroDoc.Controllers
         {
             if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
+
+            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId))
+                return Error(ErrorCode.InvalidParameters);
 
             var status = LoggingHelper.Execute(_logger, nameof(DeleteDocument), new { domain, documentId }, () =>
                 _docService.DeleteDocument(domain, documentId));
@@ -368,6 +402,12 @@ namespace MicroDoc.Controllers
             if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
 
+            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(imageName))
+                return Error(ErrorCode.InvalidParameters);
+
+            if (thumbDimension.HasValue && thumbDimension.Value > MaxThumbDimension)
+                return Error(ErrorCode.ThumbDimensionExceeded);
+
             string filePath = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(Image), new { domain, documentId, imageName }, () =>
@@ -393,9 +433,6 @@ namespace MicroDoc.Controllers
                 _ => "application/octet-stream"
             };
 
-            if (thumbDimension.HasValue && thumbDimension.Value > MaxThumbDimension)
-                return Error(ErrorCode.ThumbDimensionExceeded);
-
             Response.Headers.CacheControl = "public, max-age=31536000, immutable";
 
             if (thumbDimension.HasValue)
@@ -419,6 +456,9 @@ namespace MicroDoc.Controllers
             if (!User.IsInRole(_domainOptions, "w", domain))
                 return Forbid();
 
+            if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(imageName))
+                return Error(ErrorCode.InvalidParameters);
+
             var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
             {
                 string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
@@ -438,7 +478,7 @@ namespace MicroDoc.Controllers
             return Ok();
         }
 
-#endregion
+        #endregion
 
         #region Domain (Background/Options)
 
@@ -447,6 +487,9 @@ namespace MicroDoc.Controllers
         {
             if (!User.IsInRole(_domainOptions, "r", domain))
                 return Forbid();
+
+            if (!IsValidDomain(domain))
+                return Error(ErrorCode.InvalidParameters);
 
             string filePath = null;
 
