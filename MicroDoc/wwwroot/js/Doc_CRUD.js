@@ -4,6 +4,11 @@
     var docElement = this.element;
     var explorer = this.explorer();
 
+    var domain = docElement.dataset.domain;
+    var documentId = docElement.dataset.id;
+
+    this.log(`CloseDocument domain: ${domain}, documentId: ${documentId}`);
+
     // remove docElement
     overlay.removeChild(docElement);
     // hide toolbar
@@ -26,6 +31,8 @@ Doc.prototype.SaveDocument = async function () {
 
     var docPath = DocParser.DocPath(documentId);
 
+    this.log(`SaveDocument domain: ${domain}, documentId: ${documentId}`);
+
     // save document
     const response = await this.service.SaveDocument(domain, documentId, content);
     if (!response.ok) {
@@ -46,6 +53,8 @@ Doc.prototype.DeleteDocument = async function () {
     var documentId = docElement.dataset.id;
 
     var docPath = DocParser.DocPath(documentId);
+
+    this.log(`DeleteDocument domain: ${domain}, documentId: ${documentId}`);
 
     // save document
     const response = await this.service.DeleteDocument(domain, documentId);

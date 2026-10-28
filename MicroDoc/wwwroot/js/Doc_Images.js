@@ -48,6 +48,8 @@
 
             imageName = imageName + imageType;
 
+            this.log(`UploadImage domain: ${domain}, documentId: ${documentId}, imageName: ${imageName}`);
+
             // upload image on server
             const response = await service.UploadImage(domain, documentId, imageName, image);
             if (!response.ok) {

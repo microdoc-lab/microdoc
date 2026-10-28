@@ -11,7 +11,7 @@ function DocMatrix(element, options = {}) {
 
     this.UpdateElement(element);
 
-    this.log(`new instance #${this.instanceId}`);
+    this.debug(`new instance #${this.instanceId}`);
 }
 
 DocMatrix.prototype.UpdateElement = function (element) {
@@ -60,12 +60,15 @@ DocMatrix.prototype.Reload = async function () {
     await this.Load(this.selectedTag, this.loadDeepLevels);
 }
 
-DocMatrix.prototype.Load = async function (tagId, loadDeepLevels) {
+DocMatrix.prototype.Load = async function (selectedTag, loadDeepLevels) {
+    loadDeepLevels = loadDeepLevels ?? this.loadDeepLevels;
+    this.log(`Load selectedTag: ${selectedTag}, loadDeepLevels: ${loadDeepLevels}`);
+
     // capture state
     const searchStrings = this.GetSearchStrings();
 
     // Update model property
-    this.selectedTag = tagId;
+    this.selectedTag = selectedTag;
     this.loadDeepLevels = loadDeepLevels;
 
     // Reload HTML content

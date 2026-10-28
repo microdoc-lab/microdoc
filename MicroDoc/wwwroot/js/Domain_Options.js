@@ -33,6 +33,8 @@ Domain.prototype.ToggleDomainOptions = async function () {
         return;
 
     if (this.domainOptions.style.display == "none") {
+        this.log("LoadDomainOptions");
+
         // load options YAML from server
         const response = await this.service.LoadDomainOptions();
         if (!response.ok) {
@@ -55,6 +57,8 @@ Domain.prototype.ToggleDomainOptions = async function () {
         this.domainOptionsEditor.focus();
     }
     else {
+        this.log("SaveDomainOptions");
+
         var yaml = this.domainOptionsEditor.value;
 
         // save options YAML to server

@@ -63,6 +63,8 @@ TagTree.prototype.NewTag = async function () {
         return;
     }
 
+    this.log(`NewTag selectedTag: ${selectedTag}, newTagName: ${newTagName}`);
+
     // Create Tag
     const response = await this.service.NewTag(domain, selectedTag, newTagName);
     if (!response.ok) {
@@ -92,8 +94,10 @@ TagTree.prototype.RenameTag = async function () {
         return;
     }
 
+    this.log(`RenameTag selectedTag: ${selectedTag}, newTagName: ${newTagName}`);
+
     // Rename Tag
-    const response = await this.service.RenameTag(domain, selectedTag, newTagName);
+    const response = await this.service.Rename(domain, selectedTag, newTagName);
     if (!response.ok) {
         this.error(format(Loc.TagTree_RenameFailed, tagPath, newTagName), await response.text());
         return;
@@ -121,6 +125,8 @@ TagTree.prototype.MoveTag = async function () {
         return;
     }
 
+    this.log(`MoveTag selectedTag: ${selectedTag}, targetTag: ${targetTag}`);
+
     // Move Tag
     const response = await this.service.MoveTag(domain, selectedTag, targetTag);
     if (!response.ok) {
@@ -142,6 +148,8 @@ TagTree.prototype.DeleteTag = async function () {
 
     if (!confirm(format(Loc.TagTree_DeletePrompt, tagPath)))
         return;
+
+    this.log(`DeleteTag selectedTag: ${selectedTag}`);
 
     // Delete Tag
     const response = await this.service.DeleteTag(domain, selectedTag);

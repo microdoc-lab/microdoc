@@ -30,7 +30,14 @@
             const sender = draggedNode.closest(".tag");
             const target = targetNode.closest(".tag");
 
-            const response = await this.service.SwapTags(sender.dataset.domain, sender.dataset.tagid, sender.dataset.tag, target.dataset.tag);
+            const domain = sender.dataset.domain;
+            const parentTag = sender.dataset.tagid;
+            const tagName = sender.dataset.tag;
+            const targetTagName = target.dataset.tag;
+
+            this.log(`SwapTags parentTag: ${parentTag}, tagName: ${tagName}, targetTagName: ${targetTagName}`);
+
+            const response = await this.service.SwapTags(domain, parentTag, tagName, targetTagName);
             if (!response.ok) {
                 console.error(Loc.TagTree_SwapTagsFailed, await response.text());
                 return;

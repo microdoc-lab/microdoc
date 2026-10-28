@@ -11,7 +11,7 @@ function Doc(element, options = {}) {
 
     this.UpdateElement(element);
 
-    this.log(`new instance #${this.instanceId}`);
+    this.debug(`new instance #${this.instanceId}`);
 }
 
 Doc.prototype.UpdateElement = function (element) {

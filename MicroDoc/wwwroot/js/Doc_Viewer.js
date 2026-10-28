@@ -43,12 +43,20 @@
 
     // select heading and scroll it into view
     docViewer.SelectAndScroll = headingIndex => {
+        const domain = this.element.dataset.domain;
+        const documentId = this.element.dataset.id;
+
+        this.log(`SelectAndScrollViewer domain: ${domain}, documentId: ${documentId}, headingIndex: ${headingIndex}`);
         SelectAndScrollViewer(docViewer, headingIndex);
         explorer.OnDocumentActivated(this);
+        docMatrix.SelectDocument(this.element);
     };
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitViewer);
+
+// Api
+Doc.prototype.IsDocumentSelected = function () { return this.element.classList.contains("selected"); }
 
 // Static functions
 function SelectElement(element) {

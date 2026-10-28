@@ -90,6 +90,7 @@ Domain.prototype.HistoryNavigate = async function (url) {
 }
 
 Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
+    this.log(`OpenExplorer domain: ${domain}, activeDocumentId: ${activeDocumentId}`);
 
     // translate domain into explorerId
     var explorerId = this.ExplorerId(domain);

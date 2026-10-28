@@ -7,24 +7,28 @@
         titleNode.addEventListener("click", (event) => {
             event.stopPropagation(); // prevent parent triggers
             const tagNode = titleNode.closest(".tag");
+
+            this.log(`OnTagSelected tagId: ${tagNode.dataset.id}`);
             this.InternalSelectTag(tagNode);
         });
     });
 
     // Default event handler
-    options.OnNodeSelected ??= function (tagName) {
-        this.log(`OnNodeSelected '${tagName}'`);
+    options.OnTagSelected ??= function (tagId) {
+        this.log(`OnTagSelected '${tagId}'`);
     };
 
-    this.OnNodeSelected = options.OnNodeSelected;
+    this.OnTagSelected = options.OnTagSelected;
 }
 
 TagTree.prototype.behaviors.push(TagTree.prototype.InitSelection);
 
 // Api
-TagTree.prototype.SelectTag = function (tagName) {
-    if (tagName != null) {
-        var tagNode = this.element.querySelector(`.tag[data-id="${tagName}"]`);
+TagTree.prototype.SelectTag = function (tagId) {
+    this.log(`SelectTag tagId: ${tagId}`);
+
+    if (tagId != null) {
+        var tagNode = this.element.querySelector(`.tag[data-id="${tagId}"]`);
         if (tagNode) {
             // select tag
             this.InternalSelectTag(tagNode);
@@ -56,7 +60,7 @@ TagTree.prototype.InternalSelectTag = function (tagNode) {
         this.selectedTag = tagNode.dataset.id;
 
         // Call user-provided callback
-        this.OnNodeSelected(tagNode.dataset.id);
+        this.OnTagSelected(tagNode.dataset.id);
     }
     else {
         // Remove selection
@@ -66,6 +70,6 @@ TagTree.prototype.InternalSelectTag = function (tagNode) {
         this.selectedTag = "";
 
         // Call user-provided callback
-        this.OnNodeSelected(null);
+        this.OnTagSelected(null);
     }
 }

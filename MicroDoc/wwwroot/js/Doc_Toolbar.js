@@ -76,7 +76,8 @@
             return;
 
         // activate document
-        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+        if (!docElement.doc.IsDocumentSelected())
+            await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
         await docMatrix.OpenPrintDocument(docElement);
     });
@@ -93,7 +94,8 @@
             return;
 
         // activate document
-        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+        if (!docElement.doc.IsDocumentSelected())
+            await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
         var span = docElement.querySelector("gallery imgw.selected span");
         if (!span)
@@ -102,7 +104,10 @@
         var docGallery = CreateSingleImageGallery(span);
         var clone = TransformGalleriesToImagePages(docGallery);
 
-        PrintElement(clone, span.textContent, event.altKey);
+        const imageName = span.textContent;
+
+        this.log(`PrintImage domain: ${domain}, documentId: ${documentId}, imageName: ${imageName}`);
+        PrintElement(clone, imageName, event.altKey);
     });
 
     // toggle view/edit mode
@@ -117,7 +122,8 @@
             return;
 
         // activate document
-        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+        if (!docElement.doc.IsDocumentSelected())
+            await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
         await docElement.doc.ToggleMode();
     });
@@ -136,7 +142,8 @@
             return;
 
         // activate document
-        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+        if (!docElement.doc.IsDocumentSelected())
+            await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
         if (!confirm(format(Loc.Document_DeletePrompt, docPath)))
             return;
@@ -156,7 +163,8 @@
             return;
 
         // activate document
-        await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
+        if (!docElement.doc.IsDocumentSelected())
+            await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
         var txtEditor = docElement.doc.txtEditor();
 
@@ -198,6 +206,10 @@ Doc.prototype.ToggleMode = async function () {
     var toggleButtonImage = toolbar.querySelector(".view img");
 
     var mode = docElement.getAttribute("mode");
+
+    const domain = this.element.dataset.domain;
+    const documentId = this.element.dataset.id;
+    this.log(`ToggleMode domain: ${domain}, documentId: ${documentId}, mode: ${mode}`);
 
     if (mode == "view") {
         const headingIndex = GetSelectedHeadingIndex(docViewer);

@@ -1,4 +1,12 @@
 ﻿// Api
+DocMatrix.prototype.SelectDocument = function (element) {
+    var docElement = element.closest(".doc");
+    if (docElement) {
+        this.overlay().querySelectorAll(".doc").forEach(doc => doc.classList.remove('selected'));
+        docElement.classList.add("selected");
+    }
+}
+
 DocMatrix.prototype.HandleDocumentClick = async function (event, select, container, scrollOnSelect) {
     // open embeded link
     const link = event.target.closest("a");
@@ -10,6 +18,7 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
         const domain = this.domain;
         var documentId = link.getAttribute("href");
 
+        this.log(`OpenLink domain: ${domain}, documentId: ${documentId}`);
         this.LoadAndOpenDocument(domain, documentId);
 
         return true;
@@ -19,16 +28,19 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
         // find possible clicked image
         const imageWrapper = event.target.closest("imgw");
         if (imageWrapper) {
-            // select image
             var span = imageWrapper.querySelector("span");
+
+            var docElement = imageWrapper.closest(".doc, doc");
+            const domain = docElement.dataset.domain;
+            const documentId = docElement.dataset.id;
+            const imageName = span.textContent;
+
+            this.log(`SelectImage domain: ${domain}, documentId: ${documentId}, imageName: ${imageName}`);
+            // select image
             SelectElement(span);
 
             // select docElement
-            var docElement = imageWrapper.closest(".doc");
-            if (docElement) {
-                this.overlay().querySelectorAll(".doc").forEach(doc => doc.classList.remove('selected'));
-                docElement.classList.add("selected");
-            }
+            this.SelectDocument(imageWrapper);
 
             if (container) {
                 // add selected class to image
@@ -53,15 +65,17 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
         // obtain section heading
         var heading = section.querySelector("h1, h2, h3");
         if (heading) {
+            var docElement = heading.closest(".doc, doc");
+            const domain = docElement.dataset.domain;
+            const documentId = docElement.dataset.id;
+            const headingText = heading.textContent;
+
+            this.log(`SelectHeading domain: ${domain}, documentId: ${documentId}, headingText: ${headingText}`);
             // select heading
             SelectElement(heading);
 
             // select docElement
-            var docElement = section.closest(".doc");
-            if (docElement) {
-                this.overlay().querySelectorAll(".doc").forEach(doc => doc.classList.remove('selected'));
-                docElement.classList.add("selected");
-            }
+            this.SelectDocument(section);
 
             if (container) {
                 // scroll to clicked heading (print preview TOC)

@@ -11,7 +11,7 @@ function TagTree(element, options = {}) {
 
     this.UpdateElement(element);
 
-    this.log(`new instance #${this.instanceId}`);
+    this.debug(`new instance #${this.instanceId}`);
 }
 
 TagTree.prototype.UpdateElement = function (element) {
@@ -50,13 +50,15 @@ TagTree.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }
 
-TagTree.prototype.Load = async function (tagId, toExpand) {
+TagTree.prototype.Load = async function (selectedTag, toExpand) {
+    this.log(`Load selectedTag: ${selectedTag}, toExpand: ${toExpand}`);
+
     // capture state
     var expandedTag = this.ExpandedTag();
     var searchText = this.searchInput.value;
 
     // Update model property
-    this.selectedTag = tagId;
+    this.selectedTag = selectedTag;
 
     // Reload HTML content
     const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);

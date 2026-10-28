@@ -11,7 +11,7 @@ function Domain(element, options = {}) {
 
     this.UpdateElement(element);
 
-    this.log(`new instance #${this.instanceId}`);
+    this.debug(`new instance #${this.instanceId}`);
 }
 
 Domain.prototype.UpdateElement = function (element) {

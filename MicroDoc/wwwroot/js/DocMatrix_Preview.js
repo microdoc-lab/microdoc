@@ -113,6 +113,7 @@ DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPreview);
 
 // Api
 DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent, documentHtml, headingIndex, mode) {
+    this.log(`OpenDocument domain: ${domain}, documentId: ${documentId}, headingIndex: ${headingIndex}, mode: ${mode}`);
     var explorer = this.explorer();
     var overlay = this.overlay();
 
@@ -178,6 +179,8 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
 }
 
 DocMatrix.prototype.LoadAndOpenDocument = async function (domain, documentId, headingIndex, silentError) {
+    this.log(`LoadAndOpenDocument domain: ${domain}, documentId: ${documentId}, headingIndex: ${headingIndex}, silentError: ${silentError}`);
+
     var docPath = DocParser.DocPath(documentId);
 
     // load document content

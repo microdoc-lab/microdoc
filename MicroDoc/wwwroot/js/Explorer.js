@@ -11,7 +11,7 @@ function Explorer(element, options = {}) {
 
     this.UpdateElement(element);
 
-    this.log(`new instance #${this.instanceId}`);
+    this.debug(`new instance #${this.instanceId}`);
 }
 
 Explorer.prototype.UpdateElement = function (element) {
@@ -58,9 +58,11 @@ Explorer.prototype.Reload = async function () {
     await this.Load(this.selectedTag);
 }
 
-Explorer.prototype.Load = async function (tagId) {
+Explorer.prototype.Load = async function (selectedTag) {
+    this.log(`Load selectedTag: ${selectedTag}`);
+
     // Update model property
-    this.selectedTag = tagId;
+    this.selectedTag = selectedTag;
 
     // Reload HTML content
     const response = await this.service.Explorer(this.id, this.domain, this.selectedTag, this.loadDeepLevels);

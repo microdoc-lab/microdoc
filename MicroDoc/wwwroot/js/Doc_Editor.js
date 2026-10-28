@@ -3,6 +3,7 @@
 
     var docElement = this.element;
     var explorer = this.explorer();
+    var docMatrix = this.docMatrix();
     var txtEditor = this.txtEditor();
 
     // save and close document editor on ESC
@@ -26,12 +27,20 @@
 
     // select heading line and scroll it into view
     txtEditor.SelectAndScroll = (headingIndex, focus = true) => {
+        const domain = this.element.dataset.domain;
+        const documentId = this.element.dataset.id;
+
+        this.log(`SelectAndScrollEditor domain: ${domain}, documentId: ${documentId}, headingIndex: ${headingIndex}, focus: ${focus}`);
         SelectAndScrollEditor(txtEditor, headingIndex, focus);
         explorer.OnDocumentActivated(this);
+        docMatrix.SelectDocument(this.element);
     }
 
     // activate document when editor got focus
-    txtEditor.addEventListener("focus", e => explorer.OnDocumentActivated(this));
+    txtEditor.addEventListener("focus", e => {
+        explorer.OnDocumentActivated(this);
+        docMatrix.SelectDocument(this.element);
+    });
 
     // update selectedHeadingIndex in cookie
     txtEditor.addEventListener('select', e => explorer.OnDocumentEditorSelectionChanged(this));

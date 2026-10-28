@@ -24,6 +24,8 @@
         if (!tag)
             return;
 
+        this.log(`NavigateTag selectedTag: ${tag.dataset.id}`);
+
         // select tag in tree
         this.explorer().tagTree().SelectTag(tag.dataset.id);
     });
@@ -46,6 +48,8 @@ DocMatrix.prototype.MoveTagUp = function () {
 
     // determine parent tag
     var parentTag = DocParser.TagParent(this.selectedTag);
+
+    this.log(`MoveTagUp selectedTag: ${parentTag}`);
 
     // select parent tag
     this.explorer().tagTree().SelectTag(parentTag);

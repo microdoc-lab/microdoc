@@ -68,6 +68,10 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
 DocMatrix.prototype.OpenPrintColumn = function (document) {
+    const domain = this.domain;
+
+    this.log(`OpenPrintColumn domain: ${domain}, document: ${document}`);
+
     var modal = this.modal();
     var container = this.printContainer();
     var printTitle = this.printTitle();
@@ -119,6 +123,13 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
 }
 
 DocMatrix.prototype.OpenPrintDocument = function (docElement) {
+    const domain = this.domain;
+    const documentId = docElement.dataset.id;
+    const document = docElement.dataset.document;
+    const tagpath = docElement.dataset.tagpath;
+
+    this.log(`OpenPrintDocument domain: ${domain}, documentId: ${documentId}`);
+
     var modal = this.modal();
     var container = this.printContainer();
     var printTitle = this.printTitle();
@@ -127,11 +138,20 @@ DocMatrix.prototype.OpenPrintDocument = function (docElement) {
     var html = docElement.doc.docViewer().innerHTML;
 
     // update title
-    printTitle.textContent = DocParser.DocPath(docElement.dataset.id);
-    printTitle.dataset.document = docElement.dataset.document;
+    printTitle.textContent = DocParser.DocPath(documentId);
+    printTitle.dataset.document = document;
+
+    // clone document
+    var docClone = window.document.createElement("doc");
+    docClone.dataset.domain = domain;
+    docClone.dataset.id = documentId;
+    docClone.dataset.document = document;
+    docClone.dataset.tagpath = tagpath;
 
     // update container HTML
-    container.innerHTML = `<doc>${html}</doc>`;
+    docClone.innerHTML = html;
+    container.replaceChildren();
+    container.appendChild(docClone);
 
     // remove hover style
     container.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
@@ -156,7 +176,11 @@ DocMatrix.prototype.OpenPrintDocument = function (docElement) {
     this.explorer().OnDocumentPrintDialogOpened(docElement.doc);
 }
 
+DocMatrix.prototype.IsPrintOpened = function () { return this.modalOpened; }
+
 DocMatrix.prototype.ClosePrint = function () {
+    this.log("ClosePrint");
+
     if (!this.modalOpened)
         return;
 
@@ -174,6 +198,8 @@ DocMatrix.prototype.ClosePrint = function () {
 }
 
 DocMatrix.prototype.CopyPrint = async function () {
+    this.log("CopyPrint");
+
     if (!this.modalOpened)
         return;
 
@@ -183,6 +209,8 @@ DocMatrix.prototype.CopyPrint = async function () {
 }
 
 DocMatrix.prototype.DialogPrint = async function (event) {
+    this.log("DialogPrint");
+
     if (!this.modalOpened)
         return;
 
@@ -193,6 +221,8 @@ DocMatrix.prototype.DialogPrint = async function (event) {
 }
 
 DocMatrix.prototype.DialogPrintImages = async function (event) {
+    this.log("DialogPrintImages");
+
     if (!this.modalOpened)
         return;
 

@@ -6,7 +6,7 @@
 
     // synchronize DocMatrix with selected tag in TagTree
     // store selectedTag in cookie
-    tagTree.options.OnNodeSelected = tagTree.OnNodeSelected = tagId => {
+    tagTree.options.OnTagSelected = tagTree.OnTagSelected = tagId => {
         this.selectedTag = tagId;
         this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
 
@@ -44,9 +44,12 @@ Explorer.prototype.ActivateRecentDocument = async function () {
 }
 
 Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
+    this.log(`ActivateDocumentOrLoadAndOpen documentId: ${documentId}`);
+
     var docMatrix = this.docMatrix();
 
-    docMatrix.ClosePrint();
+    if (docMatrix.IsPrintOpened())
+        docMatrix.ClosePrint();
 
     if (!documentId) {
         // update domain title
