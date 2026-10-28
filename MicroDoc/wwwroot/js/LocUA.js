@@ -29,11 +29,12 @@
     TagTree_InvalidTag: "Невірний тег. Лише символи, цифри, підкреслення, дефіс, пробіли (розділені /) допустимі",
     TagTree_MoveFailed: "Перемістити тег {0} у {1} не вдалося",
 
-    TagTree_DeletePrompt: "Видалити тег {0}?",
-    TagTree_DeleteFailed: "Видалити тег {0} не вдалося",
+    TagTree_LoadFailed: "Завантажити дерево тегів не вдалося",
 
     TagTree_SwapTagsFailed: "Переставити теги не вдалося",
-    TagTree_LoadFailed: "Завантажити дерево тегів не вдалося",
+
+    TagTree_DeletePrompt: "Видалити тег {0}?",
+    TagTree_DeleteFailed: "Видалити тег {0} не вдалося",
 
     DocMatrix_Reload: "Оновити матрицю документів",
     DocMatrix_MoveUp: "Перести вгору",
@@ -61,8 +62,15 @@
     Document_SaveAndClose: "Зберегти та Закрити",
 
     Document_LoadFailed: "Завантажити документ {0} не вдалося",
+
+    Document_OverridePrompt: "Документ {0}: {1} був змінений іншим користувачем. Завантажити зміни?",
+    Document_DiscardPrompt: "Документ {0}: {1} був видалений іншим користувачем. Закрити редактор?",
+
     Document_SaveFailed: "Зберегти документ {0} не вдалося",
+
+    Document_DeletePrompt: "Видалити документ {0}?",
     Document_DeleteFailed: "Видалити документ {0} не вдалося",
+
     Document_UploadImageFailed: "Зберегти зображення {0} не вдалося",
 
     Print_CopyHTML: "Копіювати HTML",

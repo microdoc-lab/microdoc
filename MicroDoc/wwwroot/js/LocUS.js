@@ -29,11 +29,12 @@
     TagTree_InvalidTag: "Invalid tag. Only symbols, digits, underscore, hyphen, space (/ separated) allowed",
     TagTree_MoveFailed: "Move Tag {0} to {1} failed",
 
-    TagTree_DeletePrompt: "Delete tag {0}?",
-    TagTree_DeleteFailed: "Delete tag {0} failed",
+    TagTree_LoadFailed: "TagTree load failed",
 
     TagTree_SwapTagsFailed: "Swap tags failed",
-    TagTree_LoadFailed: "TagTree load failed",
+
+    TagTree_DeletePrompt: "Delete tag {0}?",
+    TagTree_DeleteFailed: "Delete tag {0} failed",
 
     DocMatrix_Reload: "Reload document matrix",
     DocMatrix_MoveUp: "Move Up",
@@ -61,8 +62,15 @@
     Document_SaveAndClose: "Save & Close",
 
     Document_LoadFailed: "Load document {0} failed",
+
+    Document_OverridePrompt: "Document {0}: {1} was changed by another user. Reload?",
+    Document_DiscardPrompt: "Document {0}: {1} was deleted by another user. Close opened editor?",
+
     Document_SaveFailed: "Save document {0} failed",
+
+    Document_DeletePrompt: "Delete document {0}?",
     Document_DeleteFailed: "Delete document {0} failed",
+
     Document_UploadImageFailed: "Upload image {0} failed",
 
     Print_CopyHTML: "Copy HTML",

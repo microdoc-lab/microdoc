@@ -138,7 +138,7 @@
         // activate document
         await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
-        if (!confirm(`Delete document ${docPath} ?`))
+        if (!confirm(format(Loc.Document_DeletePrompt, docPath)))
             return;
 
         await docElement.doc.DeleteDocument();

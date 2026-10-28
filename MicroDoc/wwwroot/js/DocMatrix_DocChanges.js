@@ -16,9 +16,12 @@ DocMatrix.prototype.HandleDocChanges = async function (change) {
                 const headingIndexView = GetSelectedHeadingIndex(docViewer);
                 const headingIndexEdit = GetHeadingIndexAtCursor(txtEditor);
 
+                const domain = change.domain;
+                const docPath = DocParser.DocPath(change.documentId);
+
                 if (change.external) {
                     if (mode == "edit") {                                       // external edit
-                        if (confirm(`Document ${change.domain}: ${change.documentId} was changed by another user. Reload?`)) {
+                        if (confirm(format(Loc.Document_OverridePrompt, domain, docPath))) {
                             docElement.dataset.content = change.content;        // confirmed - update document in editor, focus if was focused
                             docViewer.innerHTML = change.html;
                             txtEditor.value = change.content;
@@ -64,9 +67,12 @@ DocMatrix.prototype.HandleDocChanges = async function (change) {
             var docInCell = this.docInCell(change.domain, change.documentId);
             var mode = docElement.getAttribute("mode");
 
+            const domain = change.domain;
+            const docPath = DocParser.DocPath(change.documentId);
+
             if (docElement) {
                 if (mode == "edit" && change.external) {
-                    if (confirm(`Document ${change.domain}: ${change.documentId} was deleted by another user. Close opened editor?`))
+                    if (confirm(format(Loc.Document_DiscardPrompt, domain, docPath)))
                         docElement.doc.CloseDocument();     // confirmed delete - close document
                     else
                         docElement.dataset.content = "";    // not confirmed - remain opened, reset content, can be re-saved
