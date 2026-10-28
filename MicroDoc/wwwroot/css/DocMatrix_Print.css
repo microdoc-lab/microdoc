@@ -15,18 +15,14 @@
     display: block;
 }
 
-.explorer .modal doc:not(:last-child) {
-    border-bottom: 1px solid #ccc;
+.explorer .modal doc:not(:first-child) {
+    border-top: 1px solid #ccc;
 }
 
 /* Viewer HTML*/
 
 /* Image */
-/* Custom direction and scale in preview */
-.explorer .modal doc gallery img, doc gallery img {
-    transform-origin: top left;
-}
-
+/* Custom scale in preview */
 .explorer .modal doc gallery imgw.hover img {
     transform: scale(7.5);
     z-index: 10;

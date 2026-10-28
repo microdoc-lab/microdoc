@@ -74,7 +74,11 @@
     padding-top: 0px;
 }
 
-/* Custom scale in preview */
+/* Custom orientation/scale in preview */
+.docmatrix .grid td doc gallery img {
+    transform-origin: bottom left !important;
+}
+
 .docmatrix .grid td doc gallery imgw.hover img {
     transform: scale(5);
 }

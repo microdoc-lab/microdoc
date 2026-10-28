@@ -110,5 +110,10 @@ function AdjustImageGalleryPositionAndVisibility(container) {
                 galleryCenter <= viewerRect.bottom
                 ? "visible"
                 : "hidden";
+
+        if (rect.top + rect.height / 2 > window.innerHeight / 2)
+            gallery.classList.add("belowMiddle");
+        else
+            gallery.classList.remove("belowMiddle");
     });
 }
