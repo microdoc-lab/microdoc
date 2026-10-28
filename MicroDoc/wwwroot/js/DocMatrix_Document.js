@@ -23,6 +23,13 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
             var span = imageWrapper.querySelector("span");
             SelectElement(span);
 
+            // select docElement
+            var docElement = imageWrapper.closest(".doc");
+            if (docElement) {
+                this.overlay().querySelectorAll(".doc").forEach(doc => doc.classList.remove('selected'));
+                docElement.classList.add("selected");
+            }
+
             if (container) {
                 // add selected class to image
                 container.querySelectorAll("imgw").forEach(imgw => imgw.classList.remove('selected'));
@@ -48,6 +55,13 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
         if (heading) {
             // select heading
             SelectElement(heading);
+
+            // select docElement
+            var docElement = section.closest(".doc");
+            if (docElement) {
+                this.overlay().querySelectorAll(".doc").forEach(doc => doc.classList.remove('selected'));
+                docElement.classList.add("selected");
+            }
 
             if (container) {
                 // scroll to clicked heading (print preview TOC)

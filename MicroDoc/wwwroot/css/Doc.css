@@ -31,6 +31,10 @@
     font-size: initial;
 }
 
+.explorer .overlay .doc.selected {
+    z-index: 100;
+}
+
 /* Toolbar */
 .explorer .overlay .toolbar {
     position: absolute;
