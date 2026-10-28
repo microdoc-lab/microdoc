@@ -23,10 +23,10 @@ function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
 
     function activate(element) {
         // Only one active element per controller.
-        if (activeElement && activeElement !== element) {
-            cancelLeave(activeElement);
-            activeElement.classList.remove("hover");
-        }
+        //if (activeElement && activeElement !== element) {
+        //    cancelLeave(activeElement);
+        //    activeElement.classList.remove("hover");
+        //}
 
         element.classList.add("hover");
         activeElement = element;
@@ -45,7 +45,7 @@ function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
             element.contains(event.relatedTarget))
             return;
 
-        // console.log(code + " pointerover " + element + " " + element.matches(":hover"));
+        // console.log(code + " pointerover " + element + " " + delayEnter);
 
         cancelLeave(element);
 
@@ -75,7 +75,7 @@ function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
             element.contains(event.relatedTarget))
             return;
 
-        // console.log(code + " pointerout " + element + " " + element.matches(":hover"));
+        // console.log(code + " pointerout " + element + " " + delayLeave);
 
         if (pendingEnter === element)
             cancelEnter();

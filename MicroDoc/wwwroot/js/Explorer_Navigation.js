@@ -31,8 +31,8 @@
     };
 
     enableSoftHover("tree/grid", `#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`, 700, 500);
-    enableSoftHover("grid td", `#${this.id} .docmatrix .grid td`);
-    enableSoftHover("grid td doc", `#${this.id} .docmatrix .grid td:not(.misc) doc section`);
+    enableSoftHover("grid td", `#${this.id} .docmatrix .grid td`, 300, 600);
+    enableSoftHover("grid td doc", `#${this.id} .docmatrix .grid td:not(.misc) doc section`, 600, 100);
     enableSoftHover("imgw", `#${this.id} .docmatrix .grid td:not(.misc) doc gallery imgw, #${this.id} .overlay .doc gallery imgw.selected, #${this.id} .modal doc gallery imgw.selected`, 700, 500);
 }
 
@@ -131,7 +131,6 @@ Explorer.prototype.OnDocumentActivated = function (doc, restore) {
 
     // put document URL in history
     window.domain.HistoryNavigate(`/${domain}/${documentId}`);
-    console.log(`/${domain}/${documentId}`);
 
     // store active document
     this.AddCookieDocument(documentId, selectedHeadingIndex);
