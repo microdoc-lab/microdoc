@@ -100,7 +100,7 @@ namespace MicroDoc.Services
             {
                 var parts = parsedName.Split('+');
                 if (parts.Length != 2)
-                    return ErrorCode.WrongImageName;
+                    return ErrorCode.InvalidImageName;
 
                 document = parts[0];
                 imageName = parts[1];
@@ -110,7 +110,7 @@ namespace MicroDoc.Services
                 var parts = parsedName.Split('+');
 
                 if (parts.Length > 2)
-                    return ErrorCode.WrongImageName;
+                    return ErrorCode.InvalidImageName;
 
                 // Local case: document+imageName.png
                 if (parts.Length == 2) {

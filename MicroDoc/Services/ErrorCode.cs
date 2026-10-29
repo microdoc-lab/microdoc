@@ -15,10 +15,11 @@
         ImageNotFound,
 
         TagNotClosed,
-        WrongImageName,
 
-        ThumbDimensionExceeded,
-        NotImplemented,
+        InvalidImageName,
+        InvalidDomainName,
         InvalidParameters,
+
+        NotImplemented,
     }
 }

@@ -90,8 +90,8 @@
     ErrorCode_DocumentNotFound: "Document not found",
     ErrorCode_ImageNotFound: "Image not found",
     ErrorCode_TagNotClosed: "Tag not closed",
-    ErrorCode_WrongImageName: "Wrong image name",
-    ErrorCode_ThumbDimensionExceeded: "Thumb dimension exceeded",
-    ErrorCode_NotImplemented: "Not Implemented",
+    ErrorCode_InvalidImageName: "Invalid image name. Only symbols, digits, underscore, hyphen, space allowed",
+    ErrorCode_InvalidDomainName: "Invalid domain name. Only symbols, digits, underscore, hyphen, dot allowed",
     ErrorCode_InvalidParameters: "Invalid Parameters",
+    ErrorCode_NotImplemented: "Not Implemented",
 };

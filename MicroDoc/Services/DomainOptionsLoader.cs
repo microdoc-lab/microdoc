@@ -1,4 +1,5 @@
 ﻿using YamlDotNet.Serialization;
+using static MicroDoc.Services.DocumentParser;
 
 namespace MicroDoc.Services
 {
@@ -39,12 +40,28 @@ namespace MicroDoc.Services
             return yaml;
         }
 
-        public static DomainOptions ValidateOptions(string yaml)
+        public static ErrorCode ValidateOptions(string yaml, out DomainOptions options)
         {
             var deserializer = new DeserializerBuilder().Build();
-            var options = deserializer.Deserialize<DomainOptions>(yaml);
+            options = deserializer.Deserialize<DomainOptions>(yaml);
+
+            if (options.Domains.Any(d => !IsValidDomain(d.Name)))
+                return ErrorCode.InvalidDomainName;
+
+            if (options.Domains.Where(d => !string.IsNullOrWhiteSpace(d.Background)).Any(d =>
+            {
+                var status = TryParseImagePath(d.Background, out var tags, out var document, out var imageName);
+                if (status != ErrorCode.Ok)
+                    return false;
+
+                if (!tags.All(IsValidTagName) || !IsValidDocumentName(document) || !IsValidImageName(Path.GetFileNameWithoutExtension(imageName)))
+                    return false;
+
+                return true;
+            }))
+
             InitOptions(options);
-            return options;
+            return ErrorCode.Ok;
         }
 
         public static void SaveOptionsToFile(string path, string yaml)

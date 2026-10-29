@@ -406,7 +406,7 @@ namespace MicroDoc.Controllers
                 return Error(ErrorCode.InvalidParameters);
 
             if (thumbDimension.HasValue && thumbDimension.Value > MaxThumbDimension)
-                return Error(ErrorCode.ThumbDimensionExceeded);
+                return Error(ErrorCode.InvalidParameters);
 
             string filePath = null;
 
@@ -543,7 +543,9 @@ namespace MicroDoc.Controllers
 
             var status = LoggingHelper.Execute(_logger, nameof(SaveDomainOptions), new { yaml }, () =>
             {
-                var domainOptions = DomainOptionsLoader.ValidateOptions(yaml);
+                var status = DomainOptionsLoader.ValidateOptions(yaml, out var domainOptions);
+                if (status != ErrorCode.Ok)
+                    return status;
 
                 DomainOptionsLoader.SaveOptionsToFile(_microDocOptions.Value.DomainOptions, yaml);
 

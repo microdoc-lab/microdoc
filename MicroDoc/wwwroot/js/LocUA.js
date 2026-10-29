@@ -90,8 +90,8 @@
     ErrorCode_DocumentNotFound: "Документ не знайдено",
     ErrorCode_ImageNotFound: "Зображення не знайдено",
     ErrorCode_TagNotClosed: "Тег не закритий",
-    ErrorCode_WrongImageName: "Невірна назва зображення",
-    ErrorCode_ThumbDimensionExceeded: "Перевищено розмірність міні-зображення",
-    ErrorCode_NotImplemented: "Не реалізовано",
+    ErrorCode_InvalidImageName: "Невірна назва зображення. Лише символи, цифри, підкреслення, дефіс, пробіли допустимі",
+    ErrorCode_InvalidDomainName: "Невірна назва домену. Лише символи, цифри, підкреслення, дефіс, крапка допустимі",
     ErrorCode_InvalidParameters: "Невірні параметри",
+    ErrorCode_NotImplemented: "Не реалізовано",
 };
