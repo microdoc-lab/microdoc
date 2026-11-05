@@ -233,6 +233,8 @@ Doc.prototype.ToggleMode = async function () {
             await this.SaveDocument();
 
         docViewer.SelectAndScroll(headingIndex);
+
+        AdjustImageGalleryPositionAndVisibility(docViewer);
     }
 
     docElement.doc.PositionToolbar();
