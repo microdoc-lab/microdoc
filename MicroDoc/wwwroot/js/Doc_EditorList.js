@@ -60,6 +60,10 @@
 
         const start = txtEditor.selectionStart;
         const end = txtEditor.selectionEnd;
+
+        if (start != end)
+            return;
+
         const value = txtEditor.value;
 
         const firstLineStart = value.lastIndexOf("\n", start - 1) + 1;
@@ -77,6 +81,10 @@
 
         // Handle list blocks only.
         if (!lines.some(line => /^ *- /.test(line)))
+            return;
+
+        const textBeforeCursor = lines[0].substring(0, start - firstLineStart);
+        if (/[^ -]/.test(textBeforeCursor))
             return;
 
         e.preventDefault();
