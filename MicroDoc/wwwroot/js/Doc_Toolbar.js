@@ -79,6 +79,12 @@
         if (!docElement.doc.IsDocumentSelected())
             await this.explorer().ActivateDocumentOrLoadAndOpen(documentId);
 
+        var txtEditor = docElement.doc.txtEditor();
+
+        var mode = docElement.getAttribute("mode")
+        if (mode == "edit" && isInRole("w", domain, documentId) && txtEditor.value != docElement.dataset.content)
+            await docElement.doc.SaveDocument();
+
         await docMatrix.OpenPrintDocument(docElement);
     });
 
