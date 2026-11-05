@@ -114,6 +114,8 @@ function SelectAndScrollViewer(viewer, headingIndex, container) {
         // if no heading specified - scroll document to top
         viewer.scrollTo({ behavior: "auto", top: 0 });
     }
+
+    window.scrollTo({ behavior: 'auto', top: 0 });
 }
 
 function GetSelectedHeadingIndex(viewer) {
