@@ -197,7 +197,7 @@ Doc.prototype.PositionToolbar = function () {
 
     toolbar.style.left = `${rect.left - overlayRect.left}px`;
     toolbar.style.top = `${rect.top - overlayRect.top}px`;
-    toolbar.style.width = `${rect.width}px`;
+    toolbar.style.width = `${rect.width - 18}px`;
 }
 
 Doc.prototype.ToggleMode = async function () {
