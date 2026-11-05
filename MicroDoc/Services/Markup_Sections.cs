@@ -3,6 +3,7 @@
     public partial class Markup
     {
         private bool sectionStarted = false;
+        private bool isCode = false;
 
         static private (int level, string heading) TryParseHeading(string line)
         {
@@ -29,6 +30,7 @@
 
             var callout = ExtractCallout(ref heading);
             callout = ToCssClass(callout);
+            isCode = callout == "code";
 
             var @class = callout != null ? $" class=\"callout {callout}\" callout=\"({callout})\" title=\"{callout}\"" : null;
 
@@ -48,6 +50,9 @@
                 html.Append("<p></p>");         // ensure section not finished with <gallery>
                 html.Append("</content>\n");    // content
                 html.Append("</section>\n");
+
+                isCode = false;
+                sectionStarted = false;
             }
         }
     }

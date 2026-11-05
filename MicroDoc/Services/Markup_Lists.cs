@@ -4,8 +4,11 @@
     {
         private int listLevel = -1;
 
-        static private (int level, string item) TryParseListItem(string line)
+        private (int level, string item) TryParseListItem(string line)
         {
+            if (isCode)
+                return (-1, null);
+
             int spaces = 0;
 
             while (spaces < line.Length && line[spaces] == ' ')
