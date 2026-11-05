@@ -48,12 +48,12 @@
 
             imageName = imageName + imageType;
 
-            this.log(`UploadImage domain: ${domain}, documentId: ${documentId}, imageName: ${imageName}`);
+            docElement.doc.log(`UploadImage domain: ${domain}, documentId: ${documentId}, imageName: ${imageName}`);
 
             // upload image on server
             const response = await service.UploadImage(domain, documentId, imageName, image);
             if (!response.ok) {
-                this.error(format(Loc.Document_UploadImageFailed, docPath), await response.text());
+                docElement.doc.error(format(Loc.Document_UploadImageFailed, docPath), await response.text());
                 return;
             }
 
