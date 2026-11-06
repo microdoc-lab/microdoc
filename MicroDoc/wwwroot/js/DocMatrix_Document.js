@@ -48,11 +48,13 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
                 imageWrapper.classList.add('selected');
 
                 // notify SoftHover
-                imageWrapper.dispatchEvent(new PointerEvent("pointerover", {
+                var arg = new PointerEvent("pointerover", {
                     bubbles: true,
                     cancelable: true,
                     pointerType: "mouse"
-                }));
+                });
+                arg.custom = true;
+                imageWrapper.dispatchEvent(arg);
             }
             return false;
         }

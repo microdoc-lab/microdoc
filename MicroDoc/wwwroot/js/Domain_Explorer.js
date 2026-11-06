@@ -51,9 +51,31 @@
     // close document viewer (with active selection) on ESC
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
-            // skip if modal window opened
-            if (document.querySelector('.explorerHost[style*="display: flex"] .explorer .modal[style*="display: block"]'))
+
+            var explorer = window.domain.GetActiveExplorer();
+            if (!explorer)
                 return;
+
+            // skip if modal window opened
+            if (explorer.docMatrix().isModalOpened()) {
+                // close Image preview
+                var imageWrapper = explorer.docMatrix().modal().querySelector("gallery imgw.selected.hover");
+                if (imageWrapper) {
+                    // notify SoftHover
+                    var arg = new PointerEvent("pointerout", {
+                        bubbles: true,
+                        cancelable: true,
+                        pointerType: "mouse"
+                    });
+                    arg.custom = true;
+                    imageWrapper.dispatchEvent(arg);
+
+                    e.stopImmediatePropagation();
+                    return;
+                }
+
+                return;
+            }
 
             // current document viewer can be determined by having selection in it
             const selection = window.getSelection();
@@ -69,6 +91,20 @@
             const docElement = viewer.closest(".doc");
             if (!docElement)
                 return;
+
+            // close Image preview
+            var imageWrapper = docElement.querySelector("gallery imgw.selected.hover");
+            if (imageWrapper) {
+                // notify SoftHover
+                var arg = new PointerEvent("pointerout", {
+                    bubbles: true,
+                    cancelable: true,
+                    pointerType: "mouse"
+                });
+                arg.custom = true;
+                imageWrapper.dispatchEvent(arg);
+                return;
+            }
 
             // close document
             docElement.doc.CloseDocument();
@@ -161,6 +197,11 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
 
     // activate required document
     await explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+}
+
+Domain.prototype.GetActiveExplorer = function () {
+    const explorerElement = document.querySelector('.explorerHost[style*="display: flex"] .explorer');
+    return explorerElement ? explorerElement.explorer : null;
 }
 
 Domain.prototype.ActivateExplorer = function (element) {

@@ -48,6 +48,7 @@ DocMatrix.prototype.ApplyChanges = async function (change) {
 DocMatrix.prototype.explorer = function () { return this.element.closest(".explorer").explorer; }
 DocMatrix.prototype.overlay = function () { return this.element.closest(".explorer").querySelector(".overlay"); }
 DocMatrix.prototype.modal = function () { return this.element.closest(".explorer").querySelector(".modal"); }
+DocMatrix.prototype.isModalOpened = function () { return this.element.closest(".explorer").querySelector(".modal").style.display == "block"; }
 DocMatrix.prototype.printContainer = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .scroll-area"); }
 DocMatrix.prototype.printTitle = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .toolbar .title"); }
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }

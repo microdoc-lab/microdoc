@@ -58,7 +58,7 @@ function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
                 activate(element);
                 enterTimer = null;
                 pendingEnter = null;
-            }, delayEnter);
+            }, event.custom ? 0 : delayEnter);
         }
     });
 
@@ -93,7 +93,7 @@ function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
                 activeElement = null;
 
             leaveTimers.delete(element);
-        }, delayLeave);
+        }, event.custom ? 0 : delayLeave);
 
         leaveTimers.set(element, timer);
     });

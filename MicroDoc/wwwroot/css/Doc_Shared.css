@@ -112,13 +112,12 @@
     transform-origin: bottom left;
 }
 
-.doc gallery imgw.selected img, doc gallery imgw.selected img {
+.doc gallery imgw.selected imgc, doc gallery imgw.selected imgc {
     outline: 1px solid gray;
 }
 
 .doc gallery imgw.hover img, doc gallery imgw.hover img {
     transform: scale(15);
-    outline: none;
 }
 
 .img-preview {
