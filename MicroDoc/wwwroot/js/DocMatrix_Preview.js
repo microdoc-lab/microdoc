@@ -102,6 +102,15 @@
             // detect clicked heading index
             const headings = docInCell.querySelectorAll("h1, h2, h3");
             headingIndex = [...headings].indexOf(heading);
+
+            // notify SoftHover
+            var arg = new PointerEvent("pointerout", {
+                bubbles: true,
+                cancelable: true,
+                pointerType: "mouse"
+            });
+            arg.custom = true;
+            section.dispatchEvent(arg);
         }
 
         // open document in overlay
