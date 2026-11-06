@@ -7,10 +7,14 @@
     font-size: smaller;
     font-weight: bold;
     background: var(--doc-background);
-    border: 1px solid #ccc;
+    outline: 1px solid #ccc;
     border-radius: 5px;
     cursor: pointer;
     pointer-events: initial;
+}
+
+.explorer .overlay .doc.selected .label {
+    outline: 3px solid blue;
 }
 
 .explorer .overlay .doc .label:hover {
