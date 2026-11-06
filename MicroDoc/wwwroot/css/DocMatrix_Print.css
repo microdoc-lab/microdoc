@@ -31,13 +31,13 @@
 /* TOC */
 .explorer .modal doc :is(h1,h2,h3)::after {
     position: absolute;
-    top: calc(var(--index) * 24px);
+    top: calc(var(--index) * 13px);
     content: attr(content);
     cursor: pointer;
 
     padding-left: 4px;
 
-    font-size: 16px; 
+    font-size: 14px; 
     font-weight: normal; 
 
     white-space: nowrap;
