@@ -1,6 +1,7 @@
 ﻿/* Doc */
-.docmatrix .grid td doc:has(section h2) { padding-right: 4px; }
-.docmatrix .grid td doc:has(section h3) { padding-right: 8px; }
+.docmatrix .grid td doc:has(section h1) { padding-right: 4px; }
+.docmatrix .grid td doc:has(section h2) { padding-right: 8px; }
+.docmatrix .grid td doc:has(section h3) { padding-right: 12px; }
 
 /* Section */
 .docmatrix .grid td doc section {
@@ -8,8 +9,9 @@
     cursor: default;
 }
 
-.docmatrix .grid td doc section:has(h2) { left: 4px; }
-.docmatrix .grid td doc section:has(h3) { left: 8px; }
+.docmatrix .grid td doc section:has(h1) { left: 4px; }
+.docmatrix .grid td doc section:has(h2) { left: 8px; }
+.docmatrix .grid td doc section:has(h3) { left: 12px; }
 
 /* Headings */
 .docmatrix .grid td doc :is(h1, h2, h3) {
