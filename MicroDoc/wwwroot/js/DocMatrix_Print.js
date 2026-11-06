@@ -96,6 +96,9 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
     // remove hover style
     container.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
 
+    // remove selected style
+    container.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+
     // remove preview class
     container.querySelectorAll("doc").forEach(doc => {
         doc.classList.remove("preview");
@@ -155,6 +158,9 @@ DocMatrix.prototype.OpenPrintDocument = function (docElement) {
 
     // remove hover style
     container.querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
+
+    // remove selected style
+    container.querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
 
     // number Headings
     var headingIndex = 0;

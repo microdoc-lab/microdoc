@@ -153,6 +153,9 @@ DocMatrix.prototype.OpenDocument = function (domain, documentId, documentContent
     // remove hover style
     docElement.querySelector(".viewer").querySelectorAll(".hover").forEach(el => el.classList.remove("hover"));
 
+    // remove selected style
+    docElement.querySelector(".viewer").querySelectorAll(".selected").forEach(el => el.classList.remove("selected"));
+
     // setup client component
     var options = {};
     const doc = new Doc(docElement, options);
