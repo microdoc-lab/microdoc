@@ -10,7 +10,7 @@
             if (!docMatrix.isModalOpened())
                 return;
 
-            if (this.isModalBackground())
+            if (docMatrix.isModalBackground())
                 return;
 
             e.preventDefault();

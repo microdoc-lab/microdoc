@@ -82,6 +82,12 @@
     pointer-events: none;
 }
 
+/* Modal effect on Print buttons */
+.explorer:has(.modal[style*="display: block"]) .disable-modal {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
 /* Tag Tree */
 .explorer .tree-panel {
     --color: var(--tree-background);
