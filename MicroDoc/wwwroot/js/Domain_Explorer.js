@@ -58,8 +58,8 @@
 
             // skip if modal window opened
             if (explorer.docMatrix().isModalOpened()) {
-                // close Image preview
-                var imageWrapper = explorer.docMatrix().modal().querySelector("gallery imgw.selected.hover");
+                // try close Image preview
+                const imageWrapper = explorer.docMatrix().modal().querySelector("gallery imgw.selected.hover");
                 if (imageWrapper) {
                     // notify SoftHover
                     var arg = new PointerEvent("pointerout", {
@@ -74,6 +74,34 @@
                     return;
                 }
 
+                return;
+            }
+
+            // try close Grid
+            const grid = explorer.element.querySelector(".grid.hover");
+            if (grid) {
+                // notify SoftHover
+                var arg = new PointerEvent("pointerout", {
+                    bubbles: true,
+                    cancelable: true,
+                    pointerType: "mouse"
+                });
+                arg.custom = true;
+                grid.dispatchEvent(arg);
+                return;
+            }
+
+            // try close Tree
+            const tree = explorer.element.querySelector(".tag-tree.hover");
+            if (tree) {
+                // notify SoftHover
+                var arg = new PointerEvent("pointerout", {
+                    bubbles: true,
+                    cancelable: true,
+                    pointerType: "mouse"
+                });
+                arg.custom = true;
+                tree.dispatchEvent(arg);
                 return;
             }
 
@@ -92,8 +120,8 @@
             if (!docElement)
                 return;
 
-            // close Image preview
-            var imageWrapper = docElement.querySelector("gallery imgw.selected.hover");
+            // try close Image preview
+            const imageWrapper = docElement.querySelector("gallery imgw.selected.hover");
             if (imageWrapper) {
                 // notify SoftHover
                 var arg = new PointerEvent("pointerout", {

@@ -106,6 +106,15 @@
 
         // open document in overlay
         this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
+
+        // notify SoftHover
+        var arg = new PointerEvent("pointerout", {
+            bubbles: true,
+            cancelable: true,
+            pointerType: "mouse"
+        });
+        arg.custom = true;
+        grid.dispatchEvent(arg);
     });
 }
 
