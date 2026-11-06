@@ -4,9 +4,23 @@
     {
         private bool tableStarted;
 
-        private static string[] ParseTableCells(string line)
+        private string[] ParseTableCells(string line)
         {
-            return line.Split('|');
+            if (isCode)
+                return [];
+
+            var parts = line.Split('|');
+
+            if (parts.Length < 3)
+                return [];
+
+            if (parts.First().Trim() != string.Empty)
+                return [];
+
+            if (parts.Last().Trim() != string.Empty)
+                return [];
+
+            return parts;
         }
 
         private static IEnumerable<(string Text, int Colspan)> ParseRowColspans(string[] cells)
