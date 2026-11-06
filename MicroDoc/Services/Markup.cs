@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Net;
+using System.Text;
 
 namespace MicroDoc.Services
 {
@@ -25,7 +26,9 @@ namespace MicroDoc.Services
             listLevel = -1;
             imageGalleryStarted = false;
 
-            var lines = text.Replace("\r\n", "\n").Split('\n');
+            var lines = text.Replace("\r\n", "\n").Split('\n')
+                .Select(WebUtility.HtmlEncode)
+                .ToArray();
 
             foreach (var line in lines)
             {
