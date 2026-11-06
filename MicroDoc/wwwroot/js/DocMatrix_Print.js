@@ -7,7 +7,10 @@
     // close print preview on ESC
     document.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
-            if (!docMatrix.modalOpened)
+            if (!docMatrix.isModalOpened())
+                return;
+
+            if (this.isModalBackground())
                 return;
 
             e.preventDefault();
@@ -68,6 +71,12 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitPrint);
 
 DocMatrix.prototype.OpenPrintColumn = function (document) {
+    if (this.isModalOpened())
+        return;
+
+    if (this.isModalBackground())
+        return;
+
     const domain = this.domain;
 
     this.log(`OpenPrintColumn domain: ${domain}, document: ${document}`);
@@ -120,12 +129,17 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
 
     AdjustImageGalleryPositionAndVisibility(container);
 
-    this.modalOpened = true;
-
     this.explorer().OnColumnPrintDialogOpened(document);
+    modal.restoreCallback = () => this.explorer().OnColumnPrintDialogOpened(document);
 }
 
 DocMatrix.prototype.OpenPrintDocument = function (docElement) {
+    if (this.isModalOpened())
+        return;
+
+    if (this.isModalBackground())
+        return;
+
     const domain = this.domain;
     const documentId = docElement.dataset.id;
     const document = docElement.dataset.document;
@@ -177,17 +191,14 @@ DocMatrix.prototype.OpenPrintDocument = function (docElement) {
 
     AdjustImageGalleryPositionAndVisibility(container);
 
-    this.modalOpened = true;
-
     this.explorer().OnDocumentPrintDialogOpened(docElement.doc);
+    modal.restoreCallback = () => this.explorer().OnDocumentPrintDialogOpened(docElement.doc);
 }
-
-DocMatrix.prototype.IsPrintOpened = function () { return this.modalOpened; }
 
 DocMatrix.prototype.ClosePrint = function () {
     this.log("ClosePrint");
 
-    if (!this.modalOpened)
+    if (!this.isModalOpened())
         return;
 
     var modal = this.modal();
@@ -197,7 +208,8 @@ DocMatrix.prototype.ClosePrint = function () {
     container.innerHTML = "";
     modal.style.display = "none";
 
-    this.modalOpened = false;
+    modal.restoreInfo = null;
+    modal.restoreCallback = null;
 
     // activate recent document
     this.explorer().ActivateRecentDocument();
@@ -206,7 +218,7 @@ DocMatrix.prototype.ClosePrint = function () {
 DocMatrix.prototype.CopyPrint = async function () {
     this.log("CopyPrint");
 
-    if (!this.modalOpened)
+    if (!this.isModalOpened())
         return;
 
     var container = this.printContainer();
@@ -217,7 +229,7 @@ DocMatrix.prototype.CopyPrint = async function () {
 DocMatrix.prototype.DialogPrint = async function (event) {
     this.log("DialogPrint");
 
-    if (!this.modalOpened)
+    if (!this.isModalOpened())
         return;
 
     var container = this.printContainer();
@@ -229,7 +241,7 @@ DocMatrix.prototype.DialogPrint = async function (event) {
 DocMatrix.prototype.DialogPrintImages = async function (event) {
     this.log("DialogPrintImages");
 
-    if (!this.modalOpened)
+    if (!this.isModalOpened())
         return;
 
     var container = this.printContainer();

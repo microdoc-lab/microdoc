@@ -49,6 +49,7 @@ DocMatrix.prototype.explorer = function () { return this.element.closest(".explo
 DocMatrix.prototype.overlay = function () { return this.element.closest(".explorer").querySelector(".overlay"); }
 DocMatrix.prototype.modal = function () { return this.element.closest(".explorer").querySelector(".modal"); }
 DocMatrix.prototype.isModalOpened = function () { return this.element.closest(".explorer").querySelector(".modal").style.display == "block"; }
+DocMatrix.prototype.isModalBackground = function () { return this.element.closest(".explorer").querySelector(".modal").classList.contains("background"); }
 DocMatrix.prototype.printContainer = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .scroll-area"); }
 DocMatrix.prototype.printTitle = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .toolbar .title"); }
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
@@ -56,6 +57,7 @@ DocMatrix.prototype.grid = function () { return this.element.querySelector(".gri
 DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(`.grid tr[data-tag="${tag}"]`); }
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
+DocMatrix.prototype.docInReport = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.modal doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 
 DocMatrix.prototype.Reload = async function () {
     await this.Load(this.selectedTag, this.loadDeepLevels);

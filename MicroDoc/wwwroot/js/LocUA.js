@@ -76,6 +76,7 @@
 
     Document_UploadImageFailed: "Зберегти зображення {0} не вдалося",
 
+    Print_EditDocument: "Редагувати виділений документ",
     Print_CopyHTML: "Копіювати HTML",
     Print_Print: "Друкувати",
     Print_PrintImages: "Друкувати зображення",

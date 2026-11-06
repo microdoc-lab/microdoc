@@ -4,6 +4,7 @@
     container-type: inline-size;
 }
 
+/* Overlay */
 .explorer > .overlay {
     position: absolute;
     left: 0px;
@@ -15,6 +16,7 @@
     font-size: 0px;
 }
 
+/* Modal */
 .explorer > .modal {
     position: absolute;
     left: 0px;
@@ -62,12 +64,25 @@
     background: color-mix(in srgb, var(--color) var(--opacity), transparent);
 }
 
+/* Modal toolbar */
 .explorer > .modal .doc-container .toolbar {
     position: absolute;
     right: 18px;
     top: 0px;
 }
 
+/* Modal background */
+.explorer > .modal.background {
+    transform-origin: top right;
+    transition: transform 0.15s ease;
+    transform: scale(0.25);
+}
+
+.explorer > .modal.background .doc-container {
+    pointer-events: none;
+}
+
+/* Tag Tree */
 .explorer .tree-panel {
     --color: var(--tree-background);
     --opacity: 90%;

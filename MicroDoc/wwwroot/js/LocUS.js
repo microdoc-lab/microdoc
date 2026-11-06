@@ -76,6 +76,7 @@
 
     Document_UploadImageFailed: "Upload image {0} failed",
 
+    Print_EditDocument: "Edit selected Document",
     Print_CopyHTML: "Copy HTML",
     Print_Print: "Print",
     Print_PrintImages: "Print Images",

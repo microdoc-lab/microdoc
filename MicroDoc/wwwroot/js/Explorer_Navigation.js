@@ -48,7 +48,7 @@ Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
 
     var docMatrix = this.docMatrix();
 
-    if (docMatrix.IsPrintOpened())
+    if (docMatrix.isModalOpened() && !docMatrix.isModalBackground())
         docMatrix.ClosePrint();
 
     if (!documentId) {
