@@ -39,6 +39,8 @@ DocMatrix.prototype.HandleDocChanges = async function (change) {
                         txtEditor.value = change.content;
 
                         docViewer.SelectAndScroll(headingIndexView);
+                        AdjustImageGalleryPositionAndVisibility(docViewer);
+                        docElement.doc.TurnCodeBlocksContentEditable();
                     }
                 } else {
                     if (mode == "edit") {   // local edit
@@ -49,7 +51,8 @@ DocMatrix.prototype.HandleDocChanges = async function (change) {
                         txtEditor.AdjustHeight(txtEditor);
                     } else {                // local view
                         docElement.dataset.content = change.content;            // update viewer, no focus logic (in toggle)
-                        docViewer.innerHTML = change.html;
+                        if (!change.contentEditable)
+                            docViewer.innerHTML = change.html;
                         txtEditor.value = change.content;
                     }
                 }

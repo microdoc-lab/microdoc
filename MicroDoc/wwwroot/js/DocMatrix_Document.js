@@ -59,6 +59,9 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
             return false;
         }
 
+        if (event.target.isContentEditable)
+            return;
+
         // find & check the section
         const section = event.target.closest("section");
         if (!section)
@@ -83,6 +86,8 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
                 // scroll to clicked heading (print preview TOC)
                 if (scrollOnSelect && !IsFullyVisibleAndAboveMiddle(heading, container))
                     heading.scrollIntoView({ behavior: "auto", block: "start" });
+
+                this.modal().scrollTo({ behavior: 'auto', top: 0 });
 
                 // add selected class to heading
                 container.querySelectorAll("h1, h2, h3").forEach(heading => heading.classList.remove('selected'));

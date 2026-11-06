@@ -241,6 +241,7 @@ Doc.prototype.ToggleMode = async function () {
         docViewer.SelectAndScroll(headingIndex);
 
         AdjustImageGalleryPositionAndVisibility(docViewer);
+        docElement.doc.TurnCodeBlocksContentEditable();
     }
 
     docElement.doc.PositionToolbar();
