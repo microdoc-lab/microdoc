@@ -6,12 +6,6 @@ namespace MicroDoc.Services
     {
         private static string FormatText(string text)
         {
-            // /link:[tag] [tag] document.txt
-            text = FormatLinks(text);
-
-            // https://example.com/page?id=10
-            text = FormatInternetLinks(text);
-
             // Bold: *text*
             text = Regex.Replace(
                 text,
@@ -33,8 +27,14 @@ namespace MicroDoc.Services
             // Status: /status/
             text = Regex.Replace(
                 text,
-                @"(?<!\w)/([^/\s]+)/(?!\w)",
+                @"(?<![\w/:])/([^/\s]+)/(?![\w/])",
                 "<status class=\"$1\">$1</status>");
+
+            // /link:[tag] [tag] document.txt
+            text = FormatLinks(text);
+
+            // https://example.com/page?id=10
+            text = FormatInternetLinks(text);
 
             return text;
         }
