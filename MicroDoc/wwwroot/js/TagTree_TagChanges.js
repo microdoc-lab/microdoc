@@ -83,8 +83,9 @@ TagTree.prototype.RenameTag = async function () {
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
+    var tagName = DocParser.TagName(selectedTag);
 
-    var newTagName = prompt(format(Loc.TagTree_RenamePrompt, tagPath));
+    var newTagName = prompt(format(Loc.TagTree_RenamePrompt, tagPath), tagName);
 
     if (newTagName == null)
         return;
@@ -97,7 +98,7 @@ TagTree.prototype.RenameTag = async function () {
     this.log(`RenameTag selectedTag: ${selectedTag}, newTagName: ${newTagName}`);
 
     // Rename Tag
-    const response = await this.service.Rename(domain, selectedTag, newTagName);
+    const response = await this.service.RenameTag(domain, selectedTag, newTagName);
     if (!response.ok) {
         this.error(format(Loc.TagTree_RenameFailed, tagPath, newTagName), await response.text());
         return;
@@ -114,8 +115,9 @@ TagTree.prototype.MoveTag = async function () {
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
+    var tagParent = DocParser.TagParent(selectedTag);
 
-    var targetTag = prompt(format(Loc.TagTree_MovePrompt, tagPath));
+    var targetTag = prompt(format(Loc.TagTree_MovePrompt, tagPath), tagParent);
 
     if (targetTag == null)
         return;

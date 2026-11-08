@@ -115,7 +115,14 @@ namespace MicroDoc.Services
                 Directory.Move(source, newPath);
             }
 
-            UpdateView(domain, parentTag);
+            UpdateView(domain, parentTag, view => {
+                var tag = view.Tags.FirstOrDefault(t => t.Tag == name);
+                if (tag == null)
+                    return ErrorCode.TagNotFound;
+
+                tag.Tag = newTagName;
+                return ErrorCode.Ok;
+            });
 
             if (_domainOptions.Find(domain).TrackTagMoves)
                 _tagMoveService.Move(domain, selectedTag, newTag);
@@ -250,20 +257,26 @@ namespace MicroDoc.Services
         private ErrorCode UpdateView(string domain, string tagId, Func<TagView, ErrorCode> modifyView = null)
         {
             string rootFolder = _domainOptions.Find(domain).RootFolder;
-            var status = ErrorCode.Ok;
 
             using (_lockManager.Write(domain, DocumentParser.GetDocumentId(tagId, ViewFileName)))
             {
-                TagView view = BuildView(domain, tagId);
+                // Load view if modification function provided, otherwise - rebuild view
+                var view = modifyView != null 
+                    ? LoadView(domain, tagId) 
+                    : BuildView(domain, tagId);
 
+                var status = ErrorCode.Ok;
+
+                // apply modification function
                 if (modifyView != null)
                     status = modifyView(view);
 
-                if (status != ErrorCode.Ok)
-                    return status;
-
+                // save view anyway
                 var viewPath = Path.Combine(rootFolder, tagId, ViewFileName);
                 TagViewLoader.SaveTagsToFile(viewPath, view);
+
+                if (status != ErrorCode.Ok)
+                    return status;
             }
 
             return ErrorCode.Ok;

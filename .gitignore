@@ -13,8 +13,8 @@ secrets
 microdoc.exe
 microdoc.zip
 microdoc.doc
-test.doc
 book.doc
+renovation.doc
 
 appsettings.Development.json
 DomainOptions.Development.ini

@@ -40,6 +40,11 @@ DocParser.TagParent = function (tag) {
     return parentTag;
 }
 
+DocParser.TagName = function (tag) {
+    var tags = tag.split('/');
+    return tags.pop();
+}
+
 DocParser.DocTagPath = function (documentId) {
     var tags = documentId.split('/');
     tags.pop();
