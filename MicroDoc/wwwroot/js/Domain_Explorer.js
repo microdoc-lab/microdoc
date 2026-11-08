@@ -188,6 +188,7 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
     // create explorer 
     element = document.createElement("div");
     element.id = explorerId;
+    element.className = "explorer";
 
     // add component to DOM
     host.appendChild(element);
@@ -204,7 +205,11 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
     explorer.loadDeepLevels = explorer.cookieState.deep ?? false;
 
     // load explorer content
-    await explorer.Reload();
+    var result = await explorer.Reload();
+    if (!result) {
+        host.remove();
+        return;
+    }
 
     // init TagTree search
     if (explorer.cookieState.search)
