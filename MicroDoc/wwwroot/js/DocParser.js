@@ -126,3 +126,41 @@ DocParser.ParseCookieGridFilterUrl = function (value) {
     });
 }
 
+DocParser.SplitDocumentIntoSections = function(document) {
+    const lines = document.split('\n');
+
+    const sections = [];
+    var section = null;
+
+    lines.forEach(line => {
+        if (/^#{1,3}\s/.test(line) || !section) {
+            if (section)
+                sections.push(section);
+
+            section = [];
+        }
+
+        section.push(line);
+    });
+
+    if (section)
+        sections.push(section);
+
+    return sections;
+}
+
+DocParser.ReplaceDocumentSection = function(document, headingIndex, newContent) {
+    // split document on sections
+    const sections = DocParser.SplitDocumentIntoSections(document);
+
+    // replace section
+    return sections.map((s, i) => {
+        if (i == headingIndex && /^#{1,3}\s/.test(s[0]))
+            return s[0] + '\n' + newContent;
+
+        if (i == headingIndex)
+            return newContent;
+
+        return s.join('\n');
+    }).join('\n');
+}

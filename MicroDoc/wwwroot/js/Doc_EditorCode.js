@@ -2,7 +2,6 @@
     this.debug('InitEditorCode');
 
     const docViewer = this.docViewer();
-    const txtEditor = this.txtEditor();
 
     // accept Tab in contentEditable
     docViewer.addEventListener("keydown", e => {
@@ -32,7 +31,7 @@
             this.log(`UpdateEditableSection domain: ${domain}, documentId: ${documentId}, headingIndex: ${headingIndex}`);
 
             // replace document section
-            content = replaceSection(content, headingIndex, newSection);
+            content = DocParser.ReplaceDocumentSection(content, headingIndex, newSection);
 
             var docPath = DocParser.DocPath(documentId);
 
@@ -53,45 +52,6 @@
             e.target.dataset.content = newSection;
         }
     });
-
-    function replaceSection(document, headingIndex, newContent) {
-        // split document on sections
-        const sections = splitDocumentOnSections(document);
-
-        // replace section
-        return sections.map((s, i) => {
-            if (i == headingIndex && /^#{1,3}\s/.test(s[0]))
-                return s[0] + '\n' + newContent;
-
-            if (i == headingIndex)
-                return newContent;
-
-            return s.join('\n');
-        }).join('\n');
-    }
-
-    function splitDocumentOnSections(document) {
-        const lines = document.split('\n');
-
-        const sections = [];
-        var section = null;
-
-        lines.forEach(line => {
-            if (/^#{1,3}\s/.test(line) || !section) {
-                if (section)
-                    sections.push(section);
-
-                section = [];
-            }
-
-            section.push(line);
-        });
-
-        if (section)
-            sections.push(section);
-
-        return sections;
-    }
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitEditorCode);
