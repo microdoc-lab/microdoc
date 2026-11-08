@@ -72,15 +72,36 @@ namespace MicroDoc.Services
 
         private static void InitOptions(DomainOptions options) 
         {
-            // Init root folder
+            if (options.Domains == null)
+                options.Domains = [];
+
+            if (options.Users == null)
+                options.Users = [];
+
             foreach (var domain in options.Domains)
+            {
+                // Init root folder
                 domain.RootFolder = ResolvePath(domain.RootFolder);
 
+                if (domain.Documents == null)
+                    domain.Documents = [];
+
+                if (domain.DocumentOptions == null)
+                    domain.DocumentOptions = [];
+            }
+
+            // Init user documents
             foreach (var user in options.Users.Where(u => !string.IsNullOrWhiteSpace(u.Domain) && u.Document == "*"))
             {
                 var domain = options.Find(user.Domain);
                 user.Documents = domain.KnownDocuments();
                 user.Document = null;
+            }
+
+            foreach (var user in options.Users.Where(u => !string.IsNullOrWhiteSpace(u.Domain)))
+            {
+                if (user.Documents == null)
+                    user.Documents = [];
             }
         }
 
