@@ -57,9 +57,13 @@ function LocalizeElement(element) {
     });
 }
 
-function LocalizeError(errorCode) {
+function LocalizeError(error) {
+    const index = error.indexOf('\n');
+    const errorCode = index === -1 ? error : error.substring(0, index);
+    const errorDetails = index === -1 ? "" : error.substring(index);
+
     const value = Loc["ErrorCode_" + errorCode];
-    return value ?? "*" + "ErrorCode_" + errorCode + "*";
+    return (value ? value : errorCode) + errorDetails;
 }
 
 function format(template, ...args) {

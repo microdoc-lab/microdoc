@@ -58,8 +58,7 @@ app.UseExceptionHandler(errorApp =>
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Response.ContentType = "text/plain; charset=utf-8";
 
-        await context.Response.WriteAsync(
-            "An unexpected server error occurred.");
+        await context.Response.WriteAsync("Exception");
 
         if (app.Environment.IsDevelopment())
         {
