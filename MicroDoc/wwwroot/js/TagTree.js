@@ -47,7 +47,7 @@ TagTree.prototype.ApplyChanges = async function (change) {
 TagTree.prototype.explorer = function () { return this.element.closest(".explorer").explorer; }
 
 TagTree.prototype.Reload = async function () {
-    await this.Load(this.selectedTag);
+    return await this.Load(this.selectedTag);
 }
 
 TagTree.prototype.Load = async function (selectedTag, toExpand) {
@@ -64,7 +64,7 @@ TagTree.prototype.Load = async function (selectedTag, toExpand) {
     const response = await this.service.TagTree(this.id, this.domain, this.selectedTag);
     if (!response.ok) {
         this.error(TagTree_LoadFailed, await response.text());
-        return;
+        return false;
     }
 
     const parentElement = this.element.parentElement;
@@ -73,6 +73,8 @@ TagTree.prototype.Load = async function (selectedTag, toExpand) {
     // restore state
     this.ExpandTag(toExpand ?? expandedTag);
     this.Search(searchText);
+
+    return true;
 }
 
 // Service methods

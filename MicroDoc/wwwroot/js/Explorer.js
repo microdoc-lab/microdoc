@@ -55,7 +55,7 @@ Explorer.prototype.tagTree = function () { return document.getElementById(this.t
 Explorer.prototype.docMatrix = function () { return document.getElementById(this.docMatrixId).docMatrix; }
 
 Explorer.prototype.Reload = async function () {
-    await this.Load(this.selectedTag);
+    return await this.Load(this.selectedTag);
 }
 
 Explorer.prototype.Load = async function (selectedTag) {
@@ -68,11 +68,13 @@ Explorer.prototype.Load = async function (selectedTag) {
     const response = await this.service.Explorer(this.id, this.domain, this.selectedTag, this.loadDeepLevels);
     if (!response.ok) {
         this.error(Loc.Explorer_LoadFailed, await response.text());
-        return;
+        return false;
     }
 
     const parentElement = this.element.parentElement;
     ReplaceInnerHtml(parentElement, await response.text());
+
+    return true;
 }
 
 // Service methods

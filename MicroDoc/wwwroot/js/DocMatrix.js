@@ -60,7 +60,7 @@ DocMatrix.prototype.docInCell = function (domain, documentId) { return this.elem
 DocMatrix.prototype.docInReport = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.modal doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 
 DocMatrix.prototype.Reload = async function () {
-    await this.Load(this.selectedTag, this.loadDeepLevels);
+    return await this.Load(this.selectedTag, this.loadDeepLevels);
 }
 
 DocMatrix.prototype.Load = async function (selectedTag, loadDeepLevels) {
@@ -78,7 +78,7 @@ DocMatrix.prototype.Load = async function (selectedTag, loadDeepLevels) {
     const response = await this.service.DocMatrix(this.id, this.domain, this.selectedTag, this.loadDeepLevels);
     if (!response.ok) {
         this.error(Loc.DocMatrix_LoadFailed, await response.text());
-        return;
+        return false;
     }
 
     const parentElement = this.element.parentElement;
@@ -86,6 +86,8 @@ DocMatrix.prototype.Load = async function (selectedTag, loadDeepLevels) {
 
     // restore state
     this.Search(searchStrings);
+
+    return true;
 }
 
 // Service methods
