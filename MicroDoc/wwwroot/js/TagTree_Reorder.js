@@ -1,7 +1,7 @@
 ﻿TagTree.prototype.InitDragNDropReorder = function (options) {
     this.debug('InitDragNDropReorder');
 
-    let draggedNode = null;
+    this.draggedNode = null;
     this.element.querySelectorAll(".title").forEach(node => {
         node.draggable = true;
 
@@ -11,25 +11,41 @@
                 return;
             }
 
-            draggedNode = node;
+            this.draggedNode = node;
             e.dataTransfer.effectAllowed = "move";
         });
 
         node.addEventListener("dragover", e => {
+            e.stopPropagation();
+
+            if (!this.draggedNode) return;
+
+            // Prevent moving tag into itself
+            if (this.draggedNode === node) return;
+
+            // Only allow drop within the same parent
+            if (this.draggedNode.closest(".tag-list") !== node.closest(".tag-list")) return;
+
             e.preventDefault();
             e.dataTransfer.dropEffect = "move";
         });
 
         node.addEventListener("drop", async e => {
+            e.stopPropagation();
             e.preventDefault();
-            const targetNode = node;
+
+            if (!this.draggedNode) return;
+
+            // Prevent moving tag into itself
+            if (this.draggedNode === node) return;
 
             // Only allow drop within the same parent
-            if (!draggedNode || draggedNode === targetNode || draggedNode.closest(".tag-list") !== targetNode.closest(".tag-list")) return;
+            if (this.draggedNode.closest(".tag-list") !== node.closest(".tag-list")) return;
 
-            const sender = draggedNode.closest(".tag");
-            const target = targetNode.closest(".tag");
+            const sender = this.draggedNode.closest(".tag");
+            const target = node.closest(".tag");
 
+            // Extract tag context
             const domain = sender.dataset.domain;
             const parentTag = sender.dataset.tagid;
             const tagName = sender.dataset.tag;
@@ -37,6 +53,7 @@
 
             this.log(`SwapTags parentTag: ${parentTag}, tagName: ${tagName}, targetTagName: ${targetTagName}`);
 
+            // Reorder Tags
             const response = await this.service.SwapTags(domain, parentTag, tagName, targetTagName);
             if (!response.ok) {
                 console.error(Loc.TagTree_SwapTagsFailed, await response.text());
@@ -46,6 +63,10 @@
             // PublishChanges
             var data = await response.json();
             await window.domain.PublishChanges(data.changes);
+        });
+
+        node.addEventListener("dragend", () => {
+            this.draggedNode = null;
         });
     });
 }
