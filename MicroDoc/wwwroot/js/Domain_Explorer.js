@@ -56,83 +56,14 @@
             if (!explorer)
                 return;
 
-            // skip if modal window opened
-            if (explorer.docMatrix().isModalOpened()) {
-                // try close Image preview
-                const imageWrapper = explorer.docMatrix().modal().querySelector("gallery imgw.selected.hover");
-                if (imageWrapper) {
-                    // notify SoftHover
-                    var arg = new PointerEvent("pointerout", {
-                        bubbles: true,
-                        cancelable: true,
-                        pointerType: "mouse"
-                    });
-                    arg.custom = true;
-                    imageWrapper.dispatchEvent(arg);
-
-                    e.stopImmediatePropagation();
-                    return;
-                }
-
-                return;
-            }
-
-            // try close Grid
-            const grid = explorer.element.querySelector(".grid.hover");
-            if (grid) {
-                // notify SoftHover
-                var arg = new PointerEvent("pointerout", {
-                    bubbles: true,
-                    cancelable: true,
-                    pointerType: "mouse"
-                });
-                arg.custom = true;
-                grid.dispatchEvent(arg);
-                return;
-            }
-
-            // try close Tree
-            const tree = explorer.element.querySelector(".tag-tree.hover");
-            if (tree) {
-                // notify SoftHover
-                var arg = new PointerEvent("pointerout", {
-                    bubbles: true,
-                    cancelable: true,
-                    pointerType: "mouse"
-                });
-                arg.custom = true;
-                tree.dispatchEvent(arg);
-                return;
-            }
-
-            // current document viewer can be determined by having selection in it
-            const selection = window.getSelection();
-            if (!selection || selection.isCollapsed)
+            // try close soft-hover elements
+            if (explorer.TryCloseSoftHover(e))
                 return;
 
-            // locate and check viewer
-            const viewer = selection.anchorNode.closest(".viewer");
-            if (!viewer)
-                return;
-
-            // locate and check doc
-            const docElement = viewer.closest(".doc");
+            // find active document viewer
+            const docElement = explorer.GetSelectedDocumentViewer();
             if (!docElement)
                 return;
-
-            // try close Image preview
-            const imageWrapper = docElement.querySelector("gallery imgw.selected.hover");
-            if (imageWrapper) {
-                // notify SoftHover
-                var arg = new PointerEvent("pointerout", {
-                    bubbles: true,
-                    cancelable: true,
-                    pointerType: "mouse"
-                });
-                arg.custom = true;
-                imageWrapper.dispatchEvent(arg);
-                return;
-            }
 
             // close document
             docElement.doc.CloseDocument();

@@ -103,27 +103,15 @@
             const headings = docInCell.querySelectorAll("h1, h2, h3");
             headingIndex = [...headings].indexOf(heading);
 
-            // notify SoftHover
-            var arg = new PointerEvent("pointerout", {
-                bubbles: true,
-                cancelable: true,
-                pointerType: "mouse"
-            });
-            arg.custom = true;
-            section.dispatchEvent(arg);
+            // notify SoftHover to collapse section preview
+            pointeroutRaise(section);
         }
 
         // open document in overlay
         this.OpenDocument(domain, documentId, documentContent, documentHtml, headingIndex, (event.ctrlKey || !documentContent) && isInRole("w", domain, documentId) ? "edit" : "view");
 
-        // notify SoftHover
-        var arg = new PointerEvent("pointerout", {
-            bubbles: true,
-            cancelable: true,
-            pointerType: "mouse"
-        });
-        arg.custom = true;
-        grid.dispatchEvent(arg);
+        // notify SoftHover to collapse grid preview
+        pointeroutRaise(grid);
     });
 }
 

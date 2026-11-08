@@ -47,14 +47,8 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
                 container.querySelectorAll("imgw").forEach(imgw => imgw.classList.remove('selected'));
                 imageWrapper.classList.add('selected');
 
-                // notify SoftHover
-                var arg = new PointerEvent("pointerover", {
-                    bubbles: true,
-                    cancelable: true,
-                    pointerType: "mouse"
-                });
-                arg.custom = true;
-                imageWrapper.dispatchEvent(arg);
+                // notify SoftHover to show image preview
+                pointeroverRaise(imageWrapper);
             }
             return false;
         }
