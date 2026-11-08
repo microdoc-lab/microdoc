@@ -14,6 +14,7 @@ microdoc.exe
 microdoc.zip
 microdoc.doc
 test.doc
+book.doc
 
 appsettings.Development.json
 DomainOptions.Development.ini

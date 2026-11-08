@@ -17,6 +17,18 @@ namespace MicroDoc.Services
             _tagMoveService = tagMoveService;
         }
 
+        public ErrorCode ValidateDomainDirectory(string domain)
+        {
+            var domainCfg = _domainOptions.Find(domain);
+            if (domainCfg == null)
+                return ErrorCode.DomainNotFound;
+
+            if (!Directory.Exists(domainCfg.RootFolder))
+                return ErrorCode.DomainDirectoryNotFound;
+
+            return ErrorCode.Ok;
+        }
+
         public List<TagNode> GetTagTree(string domain) => BuildTree(domain, tagId: "", recursive: true, level: 0);
 
         internal List<TagNode> BuildTree(string domain, string tagId, bool recursive, int level)

@@ -4,6 +4,11 @@
     {
         Ok,
 
+        Exception,
+
+        DomainNotFound,
+        DomainDirectoryNotFound,
+
         TagNotFound,
         TagExists,
         RootTag,

@@ -30,7 +30,7 @@ namespace MicroDoc.Services
 
         public Domain[] Domains { get; set; } = [];
 
-        public Domain Find(string name) => Domains.First(d => d.Name == name);
+        public Domain Find(string name) => Domains.FirstOrDefault(d => d.Name == name);
 
         #endregion
 

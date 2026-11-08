@@ -82,6 +82,9 @@
     Print_PrintImages: "Друкувати зображення",
     Print_Close: "Закрити",
 
+    ErrorCode_Exception: "Сталася неочікувана помилка на сервері",
+    ErrorCode_DomainNotFound: "Домен не знайдено",
+    ErrorCode_DomainDirectoryNotFound: "Папку домена не знайдено",
     ErrorCode_TagNotFound: "Тег не знайдено",
     ErrorCode_TagExists: "Тег вже створений",
     ErrorCode_RootTag: "Не дозволено - Кореневий тег",

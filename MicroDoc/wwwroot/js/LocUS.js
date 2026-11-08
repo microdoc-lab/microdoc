@@ -82,6 +82,9 @@
     Print_PrintImages: "Print Images",
     Print_Close: "Close",
 
+    ErrorCode_Exception: "An unexpected server error occurred",
+    ErrorCode_DomainNotFound: "Domain not found",
+    ErrorCode_DomainDirectoryNotFound: "Domain directory not found",
     ErrorCode_TagNotFound: "Tag not found",
     ErrorCode_TagExists: "Tag already exists",
     ErrorCode_RootTag: "Not allowed - Root tag",

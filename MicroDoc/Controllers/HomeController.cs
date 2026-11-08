@@ -52,6 +52,10 @@ namespace MicroDoc.Controllers
             if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
                 return Error(ErrorCode.InvalidParameters);
 
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
+
             var model = LoggingHelper.Execute(_logger, nameof(TagTree), new { clientId, domain, selectedTag }, () =>
                 new TagTreeViewModel
                 {
@@ -76,13 +80,17 @@ namespace MicroDoc.Controllers
             if (!IsValidDomain(domain) || !IsValidTagId(selectedTag) || !IsValidTagName(newTagName))
                 return Error(ErrorCode.InvalidParameters);
 
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
+
             string newTag = null;
 
             var status = LoggingHelper.Execute(_logger, nameof(NewTag), new { domain, selectedTag, newTagName }, () =>
                 _tagService.NewTag(domain, selectedTag, newTagName, out newTag));
 
-            if (status != ErrorCode.Ok)
-                return Error(status);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             var result = new
             {
@@ -107,6 +115,10 @@ namespace MicroDoc.Controllers
 
             if (!IsValidDomain(domain) || !IsValidTagId(selectedTag) || !IsValidTagName(newTagName))
                 return Error(ErrorCode.InvalidParameters);
+
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             string parentTag = null;
             string newTag = null;
@@ -142,6 +154,10 @@ namespace MicroDoc.Controllers
             if (!IsValidDomain(domain) || !IsValidTagId(selectedTag) || !IsValidTagId(targetTag))
                 return Error(ErrorCode.InvalidParameters);
 
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
+
             string parentTag = null;
             string newTag = null;
 
@@ -174,6 +190,10 @@ namespace MicroDoc.Controllers
 
             if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
                 return Error(ErrorCode.InvalidParameters);
+
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             string parentTag = null;
 
@@ -214,6 +234,10 @@ namespace MicroDoc.Controllers
             if (!IsValidDomain(domain) || !IsValidTagId(parentTag) || !IsValidTagName(tagName) || !IsValidTagName(targetTagName))
                 return Error(ErrorCode.InvalidParameters);
 
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
+
             var status = LoggingHelper.Execute(_logger, nameof(SwapTags), new { domain, parentTag, tagName, targetTagName }, () =>
                 _tagService.SwapTags(domain, parentTag, tagName, targetTagName));
 
@@ -246,6 +270,10 @@ namespace MicroDoc.Controllers
             if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
                 return Error(ErrorCode.InvalidParameters);
 
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
+
             var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag }, () =>
                 new DocMatrixViewModel
                 {
@@ -269,6 +297,10 @@ namespace MicroDoc.Controllers
 
             if (!IsValidDomain(domain) || !IsValidTagId(selectedTag))
                 return Error(ErrorCode.InvalidParameters);
+
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag }, () =>
                 new ExplorerViewModel
@@ -304,6 +336,10 @@ namespace MicroDoc.Controllers
 
             if (!IsValidDomain(domain) || !IsValidDocumentId(documentId))
                 return Error(ErrorCode.InvalidParameters);
+
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             DocNode doc = null;
 
@@ -344,6 +380,10 @@ namespace MicroDoc.Controllers
             if (!IsValidDomain(domain) || !IsValidDocumentId(documentId))
                 return Error(ErrorCode.InvalidParameters);
 
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
+
             var status = LoggingHelper.Execute(_logger, nameof(SaveDocument), new { domain, documentId }, () =>
                 _docService.SaveDocument(domain, documentId, content));
             
@@ -372,6 +412,10 @@ namespace MicroDoc.Controllers
 
             if (!IsValidDomain(domain) || !IsValidDocumentId(documentId))
                 return Error(ErrorCode.InvalidParameters);
+
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             var status = LoggingHelper.Execute(_logger, nameof(DeleteDocument), new { domain, documentId }, () =>
                 _docService.DeleteDocument(domain, documentId));
@@ -407,6 +451,10 @@ namespace MicroDoc.Controllers
 
             if (thumbDimension.HasValue && thumbDimension.Value > MaxThumbDimension)
                 return Error(ErrorCode.InvalidParameters);
+
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             string filePath = null;
 
@@ -459,6 +507,10 @@ namespace MicroDoc.Controllers
             if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(Path.GetFileNameWithoutExtension(imageName)))
                 return Error(ErrorCode.InvalidParameters);
 
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
+
             var status = await LoggingHelper.Execute(_logger, nameof(UploadImage), new { domain, documentId, imageName }, async () =>
             {
                 string filePath = _docService.GetImageFilePath(domain, documentId, imageName);
@@ -490,6 +542,10 @@ namespace MicroDoc.Controllers
 
             if (!IsValidDomain(domain))
                 return Error(ErrorCode.InvalidParameters);
+
+            var statusDomain = _tagService.ValidateDomainDirectory(domain);
+            if (statusDomain != ErrorCode.Ok)
+                return Error(statusDomain);
 
             string filePath = null;
 
