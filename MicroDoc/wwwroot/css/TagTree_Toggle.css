@@ -1,5 +1,6 @@
 ﻿/* Prevent wrapping after marker */
 .tag-tree .tag > details > summary {
+    padding-right: 1.2em;
     white-space: nowrap;
 }
 
@@ -27,9 +28,9 @@
 .tag-tree details .popup {
     display: none;
     position: absolute;
-    top: 100%; /* below summary */
-    left: 70px;
-    background: white;
+    top: -11px;
+    left: 90px;
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 10px;
     border: 1px solid #ddd;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);

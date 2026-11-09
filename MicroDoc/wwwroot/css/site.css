@@ -1,3 +1,4 @@
+/* Global Variables */
 :root {
     --tree-background: linen;
     --grid-background: antiquewhite;
@@ -15,8 +16,11 @@
     background-color: var(--selection-background);
 }
 
+/* Html & Body */
 html {
-  font-size: 14px;
+    position: relative;
+    min-height: 100%;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
@@ -25,19 +29,32 @@ html {
   }
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
   overflow: hidden;
 }
 
+/* Nav bar */
+.navbar {
+    z-index: 50;
+}
+
+.navbar-brand {
+    padding-right: .5rem;
+    padding-left: .5rem;
+}
+
+.nav-item a {
+    outline: none;
+    box-shadow: none;
+}
+
+.nav-item .nav-link img {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+
+/* Container & Main */
 .container {
     display: flex;
     flex-direction: row;
@@ -49,10 +66,16 @@ main {
     width: 100%;
 }
 
+/* Footer */
 footer {
     position: sticky;
     bottom: 0;
     z-index: 50;
+}
+
+/* Buttons */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 /* toolbar buttons */
@@ -84,22 +107,8 @@ footer {
     padding-left: 6px;
 }
 
-.navbar {
-    z-index: 50;
-}
-
-.navbar-brand {
-    padding-right: .5rem;
-    padding-left: .5rem;
-}
-
-.nav-item a {
-    outline: none;
-    box-shadow: none;
-}
-
-.nav-item .nav-link img {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
+/* Drag & drop */
+.drop-target {
+    outline: 2px solid gray;
+    border-radius: 4px;
 }

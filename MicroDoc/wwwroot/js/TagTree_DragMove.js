@@ -23,11 +23,18 @@
 
             e.preventDefault();
             e.dataTransfer.dropEffect = "move";
+            list.classList.add("drop-target");
+        });
+
+        list.addEventListener("dragleave", e => {
+            list.classList.remove('drop-target');
         });
 
         list.addEventListener("drop", async e => {
             e.preventDefault();
             e.stopPropagation();
+
+            list.classList.remove('drop-target');
 
             if (!this.draggedNode) return;
 
