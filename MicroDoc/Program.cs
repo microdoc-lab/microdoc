@@ -55,23 +55,29 @@ app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
     {
+        var logger = context.RequestServices
+            .GetRequiredService<ILogger<Program>>();
+
+        var exception = context.Features
+            .Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()
+            ?.Error;
+
+        if (exception != null)
+            logger.LogError(exception,
+                "Unhandled exception processing {Method} {Path}",
+                context.Request.Method,
+                context.Request.Path);
+
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         context.Response.ContentType = "text/plain; charset=utf-8";
 
         await context.Response.WriteAsync("Exception");
 
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() && exception != null)
         {
-            var exception = context.Features
-                .Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()
-                ?.Error;
-            
-            if (exception != null) 
-            {
-                await context.Response.WriteAsync($"\n\n{exception.GetType().FullName}");
-                await context.Response.WriteAsync($"\n{exception.Message}");
-                await context.Response.WriteAsync($"\n{exception.StackTrace}");
-            }
+            await context.Response.WriteAsync($"\n\n{exception.GetType().FullName}");
+            await context.Response.WriteAsync($"\n{exception.Message}");
+            await context.Response.WriteAsync($"\n{exception.StackTrace}");
         }
     });
 });

@@ -48,6 +48,8 @@
 
             imageName = imageName + imageType;
 
+            var docPath = DocParser.DocPath(documentId);
+
             docElement.doc.log(`UploadImage domain: ${domain}, documentId: ${documentId}, imageName: ${imageName}`);
 
             // upload image on server
