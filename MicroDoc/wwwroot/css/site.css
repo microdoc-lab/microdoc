@@ -52,6 +52,7 @@ main {
 footer {
     position: sticky;
     bottom: 0;
+    z-index: 50;
 }
 
 /* toolbar buttons */
@@ -81,6 +82,10 @@ footer {
 .icon-button.separator-before {
     margin-left: 6px;
     padding-left: 6px;
+}
+
+.navbar {
+    z-index: 50;
 }
 
 .navbar-brand {
