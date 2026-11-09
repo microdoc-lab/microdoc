@@ -1,10 +1,22 @@
 ﻿Explorer.prototype.InitSoftHover = function (options) {
     this.debug('InitSoftHover');
 
-    enableSoftHover("tree/grid", `#${this.id} .tree-panel .tag-tree, #${this.id} .docmatrix .grid`, 700, 500);
-    enableSoftHover("grid td", `#${this.id} .docmatrix .grid td`, 300, 600);
-    enableSoftHover("grid td doc", `#${this.id} .docmatrix .grid td:not(.misc) doc section`, 600, 100);
-    enableSoftHover("imgw", `#${this.id} .docmatrix .grid td:not(.misc) doc gallery imgw, #${this.id} .overlay .doc gallery imgw.selected, #${this.id} .modal doc gallery imgw.selected`, 700, 500);
+    enableSoftHover("tree",
+        `#${this.id} .tree-panel .tag-tree .domain.title`, `#${this.id} .tree-panel .tag-tree`, 700, 500);
+
+    enableSoftHover("grid",
+        `#${this.id} .docmatrix .grid tr:nth-child(1)`, `#${this.id} .docmatrix .grid`, 700, 500);
+
+    enableSoftHover("grid td",
+        `#${this.id} .docmatrix .grid td`, null, 300, 600);
+
+    enableSoftHover("grid td doc",
+        `#${this.id} .docmatrix .grid td:not(.misc) doc section`, null, 600, 100);
+
+    enableSoftHover("imgw",
+        `#${this.id} .docmatrix .grid td:not(.misc) doc gallery imgw, ` +
+        `#${this.id} .overlay .doc gallery imgw.selected, ` +
+        `#${this.id} .modal doc gallery imgw.selected`, null, 700, 500);
 }
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitSoftHover);

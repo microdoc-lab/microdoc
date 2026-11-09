@@ -1,8 +1,11 @@
 ﻿// soft hover
-function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
+function enableSoftHover(code, overselector, outselector, delayEnter = 500, delayLeave = 300) {
     let enterTimer = null;
     let pendingEnter = null;
     let activeElement = null;
+
+    if (!outselector)
+        outselector = overselector;
 
     const leaveTimers = new WeakMap();
 
@@ -36,13 +39,17 @@ function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
         if (!(event.target instanceof Element))
             return;
 
-        const element = event.target.closest(selector);
+        const overelement = event.target.closest(overselector);
+        if (!overelement)
+            return;
+
+        const element = event.target.closest(outselector);
         if (!element)
             return;
 
         // Ignore movement within the same matching element.
         if (event.relatedTarget instanceof Node &&
-            element.contains(event.relatedTarget))
+            overelement.contains(event.relatedTarget))
             return;
 
         // console.log(code + " pointerover " + element + " " + delayEnter);
@@ -66,7 +73,7 @@ function enableSoftHover(code, selector, delayEnter = 500, delayLeave = 300) {
         if (!(event.target instanceof Element))
             return;
 
-        const element = event.target.closest(selector);
+        const element = event.target.closest(outselector);
         if (!element)
             return;
 
