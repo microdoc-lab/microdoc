@@ -118,11 +118,11 @@ TagTree.prototype.SwapTags = function (parentTag, tagName, targetTagName) {
 
     if (draggedIndex === -1 || targetIndex === -1) return;
 
-    if (draggedIndex >= targetIndex) {  // Insert before target                    
+    if (draggedIndex >= targetIndex) {      // Insert before target                    
         parentList.insertBefore(sender, target);
-    } else if (target.nextSibling) {    // Insert after target                    
-        parentList.insertBefore(sender, target.nextSibling);
-    } else {                            // Insert last                    
+    } else if (target.nextElementSibling) { // Insert after target                    
+        parentList.insertBefore(sender, target.nextElementSibling);
+    } else {                                // Insert last                    
         parentList.appendChild(sender);
     }
 }

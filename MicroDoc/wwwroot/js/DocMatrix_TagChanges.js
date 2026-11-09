@@ -60,11 +60,30 @@ DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
 
     if (draggedIndex === -1 || targetIndex === -1) return;
 
-    if (draggedIndex >= targetIndex) {  // Insert before target                    
-        parentList.insertBefore(sender, target);
-    } else if (target.nextSibling) {    // Insert after target                    
-        parentList.insertBefore(sender, target.nextSibling);
-    } else {                            // Insert last                    
-        parentList.appendChild(sender);
+    var senderNodes = GetChildNodes(sender);
+    if (draggedIndex >= targetIndex) {          // Insert before target                    
+        senderNodes.forEach(n => parentList.insertBefore(n, target));
+    } else {
+        var targetNodes = GetChildNodes(target);
+        var lastTarget = targetNodes.at(-1);
+        if (lastTarget.nextElementSibling) {    // Insert after target                    
+            const lastTargetSibling = lastTarget.nextElementSibling;
+            senderNodes.forEach(n => parentList.insertBefore(n, lastTargetSibling));
+        } else {                                // Insert last                    
+            senderNodes.forEach(n => parentList.appendChild(n));
+        }
+    }
+
+    function GetChildNodes(parent) {
+        var nodes = [];
+        nodes.push(parent);
+
+        let current = parent.nextElementSibling;
+        while (current && current.dataset.tag.startsWith(parent.dataset.tag + "/")) {
+            nodes.push(current);
+            current = current.nextElementSibling;
+        }
+
+        return nodes;
     }
 }
