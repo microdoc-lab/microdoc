@@ -1,14 +1,28 @@
 ﻿TagTree.prototype.InitDragNDropReorder = function (options) {
     this.debug('InitDragNDropReorder');
 
+    var expandTimer = null;
     this.element.querySelectorAll("summary").forEach(summary => {
         summary.addEventListener('dragenter', e => {
             if (!this.draggedNode) return;
 
             const details = summary.closest('details');
 
-            if (details && !details.classList.contains("empty") && !details.contains(this.draggedNode))
+            if (!details || details.classList.contains("empty") ||
+                details.contains(this.draggedNode) || details.open)
+                return;
+
+            clearTimeout(expandTimer);
+
+            expandTimer = setTimeout(() => {
                 details.open = true;
+                expandTimer = null;
+            }, 800);
+        });
+
+        summary.addEventListener('dragleave', e => {
+            clearTimeout(expandTimer);
+            expandTimer = null;
         });
     });
 
@@ -51,6 +65,9 @@
             e.preventDefault();
 
             node.classList.remove('drop-target');
+
+            clearTimeout(expandTimer);
+            expandTimer = null;
 
             if (!this.draggedNode) return;
 
