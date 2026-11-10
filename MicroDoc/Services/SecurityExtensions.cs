@@ -42,7 +42,7 @@ namespace MicroDoc.Services
         public static IEnumerable<string> AllRoles(this DomainOptions.UserAccess userAccess, DomainOptions domainOptions)
         {
             // process global roles
-            if (string.IsNullOrWhiteSpace(userAccess.Domain) && string.IsNullOrWhiteSpace(userAccess.Document) && (userAccess.Documents?.Length ?? 0) == 0)
+            if (string.IsNullOrWhiteSpace(userAccess.Domain) && (userAccess.Documents?.Length ?? 0) == 0)
                 foreach (var role in userAccess.Roles)
                     yield return $"{role}";
 
@@ -54,7 +54,7 @@ namespace MicroDoc.Services
                 yield break;
 
             // process domain roles
-            if (string.IsNullOrWhiteSpace(userAccess.Document) && (userAccess.Documents?.Length ?? 0) == 0)
+            if ((userAccess.Documents?.Length ?? 0) == 0)
                 foreach (var role in userAccess.Roles)
                     yield return $"{userAccess.Domain}:{role}";
 
@@ -63,10 +63,6 @@ namespace MicroDoc.Services
                 yield break;
 
             // process Document roles
-            if (!string.IsNullOrWhiteSpace(userAccess.Document))
-                foreach (var role in userAccess.Roles)
-                    yield return $"{userAccess.Domain}:{userAccess.Document}:{role}";
-
             if (userAccess.Documents != null)
                 foreach (var document in userAccess.Documents)
                     foreach (var role in userAccess.Roles)

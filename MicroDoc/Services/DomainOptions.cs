@@ -41,7 +41,6 @@ namespace MicroDoc.Services
             public string Email { get; set; } = "";
             public string Roles { get; set; } = "";
             public string Domain { get; set; }
-            public string Document { get; set; }
             public string[] Documents { get; set; }
 
         }

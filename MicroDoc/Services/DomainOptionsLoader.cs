@@ -91,11 +91,10 @@ namespace MicroDoc.Services
             }
 
             // Init user documents
-            foreach (var user in options.Users.Where(u => !string.IsNullOrWhiteSpace(u.Domain) && u.Document == "*"))
+            foreach (var user in options.Users.Where(u => !string.IsNullOrWhiteSpace(u.Domain) && u.Documents != null && u.Documents.All(d => d == "*")))
             {
                 var domain = options.Find(user.Domain);
                 user.Documents = domain.KnownDocuments();
-                user.Document = null;
             }
 
             foreach (var user in options.Users.Where(u => !string.IsNullOrWhiteSpace(u.Domain)))
