@@ -187,6 +187,10 @@ error {
     tab-size: 4;
 }
 
+.doc section.code content p, doc section.code content p {
+    padding-left: 3px;
+}
+
 .doc code, doc code {
     color: #d63384;
     background: #f3f4f6;
