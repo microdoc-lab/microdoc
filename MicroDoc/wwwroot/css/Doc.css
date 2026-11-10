@@ -11,6 +11,7 @@
     border-radius: 5px;
     cursor: pointer;
     pointer-events: initial;
+    white-space: nowrap;
 }
 
 .explorer .overlay .doc.selected .label {
