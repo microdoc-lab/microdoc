@@ -90,23 +90,3 @@ Explorer.prototype.GetSelectedDocumentViewer = function () {
 
     return docElement;
 }
-
-function pointeroverRaise(element) {
-    var arg = new PointerEvent("pointerover", {
-        bubbles: true,
-        cancelable: true,
-        pointerType: "mouse"
-    });
-    arg.custom = true;
-    element.dispatchEvent(arg);
-}
-
-function pointeroutRaise(element) {
-    var arg = new PointerEvent("pointerout", {
-        bubbles: true,
-        cancelable: true,
-        pointerType: "mouse"
-    });
-    arg.custom = true;
-    element.dispatchEvent(arg);
-}

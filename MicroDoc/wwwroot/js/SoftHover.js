@@ -1,5 +1,5 @@
 ﻿// soft hover
-function enableSoftHover(code, overselector, outselector, delayEnter = 500, delayLeave = 300) {
+function enableSoftHover(code, overselector, outselector, overDelay = 500, outDelay = 300) {
     let enterTimer = null;
     let pendingEnter = null;
     let activeElement = null;
@@ -65,7 +65,7 @@ function enableSoftHover(code, overselector, outselector, delayEnter = 500, dela
                 activate(element);
                 enterTimer = null;
                 pendingEnter = null;
-            }, event.custom ? 0 : delayEnter);
+            }, event.custom ? 0 : overDelay);
         }
     });
 
@@ -100,7 +100,7 @@ function enableSoftHover(code, overselector, outselector, delayEnter = 500, dela
                 activeElement = null;
 
             leaveTimers.delete(element);
-        }, event.custom ? 0 : delayLeave);
+        }, event.custom ? 0 : outDelay);
 
         leaveTimers.set(element, timer);
     });
@@ -141,8 +141,28 @@ function enableSoftHover(code, overselector, outselector, delayEnter = 500, dela
                 activeElement = null;
 
             leaveTimers.delete(element);
-        }, event.custom ? 0 : delayLeave);
+        }, event.custom ? 0 : outDelay);
 
         leaveTimers.set(element, timer);
     });
+}
+
+function pointeroverRaise(element) {
+    var arg = new PointerEvent("pointerover", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "mouse"
+    });
+    arg.custom = true;
+    element.dispatchEvent(arg);
+}
+
+function pointeroutRaise(element) {
+    var arg = new PointerEvent("pointerout", {
+        bubbles: true,
+        cancelable: true,
+        pointerType: "mouse"
+    });
+    arg.custom = true;
+    element.dispatchEvent(arg);
 }
