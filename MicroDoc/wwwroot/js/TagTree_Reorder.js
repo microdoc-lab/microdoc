@@ -8,8 +8,7 @@
 
             const details = summary.closest('details');
 
-            if (!details || details.classList.contains("empty") ||
-                details.contains(this.draggedNode) || details.open)
+            if (!details || details.classList.contains("empty") || details.open)
                 return;
 
             clearTimeout(expandTimer);
