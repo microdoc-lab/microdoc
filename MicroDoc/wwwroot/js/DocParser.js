@@ -149,9 +149,21 @@ DocParser.SplitDocumentIntoSections = function(document) {
     return sections;
 }
 
+DocParser.EscapeSectionContent = function (content) {
+    const lines = content.split('\n');
+
+    return lines.map(line => {
+        if (/^#{1,3}\s/.test(line))
+            return "/" + line;
+        return line;
+    }).join('\n');
+}
+
 DocParser.ReplaceDocumentSection = function(document, headingIndex, newContent) {
     // split document on sections
     const sections = DocParser.SplitDocumentIntoSections(document);
+
+    newContent = DocParser.EscapeSectionContent(newContent);
 
     // replace section
     return sections.map((s, i) => {

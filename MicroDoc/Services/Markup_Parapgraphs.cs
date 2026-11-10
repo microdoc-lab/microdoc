@@ -8,9 +8,19 @@ namespace MicroDoc.Services
 
         private void StartParagraph(string line) {
             if (paragraph.Length > 0)
-                paragraph.Append("<br>");
+                paragraph.Append(isCode ? "\n" : "<br>");
+
+            line = UnescapeLine(line);
 
             paragraph.Append(line);
+        }
+
+        private string UnescapeLine(string line)
+        {
+            if (line.StartsWith("/#"))
+                return line.TrimStart('/');
+
+            return line;
         }
 
         private void EndParagraph()

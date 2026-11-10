@@ -5,17 +5,43 @@
 
     // accept Tab in contentEditable
     docViewer.addEventListener("keydown", e => {
-        if (e.key === "Tab" && !e.shiftKey && !e.ctrlKey && !e.altKey && e.target.isContentEditable) {
-            e.preventDefault();
+        if (e.key !== "Tab" || !e.target.isContentEditable ||
+            e.ctrlKey || e.altKey || e.metaKey)
+            return;
 
-            e.preventDefault(); // Stop focus from moving out of the element
+        e.preventDefault();
 
+        if (!e.shiftKey) {
             document.execCommand("insertText", false, "\t");
+            return;
+        }
+
+        const selection = window.getSelection();
+
+        if (!selection.isCollapsed || !selection.rangeCount)
+            return;
+
+        const range = selection.getRangeAt(0);
+        const node = range.startContainer;
+
+        if (node.nodeType !== Node.TEXT_NODE || range.startOffset === 0)
+            return;
+
+        const offset = range.startOffset;
+        const text = node.textContent;
+
+        if (text[offset - 1] === "\t") {
+            range.setStart(node, offset - 1);
+            range.deleteContents();
+        }
+        else if (text.substring(Math.max(0, offset - 2), offset) === "  ") {
+            range.setStart(node, offset - 2);
+            range.deleteContents();
         }
     });
 
     docViewer.addEventListener("focusout", async e => {
-        if (e.target.contentEditable == "true") {
+        if (e.target.isContentEditable) {
             const newSection = e.target.innerText;
 
             if (newSection == e.target.dataset.content)
@@ -68,7 +94,7 @@ Doc.prototype.TurnCodeBlocksContentEditable = function () {
         if (content.firstElementChild && content.firstElementChild.tagName.toLowerCase() === "p") {
             const p = content.firstElementChild;
             if (p.closest("section").classList.contains("code")) {
-                p.contentEditable = true;
+                p.contentEditable = "plaintext-only";
                 p.setAttribute("headingindex", index);
                 p.dataset.content = p.innerText;
             }
