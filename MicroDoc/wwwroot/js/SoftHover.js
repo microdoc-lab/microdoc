@@ -104,4 +104,45 @@ function enableSoftHover(code, overselector, outselector, delayEnter = 500, dela
 
         leaveTimers.set(element, timer);
     });
+
+    if (overselector == outselector)
+        return;
+
+    document.addEventListener("pointerout", event => {
+        if (!(event.target instanceof Element))
+            return;
+
+        const overelement = event.target.closest(overselector);
+        if (!overelement)
+            return;
+
+        const element = overelement.closest(outselector);
+
+        // Ignore movement within the same matching element.
+        if (event.relatedTarget instanceof Node &&
+            overelement.contains(event.relatedTarget))
+            return;
+
+        // console.log(code + " pointerout " + element + " " + delayLeave);
+
+        if (pendingEnter === element)
+            cancelEnter();
+
+        // Only active elements need delayed removal.
+        if (activeElement !== element)
+            return;
+
+        cancelLeave(element);
+
+        const timer = setTimeout(() => {
+            element.classList.remove("hover");
+
+            if (activeElement === element)
+                activeElement = null;
+
+            leaveTimers.delete(element);
+        }, event.custom ? 0 : delayLeave);
+
+        leaveTimers.set(element, timer);
+    });
 }
