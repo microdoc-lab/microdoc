@@ -61,8 +61,8 @@
         const start = txtEditor.selectionStart;
         const end = txtEditor.selectionEnd;
 
-        if (start != end)
-            return;
+        //if (start != end)
+        //    return;
 
         const value = txtEditor.value;
 
@@ -105,17 +105,29 @@
 
         const replacement = updatedLines.join("\n");
 
+        const scrollTop = txtEditor.scrollTop;
+
         // Replace the whole block as a native editing operation.
         txtEditor.setSelectionRange(firstLineStart, blockEnd);
         document.execCommand("insertText", false, replacement);
 
         // Restore the selection, accounting for the changed indentation.
         const delta = replacement.length - (blockEnd - firstLineStart);
-        const newStart = start +
-            updatedLines[0].length - lines[0].length;
+        const atLineStart = start === firstLineStart;
+
+        const newStart = atLineStart
+            ? firstLineStart
+            : Math.max(firstLineStart,
+                start + updatedLines[0].length - lines[0].length);
+
         const newEnd = Math.max(newStart, end + delta);
 
         txtEditor.setSelectionRange(newStart, newEnd);
+
+        // restore scroll position
+        requestAnimationFrame(() => {
+            txtEditor.scrollTop = scrollTop;
+        });
     });
 
     // clean current list-item line on pasting list item
