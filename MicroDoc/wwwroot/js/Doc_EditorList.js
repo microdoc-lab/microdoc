@@ -117,6 +117,55 @@
 
         txtEditor.setSelectionRange(newStart, newEnd);
     });
+
+    // clean current list-item line on pasting list item
+    txtEditor.addEventListener('paste', e => {
+        const item = getEmptyListItem(txtEditor);
+
+        if (!item) return;
+
+        const text = e.clipboardData.getData('text/plain');
+
+        if (!text || !isListItemText(text))
+            return;
+
+        e.preventDefault();
+
+        txtEditor.setSelectionRange(item.start, item.end);
+        document.execCommand('insertText', false, text);
+    });
+
+    function isListItemText(text) {
+        return /^[ \t]*-[ \t]+/.test(text);
+    }
+
+    function getEmptyListItem(textarea) {
+        const pos = textarea.selectionStart;
+
+        // Require collapsed selection
+        if (pos !== textarea.selectionEnd)
+            return null;
+
+        const lineStart = textarea.value.lastIndexOf('\n', pos - 1) + 1;
+        const lineEnd = textarea.value.indexOf('\n', lineStart);
+        const actualLineEnd = lineEnd < 0 ? textarea.value.length : lineEnd;
+
+        if (pos !== actualLineEnd)
+            return null;
+
+        const line = textarea.value.substring(lineStart, pos);
+
+        const match = line.match(/^([ \t]*-[ \t]+)$/);
+
+        if (!match)
+            return null;
+
+        return {
+            start: lineStart,
+            end: pos,
+            prefix: match[1]
+        };
+    }
 }
 
 Doc.prototype.behaviors.push(Doc.prototype.InitEditorList);
