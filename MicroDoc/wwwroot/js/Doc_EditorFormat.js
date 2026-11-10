@@ -100,16 +100,22 @@
         document.execCommand("insertText", false, "|");
     });
 
-    // accept Tab in document editor
+    // Accept Tab / Shift+Tab in document editor
     txtEditor.addEventListener("keydown", e => {
-        if (e.key === "Tab" && !e.shiftKey && !e.ctrlKey && !e.altKey) {
-            e.preventDefault();
+        if (e.key !== "Tab" || e.ctrlKey || e.altKey || e.metaKey)
+            return;
 
-            const start = txtEditor.selectionStart;
-            const end = txtEditor.selectionEnd;
+        e.preventDefault();
 
-            txtEditor.setSelectionRange(start, end);
-            document.execCommand("insertText", false, "\t");
+        const start = txtEditor.selectionStart;
+        const end = txtEditor.selectionEnd;
+        const text = txtEditor.value;
+
+        if (!e.shiftKey) {
+            txtEditor.setRangeText("\t", start, end, "end");
+        }
+        else if (start === end && start > 0 && text[start - 1] === "\t") {
+            txtEditor.setRangeText("", start - 1, start, "end");
         }
     });
 }
