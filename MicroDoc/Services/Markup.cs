@@ -44,7 +44,7 @@ namespace MicroDoc.Services
                     continue;
                 }
 
-                if (string.IsNullOrWhiteSpace(line))
+                if (!isCode && string.IsNullOrWhiteSpace(line))
                 {
                     EndParagraph();
                     EndList();

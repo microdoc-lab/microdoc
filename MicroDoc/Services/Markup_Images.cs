@@ -4,8 +4,11 @@
     {
         private bool imageGalleryStarted;
 
-        private static string TryParseImage(string line)
+        private string TryParseImage(string line)
         {
+            if (isCode)
+                return null;
+
             if (line.StartsWith("/image:") && line.Length > "/image:".Length)
                 return line["/image:".Length..];
             

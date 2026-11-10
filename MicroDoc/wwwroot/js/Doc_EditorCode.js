@@ -64,11 +64,14 @@ Doc.prototype.TurnCodeBlocksContentEditable = function () {
         return;
 
     const docViewer = this.docViewer();
-    docViewer.querySelectorAll("section content p:first-child").forEach((p, index) => {
-        if (p.closest("section").classList.contains("code")) {
-            p.contentEditable = true;
-            p.setAttribute("headingindex", index);
-            p.dataset.content = p.innerText;
+    docViewer.querySelectorAll("section content").forEach((content, index) => {
+        if (content.firstElementChild && content.firstElementChild.tagName.toLowerCase() === "p") {
+            const p = content.firstElementChild;
+            if (p.closest("section").classList.contains("code")) {
+                p.contentEditable = true;
+                p.setAttribute("headingindex", index);
+                p.dataset.content = p.innerText;
+            }
         }
     });
 }
