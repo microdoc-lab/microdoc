@@ -1,0 +1,3 @@
+# Background configuration
+Domain background can be configured in domain options.
+Domain background is shown as a background picture of Domain Explorer.

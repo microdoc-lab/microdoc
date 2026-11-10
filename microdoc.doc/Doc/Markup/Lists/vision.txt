@@ -1,0 +1,13 @@
+# Bulleted lists
+Document section may contain lists:
+- to start a list item use a dash+space (- ) then text
+- to start nested list item use a space+space+dash+space(  - ) then text
+- press Tab to increase list indentation
+- press Shift+Tab to decrease list indentation
+- press Enter to start new list item of same indentation level
+
+## /code: List sample
+- item 1
+- item 2
+  - nested item 11
+  - nested item 12 

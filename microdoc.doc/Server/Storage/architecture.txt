@@ -1,0 +1,6 @@
+# File system document storage
+Documents stored in file system. 
+Every Domain configured with `RootFolder`.
+Tags are folders.
+Documents are text files.
+Images stored in format they were uploaded.

@@ -1,0 +1,4 @@
+# Load Deep Levels
+By default Document Matrix displays *selected Tag* row + it's *child Tags* rows.
+In order to display all nested tags - check *Load Deep Levels* checkbox in Document Matrix toolbar.
+Nested level of Tag can be visually seen by it's left offset.

@@ -1,0 +1,32 @@
+# Minimal Deployment
+- download microdoc.zip
+- unzip to some folder
+  - microdoc.exe - web server folder
+  - microdoc.doc - MicroDoc document library
+  - book.doc - book sample document library
+  - renovation.doc - renovation sample document library
+  - training.doc - training sample document library
+- run ServerStart.cmd
+
+This will start local web server and open MicroDoc page in web browser.
+Site is accessible over https://localhost:7273/
+Simple login is enabled by default - any login/password accepted.
+This is good for local use.
+
+Following steps
+- setup developer certificate (local deployment)
+- setup Google authentication
+- configure users and roles
+- provide site external access
+
+## /code: Setup developer certificate
+// Unable to configure HTTPS endpoint. 
+// No server certificate was specified, 
+// and the default developer certificate could not be found or is out of date
+//
+// to solve this error on server start 
+// execute following command and restart server
+
+dotnet dev-certs https --clean
+dotnet dev-certs https
+dotnet dev-certs https --trust

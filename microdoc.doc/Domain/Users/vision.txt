@@ -1,0 +1,15 @@
+# Global security
+Specify global user access level:
+- a - admin - can edit domain options
+- r - reader - can view documents
+- w - writer - can edit documents
+
+# Domain-level security
+Specify user access level for *every* individual domain:
+- r - reader - can view documents of domain
+- w - writer - can edit documents of domain
+
+# Document-level security
+Specify user access level for *every* individual document type:
+- r - reader - can view documents of specific column in domain
+- w - writer - can edit documents of specific column in domain

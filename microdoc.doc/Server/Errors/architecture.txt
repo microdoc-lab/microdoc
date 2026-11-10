@@ -1,0 +1,14 @@
+# Server Errors
+Web server returns errors to client in response body.
+Client reads response text (first line) as localizes error message.
+The rest of response (error details) as shown to client as is.
+
+## ErrorCode enumeration
+All possible return codes represented in `ErrorCode` enumeration.
+Those values has localization on client.
+Server operation produces real response if the operation succeeded, otherwise ErrorCode returned.
+
+# Server Exceptions
+Unhandled exceptions captured globally on server and logged.
+Status `ErrorCode.Exception` returned to client.
+Exception details returned in the tail of response (Development mode only).

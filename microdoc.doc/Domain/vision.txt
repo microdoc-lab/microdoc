@@ -1,0 +1,20 @@
+# Domain 
+## Isolate subject area documents
+Domain represents document library of a specific subject area. Some examples:
+- software development
+- car maintenance
+- sport training
+
+Domain *configuration* defines 2 main settings:
+- *document types* - typical documents mandatory for subject area:
+  - _software development_: vision / requirements / architecture / use-cases
+  - _car maintenance_: design / schemes / diagnostics / repair
+  - _sport training_: exercise; preparation; safety rules
+- *users* - domain users and their permissions
+  - _admin_ - can edit domain configuration
+  - _reader_ - can view documents
+  - _writer_ - can edit tags and documents
+
+## Work with multiple domains
+MicroDoc allows simultaneous work with documents from multiple domains.
+Open several domain explorers, and switch between them (like desktops in Windows).

@@ -1,0 +1,8 @@
+# Parameters Validation
+
+Server validates all controller parameters for their correctness:
+- IsValidDomain
+- IsValidTagId
+- IsValidTagName
+
+If some parameter invalid - `ErrorCode.InvalidParameters` returned to client.

@@ -1,0 +1,14 @@
+# Document Markup
+Document content is written in plain text editor using simple Markup.
+Following elements supported:
+- *Bold* / _Underline_ formatting
+- headings of 1st/2nd/3rd levels
+- paragraphs
+- lists
+- tables
+- images
+- links
+- callouts
+- statuses
+
+See detailed in nested documents...

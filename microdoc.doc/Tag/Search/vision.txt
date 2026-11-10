@@ -1,0 +1,9 @@
+# Search Tag
+- press *Search* button in Tag Tree toolbar
+- type search phrase in search textbox
+- Tag Tree is filtered to display tags that contain search phrase
+  - if nested tag matched - parent tag is also displayed but Gray
+- press Esc to clear search textbox
+- press Esc again to close search textbox
+  - or press Tab to leave focus from search textbox and disappear it
+  - non-empty search textbox stay visible even when not focused

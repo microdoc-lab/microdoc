@@ -1,0 +1,13 @@
+# Headings
+Document is build from sections, each section has it's Heading.
+Once you start a Heading - you start a new section, also ending previous one.
+Heading can be of 1st/2nd/3rd levels.
+
+## 1st level Heading
+- start a line with single hash (#)
+
+## 2nd level Heading
+- start a line with double hash (##)
+
+## 3rd level Heading
+- start a line with triple hash (###)

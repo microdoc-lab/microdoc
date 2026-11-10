@@ -1,0 +1,6 @@
+# /code:code test
+my code
+going here
+## single-line code 
+text goes here: `var a = b;` - this is code block
+## empty section

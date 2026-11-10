@@ -1,0 +1,10 @@
+# Bold text
+- select text, press Ctrl+B
+- wrap text in stars (*): *bold text*
+
+# Underlined text
+- select text, press Ctrl+U
+- wrap text in underscores (_): _underlined text_
+
+# Code line
+- wrap text in backquotes (`): `code line`

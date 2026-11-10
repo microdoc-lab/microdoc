@@ -1,0 +1,9 @@
+# Configuration
+
+Domain *configuration* consists of:
+- document types (Document Matrix columns)
+- document colors
+- domain background image
+- domain users / access level
+
+Domain configuration can be edited by Admin user

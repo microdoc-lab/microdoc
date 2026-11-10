@@ -1,0 +1,28 @@
+# Upload Image
+To upload image into document library:
+- copy image/file to clipboard
+- press Ctrl+V in Document Editor
+- type image title
+After that image will be uploaded and stored in document library.
+Also image reference will be included into document markup:
+`/image:DocMatrix.png`
+
+## Preview Images
+In view mode images rendered as Thumbnails. To preview image:
+- mouse click image to select image
+- mouse hover on image to scale image
+- press ESC to cancel preview or un-hover the image
+
+## Image Gallery
+Several images uploaded to document combined into Gallery in view mode.
+It is recommended to have no more than 4-6 images in single Gallery.
+/image:ImageGallery.png
+
+## Select Image
+Mouse click image to select image.
+
+## Copy Image path
+Select Image and press Ctrl+C - image path will be copied to clipboard in form:
+`[Doc] [Markup] [Images] vision+ImageGallery.png`
+
+/note: image name is prefixed with the name of document.

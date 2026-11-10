@@ -1,0 +1,28 @@
+# Browse Tags and Documents
+Domain explorer consists of *Tag Tree* (in left) and *Document Matrix* (in center)
+
+## Tag Tree
+Tag Tree - displays tags hierarchy in form of expandable tree view
+- [Car]
+  - [Engine]
+  - [Suspension]
+    - [Front]
+    - [Rear]
+  - [Electronics]
+
+## Document Matrix
+Document Matrix - displays documents is form of grid (files)
+- _rows_: Tag and it's child Tags
+- _columns_: domain documents (vision, architecture, usecases)
+
+|tag			| design	| schemes 	| diagnostics 	| repair	|
+|*[Car]*		| 		|			|			| 		|
+|* [Engine]	|		|			|			| 		|
+|* [Suspension]|		|			|			| 		|
+|* [Electrics]	|		|			|			| 		|
+
+## Preview documents
+Document Matrix displays document headings by default. Section content can be previewed by mouse hover on corresponding heading.
+
+## Open documents 
+Open document for viewing/editing by mouse click on document heading/section in preview

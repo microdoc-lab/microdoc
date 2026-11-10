@@ -1,0 +1,15 @@
+# Peer to peer synchronization
+Server uses SignalR technology to notify other clients about tags/documents changes.
+
+User will be prompted if currently editing document was changed by other user:
+- accept changes and reload editor
+- reject changes, continue own editing
+
+User will be prompted if currently editing document was removed by other user:
+- accept changes and close editor
+- reject changes, continue own editing
+
+## Core synchronization
+Changes synchronization used as core implementation mechanism:
+- for external changes
+- for local changes

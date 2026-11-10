@@ -1,0 +1,9 @@
+# Paragraphs
+Document section may contain paragraphs, lists, tables. 
+For lists and tables special syntax is used, any other text is a paragraph.
+
+## Break Line
+Single new-line symbol doesn't start new paragraph automatically, but rendered as a break-line tag in HTML `<br>`
+
+## Start new Paragraph
+To start new paragraph empty line should be added (new-line symbols needed).

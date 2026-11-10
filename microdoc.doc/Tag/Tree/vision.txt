@@ -1,0 +1,25 @@
+# Tag Tree view
+Domain Explorer has a *Tree View* in *left part*, and a Document Matrix in central part.
+/image:TagTree.png
+
+## Tree Nodes
+- root node of Tag Tree displays the name of domain
+- first-level children Tags always shown under the root
+- nested Tags can be seen by expanding tree nodes
+
+## Toolbar
+Top-Right corner of Tag Tree contains toolbar buttons:
+- New Tag
+- Rename Tag
+- Move Tag
+- Delete Tag
+- Reload Tree
+- Search
+
+## Browse Tags
+Browse tags in a tree view by expanding/clicking child tags.
+Select tag in tree by mouse click to explore tag-related documents in Document Matrix.
+
+## Manage Tags
+Create/Rename/Move/Reorder/Delete tags in tree.
+

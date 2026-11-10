@@ -1,0 +1,24 @@
+# Document Editor
+Document content is edited in plain-text editor using simplified Markup.
+To open document in edit mode:
+- *Ctrl+click* on document cell/heading in Document Matrix
+- press Toggle View/Edit mode in Document toolbar
+
+## Scroll to section
+- Ctrl+click on document heading in Document Matrix to open Document Editor and scroll to corresponding section
+- Toggle View/Edit mode in Document toolbar to open Document Editor and scroll to section selected in Document Viewer
+
+## Toggle to View mode
+Press Toggle View/Edit mode in Document toolbar to switch Document Editor to Document Viewer:
+- document is automatically saved
+- Document Viewer is scrolled to section selected in Document Editor
+
+## Accept Tabs
+Tab characters are normally accepted in editor. 
+Use Tabs to adjust columns in table markup.
+
+## Save and Close
+Press *Save and Close* button in Document toolbar to save changes and close Document Editor.
+
+## Delete Document
+Press *Delete* button in Document toolbar to delete document and close Document Editor.

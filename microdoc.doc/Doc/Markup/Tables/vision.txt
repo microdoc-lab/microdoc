@@ -1,0 +1,21 @@
+# Table syntax
+Document section may contain tables.
+To define a table:
+- start a line with vertical line (|) symbol
+- use vertical line (|) symbol as cell separator
+  - use several vertical line (|) symbols to increase cell colspan
+- end a line with vertical line (|) symbol
+
+|vision 	| arch 	| test	|
+|1		|		|		|
+|2		|colspan			||
+|colspan			||		|
+
+## Colspan
+To make a cell span multiple columns print several vertical line (||) symbols at the right cell side.
+
+## /code: Table sample
+|vision 	| arch 	| test	|
+|1			|		|		|
+|2			|colspan		||
+|colspan			||		|

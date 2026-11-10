@@ -1,0 +1,35 @@
+# Setup Google Authentication
+Follow instructions in this document.
+Official documentation: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0&utm_source=chatgpt.com
+
+## Create a Google Cloud project
+- Open Google Cloud Console.
+- Sign in with your Google account.
+- Create a new project (or select an existing one).
+
+## Configure Google Auth
+- Open Google Auth Platform.
+- Configure the OAuth consent screen:
+   - App name
+   - User support email
+   - Audience: External
+   - Developer contact email
+- Save the configuration.
+
+## Obtain ClientId and ClientSecret
+- Open the Google Auth Clients.
+- Click Create Client.
+- Select application type: Web application.
+- Enter a name, e.g. MyGame Server.
+- Add Authorized redirect URI (https://your-domain.com/signin-google)
+- Click Create.
+- Copy the generated:
+  - Client ID
+  - Client Secret
+
+## /code: Configure our ASP.NET Core server
+// Add the credentials to server configuration appsettings.json:
+    "Google": {
+      "ClientId": "YOUR_CLIENT_ID",
+      "ClientSecret": "YOUR_CLIENT_SECRET"
+    }

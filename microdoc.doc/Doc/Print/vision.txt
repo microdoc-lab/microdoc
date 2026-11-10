@@ -1,0 +1,42 @@
+# Print Preview Popup
+Press Print button in Document toolbar to open Print Preview popup.
+
+## Table of Contents
+Print Preview popup displays Table of Contents (TOC) in left side and Document content in printable forms in central part.
+TOC is built from document headings.
+TOC selection is synchronized with document sections:
+- click on heading in TOC scrolls to section in document
+- click on section in document selects heading in TOC
+
+## Print Preview Toolbar
+Top-Right side of Print Preview popup contains print toolbar:
+- Edit selected Document
+- Copy HTML
+- Print
+- Print Images
+
+## Edit selected Document
+Select document by click on it.
+Edit selected Document minimizes print preview popup to upper-right corner, and opens selected document for edit.
+Save or Close document in editor and return to print preview popup by clicking it.
+
+## Copy HTML
+Copy document HTML into clipboard in rich text format available to paste into MS Word.
+
+## Print Document
+Open browser's print window for document.
+
+### Preview Image galleries
+To preview images from image galleries in print preview:
+- mouse-click image to select image
+- mouse-hover image to preview image
+- press ESC to cancel preview or un-hover the image
+
+### Print Image galleries
+Images are printed in thumbnail size.
+In order to print full-scale images use Print Images button.
+
+## Print Images
+Open browser's print window for images in document.
+Images are drawn full-scale.
+Instead of embedding full-scale images into main document - this approach allows to print images as addition document.

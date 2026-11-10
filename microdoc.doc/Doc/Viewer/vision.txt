@@ -1,0 +1,54 @@
+# Document Viewer
+Click on Document Matrix cell opens cell document in a *view mode*.
+Document is opened in Document Viewer.
+*Multiple* documents can be opened.
+Document Viewers are stacked horizontally in the bottom part of Domain Explorer.
+Document Viewer occupies 50% of width of Domain Explorer - two Document Viewers can be placed in a row.
+
+## Toolbar
+Top-Left part of viewer contains print toolbar buttons:
+- Print
+- Print selected Image
+
+Top-Right part of viewer contains edit toolbar buttons:
+- Toggle View/Edit
+- Delete
+- Save & Close
+
+## Document Title
+Top-Center part of viewer displays document path. 
+
+### Copy document path
+Mouse click on the title to copy document path into clipboard.
+
+## Headings and Sections
+Document is build from sections, each section has it's Heading.
+Once you start a Heading - you start a new section, also ending previous one.
+Heading can be of 1st/2nd/3rd levels.
+
+### Select Heading
+To select Heading:
+- mouse click Heading
+- mouse click Section
+ 
+### Copy Heading
+Select Heading and press Ctrl+C - heading text is copied to clipboard in form:
+`[Doc] [Matrix] Browse Tags`
+This form is useful for *Git commits*.
+
+## Render Markup HTML
+While the document content is written in simplified Markup, Document Viewer renders the document as HTML.
+
+### Image Galleries and Image Preview
+Document can contain images groups - galleries. 
+Every image has it's title.
+In order to preview image:
+- mouse click on image to select it
+- mouse hover on image to scale the image
+
+## Toggle to Edit mode
+Edit toolbar allows switching Document Viewer to Document Editor.
+
+## Reorder opened Documents
+Multiple documents are opened in bottom part of Explorer window.
+To swap documents drag one document by title bar and move onto another document.

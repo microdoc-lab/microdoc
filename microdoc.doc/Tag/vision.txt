@@ -1,0 +1,44 @@
+# Tag
+In MicroDoc domain subject area is represented in hierarchical form of Tags. 
+
+## Subject area modelling
+Tags define ontology of subject area.
+Tags are similar to folders in file system.
+Every single Tag can have multiple related documents (vision/architecture/usecases).
+Tags are managed by document library users.
+
+## /example: Software domain tags
+- [Database]
+  - [Profiling]
+- [Server]
+  - [Security]
+  - [Configuration]
+- [Client]
+  - [Widgets]
+  - [Responsiveness]
+
+## /example: Car domain tags
+- [Suspension]
+  - [Front]
+  - [Rear]
+- [Electronics]
+  - [Light]
+  - [Interior]
+
+## Tag Name
+Tag name identifies the tag within it's parent. 
+Only symbols, digits, underscore, hyphen, space allowed.
+
+## Tag Path
+Full Tag Path includes names of all tag parents + it's own name:
+[Server] [Security]
+[Client] [Widgets]
+[Car] [Suspension] [Front]
+[Car] [Electronics] [Interior]
+
+## Tag Id
+Tag Id is semantically similar to Tag Path but uses / as separator:
+Server/Security
+Client/Widgets
+Car/Suspension/Front
+Car/Electronics/Interior

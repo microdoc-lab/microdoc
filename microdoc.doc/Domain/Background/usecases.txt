@@ -1,0 +1,5 @@
+# /code: Domain Background sample
+Domains:
+- Name: microdoc.doc
+  RootFolder: ~/../microdoc.doc
+  Background:  _domain+background.jpg

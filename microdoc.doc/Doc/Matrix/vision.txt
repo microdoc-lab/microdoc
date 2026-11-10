@@ -1,0 +1,42 @@
+# Document Matrix
+Domain Explorer has a Tree View in left part, and a *Document Matrix* in *central part*.
+/image:DocMatrix.png
+Browse tags in Tree View - explore related documents in Document Matrix.
+
+## Columns
+- first (Tag) column - displays name of Tag
+- document columns - contains documents configured for domain
+- last (Misc) column - contains any other documents (not configured for domain)
+
+## Toolbar
+Top-left cell of Document Matrix contains several buttons:
+- Reload document matrix
+- Move Up to navigate to parent tag
+- Load Deep Levels checkbox
+
+## Browse Tags
+- click Tag name in left column to navigate tree/grid to that tag
+- click Move Up button in grid toolbar to navigate tree/grid to parent tag
+
+## Preview documents
+Document Matrix cell displays only document headings.
+Preview document section by mouse hover on heading.
+Preview document image by mouse hover on image in currently previewing section.
+/image:Preview.png
+
+### Images indicator in preview
+If a section of document contains images - image indicator is shown near the heading.
+/image:ImageIndicator.png
+
+## Open Document
+Open document in *view mode* by *mouse click* on cell/heading.
+*Click heading* to open document and *scroll* to corresponding *section*.
+Multiple documents can be opened for view/edit.
+*Ctrl+click* to open document in *edit mode*.
+
+## Create Document
+Create new document by mouse click on empty cell.
+No need to specify document name - document is automatically named and placed in tag hierarchy:
+|*[Server] [Security] vision.txt*			| Server\Security\vision.txt		|
+|*[Server] [Security] architecture.txt*	| Server\Security\architecture.txt	|
+|*[Client] [Widgets] usecases.txt*		| Client\Widgets\usecases.txt		|

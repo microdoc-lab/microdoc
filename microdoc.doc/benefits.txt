@@ -1,0 +1,13 @@
+# Reduced document size
+- don't work with huge documents
+- preview/open document section from explorer - no scrolling of huge document
+
+# Simple information style
+- write information as list of theses
+- don't care about document stylistics
+- accept redundancy across documents
+
+# Improved work style
+- write documents fast
+- concentrate on information level
+- concentrate on information type

@@ -1,0 +1,15 @@
+# Insert Document Link
+- copy document path by mouse clicking on document title
+- type /link: and paste document path
+
+`/link: [Doc] [Markup] vision.txt`
+
+/link: [Doc] [Markup] vision.txt
+
+Mouse click link to open document.
+
+/note: after Tag move link may stop work
+
+## Internet Links
+For regular links just paste link as is and it will be recognized in view mode:
+https://www.google.com/

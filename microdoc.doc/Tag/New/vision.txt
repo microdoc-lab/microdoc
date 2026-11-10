@@ -1,0 +1,4 @@
+# Create new Tag
+- select *parent tag* in Tag Tree
+- press *New Tag* button in Tag Tree toolbar
+- enter *new tag name* (only symbols, digits, underscore, hyphen, space allowed)

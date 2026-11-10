@@ -1,0 +1,3 @@
+# Reorder Tags
+In order to swap tags - drag one Tag in tree and move onto another.
+Tags can be swapped within same parent.

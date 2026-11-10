@@ -1,0 +1,10 @@
+# Document taxonomy
+Typical domain documents are divided into types (vision, architecture, testing, instructions).
+Different documents represented as columns in Document Matrix.
+Every document type can have specific color for better recognition.
+
+## Benefits
+Separate information accordingly:
+- document type - separate concerns
+- level of detail - do not overload document with details
+- writer role - isolate edits

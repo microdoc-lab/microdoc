@@ -1,0 +1,9 @@
+# Move Tag
+- select *moving tag* in Tag Tree
+- press *Move Tag* button in Tag Tree toolbar
+- enter *target tag* (Only symbols, digits, underscore, hyphen, space (/ separated) allowed)
+  - target tag is a new parent of moving tag
+  - use folder-style name for target tag: 
+    - (empty) - root tag
+    - Server - move into [Server] tag
+    - Server/Security - move into [Server] [Security] tag

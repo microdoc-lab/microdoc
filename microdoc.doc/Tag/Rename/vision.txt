@@ -1,0 +1,4 @@
+# Rename Tag
+- select *renaming tag* in Tag Tree
+- press *Rename Tag* button in Tag Tree toolbar
+- enter *new tag name* (only symbols, digits, underscore, hyphen, space allowed)

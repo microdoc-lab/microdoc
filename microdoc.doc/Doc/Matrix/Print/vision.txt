@@ -1,0 +1,7 @@
+# Print Doc Matrix Column
+In MicroDoc documents are relatively small and it is desirable to combine all documents of specific column and print them in a single step.
+Press *Print* button in *column header* to open Print Preview popup.
+All documents of column will be combined and shown in Print Preview.
+Table of Contents will be combined.
+If *Load Deep Levels* checkbox checked - nested documents will be included.
+Detailed information about Print Preview popup: /link:[Doc] [Print] vision.txt

@@ -1,0 +1,12 @@
+# Search Document 
+- press *Search* button in Document Matrix heading column
+  - search in Tag (first) column filters all documents
+  - search in Document column filters documents in this column
+  - search in Misc (last) column filters documents in Misc column
+- type search phrase in search textbox
+- DocMatrix is filtered to display rows that has documents that contain search phrase
+  - documents in a row that doesn't contain search phrase displayed Gray
+- press Esc to clear search textbox
+- press Esc again to close search textbox
+  - or press Tab to leave focus from search textbox and disappear it
+  - non-empty search textbox stay visible even when not focused

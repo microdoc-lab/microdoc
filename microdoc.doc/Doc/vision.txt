@@ -1,0 +1,24 @@
+# Doc
+In MicroDoc documents are strongly associated with Tags.
+Every single Tag can have multiple related documents (vision/architecture/usecases).
+
+## Document Matrix
+Domain Explorer has a Tree View in the left part, and a *Document Matrix* in the *central part*.
+
+## Document Cell
+Tag Documents are displayed in cells of Document Matrix.
+Document is located on crossing of:
+- Tag (row) - subject
+- Document type (column) - type of content
+
+## Document Markup
+Document content is written in simple Markup, following elements supported:
+- *Bold* / _Underline_ formatting
+- headings of 1st/2nd/3rd levels
+- paragraphs
+- lists
+- tables
+- images
+- links
+- callouts
+- statuses

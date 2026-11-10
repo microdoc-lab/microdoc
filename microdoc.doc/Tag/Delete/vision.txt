@@ -1,0 +1,6 @@
+# Delete Tag
+- select *deleting tag* in Tag Tree
+- press *Delete Tag* button in Tag Tree toolbar
+- confirm action
+  - all tag related documents should be removed first
+  - all nested tags should be removed first

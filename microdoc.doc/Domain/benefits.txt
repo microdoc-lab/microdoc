@@ -1,0 +1,5 @@
+# Isolated domains
+- don't work with huge document library
+- distribute documents across domains (software development/project management)
+- configure domain-specific document types
+- manage users access to domains and documents

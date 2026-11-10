@@ -1,0 +1,24 @@
+# Code Section
+To define whole section as code block start it's heading from */code: *
+
+## /code: Sample Code Section
+code block
+goes here
+
+### Edit Code Section in Viewer
+Code section is displayed with monospace font. 
+Code section can be edited in View mode to demonstrably preserve tab intervals.
+Click code section and edit it's content.
+Move focus to another element to force changes to save.
+
+## Note Section / Paragraph
+To define whole section as note start it's heading from */note: *
+To define whole paragraph as note start the paragraph from */note: *
+
+/note: note goes here
+
+## Example Section / Paragraph
+To define whole section as example start it's heading from */example: *
+To define whole paragraph as example start the paragraph from */example: *
+
+/example: example goes here
