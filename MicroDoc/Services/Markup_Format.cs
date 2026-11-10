@@ -4,8 +4,11 @@ namespace MicroDoc.Services
 {
     public partial class Markup
     {
-        private static string FormatText(string text)
+        private string FormatText(string text)
         {
+            if (isCode)
+                return text;
+
             // Bold: *text*
             text = Regex.Replace(
                 text,
