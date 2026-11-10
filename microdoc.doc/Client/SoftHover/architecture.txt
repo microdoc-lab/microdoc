@@ -1,0 +1,33 @@
+# Soft Hover functionality
+SoftHover functionality aimed to:
+- use CSS classes for hovered elements
+- but mitigate immediate standard hovering in HTML
+
+Instead of using `:hover` selector we rely on `.hover` class which is added after specific delay, and also removed after specific delay.
+Client specifies following settings configuring soft hover:
+- over-selector - hover trigger
+- out-selector - unhover trigger
+- overDelay - wait interval to hover
+- outDelay - wait interval to unhover
+
+over-selector is usually small - we should intentionally move mouse pointer into small area and delay there to hover bigger element.
+out-selector is usually the hovered element itself - we should leave element for some period of time to unhover it.
+
+There is also API to trigger over/out events.
+
+## SoftHover API
+- `enableSoftHover(code, overselector, outselector, overDelay = 500, outDelay = 300)`
+- `pointeroverRaise(element)`
+- `pointeroutRaise(element)`
+
+## examples in MicroDoc:
+- hover TagTree title to show whole TagTree
+- hover DocMatrix header row to show whole DocMatrix
+- hover document in cell to show document preview
+- hover heading in document preview to show document section
+- hover image in document preview to preview image
+
+## API examples
+- select image on click to trigger image preview
+- unhover document preview on document open by click
+- unhover TagTree/DocMatrix on Esc

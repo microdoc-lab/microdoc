@@ -1,0 +1,58 @@
+# Component architecture
+Client controls implemented as components.
+JavaScript prototype used to define component functions.
+
+## Core Functionality
+Core component functionality lives in main file (TagTree.js, DocMatrix.js):
+- constructor function
+- logging functions
+- behaviors collection
+- changeHandlers collection
+- Load/Reload functions
+- component related service class
+
+## Component Element
+Every component is associated with DOM element (passes to constructor).
+Element content is rendered by Razor engine, along with component attaching script.
+
+### Component Map
+Client maintains WeakMap of all components.
+This technique allows to preserve component references over AJAX requests.
+AJAX reload obtains new component DOM and attaches it to existing component.
+
+## Component Options
+Second constructor parameter used to pass options to component.
+Options object may contain:
+- element style
+- behavior parameters
+- event handler functions
+
+## Logging functions
+Component defines set of logging functions (debug, info, log, warn, error).
+All functions call corresponding console logging function plus:
+- prefix message with component *class and id*
+- localize error codes
+
+## Partial scripts and Behaviors
+Client component functionality is split into partial scripts (behavior) to avoid huge files.
+- TagTree.js
+  - TagTree_Toggle.js
+  - TagTree_Selection.js 
+  - TagTree_Search.js
+  - TagTree_Reorder.js
+  - ...
+Init behavior function is registered in component's behaviors collection.
+Component calls InitBehaviors function right after construction/element attach.
+
+## Change handlers
+Client component is designed to react on changes received from server.
+/link: [Server] [Synchronization] architecture.txt
+Typical server operation returns to client change-set which is broadcasted over client components.
+Component provides registers it's callback in changeHandlers collection:
+- TagTree_TagChanges.js
+- DocMatrix_TagChanges.js
+- DocMatrix_DocChanges.js
+- ...
+
+Component will receive external changes along with it's own changes.
+Reaction can be adjusted depending on change.external flag.

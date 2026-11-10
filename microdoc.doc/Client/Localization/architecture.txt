@@ -1,0 +1,21 @@
+# Localization Support
+Client supports localization on following languages:
+- US - english
+- UA - ukrainian
+
+## Localize HTML
+Call `LocalizeElement` to localize HTML elements for provided element:
+- localize attributes of HTML node
+- localize content of HTML node
+- string formatting supported
+
+### /code: Localize element attributes
+// set title attribute to Loc['TagTree_Search']
+data-loc-title="TagTree_Search" 
+
+### /code: Localize element content
+/ set span content to string.format(Loc['Auth_Greeting'], userIdentityName)
+<span data-loc-content="Auth_Greeting" data-loc-content$0="@User.Identity.Name"></span>
+
+## Localize Errors
+Component error logging function automatically localizes error codes.

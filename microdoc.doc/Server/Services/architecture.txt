@@ -1,0 +1,16 @@
+# Services
+Server functionality is implemented in services:
+- TagService
+- DocService
+- LockManager
+- TagMoveService
+
+# Configuration
+Server configuration:
+- MicroDocOptions - appsettings.json
+  - logging
+  - Google authentication
+  - path to DomainOptions.ini
+- DomainOptions - DomainOptions.ini
+  - domains
+  - users

@@ -1,13 +1,12 @@
-# /code: Allow all users
+## /code: Allow all users
 SimpleLogin: true
 DomainLevelSecurity: false
-Users:
-- { Email: '*',			Roles: rwa }
 
 # /code: Role based security
 SimpleLogin: false
 DomainLevelSecurity: false
 Users:
+// Global roles
 - { Email: 'admin@gmail.com',	Roles: rwa }
 - { Email: 'writer@gmail.com',	Roles: rw }
 - { Email: 'reader@gmail.com',	Roles: r }
@@ -16,13 +15,47 @@ Users:
 SimpleLogin: false
 DomainLevelSecurity: true
 Users:
+// Global roles
+- { Email: 'admin@gmail.com',	Roles: rwa }
+- { Email: 'writer@gmail.com',	Roles: rw }
+- { Email: 'reader@gmail.com',	Roles: r }
+
+
+
+// microdoc.doc domain roles
 - { Email: 'admin@gmail.com',	Domain: microdoc.doc, Roles: rwa }
 - { Email: 'writer@gmail.com',	Domain: microdoc.doc, Roles: rw }
 - { Email: 'reader@gmail.com',	Domain: microdoc.doc, Roles: r }
+
+
+// book.doc domain roles
 - { Email: 'writer@gmail.com',	Domain: test, Roles: rw }
 - { Email: 'reader@gmail.com',	Domain: test, Roles: r }
 
 # /code: Document level security
+Domains:
+- Name: microdoc.doc
+  ...
+  DocumentLevelSecurity: true
+
+
+SimpleLogin: false
+DomainLevelSecurity: true
+Users:
+// Global roles
+- { Email: 'admin@gmail.com',	Roles: rwa }
+- { Email: 'writer@gmail.com',	Roles: rw }
+- { Email: 'reader@gmail.com',	Roles: r }
+
+
+
+// microdoc.doc domain roles
+- { Email: 'admin@gmail.com',	Domain: microdoc.doc, Roles: rwa }
+- { Email: 'writer@gmail.com',	Domain: microdoc.doc, Roles: rw }
+- { Email: 'reader@gmail.com',	Domain: microdoc.doc, Roles: r }
+
+
+// microdoc.doc document roles
 - { Email: 'admin@gmail.com',	Domain: microdoc.doc, Roles: rw, Document: '*' }
 - { Email: 'writer@gmail.com',	Domain: microdoc.doc, Roles: rw, Documents: [ vision, architecture, usecases ] }
 - { Email: 'reader@gmail.com',	Domain: microdoc.doc, Roles: r,  Documents: [ architecture, usecases ] }

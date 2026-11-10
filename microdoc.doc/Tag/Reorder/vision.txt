@@ -1,3 +1,8 @@
 # Reorder Tags
-In order to swap tags - drag one Tag in tree and move onto another.
+To swap tags - drag one Tag in tree and move onto another.
 Tags can be swapped within same parent.
+Icon indicator shows the movement allowed or not.
+
+## Move tag by Drag&Drop
+Move tag to another tag by dragging onto tag-group.
+Icon indicator shows the movement allowed or not.

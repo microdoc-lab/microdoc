@@ -1,0 +1,19 @@
+# Web Client
+MicroDoc client implemented as web client on top of ASP.NET Core web application.
+Client controls (components) rendered on server and delivered to client using AJAX.
+
+## Navigation and URL
+Browser URL depends on currently active document.
+Please, notice how URL changed when you open documents/print dialog.
+Following scenarios supported:
+- copy current URL, open on another browser - same document should be opened
+- press browser Back button - previous document should be activated
+
+## Cookies
+Client cookies used to store:
+- currently opened documents
+- activation history
+
+Following scenarios supported:
+- refresh current page - same documents set should be opened
+- close document - previous document should be activated

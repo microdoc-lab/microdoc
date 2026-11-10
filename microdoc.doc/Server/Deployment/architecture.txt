@@ -30,3 +30,9 @@ Following steps
 dotnet dev-certs https --clean
 dotnet dev-certs https
 dotnet dev-certs https --trust
+
+## Setup Google authentication
+/link: [Server] [Deployment] [Google Auth] architecture.txt
+
+## Configure users and roles
+/link: [Domain] [Users] usecases.txt

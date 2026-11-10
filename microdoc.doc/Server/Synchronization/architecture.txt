@@ -1,5 +1,8 @@
 # Peer to peer synchronization
 Server uses SignalR technology to notify other clients about tags/documents changes.
+Typical server operation returns to client change-set which is broadcasted over client components.
+In this way multiple subscribers can update their state in response to particular change.
+Below are complex cases related to changes synchronization: 
 
 User will be prompted if currently editing document was changed by other user:
 - accept changes and reload editor

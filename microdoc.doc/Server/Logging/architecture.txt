@@ -1,0 +1,9 @@
+# Server Logging
+Standard .NET Core logging used `ILogger<T>`.
+LoggingHelper class provides logging infrastructure:
+- log trace message:  About to {operation} - before the call
+- log info message: Done to {operation} - after the call succeeds
+- log warn message: Fail to {operation} - after the call failed
+- log error message: Error in {operation} {exception} after the call exception
+- measure call elapsed time
+All server calls wrapped into `LoggingHelper.Execute`.
