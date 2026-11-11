@@ -147,7 +147,7 @@ error {
 
 /* Callouts */
 .doc section.callout:not(.code), doc:not(.preview) section.callout:not(.code),
-.doc p.callout, doc p.callout {
+.doc p.callout:not(.code), doc p.callout:not(.code) {
     border: 1px solid #888;
     border-radius: 6px;
     padding: 8px 12px;
@@ -156,7 +156,7 @@ error {
 }
 
 .doc section.callout:not(.code)::before, doc:not(.preview) section.callout:not(.code)::before,
-.doc p.callout::before, doc p.callout::before {
+.doc p.callout:not(.code)::before, doc p.callout:not(.code)::before {
     content: attr(callout) ' ';
     color: darkblue;
 }
@@ -171,7 +171,7 @@ error {
 .doc section.example, doc section.example, .doc p.example, doc p.example { border-left: 4px solid #72966b !important; }
 
 /* Code */
-.doc section.code content, doc section.code content {
+.doc p.code, doc p.code {
     padding: 3px 6px 1px 6px;
     overflow-x: auto;
 

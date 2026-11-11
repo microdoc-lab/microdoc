@@ -126,6 +126,29 @@ DocParser.ParseCookieGridFilterUrl = function (value) {
     });
 }
 
+DocParser.GetDocumentPart = function (document, linestart, lineend) {
+    const lines = document.split("\n");
+    const part = lines.slice(linestart, lineend + 1);
+    return part.join("\n");
+}
+
+DocParser.ReplaceDocumentPart = function(document, linestart, lineend, replacement) {
+    const lines = document.split("\n");
+    const newLines = replacement.split("\n");
+
+    const escapedNewLines = newLines.map(line => {
+        if (/^#{1,3}\s/.test(line))
+            return "/" + line;
+        return line;
+    });
+
+    lines.splice(linestart, lineend - linestart + 1, ...escapedNewLines);
+
+    return lines.join("\n");
+}
+
+// #region not used
+
 DocParser.SplitDocumentIntoSections = function(document) {
     const lines = document.split('\n');
 
@@ -176,3 +199,5 @@ DocParser.ReplaceDocumentSection = function(document, headingIndex, newContent) 
         return s.join('\n');
     }).join('\n');
 }
+
+// #endregion

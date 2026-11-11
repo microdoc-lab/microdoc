@@ -17,14 +17,19 @@ namespace MicroDoc.Services
         }
 
         private StringBuilder html;
+        private int lineIndex;
+        private bool isCode => isCodeSection || isCodeParagraph;
 
         public string ToHtml(string text)
         {
             html = new StringBuilder();
             sectionStarted = false;
             paragraph = new StringBuilder();
+            paragraphCallout = null;
+            paragraphStart = -1;
             listLevel = -1;
             imageGalleryStarted = false;
+            lineIndex = -1;
 
             var lines = text.Replace("\r\n", "\n").Split('\n')
                 .Select(WebUtility.HtmlEncode)
@@ -32,6 +37,8 @@ namespace MicroDoc.Services
 
             foreach (var line in lines)
             {
+                lineIndex++;
+
                 var (headingLevel, heading) = TryParseHeading(line);
                 if (headingLevel > 0)
                 {
@@ -44,7 +51,7 @@ namespace MicroDoc.Services
                     continue;
                 }
 
-                if (!isCode && string.IsNullOrWhiteSpace(line))
+                if (!isCodeSection && string.IsNullOrWhiteSpace(line))
                 {
                     EndParagraph();
                     EndList();

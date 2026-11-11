@@ -42,22 +42,26 @@
 
     docViewer.addEventListener("focusout", async e => {
         if (e.target.isContentEditable) {
-            const newSection = e.target.innerText;
+            const p = e.target;
 
-            if (newSection == e.target.dataset.content)
+            const newSection = p.innerText;
+
+            if (newSection == p.dataset.content)
                 return;
 
-            const headingIndex = Number(e.target.getAttribute("headingindex"));
+            const linestart = Number(p.getAttribute("linestart"));
+            const lineend = Number(p.getAttribute("lineend"));
 
             // obtain document context
             const domain = this.element.dataset.domain;
             const documentId = this.element.dataset.id;
             var content = this.element.dataset.content;
 
-            this.log(`UpdateEditableSection domain: ${domain}, documentId: ${documentId}, headingIndex: ${headingIndex}`);
+            this.log(`UpdateEditableSection domain: ${domain}, documentId: ${documentId}, linestart: ${linestart}, lineend: ${lineend}`);
 
             // replace document section
-            content = DocParser.ReplaceDocumentSection(content, headingIndex, newSection);
+            const prefix = p.closest("section.code") ? "" : "/code: ";
+            content = DocParser.ReplaceDocumentPart(content, linestart, lineend, prefix + newSection);
 
             var docPath = DocParser.DocPath(documentId);
 
@@ -90,14 +94,12 @@ Doc.prototype.TurnCodeBlocksContentEditable = function () {
         return;
 
     const docViewer = this.docViewer();
-    docViewer.querySelectorAll("section content").forEach((content, index) => {
-        if (content.firstElementChild && content.firstElementChild.tagName.toLowerCase() === "p") {
-            const p = content.firstElementChild;
-            if (p.closest("section").classList.contains("code")) {
-                p.contentEditable = "plaintext-only";
-                p.setAttribute("headingindex", index);
-                p.dataset.content = p.innerText;
-            }
-        }
+    docViewer.querySelectorAll("section content p.code").forEach(p => {
+        p.contentEditable = "plaintext-only";
+        const content = p.closest(".doc").dataset.content;
+        const linestart = Number(p.getAttribute("linestart"));
+        const lineend = Number(p.getAttribute("lineend"));
+        const paragraph = DocParser.GetDocumentPart(content, linestart, lineend);
+        p.dataset.content = paragraph.startsWith("/code:") ? paragraph.slice("/code:".length).trimStart() : paragraph;
     });
 }
