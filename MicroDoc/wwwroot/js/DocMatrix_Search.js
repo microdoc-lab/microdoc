@@ -80,11 +80,11 @@ DocMatrix.prototype.Search = function (value) {
         const document = cell.dataset.document;
 
         if (cell.cellIndex == 0)                        // first column, search all documents
-            predicates.push(`td doc[data-content*="${searchText}" i]`);
+            predicates.push(`td doc[data-content*=${JSON.stringify(searchText)} i]`);
         else if (cell.classList.contains("misc"))       // last column MISC
-            predicates.push(`td.misc doc[data-content*="${searchText}" i]`);
+            predicates.push(`td.misc doc[data-content*=${JSON.stringify(searchText)} i]`);
         else                                            // document column
-            predicates.push(`td[data-document="${document}"] doc[data-content*="${searchText}" i]`);
+            predicates.push(`td[data-document="${document}"] doc[data-content*=${JSON.stringify(searchText)} i]`);
     });
 
     // raise OnSearchChanged event
