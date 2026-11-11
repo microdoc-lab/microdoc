@@ -1,0 +1,29 @@
+﻿@model MicroDoc.Services.TagNode
+
+@functions {
+    bool IsTagNodeOpen(string tagId, string SelectedTag)
+    {
+        return !string.IsNullOrEmpty(SelectedTag) 
+            && SelectedTag.StartsWith(tagId + "/");
+    }
+}
+
+@{
+    var SelectedTag = (string)ViewData["SelectedTag"];
+}
+
+<li class="part tag @(Model.Id == SelectedTag ? "selected" : "")" 
+    style="--tag-color:@Model.Color" 
+    data-domain="@Model.Domain" data-tagid="@Model.TagId" data-tag="@Model.Tag" data-id="@Model.Id">
+    <details class="@(!Model.Children.Any() ? "empty" : "")" open="@(Model.Children.Any() && IsTagNodeOpen(Model.Id, SelectedTag))">
+        <summary class="title-bar">
+            <span class="component title" data-tag="@Model.Tag">[@Model.Tag]</span>
+        </summary>
+        <ul class="part tag-list popup">
+            @foreach (var part in Model.Children)
+            {
+                @await Html.PartialAsync("_TagTreePart", part)
+            }
+        </ul>
+    </details>
+</li>

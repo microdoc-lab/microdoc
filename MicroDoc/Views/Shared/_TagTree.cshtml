@@ -13,6 +13,10 @@
     }
 }
 
+@{
+    ViewData["SelectedTag"] = Model.SelectedTag; 
+}
+
 <div id="@Model.Id" class="tag-tree">
 
     <style class="search-style"></style>
@@ -69,13 +73,7 @@
                                     <ul class="part tag-list popup">
                                         @foreach (var part in component.Children)
                                         {
-                                            <li class="part tag @(part.Id == Model.SelectedTag ? "selected" : "")" 
-                                                style="--tag-color:@part.Color" 
-                                                data-domain="@part.Domain" data-tagid="@part.TagId" data-tag="@part.Tag" data-id="@part.Id">
-                                                <div class="title-bar">
-                                                    <span class="part title" data-tag="@part.Tag">[@part.Tag]</span>
-                                                </div>
-                                            </li>
+                                            @await Html.PartialAsync("_TagTreePart", part)
                                         }
                                     </ul>
                                 </details>
