@@ -1,0 +1,17 @@
+# /code: code section
+very long paragraph1a
+very long paragraph1b
+very long paragraph1c
+#d
+# code paragraph
+/code: very long paragraph21
+#123
+- very long paragraph221
+  - very long paragraph231
+test
+
+text in the middle
+
+/code: very long paragraph31
+very long paragraph32
+very long paragraph33

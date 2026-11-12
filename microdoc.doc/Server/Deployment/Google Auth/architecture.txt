@@ -3,14 +3,14 @@ Follow instructions in this document.
 Official documentation: https://learn.microsoft.com/en-us/aspnet/core/security/authentication/social/google-logins?view=aspnetcore-10.0&utm_source=chatgpt.com
 
 ## Create a Google Cloud project
-- Open Google Cloud Console.
+- Open Google Cloud Console https://console.cloud.google.com/?utm_source=chatgpt.com.
 - Sign in with your Google account.
 - Create a new project (or select an existing one).
 
 ## Configure Google Auth
 - Open Google Auth Platform.
 - Configure the OAuth consent screen:
-   - App name
+   - App name (e.g. MicroDoc)
    - User support email
    - Audience: External
    - Developer contact email
@@ -20,8 +20,9 @@ Official documentation: https://learn.microsoft.com/en-us/aspnet/core/security/a
 - Open the Google Auth Clients.
 - Click Create Client.
 - Select application type: Web application.
-- Enter a name, e.g. MyGame Server.
-- Add Authorized redirect URI (https://your-domain.com/signin-google)
+- Enter a name (e.g. MicroDoc.Web)
+- Add Authorized JavaScript origins (https://localhost:7273)
+- Add Authorized redirect URIs (https://localhost:7273/signin-google)
 - Click Create.
 - Copy the generated:
   - Client ID
