@@ -58,6 +58,7 @@ DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docInReport = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.modal doc[data-domain="${domain}"][data-id="${documentId}"]`); }
+DocMatrix.prototype.docSelected = function () { return this.element.closest(".explorer").querySelector(".overlay .doc.selected"); }
 
 DocMatrix.prototype.Reload = async function () {
     return await this.Load(this.selectedTag, this.loadDeepLevels);

@@ -46,7 +46,7 @@ Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
     if (docMatrix.isModalOpened() && !docMatrix.isModalBackground())
         docMatrix.ClosePrint();
 
-    if (!documentId) {
+    if (!documentId && !this.docMatrix().docSelected()) {
         // update domain title
         document.title = `${this.domain}`;
 
