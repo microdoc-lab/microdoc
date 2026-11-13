@@ -7,6 +7,8 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseWindowsService();
+
 DomainOptionsLoader.ContentRootPath = builder.Environment.ContentRootPath;
 
 // Bind configuration
@@ -88,7 +90,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+var urls = builder.Configuration["Urls"] ?? "";
+if (urls.Split(';').Any(url =>
+    url.StartsWith("https://", StringComparison.OrdinalIgnoreCase)))
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseStaticFiles();
 
 app.UseRouting();
