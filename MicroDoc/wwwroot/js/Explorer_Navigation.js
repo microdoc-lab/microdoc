@@ -38,7 +38,7 @@ Explorer.prototype.ActivateRecentDocument = async function () {
     this.ActivateDocumentOrLoadAndOpen(activeDocumentId);
 }
 
-Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
+Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId, isActiveDocument) {
     this.log(`ActivateDocumentOrLoadAndOpen documentId: ${documentId}`);
 
     var docMatrix = this.docMatrix();
@@ -93,7 +93,18 @@ Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId) {
             docElement.doc.txtEditor().focus();
     }
     else {
-        await docMatrix.LoadAndOpenDocument(this.domain, documentId, selectedHeadingIndex, true);
+        const result = await docMatrix.LoadAndOpenDocument(this.domain, documentId, selectedHeadingIndex, true);
+        if (!result) { 
+            this.RemoveCookieDocument(documentId);
+
+            if (isActiveDocument && !this.docMatrix().docSelected()) {
+                // update domain title
+                document.title = `${this.domain}`;
+
+                // put domain URL in history
+                window.domain.HistoryNavigate(`/${this.domain}`);
+            }
+        }
     }
 
     if (isPrint) {

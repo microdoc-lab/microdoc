@@ -101,7 +101,7 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
             activeDocumentId = element.explorer.GetCookieRecentDocument();
 
         // activate required document
-        await element.explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+        await element.explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId, true);
 
         return;
     }
@@ -160,7 +160,7 @@ Domain.prototype.OpenExplorer = async function (domain, activeDocumentId) {
     }
 
     // activate required document
-    await explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId);
+    await explorer.ActivateDocumentOrLoadAndOpen(activeDocumentId, true);
 }
 
 Domain.prototype.GetActiveExplorer = function () {
