@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddFile();
 builder.Host.UseWindowsService();
 
 DomainOptionsLoader.ContentRootPath = builder.Environment.ContentRootPath;

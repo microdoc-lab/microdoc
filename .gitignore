@@ -9,6 +9,7 @@ obj
 .nupkg
 packages
 
+Logs
 secrets
 microdoc.exe
 microdoc.zip
