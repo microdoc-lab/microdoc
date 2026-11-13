@@ -1,0 +1,52 @@
+# External Access
+
+MicroDoc is a standalone ASP.NET Core application hosted by the built-in Kestrel web server.
+
+The application can run independently without requiring IIS or another web server.
+
+## Basic requirements
+
+- Windows or Linux operating system.
+- Appropriate .NET runtime (if using a framework-dependent deployment).
+- A writable data directory for document libraries.
+- An available HTTP/HTTPS port.
+
+## Running the application
+
+Start the published executable:
+
+MicroDoc.exe
+
+The application starts its own web server and listens on the configured endpoints.
+
+For permanent server installations, it is recommended to configure the application as a system service so that it starts automatically after a server reboot.
+
+## External access
+
+By default, the application may listen only on localhost.
+
+To allow external connections, the system administrator must configure:
+
+- Kestrel network bindings.
+- Firewall rules.
+- HTTPS and SSL certificates.
+- Domain name and DNS records, if applicable.
+- Authentication and access restrictions.
+
+The application can be exposed directly through Kestrel or hosted behind a reverse proxy.
+
+## Supported hosting configurations
+
+Administrators can choose their preferred hosting infrastructure:
+
+- Standalone Kestrel: The application handles HTTP/HTTPS requests directly.
+- IIS: IIS acts as a reverse proxy or hosts the ASP.NET Core application through the ASP.NET Core Module.
+- Other reverse proxies: Nginx, Apache, Cloudflare Tunnel, or equivalent solutions.
+
+The hosting infrastructure is independent of the MicroDoc application. No application-specific changes should be necessary when using a properly configured reverse proxy.
+
+## Security
+
+When exposing MicroDoc to external networks, administrators are responsible for configuring HTTPS, firewall restrictions, application authentication, and appropriate access permissions.
+
+Do not expose development configurations or sensitive credentials to the public.

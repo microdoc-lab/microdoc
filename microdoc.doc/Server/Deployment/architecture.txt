@@ -17,7 +17,7 @@ Following steps
 - setup developer certificate (local deployment)
 - setup Google authentication
 - configure users and roles
-- provide site external access
+- configure site external access
 
 ## /code: Setup developer certificate
 // Unable to configure HTTPS endpoint. 
