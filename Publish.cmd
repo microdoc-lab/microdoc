@@ -12,7 +12,8 @@ dotnet publish "MicroDoc\MicroDoc.csproj" -c Release -o "microdoc.exe" ^
 
 echo Creating ZIP archive...
 powershell -NoProfile -Command ^
-    "Compress-Archive -Path 'microdoc.exe','ServerStart.cmd','microdoc.doc','book.doc','renovation.doc','training.doc' -DestinationPath 'microdoc.zip' -Force" ^
+    "Compress-Archive -Path 'microdoc.exe','ServerStart.cmd','ServiceCreate.cmd','ServiceDelete.cmd',"^
+    "'microdoc.doc','book.doc','renovation.doc','training.doc' -DestinationPath 'microdoc.zip' -Force" ^
     || (echo ERROR: ZIP creation failed. & pause & exit /b 1)
 
 echo. & echo Done: microdoc.zip & pause
