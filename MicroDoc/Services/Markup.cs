@@ -106,6 +106,7 @@ namespace MicroDoc.Services
                 }
             }
 
+            lineIndex++;
             EndParagraph();
             EndList();
             EndTable();
