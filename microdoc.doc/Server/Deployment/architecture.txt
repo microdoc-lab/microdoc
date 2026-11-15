@@ -9,6 +9,12 @@
 - run ServerStart.cmd
 
 This will start local web server and open MicroDoc page in web browser.
+
+Following components required to server run:
+- *.NET 11.0 Runtime* https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-11.0.0-windows-x64-installer
+- *ASP.NET Core Runtime* https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-11.0.0-windows-x64-installer
+- *.NET 11.0 SDK* https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-11.0.100-windows-x64-installer
+
 Site is accessible over https://localhost:7273/
 Simple login is enabled by default - any login/password accepted.
 This is good for local use.
