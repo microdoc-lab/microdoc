@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Karambolo.Extensions.Logging.File" Version="4.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="11.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="11.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="11.0.0" />
-    <PackageReference Include="System.Drawing.Common" Version="11.0.0" />
+    <PackageReference Include="Karambolo.Extensions.Logging.File" Version="4.1.1" />
+    <PackageReference Include="RecursiveAI.OneImage" Version="1.11.1" />
     <PackageReference Include="YamlDotNet" Version="18.1.0" />
   </ItemGroup>
 

@@ -1,0 +1,7 @@
+Third-party software
+====================
+
+OneImage
+Copyright (c) Recursive AI
+License: MIT
+https://www.nuget.org/packages/RecursiveAI.OneImage
