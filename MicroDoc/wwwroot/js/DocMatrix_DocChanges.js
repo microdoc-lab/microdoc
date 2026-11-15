@@ -68,12 +68,12 @@ DocMatrix.prototype.HandleDocChanges = async function (change) {
         case "DeleteDocument":
             var docElement = this.docElement(change.domain, change.documentId);
             var docInCell = this.docInCell(change.domain, change.documentId);
-            var mode = docElement.getAttribute("mode");
 
             const domain = change.domain;
             const docPath = DocParser.DocPath(change.documentId);
 
             if (docElement) {
+                var mode = docElement.getAttribute("mode");
                 if (mode == "edit" && change.external) {
                     if (confirm(format(Loc.Document_DiscardPrompt, domain, docPath)))
                         docElement.doc.CloseDocument();     // confirmed delete - close document
