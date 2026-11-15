@@ -26,9 +26,13 @@ builder.Services.AddSingleton<LockManager>();
 builder.Services.AddSingleton<TagService>();
 builder.Services.AddSingleton<DocService>();
 builder.Services.AddSingleton<TagMoveService>();
-builder.Services.AddControllersWithViews()
-    .AddRazorRuntimeCompilation()
-;
+var mvcBuilder = builder.Services.AddControllersWithViews();
+if (builder.Environment.IsDevelopment())
+{
+#pragma warning disable ASPDEPR003
+    mvcBuilder.AddRazorRuntimeCompilation();
+#pragma warning restore ASPDEPR003
+}
 
 builder.Services.AddSignalR();
 
