@@ -46,12 +46,15 @@ Explorer.prototype.ActivateDocumentOrLoadAndOpen = async function (documentId, i
     if (docMatrix.isModalOpened() && !docMatrix.isModalBackground())
         docMatrix.ClosePrint();
 
-    if (!documentId && !this.docMatrix().docSelected()) {
-        // update domain title
-        document.title = `${this.domain}`;
+    if (!documentId) {
+        if (!this.docMatrix().docSelected()) {
+            // update domain title
+            document.title = `${this.domain}`;
 
-        // put domain URL in history
-        window.domain.HistoryNavigate(`/${this.domain}`);
+            // put domain URL in history
+            window.domain.HistoryNavigate(`/${this.domain}`);
+        }
+
         return;
     }
 
