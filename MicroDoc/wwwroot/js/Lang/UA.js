@@ -1,7 +1,4 @@
 ﻿const LocUA = {
-    Landing_Heading: "Вітаємо у MicroDoc",
-    Landing_Description: "Бібліотека добре організованих мініатюрних документів",
-
     Auth_Prompt: "Введіть ім'я/емейл",
     Auth_LoginSimple: "Спрощений вхід",
     Auth_LoginGoogle: "Вхід Google",

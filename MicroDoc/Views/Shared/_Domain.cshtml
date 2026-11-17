@@ -1,12 +1,25 @@
 ﻿@using MicroDoc.Services
 @inject DomainOptions _domainOptions
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Environment
 
 @{
     Model.Id = "domainExplorers";
 }
 
 <div id="@Model.Id">
-    @await Html.PartialAsync("_LandingPage")
+    @{
+        // locate the landing page view based on the language cookie
+        var language = Context.Request.Cookies["Language"] ?? "US";
+        var viewPath = $"~/Views/Landing/{language}.cshtml";
+
+        if (!System.IO.File.Exists(viewPath.Replace("~", Environment.ContentRootPath)))
+        {
+            viewPath = "~/Views/Landing/US.cshtml";
+        }
+    }
+
+    @await Html.PartialAsync(viewPath)
+
 </div>
 
 <div id="domainOptions" style="display: none;">
