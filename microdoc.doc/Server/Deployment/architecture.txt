@@ -13,7 +13,6 @@ This will start local web server and open MicroDoc page in web browser.
 Following components required to server run:
 - *.NET 11.0 Runtime* https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-11.0.0-windows-x64-installer
 - *ASP.NET Core Runtime* https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-aspnetcore-11.0.0-windows-x64-installer
-- *.NET 11.0 SDK* https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-11.0.100-windows-x64-installer
 
 Document library web site is accessible over https://localhost:7273/
 Simple login is enabled by default - any login/password accepted.
@@ -30,13 +29,7 @@ You may need to configure development certificate if the server won't start and 
 Unable to configure HTTPS endpoint. 
 No server certificate was specified, and the default developer certificate could not be found or is out of date
 
-Download and setup .NET 11 SDK (link above)
-
-/code: dotnet dev-certs https --clean
-dotnet dev-certs https
-dotnet dev-certs https --trust
-
-Alternatively you may run PowerShell script `GenerateDevCertificate.ps1` to avoid downloading SDK (briefly tested)
+Run PowerShell script `GenerateDevCertificate.ps1` to generate development certificate.
 
 ## Setup Google authentication
 /link: [Server] [Deployment] [Google Auth] architecture.txt
