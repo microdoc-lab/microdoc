@@ -134,6 +134,14 @@ Users:
 - { Email: '*',			Roles: rwa }
 ```
 
+# Library features
+![Screenshot](./Screenshot.png)
+- domain explorer / tag tree / document matrix
+- simultaneous document editing
+- multiple domains support
+- search tags / documents
+- print document / images / document column
+
 # Document Markup features
 Documents are relatively small, and there is no WYSIWYG editor at the moment. 
 Document editor is a plain textarea, document markup supports following features:
