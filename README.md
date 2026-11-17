@@ -63,9 +63,13 @@ You may need to configure development certificate if the server won't start and 
 Unable to configure HTTPS endpoint. 
 No server certificate was specified, and the default developer certificate could not be found or is out of date
 
+Download and setup .NET 11 SDK (link above)
+
 /code: dotnet dev-certs https --clean
 dotnet dev-certs https
 dotnet dev-certs https --trust
+
+Alternatively you may run PowerShell script `GenerateDevCertificate.ps1` to avoid downloading SDK (briefly tested)
 
 # Sample domains and Domain Options
 Top-level navigation menu of site contains links to sample domains:
