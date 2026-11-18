@@ -1,12 +1,12 @@
 # Minimal Deployment
-- download microdoc.zip
+- download `microdoc.zip`
 - unzip to some folder
   - microdoc.exe - web server folder
   - microdoc.doc - MicroDoc document library
   - book.doc - book sample document library
   - renovation.doc - renovation sample document library
   - training.doc - training sample document library
-- run ServerStart.cmd
+- run `Deploy\ServerStart.cmd`
 
 This will start local web server and open MicroDoc page in web browser.
 
@@ -29,7 +29,7 @@ You may need to configure development certificate if the server won't start and 
 Unable to configure HTTPS endpoint. 
 No server certificate was specified, and the default developer certificate could not be found or is out of date
 
-Run PowerShell script `GenerateDevCertificate.ps1` to generate development certificate.
+Run PowerShell script `Deploy\GenerateDevCertificate.ps1` to generate development certificate.
 
 ## Setup Google authentication
 /link: [Server] [Deployment] [Google Auth] architecture.txt

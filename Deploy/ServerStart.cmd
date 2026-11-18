@@ -2,6 +2,7 @@
 setlocal
 
 CD /d "%~dp0"
+CD ..
 CD microdoc.exe
 
 SET ASPNETCORE_URLS=https://localhost:7273

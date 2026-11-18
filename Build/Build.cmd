@@ -1,7 +1,8 @@
 @echo off
 setlocal
 
-cd /d "%~dp0"
+CD /d "%~dp0"
+CD ..
 
 echo Removing publish folder...
 if exist "microdoc.exe" rmdir /s /q "microdoc.exe"

@@ -1,7 +1,7 @@
 # Running as a Windows Service
 
 ## Register Windows Service
-Run `ServiceCreate.cmd` to create a service
+Run `Deploy\ServiceCreate.cmd` to create a service
 
 ## Testing without Https
 In appsettings.json use following setting
