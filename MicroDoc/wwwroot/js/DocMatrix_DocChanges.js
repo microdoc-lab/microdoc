@@ -51,9 +51,10 @@ DocMatrix.prototype.HandleDocChanges = async function (change) {
                         txtEditor.AdjustHeight(txtEditor);
                     } else {                // local view
                         docElement.dataset.content = change.content;            // update viewer, no focus logic (in toggle)
-                        if (!change.contentEditable)
-                            docViewer.innerHTML = change.html;
+                        docViewer.innerHTML = change.html;
                         txtEditor.value = change.content;
+                        if (change.contentEditable)
+                            docElement.doc.TurnCodeBlocksContentEditable();
                     }
                 }
             }
