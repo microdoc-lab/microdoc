@@ -485,13 +485,8 @@ namespace MicroDoc.Controllers
 
             if (thumbDimension.HasValue)
             {
-                if (OperatingSystem.IsWindows()) {
-
-                    var bytes = ImageHelper.ThumbnailPng(filePath, thumbDimension.Value);
-                    return File(bytes, "image/png");
-                }
-
-                return Error(ErrorCode.NotImplemented);
+                var bytes = ImageHelper.ThumbnailPng(filePath, thumbDimension.Value);
+                return File(bytes, "image/png");
             }
 
             return PhysicalFile(filePath, contentType);
