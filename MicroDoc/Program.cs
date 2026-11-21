@@ -123,6 +123,9 @@ app.Use(async (context, next) =>
     await next();
 });
 
+var logger = app.Services.GetRequiredService<ILogger<Program>>();
+logger.LogInformation($"Starting application MicroDoc v{AppVersion.Value}");
+
 // Run UpdateDomainBackgroundVersions
 app.Services.GetRequiredService<DocService>().UpdateDomainBackgroundVersions();
 
