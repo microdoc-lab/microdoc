@@ -137,8 +137,15 @@ DocParser.ReplaceDocumentPart = function(document, linestart, lineend, replaceme
     const newLines = replacement.split("\n");
 
     const escapedNewLines = newLines.map(line => {
-        if (/^#{1,3}\s/.test(line))
+        if (/^#/.test(line))
             return "/" + line;
+
+        if (/^\s*-/.test(line))
+            return "/" + line;
+
+        if (/^\s*\|/.test(line))
+            return "/" + line;
+
         return line;
     });
 

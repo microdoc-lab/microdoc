@@ -34,8 +34,12 @@ namespace MicroDoc.Services
 
         private string UnescapeLine(string line)
         {
-            if (line.StartsWith("/#"))
-                return line.TrimStart('/');
+            if (line.StartsWith("/"))
+            {
+                var tail = line.TrimStart('/').TrimStart(' ');
+                if (tail.StartsWith("#") || tail.StartsWith("-") || tail.StartsWith("|"))
+                    return line.TrimStart('/');
+            }
 
             return line;
         }
