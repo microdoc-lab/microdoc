@@ -1,0 +1,5 @@
+# Format samples
+
+This is *bold* text
+This is _underline_
+This is `code fragment`

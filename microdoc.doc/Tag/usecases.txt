@@ -1,6 +1,18 @@
-# /code:code test
-my code
-going here
-## single-line code 
-text goes here: `var a = b;` - this is code block
-## empty section
+# Domain Tags samples
+## /example: Software domain tags
+- [Database]
+  - [Profiling]
+- [Server]
+  - [Security]
+  - [Configuration]
+- [Client]
+  - [Widgets]
+  - [Responsiveness]
+
+## /example: Car domain tags
+- [Suspension]
+  - [Front]
+  - [Rear]
+- [Electronics]
+  - [Light]
+  - [Interior]

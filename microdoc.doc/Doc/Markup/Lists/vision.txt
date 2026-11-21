@@ -7,7 +7,10 @@ Document section may contain lists:
 - press Enter to start new list item of same indentation level
 
 ## /code: List sample
-- item 1
-- item 2
-  - nested item 11
-  - nested item 12 
+/- item 1
+/  - nested item 11
+/    - nested item 111
+/  - nested item 12 
+/- item 2
+/  - nested item 21
+/  - nested item 22 

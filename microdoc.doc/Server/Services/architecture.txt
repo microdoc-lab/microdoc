@@ -1,16 +1,16 @@
 # Services
 Server functionality is implemented in services:
-- TagService
-- DocService
-- LockManager
-- TagMoveService
+- TagService - work with Tags
+- DocService - work with Documents
+- LockManager - distributed locking
+- TagMoveService - track links after Tag renames (experimental)
 
 # Configuration
 Server configuration:
-- MicroDocOptions - appsettings.json
+- class `MicroDocOptions` represent access to `appsettings.json`
   - logging
   - Google authentication
   - path to DomainOptions.ini
-- DomainOptions - DomainOptions.ini
+- class `DomainOptions` represent access to `DomainOptions.ini`
   - domains
   - users

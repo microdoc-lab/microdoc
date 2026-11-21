@@ -1,0 +1,11 @@
+# Image Gallery sample
+first paragraph
+/image:Rabbit1.png
+/image:Rabbit2.jpg
+second paragraph
+
+## Another section with images
+/image:Rabbit1.png
+/image:Rabbit2.jpg
+/image:Rabbit1.png
+/image:Rabbit2.jpg

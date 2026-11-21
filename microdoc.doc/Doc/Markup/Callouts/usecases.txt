@@ -1,9 +1,9 @@
-# /code: code section
+# /code: Code section sample
 very long paragraph1a
 very long paragraph1b
 very long paragraph1c
 #d
-# code paragraph
+# Code paragraph sample
 /code: very long paragraph21
 #123
 - very long paragraph221

@@ -1,5 +1,5 @@
 # Web Server
-MicroDoc server implemented as ASP.NET Core application using net8.0 framework.
+MicroDoc server implemented as ASP.NET Core application using net11.0 framework.
 Standard components are used:
 - dependency injection
 - logging
@@ -7,5 +7,7 @@ Standard components are used:
 ## Used packages
 - Microsoft.AspNetCore.Authentication.Google - Google authentication
 - Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation - runtime view compilation
-- System.Drawing.Common - create image thumbnails
+- Microsoft.Extensions.Hosting.WindowsServices - host server as Windows service
+- Karambolo.Extensions.Logging.File - logging into file
+- RecursiveAI.OneImage - create image thumbnails
 - YamlDotNet - read/write Domain Options configuration; view.ini

@@ -1,0 +1,4 @@
+# Links samples
+/link:[Doc] [Markup] [Images] usecases.txt
+/link:[Doc] [Markup] [Tables] usecases.txt
+https://www.google.com/

@@ -1,0 +1,4 @@
+# Sample Domain documents
+| Software Development | vision, architecture, use-cases, configuration 	|
+| Apt Renovation		| design, materials, shopping					|
+| Training				| videos, preparation, working, recovery			|

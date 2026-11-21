@@ -7,24 +7,6 @@ Tags are similar to folders in file system.
 Every single Tag can have multiple related documents (vision/architecture/usecases).
 Tags are managed by document library users.
 
-## /example: Software domain tags
-- [Database]
-  - [Profiling]
-- [Server]
-  - [Security]
-  - [Configuration]
-- [Client]
-  - [Widgets]
-  - [Responsiveness]
-
-## /example: Car domain tags
-- [Suspension]
-  - [Front]
-  - [Rear]
-- [Electronics]
-  - [Light]
-  - [Interior]
-
 ## Tag Name
 Tag name identifies the tag within it's parent. 
 Only symbols, digits, underscore, hyphen, space allowed.
