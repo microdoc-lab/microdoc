@@ -83,6 +83,8 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
 
                 this.modal().scrollTo({ behavior: 'auto', top: 0 });
 
+                window.scrollTo({ behavior: 'auto', top: 0 });
+
                 // add selected class to heading
                 container.querySelectorAll("h1, h2, h3").forEach(heading => heading.classList.remove('selected'));
                 heading.classList.add('selected');
