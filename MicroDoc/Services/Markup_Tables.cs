@@ -9,7 +9,7 @@
             if (isCode)
                 return [];
 
-            var parts = line.Split('|');
+            var parts = line.Split('|', '!');
 
             if (parts.Length < 3)
                 return [];
@@ -51,7 +51,7 @@
             }
         }
 
-        private void StartTableRow(string[] cells)
+        private void StartTableRow(string[] cells, string line)
         {
             if (!tableStarted)
             {
@@ -59,7 +59,11 @@
                 tableStarted = true;
             }
 
-            html.Append("<tr>\n");
+            line = line.Trim();
+            if (line.StartsWith("!") && line.EndsWith("!"))
+                html.Append("<tr class=\"noborder\">\n");
+            else
+                html.Append("<tr>\n");
 
             var rowColspans = ParseRowColspans(cells).ToArray();
 

@@ -42,12 +42,20 @@
     border: 1px solid #ccc;
 }
 
+.doc .table tr, doc .table tr {
+    border-bottom: 1px solid lightgray;
+}
+
+.doc .table tr.noborder, doc .table tr.noborder {
+    border-bottom: none;
+}
+
 .doc .table th, doc .table th,
 .doc .table td, doc .table td
 {
-    border: 1px solid #ccc;
-    padding-left: 5px;
-    padding-right: 5px;
+    border: none;
+    border-right: 1px solid lightgray;
+    padding: 1px 3px;
 }
 
 /* Image */

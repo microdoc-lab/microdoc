@@ -1,5 +1,5 @@
 # Table sample
-|vision 	| arch 	| test	|
-|1			|		|		|
-|2			|colspan		||
-|colspan			||		|
+| vision 		| arch 	| test	|
+| 1			|		|		|
+| 2			| colspan			||
+| colspan				||		|

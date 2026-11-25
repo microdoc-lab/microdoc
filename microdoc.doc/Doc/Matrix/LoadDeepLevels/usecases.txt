@@ -1,8 +1,8 @@
 ## see flat tag structure
 By default document matrix should display documents of selected tag in tree + immediate child documents. This helps to stay focused on context.
-| Open tag in Tag tree	| See Tag and it's Children in Document Matrix	|
+! Open tag in Tag tree	! → See Tag and it's Children in Document Matrix	!
 
 ## see full tag structure
 Load Deep Levels check box allows to load child documents of all levels for the tag selected in tree. This gives user expanded view, but requires more files to read.
-| Open tag in Tag tree	| See Tag and it's Children in Document Matrix	|
-| Click Load Deep Levels	| See Tag and all it's Children in Document Matrix	|
+! Open tag in Tag tree	! → See Tag and it's Children in Document Matrix	!
+! Click Load Deep Levels	! → See Tag and *all* it's Children in Document Matrix	!

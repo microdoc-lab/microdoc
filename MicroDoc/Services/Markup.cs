@@ -80,7 +80,7 @@ namespace MicroDoc.Services
                     EndImageGallery();
                     EnsureStartSection();
                     var formatted = tableCells.Select(FormatText).ToArray();
-                    StartTableRow(formatted);
+                    StartTableRow(formatted, line);
                     continue;
                 }
 
