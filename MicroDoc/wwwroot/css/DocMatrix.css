@@ -104,6 +104,14 @@
     overflow: visible;
 }
 
+.docmatrix .grid tr:has(td.selected) {
+    box-shadow: 0 2px 6px rgba(0,0,200,0.2);
+}
+
+.docmatrix .grid td.selected {
+    box-shadow: 0 2px 6px rgba(0,0,200,0.3);
+}
+
 .docmatrix .grid td clip {
     display: block;
     overflow: clip;
