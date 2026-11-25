@@ -1,6 +1,8 @@
 ﻿Doc.prototype.InitEditorCode = function (options) {
     this.debug('InitEditorCode');
 
+    const explorer = this.explorer();
+    const docMatrix = this.docMatrix();
     const docViewer = this.docViewer();
 
     // accept Tab in contentEditable
@@ -37,6 +39,13 @@
         else if (text.substring(Math.max(0, offset - 2), offset) === "  ") {
             range.setStart(node, offset - 2);
             range.deleteContents();
+        }
+    });
+
+    docViewer.addEventListener("focusin", e => {
+        if (e.target.isContentEditable) {
+            explorer.OnDocumentActivated(this);
+            docMatrix.SelectDocument(this.element);
         }
     });
 

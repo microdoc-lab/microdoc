@@ -1,9 +1,34 @@
-﻿// Api
+﻿DocMatrix.prototype.InitDocument = function (options) {
+    this.debug('InitDocument');
+
+    this.gridStyle = this.element.querySelector(".grid-style");
+}
+
+DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitDocument);
+
+// Api
 DocMatrix.prototype.SelectDocument = function (element) {
     var docElement = element.closest(".doc");
     if (docElement) {
         this.overlay().querySelectorAll(".doc").forEach(doc => doc.classList.remove('selected'));
         docElement.classList.add("selected");
+    }
+
+    // Update grid style to highlight selected document
+    const sheet = this.gridStyle.sheet;
+
+    // Delete all existing rules
+    while (sheet.cssRules.length > 0)
+        sheet.deleteRule(0);
+
+    if (docElement) {
+        const documentId = docElement.dataset.id;
+        const tag = DocParser.TagParent(documentId);
+        const document = DocParser.DocName(documentId);
+        // Highlight document row
+        sheet.insertRule(`.docmatrix#${this.id} tr[data-tag=${JSON.stringify(tag)}] { box-shadow: 0 2px 6px rgba(0,0,200,0.2); }`, sheet.cssRules.length);
+        // Highlight document cell
+        sheet.insertRule(`.docmatrix#${this.id} tr[data-tag=${JSON.stringify(tag)}] td[data-document=${JSON.stringify(document)}] { box-shadow: 0 2px 6px rgba(0,0,200,0.3); }`, sheet.cssRules.length);
     }
 }
 
