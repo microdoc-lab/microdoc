@@ -7,8 +7,18 @@
 DocMatrix.prototype.behaviors.push(DocMatrix.prototype.InitDocument);
 
 // Api
-DocMatrix.prototype.SelectDocument = function (element) {
-    var docElement = element.closest(".doc");
+DocMatrix.prototype.SelectDocument = function (docElement) {
+    // remove selection from all documents
+    // selection should exist
+    const selection = window.getSelection();
+    if (selection && !selection.isCollapsed) {
+        const selectionDocElement = selection.anchorNode.closest(".doc");
+        if (selectionDocElement && selectionDocElement !== docElement) {
+            selection.removeAllRanges();
+        }
+    }
+
+    // add selection to the clicked document
     if (docElement) {
         this.overlay().querySelectorAll(".doc").forEach(doc => doc.classList.remove('selected'));
         docElement.classList.add("selected");
@@ -65,7 +75,7 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
             SelectElement(span);
 
             // select docElement
-            this.SelectDocument(imageWrapper);
+            this.SelectDocument(docElement);
 
             if (container) {
                 // add selected class to image
@@ -99,7 +109,7 @@ DocMatrix.prototype.HandleDocumentClick = async function (event, select, contain
             SelectElement(heading);
 
             // select docElement
-            this.SelectDocument(section);
+            this.SelectDocument(docElement);
 
             if (container) {
                 // scroll to clicked heading (print preview TOC)
