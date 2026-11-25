@@ -4,12 +4,12 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
 
     switch (change.op) {
         case "SwapTags":
-            if (selectedTag == change.parentTag)
+            if (selectedTag == change.parentTag || this.loadDeepLevels)
                 this.SwapRows(change.parentTag, change.tagName, change.targetTagName);  // if selected tag is parent tag - swap grid rows
             break;
 
         case "NewTag":
-            if (selectedTag == change.selectedTag)      // if selected tag is parent of new tag - reload grid (to see newly created tag in it)
+            if (selectedTag == change.selectedTag || this.loadDeepLevels)      // if selected tag is parent of new tag - reload grid (to see newly created tag in it)
                 await this.Load(selectedTag);
             break;
 
@@ -27,7 +27,7 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
             if (change.external) {
                 if (selectedTag == change.selectedTag)
                     await this.Load(change.parentTag);        // if selected tag is a moved tag - switch grid to parent tag (to see tag gone)
-                if (selectedTag == change.targetTag || selectedTag == change.parentTag)
+                else if (selectedTag == change.targetTag || selectedTag == change.parentTag || this.loadDeepLevels)
                     await this.Load(selectedTag);             // if selected tag is target/parent - reload grid (to see tag gone)
             } else
                 await this.Load(change.newTag);               // switch grid to moved tag
@@ -36,6 +36,8 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
         case "DeleteTag":
             if (selectedTag == change.selectedTag || selectedTag == change.parentTag)   // if selected tag is deleting tag/parent - switch grid to parent tag
                 await this.Load(change.parentTag);
+            else if (this.loadDeepLevels)
+                    await this.Load(selectedTag);
             break;
     }
 }
