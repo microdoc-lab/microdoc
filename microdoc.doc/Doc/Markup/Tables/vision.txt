@@ -19,3 +19,10 @@ To make a cell span multiple columns print several vertical line (||) symbols at
 |1			|		|		|
 |2			|colspan		||
 |colspan			||		|
+
+## Row without border
+To create multirow table without borders between rows start end end line with ! symbol.
+! WHEN I do this	! → THEN I see this	!
+! WHEN I do this	! → THEN I see this	!
+! WHEN I do this	! → THEN I see this	!
+This syntax is useful in tabular multi-step use-case notation.
