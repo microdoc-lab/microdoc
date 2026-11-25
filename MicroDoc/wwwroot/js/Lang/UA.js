@@ -42,6 +42,7 @@
     DocMatrix_Search: "Пошук",
     DocMatrix_SearchPH: "Пошук",
     DocMatrix_Print: "Друкувати колонку",
+    DocMatrix_Misc: "Різне",
 
     DocMatrix_NewPrompt: "Введіть назву документа (без розширення)",
     DocMatrix_InvalidDocumentName: "Невірна назва документа. Лише символи, цифри, підкреслення, дефіс, пробіли допустимі",

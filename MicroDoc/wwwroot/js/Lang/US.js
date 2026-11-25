@@ -42,6 +42,7 @@
     DocMatrix_Search: "Search",
     DocMatrix_SearchPH: "Search",
     DocMatrix_Print: "Print column",
+    DocMatrix_Misc: "Misc",
 
     DocMatrix_NewPrompt: "Enter document name (without extension)",
     DocMatrix_InvalidDocumentName: "Invalid document name. Only symbols, digits, underscore, hyphen, space allowed",
