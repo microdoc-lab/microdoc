@@ -3,6 +3,7 @@
     var toolbar = this.toolbar();
     var docElement = this.element;
     var explorer = this.explorer();
+    var docMatrix = this.docMatrix();
 
     var domain = docElement.dataset.domain;
     var documentId = docElement.dataset.id;
@@ -17,6 +18,7 @@
     toolbar.dataset.domain = null;
     toolbar.dataset.id = null;
 
+    docMatrix.UnselectDocument(docElement);
     explorer.OnDocumentClosed(this);
 }
 

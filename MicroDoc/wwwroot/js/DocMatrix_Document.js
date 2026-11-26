@@ -26,6 +26,18 @@ DocMatrix.prototype.SelectDocument = function (docElement) {
     }
 }
 
+DocMatrix.prototype.UnselectDocument = function (docElement) {
+    const domain = docElement.dataset.domain;
+    const documentId = docElement.dataset.id;
+
+    // Remove selected document in grid
+    var docInCell = this.docInCell(domain, documentId);
+    if (docInCell) {
+        const cell = docInCell.closest("td");
+        cell.classList.remove('selected');
+    }
+}
+
 DocMatrix.prototype.HandleDocumentClick = async function (event, select, container, scrollOnSelect) {
     // open embeded link
     const link = event.target.closest("a");
