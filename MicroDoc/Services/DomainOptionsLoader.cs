@@ -48,20 +48,23 @@ namespace MicroDoc.Services
             if (options.Domains.Any(d => !IsValidDomain(d.Name)))
                 return ErrorCode.InvalidDomainName;
 
-            if (options.Domains.Where(d => !string.IsNullOrWhiteSpace(d.Background)).Any(d =>
-            {
-                var status = TryParseImagePath(d.Background, out var tags, out var document, out var imageName);
-                if (status != ErrorCode.Ok)
-                    return false;
-
-                if (!tags.All(IsValidTagName) || !IsValidDocumentName(document) || !IsValidImageName(Path.GetFileNameWithoutExtension(imageName)))
-                    return false;
-
-                return true;
-            }))
+            if (options.Domains.Where(d => !string.IsNullOrWhiteSpace(d.Background)).Any(d => !ValidateBackground(d.Background)))
+                return ErrorCode.InvalidImageName;
 
             InitOptions(options);
             return ErrorCode.Ok;
+        }
+
+        private static bool ValidateBackground(string domainBackground)
+        {
+            var status = TryParseImagePath(domainBackground, out var tags, out var document, out var imageName);
+            if (status != ErrorCode.Ok)
+                return false;
+
+            if (!tags.All(IsValidTagName) || !IsValidDocumentName(document) || !IsValidImageName(Path.GetFileNameWithoutExtension(imageName)))
+                return false;
+
+            return true;
         }
 
         public static void SaveOptionsToFile(string path, string yaml)
