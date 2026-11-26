@@ -2,6 +2,7 @@
     this.debug('InitDragNDropReorder');
 
     var expandTimer = null;
+    var expandSummary = null;
     this.element.querySelectorAll("summary").forEach(summary => {
         summary.addEventListener('dragenter', e => {
             if (!this.draggedNode) return;
@@ -16,12 +17,16 @@
             expandTimer = setTimeout(() => {
                 details.open = true;
                 expandTimer = null;
+                expandSummary = null;
             }, 800);
+            expandSummary = summary;
         });
 
         summary.addEventListener('dragleave', e => {
+            if (summary !== expandSummary) return;
             clearTimeout(expandTimer);
             expandTimer = null;
+            expandSummary = null;
         });
     });
 
