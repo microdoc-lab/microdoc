@@ -68,8 +68,10 @@ async function SimpleLogin() {
     });
 
     if (!response.ok) {
-        const result = await response.json();
-        alert(result.error);
+        const text = Loc.Auth_SimpleLoginFailed;
+        const error = await response.text();
+        console.error(`SimpleLogin: ${text}`, error); 
+        alert(text + "\n\n" + LocalizeError(error));
         return;
     }
 

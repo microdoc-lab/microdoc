@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Security.Claims;
 using static MicroDoc.Services.DocumentParser;
 
@@ -664,20 +665,20 @@ namespace MicroDoc.Controllers
         public async Task<IActionResult> SimpleLogin(string email)
         {
             if (!_domainOptions.SimpleLogin)
-                return BadRequest(new { error = "Simple login not supported" });
+                return Error(ErrorCode.SimpleLoginNotSupported);
 
             if (!IPAddress.IsLoopback(HttpContext.Connection.RemoteIpAddress))
-                return BadRequest(new { error = "Simple login allowed only on localhost" });
+                return Error(ErrorCode.SimpleLoginNotAllowed);
 
             if (string.IsNullOrWhiteSpace(email))
-                return BadRequest(new { error = "Empty email" });
+                return Error(ErrorCode.SimpleLoginEmptyEmail);
 
             // Find user or *
             var user = _domainOptions.Users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase))
                 ?? _domainOptions.Users.FirstOrDefault(u => u.Email == "*");
 
             if (user == null)
-                return BadRequest(new { error = "Unknown user email" });
+                return Error(ErrorCode.SimpleLoginUnknownEmail);
 
             // sign-in user
             var claims = new[]

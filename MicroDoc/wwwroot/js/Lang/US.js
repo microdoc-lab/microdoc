@@ -5,6 +5,8 @@
     Auth_Greeting: "Hello, {0}!",
     Auth_Logout: "Logout",
 
+    Auth_SimpleLoginFailed: "Simple Login failed",
+
     Header_EditDomainOptions: "Edit Domain Options",
 
     DomainOptions_LoadFailed: "Load domain options failed",
@@ -96,4 +98,8 @@
     ErrorCode_InvalidDomainName: "Invalid domain name. Only symbols, digits, underscore, hyphen, dot allowed",
     ErrorCode_InvalidParameters: "Invalid Parameters",
     ErrorCode_NotImplemented: "Not Implemented",
+    ErrorCode_SimpleLoginNotSupported: "Simple login not supported",
+    ErrorCode_SimpleLoginNotAllowed: "Simple login allowed only on localhost",
+    ErrorCode_SimpleLoginEmptyEmail: "Empty email",
+    ErrorCode_SimpleLoginUnknownEmail: "Unknown email"
 };

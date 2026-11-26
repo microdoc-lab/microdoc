@@ -26,5 +26,10 @@
         InvalidParameters,
 
         NotImplemented,
+
+        SimpleLoginNotSupported,
+        SimpleLoginNotAllowed,
+        SimpleLoginEmptyEmail,
+        SimpleLoginUnknownEmail,
     }
 }

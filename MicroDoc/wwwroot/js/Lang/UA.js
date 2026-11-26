@@ -5,6 +5,8 @@
     Auth_Greeting: "Вітаю, {0}!",
     Auth_Logout: "Вихід",
 
+    Auth_SimpleLoginFailed: "Спрощений вхід не вдався",
+
     Header_EditDomainOptions: "Редагувати налаштування Доменів",
 
     DomainOptions_LoadFailed: "Завантажити налаштування Доменів не вдалося",
@@ -96,4 +98,8 @@
     ErrorCode_InvalidDomainName: "Невірна назва домену. Лише символи, цифри, підкреслення, дефіс, крапка допустимі",
     ErrorCode_InvalidParameters: "Невірні параметри",
     ErrorCode_NotImplemented: "Не реалізовано",
+    ErrorCode_SimpleLoginNotSupported: "Спрощений вхід не підтримується",
+    ErrorCode_SimpleLoginNotAllowed: "Спрощений вхід дозволено лише на localhost",
+    ErrorCode_SimpleLoginEmptyEmail: "Порожній email",
+    ErrorCode_SimpleLoginUnknownEmail: "Невідомий email"
 };
