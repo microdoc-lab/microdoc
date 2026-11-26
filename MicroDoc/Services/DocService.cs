@@ -97,7 +97,7 @@
                     if (ImageExtensions.Any(ext => extension.Equals(ext, StringComparison.InvariantCultureIgnoreCase)))
                         continue;
 
-                    string documentId = file.Substring(rootFolder.Length).TrimStart('\\').Replace("\\", "/");
+                    string documentId = Path.GetRelativePath(rootFolder, file).Replace(Path.DirectorySeparatorChar, '/');
 
                     DocNode node;
                     using (_lockManager.Read(domain, documentId))
