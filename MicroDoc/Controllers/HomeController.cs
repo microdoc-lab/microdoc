@@ -13,6 +13,7 @@ using static MicroDoc.Services.DocumentParser;
 
 namespace MicroDoc.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

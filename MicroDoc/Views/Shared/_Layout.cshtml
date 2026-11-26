@@ -132,6 +132,8 @@
     <script src="~/js/Lang/US.js" asp-append-version="true"></script>
     <script src="~/js/Lang/UA.js" asp-append-version="true"></script>
 
+    @Html.AntiForgeryToken()
+
     <div class="container">
         <main role="main">
             @RenderBody()

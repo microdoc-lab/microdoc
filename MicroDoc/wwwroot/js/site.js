@@ -38,7 +38,15 @@ const clientUID = crypto.randomUUID();
 
 async function apiFetch(url, options = {}) {
     const headers = new Headers(options.headers);
+
     headers.set("X-Client-UID", clientUID);
+
+    const token = document.querySelector(
+        'input[name="__RequestVerificationToken"]'
+    )?.value;
+
+    if (token)
+        headers.set("RequestVerificationToken", token);
 
     return fetch(url, {
         ...options,
