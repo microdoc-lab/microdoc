@@ -271,6 +271,10 @@ namespace MicroDoc.Services
                 if (modifyView != null)
                     status = modifyView(view);
 
+                // rebuild view if modification failed
+                if (status != ErrorCode.Ok)
+                    view = BuildView(domain, tagId);
+
                 // save view anyway
                 var viewPath = Path.Combine(rootFolder, tagId, ViewFileName);
                 TagViewLoader.SaveTagsToFile(viewPath, view);
