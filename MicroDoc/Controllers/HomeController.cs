@@ -408,7 +408,7 @@ namespace MicroDoc.Controllers
         [Authorize]
         public async Task<IActionResult> DeleteDocument(string domain, string documentId)
         {
-            if (!User.IsInRole(_domainOptions, "w", domain))
+            if (!User.IsInRole(_domainOptions, "w", domain, documentId))
                 return Forbid();
 
             if (!IsValidDomain(domain) || !IsValidDocumentId(documentId))
@@ -444,7 +444,7 @@ namespace MicroDoc.Controllers
         [Authorize]
         public IActionResult Image(string domain, string documentId, string imageName, int? thumbDimension = null)
         {
-            if (!User.IsInRole(_domainOptions, "r", domain))
+            if (!User.IsInRole(_domainOptions, "r", domain, documentId))
                 return Forbid();
 
             if (!IsValidDomain(domain) || !IsValidDocumentId(documentId) || !IsValidImageName(Path.GetFileNameWithoutExtension(imageName)))
