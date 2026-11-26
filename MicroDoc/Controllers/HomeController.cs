@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
+using System.Net;
 using System.Security.Claims;
 using static MicroDoc.Services.DocumentParser;
 
@@ -664,6 +665,9 @@ namespace MicroDoc.Controllers
         {
             if (!_domainOptions.SimpleLogin)
                 return BadRequest(new { error = "Simple login not supported" });
+
+            if (!IPAddress.IsLoopback(HttpContext.Connection.RemoteIpAddress))
+                return BadRequest(new { error = "Simple login allowed only on localhost" });
 
             if (string.IsNullOrWhiteSpace(email))
                 return BadRequest(new { error = "Empty email" });

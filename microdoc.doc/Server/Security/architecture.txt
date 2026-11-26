@@ -12,3 +12,6 @@ Use `SecurityExtensions.IsInRole` in all controller methods that has document co
 
 /code: if (!User.IsInRole(_domainOptions, "r", domain, documentId))
 	return Forbid();
+
+## Simple Login
+/note: SimpleLogin is working only on localhost, and it should be disabled on remote

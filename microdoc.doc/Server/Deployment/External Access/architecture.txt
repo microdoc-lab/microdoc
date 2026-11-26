@@ -35,6 +35,8 @@ To allow external connections, the system administrator must configure:
 
 The application can be exposed directly through Kestrel or hosted behind a reverse proxy.
 
+/note: SimpleLogin is working only on localhost, and it should be disabled on remote
+
 ## Supported hosting configurations
 
 Administrators can choose their preferred hosting infrastructure:
