@@ -10,20 +10,25 @@
 
 @{
     var SelectedTag = (string)ViewData["SelectedTag"];
+    var Type = (string)ViewData["PartType"];
 }
 
-<li class="part tag @(Model.Id == SelectedTag ? "selected" : "")" 
+<li class="@Type tag @(Model.Id == SelectedTag ? "selected" : "")" 
     style="--tag-color:@Model.Color" 
     data-domain="@Model.Domain" data-tagid="@Model.TagId" data-tag="@Model.Tag" data-id="@Model.Id">
     <details class="@(!Model.Children.Any() ? "empty" : "")" open="@(Model.Children.Any() && IsTagNodeOpen(Model.Id, SelectedTag))">
         <summary class="title-bar">
-            <span class="component title" data-tag="@Model.Tag">[@Model.Tag]</span>
+            <span class="@Type title" data-tag="@Model.Tag">[@Model.Tag]</span>
         </summary>
-        <ul class="part tag-list popup">
-            @foreach (var part in Model.Children)
-            {
-                @await Html.PartialAsync("_TagTreePart", part)
-            }
-        </ul>
+        @if (Model.Children.Any())
+        {
+            <ul class="part tag-list popup">
+                @foreach (var part in Model.Children)
+                {
+                    ViewData["PartType"] = "part";
+                    @await Html.PartialAsync("_TagTreePart", part)
+                }
+            </ul>
+        }
     </details>
 </li>

@@ -14,7 +14,7 @@
 }
 
 @{
-    ViewData["SelectedTag"] = Model.SelectedTag; 
+    ViewData["SelectedTag"] = Model.SelectedTag;
 }
 
 <div id="@Model.Id" class="tag-tree">
@@ -52,39 +52,8 @@
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
     {
-        <li class="module tag @(module.Id == Model.SelectedTag ? "selected" : "")" 
-            style="--tag-color:@module.Color;" 
-            data-domain="@module.Domain" data-tagid="@module.TagId" data-tag="@module.Tag" data-id="@module.Id">
-            <details class="@(!module.Children.Any() ? "empty" : "")" open="@(module.Children.Any() && IsTagNodeOpen(module.Id))">
-                <summary class="title-bar">
-                    <span class="module title" data-tag="@module.Tag">[@module.Tag]</span>
-                </summary>
-
-                @if (module.Children.Any())
-                {
-                    <ul class="component tag-list popup">
-                        @foreach (var component in module.Children)
-                        {
-                            <li class="component tag @(component.Id == Model.SelectedTag ? "selected" : "")" 
-                                style="--tag-color:@component.Color" 
-                                data-domain="@component.Domain" data-tagid="@component.TagId" data-tag="@component.Tag" data-id="@component.Id">
-                                <details class="@(!component.Children.Any() ? "empty" : "")" open="@(component.Children.Any() && IsTagNodeOpen(component.Id))">
-                                    <summary class="title-bar">
-                                        <span class="component title" data-tag="@component.Tag">[@component.Tag]</span>
-                                    </summary>
-                                    <ul class="part tag-list popup">
-                                        @foreach (var part in component.Children)
-                                        {
-                                            @await Html.PartialAsync("_TagTreePart", part)
-                                        }
-                                    </ul>
-                                </details>
-                            </li>
-                        }
-                    </ul>
-                }
-            </details>
-        </li>
+        ViewData["PartType"] = "module";
+        @await Html.PartialAsync("_TagTreePart", module)
     }
     </ul>
 </div>
