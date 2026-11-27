@@ -51,6 +51,7 @@ Explorer.prototype.ApplyChanges = async function (change) {
 }
 
 // Api
+Explorer.prototype.docPanel = function () { return this.element.querySelector('.doc-panel'); }
 Explorer.prototype.tagTree = function () { return document.getElementById(this.tagTreeId).tagTree; }
 Explorer.prototype.docMatrix = function () { return document.getElementById(this.docMatrixId).docMatrix; }
 

@@ -10,7 +10,10 @@
         this.selectedTag = tagId;
         this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
 
-        docMatrix.Load(tagId, this.loadDeepLevels);
+        if (this.loadDeepLevels)
+            docMatrix.ScrollToSelectedRow(tagId);
+        else
+            docMatrix.Load(tagId, this.loadDeepLevels);
     };
 
     // store search in cookie
@@ -29,6 +32,10 @@
     docMatrix.options.OnSearchChanged = docMatrix.OnSearchChanged = value => {
         this.SetCookieGridFilter(value);
     };
+
+    // scroll docMatrix to selected tag
+    if (this.loadDeepLevels)
+        setTimeout(() => docMatrix.ScrollToSelectedRow(), 0);
 }
 
 Explorer.prototype.behaviors.push(Explorer.prototype.InitNavigation);

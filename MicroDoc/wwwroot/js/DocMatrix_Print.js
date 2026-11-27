@@ -87,7 +87,7 @@ DocMatrix.prototype.OpenPrintColumn = function (document) {
 
     // combine HTML for all doc rows in a specified column
     var html = "";
-    this.grid().querySelectorAll(`tr[data-tag] td[data-document="${document}"] doc`).forEach(doc => {
+    this.grid().querySelectorAll(`:is(tr[data-tag="${this.selectedTag}"], tr[data-tag^="${this.selectedTag}/"]) td[data-document="${document}"] doc`).forEach(doc => {
         const style = getComputedStyle(doc.closest("tr"));
         const isVisible = style.display !== "none";
 

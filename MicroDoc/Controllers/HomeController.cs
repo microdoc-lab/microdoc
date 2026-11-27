@@ -277,14 +277,14 @@ namespace MicroDoc.Controllers
             if (statusDomain != ErrorCode.Ok)
                 return Error(statusDomain);
 
-            var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag }, () =>
+            var model = LoggingHelper.Execute(_logger, nameof(DocMatrix), new { clientId, domain, selectedTag, loadDeepLevels }, () =>
                 new DocMatrixViewModel
                 {
                     Id = clientId,
                     Domain = _domainOptions.Find(domain),
                     SelectedTag = selectedTag,
                     LoadDeepLevels = loadDeepLevels,
-                    Rows = _docService.GetTagWithDocuments(domain, selectedTag, loadDeepLevels)
+                    Rows = _docService.GetTagWithDocuments(domain, loadDeepLevels ? string.Empty : selectedTag, loadDeepLevels)
                 });
 
             return PartialView("_DocMatrix", model);
@@ -305,7 +305,7 @@ namespace MicroDoc.Controllers
             if (statusDomain != ErrorCode.Ok)
                 return Error(statusDomain);
 
-            var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag }, () =>
+            var model = LoggingHelper.Execute(_logger, nameof(Explorer), new { clientId, domain, selectedTag, loadDeepLevels }, () =>
                 new ExplorerViewModel
                 {
                     Id = clientId,
@@ -316,7 +316,7 @@ namespace MicroDoc.Controllers
                     },
                     DocMatrix = {
                         LoadDeepLevels = loadDeepLevels,
-                        Rows = _docService.GetTagWithDocuments(domain, selectedTag, loadDeepLevels)
+                        Rows = _docService.GetTagWithDocuments(domain, loadDeepLevels ? string.Empty : selectedTag, loadDeepLevels)
                     },
                     TemplateDoc = {
                         Mode = "view",

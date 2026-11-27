@@ -53,6 +53,7 @@ DocMatrix.prototype.isModalBackground = function () { return this.element.closes
 DocMatrix.prototype.printContainer = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .scroll-area"); }
 DocMatrix.prototype.printTitle = function () { return this.element.closest(".explorer").querySelector(".modal .doc-container .toolbar .title"); }
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
+DocMatrix.prototype.gridHeader = function () { return this.element.querySelector(".grid tr"); }
 
 DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(`.grid tr[data-tag="${tag}"]`); }
 DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
@@ -87,6 +88,8 @@ DocMatrix.prototype.Load = async function (selectedTag, loadDeepLevels) {
 
     // restore state
     this.Search(searchStrings);
+
+    this.ScrollToSelectedRow();
 
     return true;
 }

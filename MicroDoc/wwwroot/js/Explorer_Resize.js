@@ -35,23 +35,12 @@
     });
 
     // Grid scrolling
-    const docPanel = this.element.querySelector('.doc-panel');
-    let scrollPosition = 0;
+    const docPanel = this.docPanel();
+    const docMatrix = this.docMatrix();
 
     docPanel.addEventListener('wheel', e => {
         e.preventDefault();
-
-        const grid = container.querySelector('.grid');
-        const header = grid.querySelector("tr");
-
-        const maxScroll = grid.offsetHeight - docPanel.clientHeight + 100;
-
-        scrollPosition = Math.max(0,
-            Math.min(maxScroll, scrollPosition + e.deltaY));
-
-        grid.style.transform = `translateY(${-scrollPosition}px)`;
-
-        header.querySelectorAll("th").forEach(th => th.style.transform = `translateY(${scrollPosition}px)`);
+        docMatrix.ScrollTo(docMatrix.scrollPosition + e.deltaY);
     }, { passive: false });
 }
 
