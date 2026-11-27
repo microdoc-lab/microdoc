@@ -20,7 +20,7 @@
     opacity: 0.1;
 }
 
-.docmatrix .grid tr:nth-child(1) th .search:hover {
+.docmatrix .grid tr:nth-child(1) th:hover .search {
     opacity: 1;
 }
 

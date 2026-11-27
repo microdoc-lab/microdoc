@@ -50,7 +50,7 @@
     opacity: 0.1;
 }
 
-.docmatrix th .toolbar:hover {
+.docmatrix th:hover .toolbar {
     opacity: 1;
 }
 
