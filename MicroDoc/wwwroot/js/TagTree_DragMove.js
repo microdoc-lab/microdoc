@@ -2,6 +2,7 @@
     this.debug('InitDragNDropMove');
 
     this.element.querySelectorAll(".tag-list").forEach(list => {
+        // handle dragover event on tag-list to allow dropping tags into it
         list.addEventListener("dragover", e => {
             e.stopPropagation();
 
@@ -26,10 +27,12 @@
             list.classList.add("drop-target");
         });
 
+        // stop dragover event on tag-list to remove drop-target class
         list.addEventListener("dragleave", e => {
             list.classList.remove('drop-target');
         });
 
+        // handle drop event on tag-list to move the dragged tag into it
         list.addEventListener("drop", async e => {
             e.preventDefault();
             e.stopPropagation();
