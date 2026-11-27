@@ -28,8 +28,8 @@
 .tag-tree details .popup {
     display: none;
     position: absolute;
-    top: -11px;
-    left: 170px;
+    top: 28px;
+    left: 17px;
     background-color: rgba(255, 255, 255, 0.9);
     padding: 10px;
     border: 1px solid #ddd;
