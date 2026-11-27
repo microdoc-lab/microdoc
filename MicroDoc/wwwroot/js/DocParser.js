@@ -45,6 +45,11 @@ DocParser.TagName = function (tag) {
     return tags.pop();
 }
 
+DocParser.TagLevel = function (tag) {
+    var tags = tag.split('/');
+    return tags.length - 1;
+}
+
 DocParser.DocTagPath = function (documentId) {
     var tags = documentId.split('/');
     tags.pop();

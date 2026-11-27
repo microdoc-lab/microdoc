@@ -50,6 +50,10 @@ TagTree.prototype.ExpandedTag = function () {
 }
 
 TagTree.prototype.ExpandTag = function (tag) {
+    // root tag has no details to expand; but other tags should be collapsed
+    if (tag == "")
+        this.CollapseAllTags();
+
     // find tag node details
     var details = this.element.querySelector(`.tag[data-id="${tag}"] details`);
     // expand nodes up to the root
@@ -66,4 +70,13 @@ TagTree.prototype.CollapseTag = function (tag) {
     // collapse tag
     if (details)
         details.open = false;
+}
+
+TagTree.prototype.CollapseAllTags = function () {
+    // find all expanded tags
+    var elements = this.element.querySelectorAll(`details[open]`);
+    // collapse all tags
+    elements.forEach(details => {
+        details.open = false;
+    });
 }

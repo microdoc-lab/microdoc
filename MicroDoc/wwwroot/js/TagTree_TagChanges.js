@@ -16,24 +16,97 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "MoveTag":
-            if (change.external) {
-                if (selectedTag == change.selectedTag)
-                    await this.Load(change.parentTag);                  // if selected tag is a moved tag - switch tree to parent tag (to see tag gone)
-                else if (selectedTag == change.targetTag || selectedTag == change.parentTag)
-                    await this.Load(selectedTag);                       // if selected tag is target/parent - reload tree (to see tag gone)
-                else
-                    await this.Load(selectedTag);                       // reload tree
-            } else
-                await this.Load(change.newTag, change.newTag);          // switch tree to moved tag, expand moved tag
+            this.MoveItem(change.selectedTag, change.newTag);
+
+            const isSelectedTagMoved = selectedTag == change.selectedTag || selectedTag.startsWith(change.selectedTag + "/");
+            const newParentTag = DocParser.TagParent(change.newTag);
+
+            // select tag if it was previously selected
+            if (isSelectedTagMoved)
+                this.SelectTag(selectedTag.replace(change.selectedTag, change.newTag));
+
+            // collapse moving tag
+            this.CollapseTag(change.newTag);
+
+            // expand new tag if it was previously expanded
+            if (expandedTag == change.selectedTag)
+                this.ExpandTag(change.newTag);
+
+            // expand new parent tag
+            else if (!change.external || isSelectedTagMoved)
+                this.ExpandTag(newParentTag);
             break;
 
         case "DeleteTag":
+
             this.RemoveItem(change.selectedTag);
+
+            // if selected tag is deleting tag - select and expand parent tag
+            if (selectedTag == change.selectedTag) {
+                this.SelectTag(change.parentTag);
+                this.ExpandTag(change.parentTag);
+            }
+
             break;
     }
 }
 
 TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleTagChanges);
+
+TagTree.prototype.AddItem = function (parentTag, tagItem) {
+    const parentItem = this.tagItem(parentTag);
+    if (!parentItem)
+        return;
+
+    const details = parentItem.querySelector("details");
+    var list = parentItem.querySelector(".tag-list");
+
+    if (!list && parentTag == "")
+        list = this.element.querySelector(".tag-list"); 
+
+    list.appendChild(tagItem);
+
+    // mark parent tag as non-empty
+    if (details)
+        details.classList.remove("empty");
+
+    // update tag classes
+    const tagLevel = DocParser.TagLevel(tagItem.dataset.id);
+    switch (tagLevel) {
+        case 0:
+            // mark tag as module
+            tagItem.classList.remove("part");
+            tagItem.classList.add("module");
+            break;
+        default:
+            // mark tag as part
+            tagItem.classList.remove("module");
+            tagItem.classList.add("part");
+            break;
+    }
+}
+
+TagTree.prototype.MoveItem = function (tag, newTag, expand) {
+    const tagItem = this.tagItem(tag);
+    if (!tagItem)
+        return;
+
+    // remove tag from old position in tree
+    this.RemoveItem(tag);
+
+    // update item dataset
+    tagItem.dataset.id = newTag;
+
+    // update nested items dataset
+    const nestedItems = tagItem.querySelectorAll(".tag");
+    nestedItems.forEach(item => {
+        item.dataset.id = item.dataset.id.replace(tag, newTag);
+    });
+
+    // add item to new parent
+    const parentTag = DocParser.TagParent(newTag);
+    this.AddItem(parentTag, tagItem);
+}
 
 TagTree.prototype.RenameItem = function (tag, newTag) {
     const tagItem = this.tagItem(tag);
@@ -51,13 +124,13 @@ TagTree.prototype.RenameItem = function (tag, newTag) {
     title.textContent = `[${newTagName}]`;
 }
 
-TagTree.prototype.RemoveItem = function (tag, toExpand) {
+TagTree.prototype.RemoveItem = function (tag, expand) {
     const tagItem = this.tagItem(tag);
     if (!tagItem)
         return;
 
     const details = tagItem.closest("details");
-    const list = tagItem.closest("ul");
+    const list = tagItem.closest(".tag-list");
 
     // remove deleted tag from tree
     tagItem.remove();
@@ -78,11 +151,5 @@ TagTree.prototype.RemoveItem = function (tag, toExpand) {
     if (list.querySelectorAll('li').length === 0) {
         details.classList.add("empty");
         details.open = false;
-    }
-    else if (this.selectedTag == tag) {
-        // if selected tag is deleting tag - expand parent tag
-        const parentTag = DocParser.TagParent(tag);
-        this.SelectTag(parentTag);
-        this.ExpandTag(parentTag);
     }
 }
