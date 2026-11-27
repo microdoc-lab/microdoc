@@ -328,11 +328,11 @@ function NormalizeTables(root) {
         table.setAttribute("bordercolor", "#000000");
 
         table.style.borderCollapse = "collapse";
-        table.style.border = "1px solid black";
+        table.style.border = "1px solid gray";
 
         for (const cell of table.querySelectorAll("th, td")) {
             cell.setAttribute("border", "1");
-            cell.style.border = "1px solid black";
+            cell.style.border = "1px solid gray";
         }
     }
 }

@@ -202,9 +202,6 @@ error {
 .doc code, doc code {
     color: #d63384;
     background: #f3f4f6;
-    border: 1px solid #d1d5db;
-    border-radius: 3px;
-    padding: 2px;
 }
 
 /* Statuses */
