@@ -19,11 +19,11 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             this.MoveItem(change.selectedTag, change.newTag);
 
             const isSelectedTagMoved = selectedTag == change.selectedTag || selectedTag.startsWith(change.selectedTag + "/");
-            const newParentTag = DocParser.TagParent(change.newTag);
-
+            const newSelectedTag = isSelectedTagMoved ? selectedTag.replace(change.selectedTag, change.newTag) : selectedTag;
+            const newParentTag = DocParser.TagParent(newSelectedTag);
             // select tag if it was previously selected
             if (isSelectedTagMoved)
-                this.SelectTag(selectedTag.replace(change.selectedTag, change.newTag));
+                this.SelectTag(newSelectedTag);
 
             // collapse moving tag
             this.CollapseTag(change.newTag);
@@ -31,8 +31,7 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             // expand new tag if it was previously expanded
             if (expandedTag == change.selectedTag)
                 this.ExpandTag(change.newTag);
-
-            // expand new parent tag
+            // expand new parent tag if local update or selected tag was moved
             else if (!change.external || isSelectedTagMoved)
                 this.ExpandTag(newParentTag);
             break;
