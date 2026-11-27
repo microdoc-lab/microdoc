@@ -22,15 +22,19 @@ DocMatrix.prototype.ScrollTo = function (position) {
 }
 
 DocMatrix.prototype.ScrollToSelectedRow = function (tagId) {
-    if (tagId)
+    if (tagId != null)
         this.selectedTag = tagId;
 
     const grid = this.grid();
     const header = this.gridHeader();
     const row = this.tagRow(this.selectedTag);
 
+    grid.querySelectorAll("tr").forEach(tr => tr.classList.remove("selected"));
+
     if (!row) return;
 
     const rowTop = row.offsetTop - header.offsetHeight;
     this.ScrollTo(rowTop);
+
+    row.classList.add("selected");
 }

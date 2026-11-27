@@ -51,25 +51,17 @@ TagTree.prototype.SelectTag = function (tagId) {
 }
 
 TagTree.prototype.InternalSelectTag = function (tagNode) {
-    if (tagNode) {
-        // Highlight selected node
-        this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
+    const tagId = tagNode ? tagNode.dataset.id : "";
+
+    // Highlight selected node
+    this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
+
+    if (tagNode)
         tagNode.classList.add("selected");
 
-        // Update model property
-        this.selectedTag = tagNode.dataset.id;
+    // Update model property
+    this.selectedTag = tagId;
 
-        // Call user-provided callback
-        this.OnTagSelected(tagNode.dataset.id);
-    }
-    else {
-        // Remove selection
-        this.element.querySelectorAll(".tag.selected").forEach(n => n.classList.remove("selected"));
-
-        // Update model property
-        this.selectedTag = "";
-
-        // Call user-provided callback
-        this.OnTagSelected(null);
-    }
+    // Call user-provided callback
+    this.OnTagSelected(tagId);
 }

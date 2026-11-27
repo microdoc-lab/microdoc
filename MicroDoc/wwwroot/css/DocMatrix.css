@@ -23,6 +23,13 @@
     --opacity: 100%;
 }
 
+/* Grid rows */
+.docmatrix .grid tr.selected {
+    --color: var(--selection-background);
+    --opacity: 30%;
+    background: color-mix(in srgb, var(--color) var(--opacity), transparent);
+}
+
 /* Grid borders */
 .docmatrix .grid th, .docmatrix .grid td {
     border-right: 1px solid #ccc;
