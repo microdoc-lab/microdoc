@@ -91,6 +91,7 @@
     display: inline-block;
     padding: 0px 3px;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .docmatrix .grid th:hover tag {
