@@ -18,7 +18,7 @@
     data-domain="@Model.Domain" data-tagid="@Model.TagId" data-tag="@Model.Tag" data-id="@Model.Id">
     <details class="@(!Model.Children.Any() ? "empty" : "")" open="@(Model.Children.Any() && IsTagNodeOpen(Model.Id, SelectedTag))">
         <summary class="title-bar">
-            <span class="@Type title" data-tag="@Model.Tag">[@Model.Tag]</span>
+            <span class="@Type title">[@Model.Tag]</span>
         </summary>
         <ul class="part tag-list popup">
             @foreach (var part in Model.Children)

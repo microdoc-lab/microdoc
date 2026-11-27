@@ -12,11 +12,7 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "RenameTag":
-            var toExpand = expandedTag == change.selectedTag ? change.newTag : null;
-            if (selectedTag == change.selectedTag)
-                await this.Load(change.newTag, toExpand);           // if selected tag is a renamed tag - switch tree to renamed tag
-            else
-                await this.Load(selectedTag, toExpand);             // reload tree
+            this.RenameItem(change.selectedTag, change.newTag);
             break;
 
         case "MoveTag":
@@ -39,8 +35,24 @@ TagTree.prototype.HandleTagChanges = async function (change) {
 
 TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleTagChanges);
 
+TagTree.prototype.RenameItem = function (tag, newTag) {
+    const tagItem = this.tagItem(tag);
+    if (!tagItem)
+        return;
+
+    const newTagName = DocParser.TagName(newTag);
+
+    // update item dataset
+    tagItem.dataset.id = newTag;
+    tagItem.dataset.tag = newTagName;
+
+    // update item title
+    const title = tagItem.querySelector(".title");
+    title.textContent = `[${newTagName}]`;
+}
+
 TagTree.prototype.RemoveItem = function (tag, toExpand) {
-    var tagItem = this.tagItem(tag);
+    const tagItem = this.tagItem(tag);
     if (!tagItem)
         return;
 
