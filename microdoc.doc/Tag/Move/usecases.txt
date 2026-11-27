@@ -2,51 +2,51 @@
 
 ## Move non-Selected Tag
 ! Select `[other]`			!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[other]` selected !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[other]` selected !
 
 ## Move Selected Tag
 ! Select `[test] [a]`			!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` selected !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` selected !
 
 ## Move Selected Collapsed Tag with Nested Tags
 ! Create `[test] [a] [b]`		!
 ! Select `[test] [a]`			!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` selected; `[a]` collapsed !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` selected; `[a]` collapsed !
 
 ## Move Selected Expanded Tag with Nested Tags
 ! Create `[test] [a] [b]`		!
 ! Select & Expand `[test] [a]`	!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` selected; `[a]` expanded !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` selected; `[a]` expanded !
 
 ## Move Expanded Tag with Selected Nested Tag
 ! Create `[test] [a] [b]` 		!
 ! Expand `[test] [a]` 			!
 ! Select `[test] [a] [b]`		!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` expanded; `[a] [b]` selected !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` expanded; `[a] [b]` selected !
 
 
 # External Tag Move use-cases
 ## External Move non-Selected Tag
 ! Select `[other]`			!
 ! Expand `[Client]`			!
-! Move `[test] [a]` to root		! → `[Client]` expanded; `[other]` selected !
+! Move `[test] [a]` to root		!> `[Client]` expanded; `[other]` selected !
 
 ## External Move Selected Tag
 ! Select `[test] [a]`			!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` selected !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` selected !
 
 ## External Move Selected Collapsed Tag with Nested Tags
 ! Create `[test] [a] [b]`		!
 ! Select `[test] [a]`			!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` selected; `[a]` collapsed !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` selected; `[a]` collapsed !
 
 ## External Move Selected Expanded Tag with Nested Tags
 ! Create `[test] [a] [b]`		!
 ! Select & Expand `[test] [a]`	!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` selected; `[a]` expanded	!
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` selected; `[a]` expanded	!
 
 ## External Move Expanded Tag with Selected Nested Tag
 ! Create `[test] [a] [b]` 		!
 ! Expand `[test] [a]` 			!
 ! Select `[test] [a] [b]`		!
-! Move `[test] [a]` to root		! → `[test]` collapsed; `[a]` expanded; `[a] [b]` selected !
+! Move `[test] [a]` to root		!> `[test]` collapsed; `[a]` expanded; `[a] [b]` selected !

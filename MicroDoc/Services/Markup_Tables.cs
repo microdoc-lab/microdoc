@@ -23,7 +23,7 @@
             return parts;
         }
 
-        private static IEnumerable<(string Text, int Colspan)> ParseRowColspans(string[] cells)
+        private static IEnumerable<(string Text, int Colspan, string @class)> ParseRowAttributes(string[] cells)
         {
             int start = 0;
             int end = cells.Length;
@@ -38,7 +38,7 @@
 
             for (int i = start; i < end; i++)
             {
-                var text = cells[i];
+                var text = cells[i].Trim();
 
                 int colspan = 1;
                 while (i + 1 < end && cells[i + 1].Length == 0)
@@ -47,34 +47,45 @@
                     i++;
                 }
 
-                yield return (text, colspan);
+                string @class = string.Empty;
+                if (text.StartsWith("&gt;"))
+                    text = "→" + text.Substring("&gt;".Length);
+
+                yield return (text, colspan, @class);
             }
         }
 
         private void StartTableRow(string[] cells, string line)
         {
+            line = line.Trim();
+
             if (!tableStarted)
             {
                 html.Append("<table class=\"table\">\n");
                 tableStarted = true;
             }
 
-            line = line.Trim();
+            html.Append("<tr");
+            
             if (line.StartsWith("!") && line.EndsWith("!"))
-                html.Append("<tr class=\"noborder\">\n");
-            else
-                html.Append("<tr>\n");
+                html.Append(" class=\"noborder\"");
+            
+            html.Append(">\n");
 
-            var rowColspans = ParseRowColspans(cells).ToArray();
+            var rowAttributes = ParseRowAttributes(cells).ToArray();
 
-            foreach (var (text, colspan) in rowColspans)
+            foreach (var (text, colspan, @class) in rowAttributes)
             {
-                if (colspan == 1)
-                    html.Append("<td>");
-                else
-                    html.Append($"<td colspan=\"{colspan}\">");
+                html.Append("<td");
 
-                html.Append(text)
+                if (colspan > 1)
+                    html.Append($" colspan=\"{colspan}\"");
+
+                if (!string.IsNullOrEmpty(@class))
+                    html.Append($" class=\"{@class}\"");
+
+                html.Append(">")
+                    .Append(text)
                     .Append("</td>\n");
             }
 
