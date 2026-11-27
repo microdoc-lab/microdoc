@@ -91,7 +91,13 @@
 }
 
 .explorer .overlay .doc .viewer { padding: 22px 4px 4px 4px; }
-.explorer .overlay .doc .editor { resize: none; padding-top: 22px; border-color:  chocolate; }
+.explorer .overlay .doc .editor {
+    resize: none;
+    padding-top: 22px;
+    border-color: chocolate;
+    tab-size: 4ch;
+    -moz-tab-size: 4ch;
+}
 .explorer .overlay .doc .editor:focus { outline: none; }
 
 .explorer .overlay .doc[mode=edit] .viewer { display: none; }
