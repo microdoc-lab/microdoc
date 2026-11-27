@@ -35,6 +35,7 @@ function enableSoftHover(code, overselector, outselector, overDelay = 500, outDe
         activeElement = element;
     }
 
+    // hover element when mouse pointer over overselector
     document.addEventListener("pointerover", event => {
         if (!(event.target instanceof Element))
             return;
@@ -52,7 +53,7 @@ function enableSoftHover(code, overselector, outselector, overDelay = 500, outDe
             overelement.contains(event.relatedTarget))
             return;
 
-        // console.log(code + " pointerover " + element + " " + delayEnter);
+        // console.log(code + " pointerover " + element + " " + overDelay);
 
         cancelLeave(element);
 
@@ -69,6 +70,7 @@ function enableSoftHover(code, overselector, outselector, overDelay = 500, outDe
         }
     });
 
+    // unhover element when mouse pointer leave outselector
     document.addEventListener("pointerout", event => {
         if (!(event.target instanceof Element))
             return;
@@ -82,7 +84,7 @@ function enableSoftHover(code, overselector, outselector, overDelay = 500, outDe
             element.contains(event.relatedTarget))
             return;
 
-        // console.log(code + " pointerout " + element + " " + delayLeave);
+        // console.log(code + " pointerout " + element + " " + outDelay);
 
         if (pendingEnter === element)
             cancelEnter();
@@ -108,6 +110,7 @@ function enableSoftHover(code, overselector, outselector, overDelay = 500, outDe
     if (overselector == outselector)
         return;
 
+    // don't hover element if mouse pointer leave overselector
     document.addEventListener("pointerout", event => {
         if (!(event.target instanceof Element))
             return;
@@ -118,12 +121,16 @@ function enableSoftHover(code, overselector, outselector, overDelay = 500, outDe
 
         const element = overelement.closest(outselector);
 
+        // skip if element already hovered
+        if (element.classList.contains("hover"))
+            return;
+
         // Ignore movement within the same matching element.
         if (event.relatedTarget instanceof Node &&
             overelement.contains(event.relatedTarget))
             return;
 
-        // console.log(code + " pointerout " + element + " " + delayLeave);
+        // console.log(code + " pointerout " + element + " " + outDelay);
 
         if (pendingEnter === element)
             cancelEnter();
