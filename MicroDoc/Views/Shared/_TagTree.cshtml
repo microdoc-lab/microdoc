@@ -21,20 +21,20 @@
 
     <style class="search-style"></style>
 
+    <div class="tag-toolbar">
+        <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' data-loc-title="TagTree_New">
+            <img src="/icons/New.png">
+        </button>
+        <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.RenameTag()' data-loc-title="TagTree_Rename">
+            <img src="/icons/Edit.png">
+        </button>
+        <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.DeleteTag()' data-loc-title="TagTree_Delete">
+            <img src="/icons/Delete.png">
+        </button>
+    </div>
+
     <div class="toolbar-container">
 	    <div class="toolbar">
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' data-loc-title="TagTree_New">
-			    <img src="/icons/New.png">
-		    </button>
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.RenameTag()' data-loc-title="TagTree_Rename">
-			    <img src="/icons/Edit.png">
-		    </button>
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.MoveTag()' data-loc-title="TagTree_Move">
-			    <img src="/icons/Move.png">
-		    </button>
-		    <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.DeleteTag()' data-loc-title="TagTree_Delete">
-			    <img src="/icons/Delete.png">
-		    </button>
 		    <button class="icon-button r" onclick='document.getElementById("@Model.Id").tagTree.Reload()' data-loc-title="TagTree_Reload">
 			    <img src="/icons/Refresh.png">
 		    </button>
