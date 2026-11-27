@@ -70,7 +70,7 @@ TagTree.prototype.RemoveItem = function (tag, toExpand) {
     else if (this.selectedTag == tag) {
         // if selected tag is deleting tag - expand parent tag
         const parentTag = DocParser.TagParent(tag);
-        this.SelectTag(toExpand);
-        this.ExpandTag(toExpand);
+        this.SelectTag(parentTag);
+        this.ExpandTag(parentTag);
     }
 }

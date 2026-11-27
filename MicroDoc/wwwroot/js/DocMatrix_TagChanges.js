@@ -31,10 +31,12 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "DeleteTag":
-            if (selectedTag == change.selectedTag)            // if selected tag is deleting tag - switch grid to parent tag
-                await this.Load(change.parentTag);
-            else if (selectedTag == change.parentTag || this.loadDeepLevels)
-                await this.Load(selectedTag);
+            this.RemoveRow(change.selectedTag);
+
+            // if (selectedTag == change.selectedTag)            // if selected tag is deleting tag - switch grid to parent tag
+            //     await this.Load(change.parentTag);
+            // else if (selectedTag == change.parentTag || this.loadDeepLevels)
+            //     await this.Load(selectedTag);
             break;
     }
 }
@@ -85,4 +87,12 @@ DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
 
         return nodes;
     }
+}
+
+DocMatrix.prototype.RemoveRow = function (tag) {
+    const row = this.tagRow(tag);
+    if (!row)
+        return;
+
+    row.remove();
 }
