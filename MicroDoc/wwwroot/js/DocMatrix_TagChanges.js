@@ -14,10 +14,7 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "RenameTag":
-            if (selectedTag == change.selectedTag)
-                await this.Load(change.newTag);           // if selected tag is a renamed tag - switch grid to renamed tag
-            else
-                await this.Load(selectedTag);             // reload grid
+            this.RenameRow(change.selectedTag, change.newTag);
             break;
 
         case "MoveTag":
@@ -32,11 +29,6 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
 
         case "DeleteTag":
             this.RemoveRow(change.selectedTag);
-
-            // if (selectedTag == change.selectedTag)            // if selected tag is deleting tag - switch grid to parent tag
-            //     await this.Load(change.parentTag);
-            // else if (selectedTag == change.parentTag || this.loadDeepLevels)
-            //     await this.Load(selectedTag);
             break;
     }
 }
@@ -87,6 +79,29 @@ DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
 
         return nodes;
     }
+}
+
+DocMatrix.prototype.RenameRow = function (tag, newTag) {
+    const row = this.tagRow(tag);
+    if (!row)
+        return;
+
+    const newTagName = DocParser.TagName(newTag);
+
+    // update row dataset
+    row.dataset.tag = newTag;
+
+    // update row title
+    const title = row.querySelector("th tag");
+    title.dataset.id = newTag;
+    title.textContent = `[${newTagName}]`;
+
+    // update row documents
+    const tagPath = DocParser.TagPath(this.domain, newTag);
+    row.querySelectorAll("td doc").forEach(doc => {
+        doc.dataset.tagpath = tagPath;
+        doc.dataset.id = DocParser.DocId(newTag, doc.dataset.document + ".txt");
+    });
 }
 
 DocMatrix.prototype.RemoveRow = function (tag) {
