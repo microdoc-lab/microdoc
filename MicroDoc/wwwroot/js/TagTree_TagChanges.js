@@ -86,7 +86,7 @@ TagTree.prototype.AddItem = function (parentTag, tagItem) {
     }
 }
 
-TagTree.prototype.MoveItem = function (tag, newTag, expand) {
+TagTree.prototype.MoveItem = function (tag, newTag) {
     const tagItem = this.tagItem(tag);
     if (!tagItem)
         return;
@@ -95,17 +95,20 @@ TagTree.prototype.MoveItem = function (tag, newTag, expand) {
     this.RemoveItem(tag);
 
     // update item dataset
+    const newParentTag = DocParser.TagParent(newTag);
+
     tagItem.dataset.id = newTag;
+    tagItem.dataset.tagid = newParentTag;
 
     // update nested items dataset
     const nestedItems = tagItem.querySelectorAll(".tag");
     nestedItems.forEach(item => {
         item.dataset.id = item.dataset.id.replace(tag, newTag);
+        item.dataset.tagid = item.dataset.tagid.replace(tag, newTag);
     });
 
     // add item to new parent
-    const parentTag = DocParser.TagParent(newTag);
-    this.AddItem(parentTag, tagItem);
+    this.AddItem(newParentTag, tagItem);
 }
 
 TagTree.prototype.RenameItem = function (tag, newTag) {
@@ -118,6 +121,13 @@ TagTree.prototype.RenameItem = function (tag, newTag) {
     // update item dataset
     tagItem.dataset.id = newTag;
     tagItem.dataset.tag = newTagName;
+
+    // update nested items dataset
+    const nestedItems = tagItem.querySelectorAll(".tag");
+    nestedItems.forEach(item => {
+        item.dataset.id = item.dataset.id.replace(tag, newTag);
+        item.dataset.tagid = item.dataset.tagid.replace(tag, newTag);
+    });
 
     // update item title
     const title = tagItem.querySelector(".title");
