@@ -14,13 +14,10 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "RenameTag":
-            if (change.external) {
-                if (selectedTag == change.selectedTag)
-                    await this.Load(change.newTag);           // if selected tag is a renamed tag - switch grid to renamed tag
-                else
-                    await this.Load(selectedTag);             // reload grid
-            } else
-                await this.Load(change.newTag);               // switch grid to renamed tag
+            if (selectedTag == change.selectedTag)
+                await this.Load(change.newTag);           // if selected tag is a renamed tag - switch grid to renamed tag
+            else
+                await this.Load(selectedTag);             // reload grid
             break;
 
         case "MoveTag":
@@ -34,10 +31,10 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "DeleteTag":
-            if (selectedTag == change.selectedTag || selectedTag == change.parentTag)   // if selected tag is deleting tag/parent - switch grid to parent tag
+            if (selectedTag == change.selectedTag)            // if selected tag is deleting tag - switch grid to parent tag
                 await this.Load(change.parentTag);
-            else if (this.loadDeepLevels)
-                    await this.Load(selectedTag);
+            else if (selectedTag == change.parentTag || this.loadDeepLevels)
+                await this.Load(selectedTag);
             break;
     }
 }

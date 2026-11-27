@@ -12,14 +12,11 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "RenameTag":
-            if (change.external) {
-                var toExpand = expandedTag == change.selectedTag ? change.newTag : null;
-                if (selectedTag == change.selectedTag)
-                    await this.Load(change.newTag, toExpand);           // if selected tag is a renamed tag - switch tree to renamed tag
-                else
-                    await this.Load(selectedTag, toExpand);             // reload tree
-            } else
-                await this.Load(change.newTag, change.newTag);          // switch tree to renamed tag, expand renamed tag
+            var toExpand = expandedTag == change.selectedTag ? change.newTag : null;
+            if (selectedTag == change.selectedTag)
+                await this.Load(change.newTag, toExpand);           // if selected tag is a renamed tag - switch tree to renamed tag
+            else
+                await this.Load(selectedTag, toExpand);             // reload tree
             break;
 
         case "MoveTag":
@@ -35,10 +32,10 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "DeleteTag":
-            if (selectedTag != change.selectedTag)
-                await this.Load(selectedTag);
-            else
+            if (selectedTag == change.selectedTag)
                 await this.Load(change.parentTag, change.parentTag);    // if selected tag is deleting tag - switch tree to parent tag, expand parent tag
+            else
+                await this.Load(selectedTag);
             break;
     }
 }
@@ -48,7 +45,7 @@ TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleTagChanges);
 // Api
 TagTree.prototype.NewTag = async function () {
     var domain = this.domain;
-    var selectedTag = this.selectedTag;
+    var selectedTag = this.tagToolbar().dataset.id;
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
@@ -79,7 +76,7 @@ TagTree.prototype.NewTag = async function () {
 
 TagTree.prototype.RenameTag = async function () {
     var domain = this.domain;
-    var selectedTag = this.selectedTag;
+    var selectedTag = this.tagToolbar().dataset.id;
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
@@ -109,41 +106,9 @@ TagTree.prototype.RenameTag = async function () {
     await window.domain.PublishChanges(data.changes);
 }
 
-TagTree.prototype.MoveTag = async function () {
-    var domain = this.domain;
-    var selectedTag = this.selectedTag;
-
-    // Prompt new tag name
-    var tagPath = DocParser.TagPath(domain, selectedTag);
-    var tagParent = DocParser.TagParent(selectedTag);
-
-    var targetTag = prompt(format(Loc.TagTree_MovePrompt, tagPath), tagParent);
-
-    if (targetTag == null)
-        return;
-
-    if (!DocParser.IsValidTagId(targetTag)) {
-        alert(Loc.TagTree_InvalidTag);
-        return;
-    }
-
-    this.log(`MoveTag selectedTag: ${selectedTag}, targetTag: ${targetTag}`);
-
-    // Move Tag
-    const response = await this.service.MoveTag(domain, selectedTag, targetTag);
-    if (!response.ok) {
-        this.error(format(Loc.TagTree_MoveFailed, tagPath, targetTag), await response.text());
-        return;
-    }
-
-    // PublishChanges
-    var data = await response.json();
-    await window.domain.PublishChanges(data.changes);
-}
-
 TagTree.prototype.DeleteTag = async function () {
     var domain = this.domain;
-    var selectedTag = this.selectedTag;
+    var selectedTag = this.tagToolbar().dataset.id;
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
