@@ -1,41 +1,5 @@
-﻿.tag-tree .toolbar-container {
-    position: absolute;
-    right: 4px;
-    top: 3px;
-    font-size: 0;
-    text-align: right;
-    padding-right: 30px;
-    white-space: nowrap;
-}
-
-.tag-tree .toolbar-container .toolbar {
-    opacity: 0.1;
-    pointer-events: none;
-}
-.tag-tree .toolbar-container .toolbar button {
-    pointer-events: auto;
-}
-
-.tag-tree .domain.tag:hover .toolbar {
-    opacity: 1;
-}
-
-.tag-tree .toolbar-container .search {
-    display: inline-block;
-    width: 120px;
-    padding-right: 2px;
-    font-size: 14px;
-    vertical-align: middle;
-    text-align: right;
-}
-
-.tag-tree .toolbar button {
-    display: inline-block;
-    vertical-align: middle;
-}
-
-/* Tag toolbar */
-.tag-tree .tag-toolbar {
+﻿/* Tag toolbar */
+.tag-tree .toolbar {
     position: absolute;
     display: flex;
     align-items: center;
@@ -50,6 +14,8 @@
     white-space: nowrap;
 }
 
-.tag-tree .tag-toolbar button {
+.tag-tree .toolbar button {
+    display: inline-block;
+    vertical-align: middle;
     pointer-events: auto;
 }

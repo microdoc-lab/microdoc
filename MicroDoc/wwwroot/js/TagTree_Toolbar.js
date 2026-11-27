@@ -1,12 +1,17 @@
 ﻿TagTree.prototype.InitToolbar = function (options) {
     this.debug('InitToolbar');
 
-    const toolbar = this.tagToolbar();
+    const toolbar = this.toolbar();
 
     // show toolbar on mouseover
-    this.element.addEventListener("mouseover", event => {
+    this.element.addEventListener("mouseover", event => {        
         // find & check title
-        const title = event.target.closest(".title");
+        var title = event.target.closest(".title");
+
+        // Assume root tag when moving over search button.
+        if (this.searchInput.contains(event.target))
+            title = this.element.querySelector(".domain.tag .title");
+
         if (!title)
             return;
 
@@ -28,8 +33,18 @@
         this.PositionToolbar(title);
 
         // don't show toolbar for root tag
-        if (tagId == "")
-            toolbar.style.visibility = "hidden";
+        if (tagId == "") {
+            toolbar.querySelector(".rename").style.setProperty('display', 'none', 'important');
+            toolbar.querySelector(".delete").style.setProperty('display', 'none', 'important');
+            toolbar.querySelector(".reload").style.removeProperty('display');
+            toolbar.querySelector(".search-ph").style.removeProperty('display');
+        }
+        else {
+            toolbar.querySelector(".rename").style.removeProperty('display');
+            toolbar.querySelector(".delete").style.removeProperty('display');
+            toolbar.querySelector(".reload").style.setProperty('display', 'none', 'important');
+            toolbar.querySelector(".search-ph").style.setProperty('display', 'none', 'important');
+        }
     });
 
     // hide toolbar on mouseout
@@ -47,6 +62,11 @@
         if (toolbar.contains(event.relatedTarget))
             return;
 
+        // Don't hide when moving over search for root tag.
+        const tag = title.closest(".tag");
+        if (this.searchInput.contains(event.relatedTarget) && tag.dataset.id == "")
+            return;
+
         // hide toolbar
         toolbar.style.visibility = "hidden";
         // reset toolbar context
@@ -62,7 +82,7 @@ TagTree.prototype.behaviors.push(TagTree.prototype.InitToolbar);
 // Api
 TagTree.prototype.PositionToolbar = function (title) {
     var overlay = this.element;
-    var toolbar = this.tagToolbar();
+    var toolbar = this.toolbar();
 
     // position toolbar at the top-right corner of title
     const rect = title.getBoundingClientRect();
@@ -79,7 +99,7 @@ TagTree.prototype.PositionToolbar = function (title) {
 
 TagTree.prototype.NewTag = async function () {
     var domain = this.domain;
-    var selectedTag = this.tagToolbar().dataset.id;
+    var selectedTag = this.toolbar().dataset.id;
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
@@ -110,7 +130,7 @@ TagTree.prototype.NewTag = async function () {
 
 TagTree.prototype.RenameTag = async function () {
     var domain = this.domain;
-    var selectedTag = this.tagToolbar().dataset.id;
+    var selectedTag = this.toolbar().dataset.id;
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);
@@ -142,7 +162,7 @@ TagTree.prototype.RenameTag = async function () {
 
 TagTree.prototype.DeleteTag = async function () {
     var domain = this.domain;
-    var selectedTag = this.tagToolbar().dataset.id;
+    var selectedTag = this.toolbar().dataset.id;
 
     // Prompt new tag name
     var tagPath = DocParser.TagPath(domain, selectedTag);

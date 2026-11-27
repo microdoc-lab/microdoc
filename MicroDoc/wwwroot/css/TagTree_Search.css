@@ -1,9 +1,12 @@
 ﻿/* Search input */
-.tag-tree .toolbar-container .search {
+.tag-tree .search-ph {
+    opacity: 0;
+}
+
+.tag-tree .search {
     position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    right: 2px;
+    top: 0px;
     box-sizing: border-box;
     width: 24px;
     height: 28px;
@@ -18,15 +21,19 @@
     cursor: pointer;
     text-align: right;
     opacity: 0.1;
+    z-index: 100;
 }
 
-.tag-tree .domain.tag:hover .search {
+.tag-tree .search:hover,
+.tag-tree:has(.domain.tag:hover) .search,
+.tag-tree:has(.domain.tag .title.hover) .search {
     opacity: 1;
 }
 
-.tag-tree .toolbar-container .search:focus,
-.tag-tree .toolbar-container .search:not(:focus):not(:placeholder-shown) {
+.tag-tree .search:focus,
+.tag-tree .search:not(:focus):not(:placeholder-shown) {
     width: 100px;
+    right: 4px;
     padding-left: 28px;
     padding-right: 8px;
     background-color: white;

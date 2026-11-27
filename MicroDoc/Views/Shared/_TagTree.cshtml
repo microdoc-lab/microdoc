@@ -21,38 +21,31 @@
 
     <style class="search-style"></style>
 
-    <div class="tag-toolbar">
-        <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' data-loc-title="TagTree_New">
+    <div class="toolbar">
+        <button class="icon-button w new" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' data-loc-title="TagTree_New">
             <img src="/icons/New.png">
         </button>
-        <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.RenameTag()' data-loc-title="TagTree_Rename">
+        <button class="icon-button w rename" onclick='document.getElementById("@Model.Id").tagTree.RenameTag()' data-loc-title="TagTree_Rename">
             <img src="/icons/Edit.png">
         </button>
-        <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.DeleteTag()' data-loc-title="TagTree_Delete">
+        <button class="icon-button w delete" onclick='document.getElementById("@Model.Id").tagTree.DeleteTag()' data-loc-title="TagTree_Delete">
             <img src="/icons/Delete.png">
+        </button>
+        <button class="icon-button r reload" onclick='document.getElementById("@Model.Id").tagTree.Reload()' data-loc-title="TagTree_Reload">
+            <img src="/icons/Refresh.png">
+        </button>
+        <button class="icon-button r search-ph">
+            <img src="/icons/Search.png">
         </button>
     </div>
 
     <div class="domain tag @(Model.SelectedTag == "" ? "selected" : "")" data-domain="@Model.Domain.Name" data-tagid="" data-tag="" data-id="">
         <span class="title-bar">
-            <span class="domain title">
-                @Model.Domain.Name
-
-                <div class="toolbar-container">
-                    <div class="toolbar">
-                        <button class="icon-button w" onclick='document.getElementById("@Model.Id").tagTree.NewTag()' data-loc-title="TagTree_New">
-                            <img src="/icons/New.png">
-                        </button>
-                        <button class="icon-button r" onclick='document.getElementById("@Model.Id").tagTree.Reload()' data-loc-title="TagTree_Reload">
-                            <img src="/icons/Refresh.png">
-                        </button>
-                    </div>
-
-                    <input class="search r" name="search" type="text" data-loc-placeholder="TagTree_SearchPH" data-loc-title="TagTree_Search"></input>
-                </div>
-            </span>
+            <span class="domain title">@Model.Domain.Name</span>
         </span>
     </div>
+
+    <input class="r search" name="search" type="text" data-loc-placeholder="TagTree_SearchPH" data-loc-title="TagTree_Search"></input>
 
     <ul class="module tag-list">
     @foreach (var module in Model.Nodes)
@@ -79,6 +72,7 @@
         tagTree.UpdateElement(container);
         tagTree.InitBehaviors();
 
-        LocalizeElement(container.querySelector(".toolbar-container"));
+        LocalizeElement(container.querySelector(".toolbar"));
+        LocalizeElement(container.querySelector(".search"));
     })();
 </script>

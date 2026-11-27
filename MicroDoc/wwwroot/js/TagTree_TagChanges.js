@@ -51,7 +51,7 @@ TagTree.prototype.RemoveItem = function (tag, toExpand) {
     tagItem.remove();
 
     // hide toolbar if it was on deleted tag
-    const toolbar = this.tagToolbar();
+    const toolbar = this.toolbar();
     if (toolbar.dataset.id == tag) {
         // hide toolbar
         toolbar.style.visibility = "hidden";

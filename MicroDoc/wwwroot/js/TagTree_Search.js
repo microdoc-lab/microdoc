@@ -2,7 +2,7 @@
     this.debug('InitSearch');
 
     this.searchStyle = this.element.querySelector(".search-style");
-    this.searchInput = this.element.querySelector(".toolbar-container .search");
+    this.searchInput = this.element.querySelector(".search");
 
     // Default event handler
     options.OnSearchChanged ??= function (value) {
@@ -12,6 +12,7 @@
     this.OnSearchChanged = options.OnSearchChanged;
 
     this.searchInput.addEventListener("focus", () => this.searchInput.select());
+    this.searchInput.addEventListener("click", e => e.stopPropagation());
     this.searchInput.addEventListener("input", () => this.Search());
 
     // handle Esc key to clear search

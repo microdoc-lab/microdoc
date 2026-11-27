@@ -45,7 +45,7 @@ TagTree.prototype.ApplyChanges = async function (change) {
 
 // Api
 TagTree.prototype.explorer = function () { return this.element.closest(".explorer").explorer; }
-TagTree.prototype.tagToolbar = function () { return this.element.querySelector(".tag-toolbar"); }
+TagTree.prototype.toolbar = function () { return this.element.querySelector(".toolbar"); }
 
 TagTree.prototype.tagItem = function (tag) { return this.element.querySelector(`.tag[data-id="${tag}"]`); }
 
