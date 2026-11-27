@@ -20,15 +20,12 @@
         <summary class="title-bar">
             <span class="@Type title" data-tag="@Model.Tag">[@Model.Tag]</span>
         </summary>
-        @if (Model.Children.Any())
-        {
-            <ul class="part tag-list popup">
-                @foreach (var part in Model.Children)
-                {
-                    ViewData["PartType"] = "part";
-                    @await Html.PartialAsync("_TagTreePart", part)
-                }
-            </ul>
-        }
+        <ul class="part tag-list popup">
+            @foreach (var part in Model.Children)
+            {
+                ViewData["PartType"] = "part";
+                @await Html.PartialAsync("_TagTreePart", part)
+            }
+        </ul>
     </details>
 </li>

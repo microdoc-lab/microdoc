@@ -8,7 +8,7 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             if (change.external)
                 await this.Load(selectedTag);
             else
-                await this.Load(selectedTag, selectedTag);              // reload tree, expand selected tag (to see newly created tag in it)
+                await this.Load(selectedTag, expandedTag);              // reload tree, expand selected tag (to see newly created tag in it)
             break;
 
         case "RenameTag":
@@ -32,12 +32,45 @@ TagTree.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "DeleteTag":
-            if (selectedTag == change.selectedTag)
-                await this.Load(change.parentTag, change.parentTag);    // if selected tag is deleting tag - switch tree to parent tag, expand parent tag
-            else
-                await this.Load(selectedTag);
+            this.RemoveItem(change.selectedTag);
             break;
     }
 }
 
 TagTree.prototype.changeHandlers.push(TagTree.prototype.HandleTagChanges);
+
+TagTree.prototype.RemoveItem = function (tag, toExpand) {
+    var tagItem = this.tagItem(tag);
+    if (!tagItem)
+        return;
+
+    const details = tagItem.closest("details");
+    const list = tagItem.closest("ul");
+
+    // remove deleted tag from tree
+    tagItem.remove();
+
+    // hide toolbar if it was on deleted tag
+    const toolbar = this.tagToolbar();
+    if (toolbar.dataset.id == tag) {
+        // hide toolbar
+        toolbar.style.visibility = "hidden";
+        // reset toolbar context
+        toolbar.dataset.id = null;
+    }
+
+    if (!details)
+        return;
+
+    // if no more children - mark parent tag as empty
+    if (list.querySelectorAll('li').length === 0) {
+        details.classList.add("empty");
+        details.open = false;
+    }
+    else if (this.selectedTag == tag) {
+        // if selected tag is deleting tag - expand parent tag
+        const parentTag = DocParser.TagParent(tag);
+        this.SelectTag(toExpand);
+        this.ExpandTag(toExpand);
+    }
+}

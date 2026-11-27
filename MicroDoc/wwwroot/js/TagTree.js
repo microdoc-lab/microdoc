@@ -47,6 +47,8 @@ TagTree.prototype.ApplyChanges = async function (change) {
 TagTree.prototype.explorer = function () { return this.element.closest(".explorer").explorer; }
 TagTree.prototype.tagToolbar = function () { return this.element.querySelector(".tag-toolbar"); }
 
+TagTree.prototype.tagItem = function (tag) { return this.element.querySelector(`.tag[data-id="${tag}"]`); }
+
 TagTree.prototype.Reload = async function () {
     return await this.Load(this.selectedTag);
 }
