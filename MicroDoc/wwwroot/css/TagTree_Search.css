@@ -20,7 +20,7 @@
     opacity: 0.1;
 }
 
-.tag-tree .toolbar-container:hover .search {
+.tag-tree .domain.tag:hover .search {
     opacity: 1;
 }
 

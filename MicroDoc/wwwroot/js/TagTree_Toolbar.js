@@ -19,10 +19,6 @@
         var domain = tag.dataset.domain;
         var tagId = tag.dataset.id;
 
-        // don't show toolbar for root tag
-        if (tagId == "")
-            return;
-
         // show toolbar
         toolbar.style.visibility = "visible";
         // set toolbar context
@@ -30,6 +26,10 @@
         toolbar.dataset.id = tagId;
 
         this.PositionToolbar(title);
+
+        // don't show toolbar for root tag
+        if (tagId == "")
+            toolbar.style.visibility = "hidden";
     });
 
     // hide toolbar on mouseout

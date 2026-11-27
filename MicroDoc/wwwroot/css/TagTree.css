@@ -48,7 +48,7 @@
     border-radius: 4px;
 }
 
-.tag-tree .tag:not(.domain) .title:hover, .tag-tree .title.hover {
+.tag-tree .tag .title:hover, .tag-tree .title.hover {
     background-color: var(--hover-background);
 }
 
@@ -59,10 +59,4 @@
 .tag-tree .domain.title,
 .tag-tree .module.title {
     font-weight: bold;
-}
-
-.tag-tree details[open] > summary > .title {
-    --color: var(--hover-background);
-    --opacity: 60%;
-    background: color-mix(in srgb, var(--color) var(--opacity), transparent);
 }
