@@ -17,9 +17,14 @@
     background-size: 24px 24px;
     cursor: pointer;
     text-align: right;
+    opacity: 0.1;
 }
 
-.docmatrix .grid tr:nth-child(1) th .search:focus, 
+.docmatrix .grid tr:nth-child(1) th .search:hover {
+    opacity: 1;
+}
+
+.docmatrix .grid tr:nth-child(1) th .search:focus,
 .docmatrix .grid tr:nth-child(1) th .search:not(:focus):not(:placeholder-shown) {
     width: 100px;
     padding-left: 28px;
@@ -28,4 +33,5 @@
     border-color: #aaa;
     border-radius: 4px;
     cursor: text;
+    opacity: 1;
 }

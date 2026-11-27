@@ -24,9 +24,9 @@
 					<button class="icon-button r" onclick='document.getElementById("@Model.Id").docMatrix.MoveTagUp()' data-loc-title="DocMatrix_MoveUp">
 						<img src="/icons/Up.png">
 					</button>
-					<input type="checkbox" class="load-deep-levels" @(Model.LoadDeepLevels ? "checked" : "") data-loc-title="DocMatrix_LoadDeepLevels"
-						onchange='document.getElementById("@Model.Id").docMatrix.LoadDeepLevelsChanged()' />
 				</div>
+				<input type="checkbox" class="load-deep-levels" @(Model.LoadDeepLevels ? "checked" : "") data-loc-title="DocMatrix_LoadDeepLevels"
+					   onchange='document.getElementById("@Model.Id").docMatrix.LoadDeepLevelsChanged()' />
 				<input type="text" class="search r" data-loc-placeholder="DocMatrix_SearchPH" data-loc-title="DocMatrix_Search" />
 			</th>
 			@foreach (var column in columnDocuments)
