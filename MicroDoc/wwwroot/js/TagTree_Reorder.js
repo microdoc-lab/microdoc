@@ -3,6 +3,7 @@
 
     var expandTimer = null;
     var expandSummary = null;
+    // expand tag on dragenter after 800ms
     this.element.querySelectorAll("summary").forEach(summary => {
         summary.addEventListener('dragenter', e => {
             if (!this.draggedNode) return;
@@ -34,6 +35,7 @@
     this.element.querySelectorAll(".title").forEach(node => {
         node.draggable = true;
 
+        // initialize drag and drop for title
         node.addEventListener("dragstart", e => {
             if (window.dragging) {
                 e.preventDefault();
@@ -44,27 +46,35 @@
             e.dataTransfer.effectAllowed = "move";
         });
 
+        // handle dragover event on title to allow dropping tags into it
         node.addEventListener("dragover", e => {
-            e.stopPropagation();
-
             if (!this.draggedNode) return;
-
-            // Prevent moving tag into itself
-            if (this.draggedNode === node) return;
 
             // Only allow drop within the same parent
             if (this.draggedNode.closest(".tag-list") !== node.closest(".tag-list")) return;
+
+            e.stopPropagation();
+
+            // Prevent moving tag into itself
+            if (this.draggedNode === node) return;
 
             e.preventDefault();
             e.dataTransfer.dropEffect = "move";
             node.classList.add("drop-target");
         });
 
+        // stop dragover event on title to remove drop-target class
         node.addEventListener("dragleave", e => {
             node.classList.remove('drop-target');
         });
 
+        // handle drop event on title to swap the dragged tag with it
         node.addEventListener("drop", async e => {
+            if (!this.draggedNode) return;
+
+            // Only allow drop within the same parent
+            if (this.draggedNode.closest(".tag-list") !== node.closest(".tag-list")) return;
+
             e.stopPropagation();
             e.preventDefault();
 
@@ -73,13 +83,8 @@
             clearTimeout(expandTimer);
             expandTimer = null;
 
-            if (!this.draggedNode) return;
-
             // Prevent moving tag into itself
             if (this.draggedNode === node) return;
-
-            // Only allow drop within the same parent
-            if (this.draggedNode.closest(".tag-list") !== node.closest(".tag-list")) return;
 
             const sender = this.draggedNode.closest(".tag");
             const target = node.closest(".tag");
