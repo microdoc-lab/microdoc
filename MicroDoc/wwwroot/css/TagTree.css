@@ -52,11 +52,11 @@
     background-color: var(--hover-background);
 }
 
-.tag-tree .domain.title {
+.tag-tree .tag.domain .title {
     font-size: larger;
+    font-weight: bold;
 }
 
-.tag-tree .domain.title,
-.tag-tree .module.title {
+.tag-tree .tag.module > details > summary .title {
     font-weight: bold;
 }
