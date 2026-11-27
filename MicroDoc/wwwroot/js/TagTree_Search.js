@@ -2,7 +2,7 @@
     this.debug('InitSearch');
 
     this.searchStyle = this.element.querySelector(".search-style");
-    this.searchInput = this.element.querySelector(".toolbar .search");
+    this.searchInput = this.element.querySelector(".toolbar-container .search");
 
     // Default event handler
     options.OnSearchChanged ??= function (value) {

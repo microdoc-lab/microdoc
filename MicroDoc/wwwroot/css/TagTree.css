@@ -5,7 +5,7 @@
     padding: 0px 3px;
 }
 
-.tag-tree .toolbar {
+.tag-tree .toolbar-container {
     position: absolute;
     right: 0px;
     top: 0px;
@@ -15,7 +15,15 @@
     white-space: nowrap;
 }
 
-.tag-tree .toolbar .search {
+.tag-tree .toolbar {
+    opacity: 0.1;
+}
+
+.tag-tree .toolbar-container:hover .toolbar {
+    opacity: 1;
+}
+
+.tag-tree .toolbar-container .search {
     display: inline-block;
     width: 120px;
     padding-right: 2px;
