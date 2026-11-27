@@ -60,3 +60,7 @@
 .tag-tree .tag.module > details > summary .title {
     font-weight: bold;
 }
+
+.tag-tree details[open] > summary > .title {
+    background-color: var(--hover-background);
+}
