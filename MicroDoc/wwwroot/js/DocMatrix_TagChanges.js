@@ -5,11 +5,11 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
     switch (change.op) {
         case "SwapTags":
             if (selectedTag == change.parentTag || this.loadDeepLevels)
-                this.SwapRows(change.parentTag, change.tagName, change.targetTagName);  // if selected tag is parent tag - swap grid rows
+                this.SwapRows(change.parentTag, change.tagName, change.targetTagName);
             break;
 
         case "NewTag":
-            if (selectedTag == change.selectedTag || this.loadDeepLevels)      // if selected tag is parent of new tag - reload grid (to see newly created tag in it)
+            if (selectedTag == change.selectedTag || this.loadDeepLevels)
                 await this.Load(selectedTag);
             break;
 
@@ -18,13 +18,10 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
             break;
 
         case "MoveTag":
-            if (change.external) {
-                if (selectedTag == change.selectedTag)
-                    await this.Load(change.parentTag);        // if selected tag is a moved tag - switch grid to parent tag (to see tag gone)
-                else if (selectedTag == change.targetTag || selectedTag == change.parentTag || this.loadDeepLevels)
-                    await this.Load(selectedTag);             // if selected tag is target/parent - reload grid (to see tag gone)
-            } else
-                await this.Load(change.newTag);               // switch grid to moved tag
+            if (this.loadDeepLevels)
+                this.MoveRow(change.selectedTag, change.newTag);
+            else
+                await this.Load(selectedTag);
             break;
 
         case "DeleteTag":
@@ -34,6 +31,20 @@ DocMatrix.prototype.HandleTagChanges = async function (change) {
 }
 
 DocMatrix.prototype.changeHandlers.push(DocMatrix.prototype.HandleTagChanges);
+
+// Api
+DocMatrix.prototype.GetTagRowWithChildren = function (tagRow) {
+    var nodes = [];
+    nodes.push(tagRow);
+
+    let current = tagRow.nextElementSibling;
+    while (current && (tagRow.dataset.tag == "" || current.dataset.tag.startsWith(tagRow.dataset.tag + "/"))) {
+        nodes.push(current);
+        current = current.nextElementSibling;
+    }
+
+    return nodes;
+}
 
 DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
     var sender = this.tagRow(DocParser.DocId(parentTag, tagName));
@@ -53,54 +64,91 @@ DocMatrix.prototype.SwapRows = function (parentTag, tagName, targetTagName) {
 
     if (draggedIndex === -1 || targetIndex === -1) return;
 
-    var senderNodes = GetChildNodes(sender);
+    var senderNodes = this.GetTagRowWithChildren(sender);
     if (draggedIndex >= targetIndex) {          // Insert before target                    
         senderNodes.forEach(n => parentList.insertBefore(n, target));
     } else {
-        var targetNodes = GetChildNodes(target);
-        var lastTarget = targetNodes.at(-1);
-        if (lastTarget.nextElementSibling) {    // Insert after target                    
-            const lastTargetSibling = lastTarget.nextElementSibling;
+        var targetRows = this.GetTagRowWithChildren(target);
+        var lastTargetRow = targetRows.at(-1);
+        if (lastTargetRow.nextElementSibling) {    // Insert after target                    
+            const lastTargetSibling = lastTargetRow.nextElementSibling;
             senderNodes.forEach(n => parentList.insertBefore(n, lastTargetSibling));
         } else {                                // Insert last                    
             senderNodes.forEach(n => parentList.appendChild(n));
         }
     }
-
-    function GetChildNodes(parent) {
-        var nodes = [];
-        nodes.push(parent);
-
-        let current = parent.nextElementSibling;
-        while (current && current.dataset.tag.startsWith(parent.dataset.tag + "/")) {
-            nodes.push(current);
-            current = current.nextElementSibling;
-        }
-
-        return nodes;
-    }
 }
 
 DocMatrix.prototype.RenameRow = function (tag, newTag) {
-    const row = this.tagRow(tag);
-    if (!row)
+    const tagRow = this.tagRow(tag);
+    if (!tagRow)
         return;
 
-    const newTagName = DocParser.TagName(newTag);
+    const rows = this.GetTagRowWithChildren(tagRow);
+    rows.forEach(row => {
+        // update row dataset
+        row.dataset.tag = row.dataset.tag.replace(tag, newTag);
 
-    // update row dataset
-    row.dataset.tag = newTag;
+        // update row title
+        const title = row.querySelector("th tag");
+        if (title.dataset.id == tag)
+            title.textContent = `[${DocParser.TagName(newTag)}]`;
+        title.dataset.id = title.dataset.id.replace(tag, newTag);
 
-    // update row title
-    const title = row.querySelector("th tag");
-    title.dataset.id = newTag;
-    title.textContent = `[${newTagName}]`;
+        // update row documents
+        row.querySelectorAll("td doc").forEach(doc => {
+            doc.dataset.id = doc.dataset.id.replace(tag, newTag);
+            doc.dataset.tagpath = DocParser.DocTagPath(doc.dataset.id);
+        });
+    });
+}
 
-    // update row documents
-    const tagPath = DocParser.TagPath(this.domain, newTag);
-    row.querySelectorAll("td doc").forEach(doc => {
-        doc.dataset.tagpath = tagPath;
-        doc.dataset.id = DocParser.DocId(newTag, doc.dataset.document + ".txt");
+DocMatrix.prototype.MoveRow = function (tag, newTag) {
+    const tagRow = this.tagRow(tag);
+    if (!tagRow)
+        return;
+
+    const newParentTag = DocParser.TagParent(newTag);
+    const parentRow = this.tagRow(newParentTag);
+    if (!parentRow)
+        return;
+
+    const parentList = tagRow.parentElement;
+    const targetRows = this.GetTagRowWithChildren(parentRow);
+    const lastTargetRow = targetRows.at(-1);
+
+    // move rows in Grid
+    const rows = this.GetTagRowWithChildren(tagRow);
+    rows.forEach(row => {
+        if (lastTargetRow.nextElementSibling) {    // Insert after target                    
+            const lastTargetSibling = lastTargetRow.nextElementSibling;
+            rows.forEach(n => parentList.insertBefore(n, lastTargetSibling));
+        } else {                                // Insert last                    
+            rows.forEach(n => parentList.appendChild(n));
+        }
+    });
+
+    // update rows dataset
+    rows.forEach(row => {
+        // update row dataset
+        row.dataset.tag = row.dataset.tag.replace(tag, newTag);
+
+        // update row title
+        const title = row.querySelector("th tag");
+        if (title.dataset.id == tag)
+            title.textContent = `[${DocParser.TagName(newTag)}]`;
+        title.dataset.id = title.dataset.id.replace(tag, newTag);
+
+        // update header tag-level
+        const th = row.querySelector("th");
+        th.dataset.tagLevel = DocParser.TagLevel(row.dataset.tag) + 1;
+        th.style.setProperty('--tag-level', th.dataset.tagLevel);
+
+        // update row documents
+        row.querySelectorAll("td doc").forEach(doc => {
+            doc.dataset.id = doc.dataset.id.replace(tag, newTag);
+            doc.dataset.tagpath = DocParser.DocTagPath(doc.dataset.id);
+        });
     });
 }
 

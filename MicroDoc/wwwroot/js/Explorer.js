@@ -43,8 +43,14 @@ Explorer.prototype.ApplyChanges = async function (change) {
         await handler.call(this, change);
     }
 
-    await this.tagTree().ApplyChanges(change);
-    await this.docMatrix().ApplyChanges(change);
+    try {
+        this.disableTagTreeDocMatrixSync = true;
+        await this.tagTree().ApplyChanges(change);
+        await this.docMatrix().ApplyChanges(change);
+    }
+    finally {
+        this.disableTagTreeDocMatrixSync = false;
+    }
 
     for (const docElement of this.element.querySelectorAll(".overlay .doc"))
         await docElement.doc.ApplyChanges(change);

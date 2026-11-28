@@ -4,16 +4,22 @@
     var tagTree = this.tagTree();
     var docMatrix = this.docMatrix();
 
+    this.disableTagTreeDocMatrixSync = false;
+
     // synchronize DocMatrix with selected tag in TagTree
     // store selectedTag in cookie
     tagTree.options.OnTagSelected = tagTree.OnTagSelected = tagId => {
         this.selectedTag = tagId;
         this.SetCookieTag(this.selectedTag, this.search, this.loadDeepLevels);
 
-        if (this.loadDeepLevels)
-            docMatrix.ScrollToSelectedRow(tagId);
-        else
-            docMatrix.Load(tagId, this.loadDeepLevels);
+        if (this.disableTagTreeDocMatrixSync)
+            docMatrix.selectedTag = tagId;
+        else {
+            if (this.loadDeepLevels)
+                docMatrix.ScrollToSelectedRow(tagId);
+            else
+                docMatrix.Load(tagId, this.loadDeepLevels);
+        }
     };
 
     // store search in cookie
