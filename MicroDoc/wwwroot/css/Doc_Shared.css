@@ -37,9 +37,15 @@
 /* Paragraph */
 .doc p, doc p { margin: 4px 0px 4px 0px; }
 
+/* List */
+.doc ul, doc ul {
+    margin-bottom: 0px;
+}
+
 /* Table */
 .doc .table, doc .table {
     border: 1px solid #ccc;
+    margin-bottom: 0px;
 }
 
 .doc .table tr, doc .table tr {

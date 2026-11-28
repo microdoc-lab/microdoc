@@ -1,7 +1,7 @@
 ﻿/* Doc */
-.docmatrix .grid td doc:has(section h1) { padding-right: 4px; }
-.docmatrix .grid td doc:has(section h2) { padding-right: 8px; }
-.docmatrix .grid td doc:has(section h3) { padding-right: 12px; }
+.docmatrix .grid td doc:has(section h1) { padding-right: 8px; }
+.docmatrix .grid td doc:has(section h2) { padding-right: 12px; }
+.docmatrix .grid td doc:has(section h3) { padding-right: 16px; }
 
 /* Section */
 .docmatrix .grid td doc section {
@@ -57,7 +57,7 @@
     padding: 0px 3px 0px 3px;
 }
 
-.docmatrix .grid td:not(.misc) doc section.hover > content:not(:empty) {
+.docmatrix .grid td:not(.misc) doc section.hover > content:not(:has(> p:empty:only-child)) {
     display: block;
     background-color: var(--doc-background);
     margin-top: -8px;
