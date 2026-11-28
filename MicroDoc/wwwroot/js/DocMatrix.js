@@ -55,9 +55,9 @@ DocMatrix.prototype.printTitle = function () { return this.element.closest(".exp
 DocMatrix.prototype.grid = function () { return this.element.querySelector(".grid"); }
 DocMatrix.prototype.gridHeader = function () { return this.element.querySelector(".grid tr"); }
 
-DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(`.grid tr[data-tag="${tag}"]`); }
-DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
-DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
+DocMatrix.prototype.tagRow = function (tag) { return this.element.querySelector(`.grid > tbody > tr[data-tag="${tag}"]`); }
+DocMatrix.prototype.docElement = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.overlay > .doc[data-domain="${domain}"][data-id="${documentId}"]`); }
+DocMatrix.prototype.docInCell = function (domain, documentId) { return this.element.querySelector(`.grid > tbody > tr > td doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docInReport = function (domain, documentId) { return this.element.closest(".explorer").querySelector(`.modal doc[data-domain="${domain}"][data-id="${documentId}"]`); }
 DocMatrix.prototype.docSelected = function () { return this.element.closest(".explorer").querySelector(".overlay .doc.selected"); }
 
